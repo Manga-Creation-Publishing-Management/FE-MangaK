@@ -1,0 +1,476 @@
+import { useState } from 'react';
+import { Plus, Search, Users, ShieldCheck, UserX, UserCheck, X, Eye, EyeOff, ChevronDown } from 'lucide-react';
+
+
+
+
+const roleLabels = {
+  mangaka: 'Mangaka',
+  assistant: 'Assistant',
+  tantou: 'Tantou Editor',
+  editorial: 'Editorial Board',
+};
+
+const roleColors = {
+  mangaka: 'bg-primary/10 text-primary border-primary/30',
+  assistant: 'bg-accent/10 text-accent border-accent/30',
+  tantou: 'bg-info/10 text-info border-info/30',
+  editorial: 'bg-success/10 text-success border-success/30',
+};
+
+const initialUsers = [
+  { id: 1, name: 'Akira Tanaka', email: 'akira@comicmanager.com', username: 'akira_t', role: 'mangaka', status: 'active', createdAt: '2026-01-10', lastLogin: '2026-05-20' },
+  { id: 2, name: 'Yuki Sato', email: 'yuki@comicmanager.com', username: 'yuki_s', role: 'mangaka', status: 'active', createdAt: '2026-01-15', lastLogin: '2026-05-19' },
+  { id: 3, name: 'Hiro Yamada', email: 'hiro@comicmanager.com', username: 'hiro_y', role: 'mangaka', status: 'suspended', createdAt: '2026-02-01', lastLogin: '2026-04-30' },
+  { id: 4, name: 'Mei Nakamura', email: 'mei@comicmanager.com', username: 'mei_n', role: 'assistant', status: 'active', createdAt: '2026-01-20', lastLogin: '2026-05-21' },
+  { id: 5, name: 'Ryu Watanabe', email: 'ryu@comicmanager.com', username: 'ryu_w', role: 'assistant', status: 'active', createdAt: '2026-02-10', lastLogin: '2026-05-20' },
+  { id: 6, name: 'Sara Ito', email: 'sara@comicmanager.com', username: 'sara_i', role: 'assistant', status: 'suspended', createdAt: '2026-03-05', lastLogin: '2026-05-01' },
+  { id: 7, name: 'Kenji Suzuki', email: 'kenji@comicmanager.com', username: 'kenji_s', role: 'tantou', status: 'active', createdAt: '2026-01-08', lastLogin: '2026-05-21' },
+  { id: 8, name: 'Aiko Matsuda', email: 'aiko@comicmanager.com', username: 'aiko_m', role: 'editorial', status: 'active', createdAt: '2026-01-05', lastLogin: '2026-05-21' },
+];
+
+export function AdminDashboard() {
+  const [users, setUsers] = useState(initialUsers);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterRole, setFilterRole] = useState('all');
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showPermissionsModal, setShowPermissionsModal] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null);
+
+  // Create account form state
+  const [newName, setNewName] = useState('');
+  const [newEmail, setNewEmail] = useState('');
+  const [newUsername, setNewUsername] = useState('');
+  const [newRole, setNewRole] = useState('mangaka');
+  const [newPassword, setNewPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [createError, setCreateError] = useState('');
+
+  const stats = [
+    { label: 'Total Accounts', value: users.length, icon: Users, color: 'bg-primary/10 text-primary' },
+    { label: 'Active Accounts', value: users.filter(u => u.status === 'active').length, icon: UserCheck, color: 'bg-success/10 text-success' },
+    { label: 'Suspended', value: users.filter(u => u.status === 'suspended').length, icon: UserX, color: 'bg-destructive/10 text-destructive' },
+    { label: 'Roles Assigned', value: 4, icon: ShieldCheck, color: 'bg-info/10 text-info' },
+  ];
+
+  const filtered = users.filter(u => {
+    const matchesSearch = u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      u.username.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesRole = filterRole === 'all' || u.role === filterRole;
+    const matchesStatus = filterStatus === 'all' || u.status === filterStatus;
+    return matchesSearch && matchesRole && matchesStatus;
+  });
+
+  const handleToggleStatus = (user) => {
+    const action = user.status === 'active' ? 'suspend' : 'activate';
+    setConfirmAction({ user, action });
+  };
+
+  const confirmToggle = () => {
+    if (!confirmAction) return;
+    setUsers(prev => prev.map(u =>
+      u.id === confirmAction.user.id
+        ? { ...u, status: confirmAction.action === 'suspend' ? 'suspended' : 'active' }
+        : u
+    ));
+    setConfirmAction(null);
+  };
+
+  const generatePassword = () => {
+    const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$';
+    setNewPassword(Array.from({ length: 12 }, () => chars[Math.floor(Math.random() * chars.length)]).join(''));
+  };
+
+  const handleCreate = (e) => {
+    e.preventDefault();
+    if (!newName.trim() || !newEmail.trim() || !newUsername.trim() || !newPassword.trim()) {
+      setCreateError('All fields are required.');
+      return;
+    }
+    if (users.some(u => u.username === newUsername)) {
+      setCreateError('Username already exists.');
+      return;
+    }
+    if (users.some(u => u.email === newEmail)) {
+      setCreateError('Email already in use.');
+      return;
+    }
+    const newUser = {
+      id: Math.max(...users.map(u => u.id)) + 1,
+      name: newName.trim(),
+      email: newEmail.trim(),
+      username: newUsername.trim(),
+      role: newRole,
+      status: 'active',
+      createdAt: new Date().toISOString().split('T')[0],
+      lastLogin: '—',
+    };
+    setUsers(prev => [...prev, newUser]);
+    setShowCreateModal(false);
+    setNewName(''); setNewEmail(''); setNewUsername('');
+    setNewRole('mangaka'); setNewPassword(''); setCreateError('');
+  };
+
+  const handleRoleChange = (userId, role) => {
+    setUsers(prev => prev.map(u => u.id === userId ? { ...u, role } : u));
+  };
+
+  const permissionMatrix = {
+    mangaka: ['Create series', 'Manage own chapters', 'Assign tasks to assistants', 'View own feedback', 'View leaderboard'],
+    assistant: ['View assigned tasks', 'Update task progress', 'View own income'],
+    tantou: ['Review assigned series', 'Review chapters', 'Send feedback to Mangaka', 'Submit to Editorial Board', 'View leaderboard'],
+    editorial: ['Approve/reject series', 'Approve/reject chapters', 'Manage publishing schedule', 'Import rating data', 'Cancel series', 'View leaderboard'],
+  };
+
+  return (
+    <div className="p-8 space-y-8">
+      <div className="flex justify-between items-start">
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p className="text-muted-foreground mt-1">Manage system accounts and permissions</p>
+        </div>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setShowPermissionsModal(true)}
+            className="flex items-center gap-2 px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors"
+          >
+            <ShieldCheck size={18} />
+            Role Permissions
+          </button>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+          >
+            <Plus size={18} />
+            Create Account
+          </button>
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-4 gap-6">
+        {stats.map((stat) => {
+          const Icon = stat.icon;
+          return (
+            <div key={stat.label} className="bg-card border border-border rounded-xl p-6">
+              <div className={`w-12 h-12 rounded-lg ${stat.color} flex items-center justify-center mb-4`}>
+                <Icon size={24} />
+              </div>
+              <p className="text-muted-foreground text-sm">{stat.label}</p>
+              <p className="text-2xl mt-1">{stat.value}</p>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Filters */}
+      <div className="flex gap-4 items-center">
+        <div className="relative flex-1 max-w-sm">
+          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by name, email or username…"
+            className="w-full pl-10 pr-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+        <select
+          value={filterRole}
+          onChange={(e) => setFilterRole(e.target.value)}
+          className="px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          <option value="all">All Roles</option>
+          <option value="mangaka">Mangaka</option>
+          <option value="assistant">Assistant</option>
+          <option value="tantou">Tantou Editor</option>
+          <option value="editorial">Editorial Board</option>
+        </select>
+        <select
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+          className="px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          <option value="all">All Status</option>
+          <option value="active">Active</option>
+          <option value="suspended">Suspended</option>
+        </select>
+      </div>
+
+      {/* User Table */}
+      <div className="bg-card border border-border rounded-xl overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-muted/50 border-b border-border">
+              <tr>
+                <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">User</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">Username</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">Role</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">Status</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">Created</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">Last Login</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {filtered.map((user) => (
+                <tr key={user.id} className={`hover:bg-muted/30 transition-colors ${user.status === 'suspended' ? 'opacity-60' : ''}`}>
+                  <td className="px-6 py-4">
+                    <div>
+                      <p className="font-medium">{user.name}</p>
+                      <p className="text-sm text-muted-foreground">{user.email}</p>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <code className="text-sm bg-muted px-2 py-0.5 rounded">{user.username}</code>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="relative inline-block">
+                      <select
+                        value={user.role}
+                        onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                        className={`appearance-none pl-3 pr-7 py-1 rounded-full border text-sm font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary ${roleColors[user.role]}`}
+                      >
+                        <option value="mangaka">Mangaka</option>
+                        <option value="assistant">Assistant</option>
+                        <option value="tantou">Tantou Editor</option>
+                        <option value="editorial">Editorial Board</option>
+                      </select>
+                      <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`px-3 py-1 rounded-full border text-sm ${
+                      user.status === 'active'
+                        ? 'bg-success/10 text-success border-success/30'
+                        : 'bg-destructive/10 text-destructive border-destructive/30'
+                    }`}>
+                      {user.status === 'active' ? 'Active' : 'Suspended'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-muted-foreground">{user.createdAt}</td>
+                  <td className="px-6 py-4 text-sm text-muted-foreground">{user.lastLogin}</td>
+                  <td className="px-6 py-4">
+                    <button
+                      onClick={() => handleToggleStatus(user)}
+                      className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                        user.status === 'active'
+                          ? 'text-destructive hover:bg-destructive/10 border border-destructive/30'
+                          : 'text-success hover:bg-success/10 border border-success/30'
+                      }`}
+                    >
+                      {user.status === 'active' ? <UserX size={15} /> : <UserCheck size={15} />}
+                      {user.status === 'active' ? 'Suspend' : 'Activate'}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan={7} className="px-6 py-12 text-center text-muted-foreground">
+                    No users match your search.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Create Account Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-card rounded-xl p-8 w-full max-w-lg">
+            <div className="flex justify-between items-center mb-6">
+              <h2>Create Account</h2>
+              <button onClick={() => { setShowCreateModal(false); setCreateError(''); }}
+                className="text-muted-foreground hover:text-foreground">
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreate} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-muted-foreground mb-1.5 block">Full Name</label>
+                  <input
+                    type="text"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    placeholder="Full name"
+                    className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-muted-foreground mb-1.5 block">Username</label>
+                  <input
+                    type="text"
+                    value={newUsername}
+                    onChange={(e) => setNewUsername(e.target.value)}
+                    placeholder="username"
+                    className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm text-muted-foreground mb-1.5 block">Email</label>
+                <input
+                  type="email"
+                  value={newEmail}
+                  onChange={(e) => setNewEmail(e.target.value)}
+                  placeholder="email@comicmanager.com"
+                  className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm text-muted-foreground mb-1.5 block">Role</label>
+                <select
+                  value={newRole}
+                  onChange={(e) => setNewRole(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  <option value="mangaka">Mangaka</option>
+                  <option value="assistant">Assistant</option>
+                  <option value="tantou">Tantou Editor</option>
+                  <option value="editorial">Editorial Board</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-sm text-muted-foreground mb-1.5 block">System Password</label>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <input
+                      type={showNewPassword ? 'text' : 'password'}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="Set a password"
+                      className="w-full px-4 py-2.5 pr-10 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary font-mono"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                      {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={generatePassword}
+                    className="px-4 py-2.5 border border-border rounded-lg hover:bg-muted transition-colors text-sm whitespace-nowrap"
+                  >
+                    Generate
+                  </button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1.5">This password will be shared with the user at account creation.</p>
+              </div>
+
+              {createError && (
+                <p className="text-sm text-destructive">{createError}</p>
+              )}
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => { setShowCreateModal(false); setCreateError(''); }}
+                  className="flex-1 px-4 py-2.5 border border-border rounded-lg hover:bg-muted transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                >
+                  Create Account
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Confirm Suspend/Activate Modal */}
+      {confirmAction && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-card rounded-xl p-8 w-full max-w-sm">
+            <h2 className="mb-4">
+              {confirmAction.action === 'suspend' ? 'Suspend Account' : 'Activate Account'}
+            </h2>
+            <p className="text-sm text-muted-foreground mb-6">
+              {confirmAction.action === 'suspend'
+                ? `Are you sure you want to suspend ${confirmAction.user.name}'s account? They will lose access immediately.`
+                : `Restore access for ${confirmAction.user.name}? They will be able to log in again.`}
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setConfirmAction(null)}
+                className="flex-1 px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmToggle}
+                className={`flex-1 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity ${
+                  confirmAction.action === 'suspend'
+                    ? 'bg-destructive text-destructive-foreground'
+                    : 'bg-success text-success-foreground'
+                }`}
+              >
+                {confirmAction.action === 'suspend' ? 'Suspend' : 'Activate'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Role Permissions Modal */}
+      {showPermissionsModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-card rounded-xl p-8 w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h2>Role Permissions</h2>
+              <button onClick={() => setShowPermissionsModal(false)}
+                className="text-muted-foreground hover:text-foreground">
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              {Object.entries(permissionMatrix).map(([role, perms]) => (
+                <div key={role} className="border border-border rounded-xl p-5">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className={`px-3 py-1 rounded-full border text-sm font-medium ${roleColors[role]}`}>
+                      {roleLabels[role]}
+                    </span>
+                  </div>
+                  <ul className="space-y-2">
+                    {perms.map((perm) => (
+                      <li key={perm} className="flex items-center gap-2 text-sm">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+                        {perm}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6">
+              <button
+                onClick={() => setShowPermissionsModal(false)}
+                className="w-full px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

@@ -1,15 +1,15 @@
-import { useState } from 'react'
-import '../styles/global.css'
+import { BrowserRouter } from 'react-router';
+import { ThemeProvider } from '@/features/auth/ThemeContext';
+import { ThemeToggle } from '@/shared/components/ThemeToggle';
+import AppRoutes from '@/routes/AppRoutes';
 
-function App() {
-
+export default function App() {
   return (
-    <>
-    <h1 className='text-3xl font-bold underline'>
-      Hello world!
-    </h1>
-    </>
-  )
+    <ThemeProvider>
+      <ThemeToggle />
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </ThemeProvider>
+  );
 }
-
-export default App
