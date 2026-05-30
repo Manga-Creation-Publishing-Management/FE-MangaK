@@ -1,0 +1,92 @@
+import { useState } from 'react';
+import {
+  Home, FolderKanban, DollarSign, TrendingUp, Upload, Settings,
+  CalendarClock, CheckSquare, ClipboardList, FileSearch, Users,
+  ShieldCheck, BookMarked,
+  Menu
+} from 'lucide-react';
+import { Link, useLocation } from 'react-router';
+
+export function Sidebar({ userRole }) {
+  const location = useLocation();
+  const [isOpen, setIsOpen] = useState(true);
+
+  const menuItems = {
+    reader: [
+      { icon: Home, label: 'Dashboard', path: '/reader', key: 'dashboard' },
+      { icon: BookMarked, label: 'Browse Series', path: '/reader', key: 'browse' },
+      { icon: Settings, label: 'Profile & Settings', path: '/reader/profile', key: 'profile' },
+    ],
+    admin: [
+      { icon: Home, label: 'Dashboard', path: '/admin', key: 'dashboard' },
+      { icon: Settings, label: 'Profile & Settings', path: '/admin/profile', key: 'profile' },
+    ],
+    mangaka: [
+      { icon: Home, label: 'Dashboard', path: '/mangaka', key: 'dashboard' },
+      { icon: FolderKanban, label: 'Series Management', path: '/mangaka/series', key: 'series' },
+      { icon: ClipboardList, label: 'Task Management', path: '/mangaka/tasks', key: 'tasks' },
+      { icon: TrendingUp, label: 'Leaderboard', path: '/mangaka/tracking', key: 'tracking' },
+      { icon: Settings, label: 'Profile & Settings', path: '/mangaka/profile', key: 'profile' },
+    ],
+    assistant: [
+      { icon: Home, label: 'Dashboard', path: '/assistant', key: 'dashboard' },
+      { icon: CheckSquare, label: 'My Tasks', path: '/assistant/tasks', key: 'tasks' },
+      { icon: DollarSign, label: 'Income', path: '/assistant/income', key: 'income' },
+      { icon: Settings, label: 'Profile & Settings', path: '/assistant/profile', key: 'profile' },
+    ],
+    tantou: [
+      { icon: Home, label: 'Dashboard', path: '/tantou', key: 'dashboard' },
+      { icon: FolderKanban, label: 'Series Review', path: '/tantou/series', key: 'series' },
+      { icon: TrendingUp, label: 'Leaderboard', path: '/tantou/tracking', key: 'tracking' },
+      { icon: Settings, label: 'Profile & Settings', path: '/tantou/profile', key: 'profile' },
+    ],
+    editorial: [
+      { icon: Home, label: 'Dashboard', path: '/editorial', key: 'dashboard' },
+      { icon: FileSearch, label: 'Series Approval', path: '/editorial/series', key: 'series' },
+      { icon: CalendarClock, label: 'Publishing Schedule', path: '/editorial/schedule', key: 'schedule' },
+      { icon: TrendingUp, label: 'Leaderboard', path: '/editorial/tracking', key: 'tracking' },
+      { icon: Settings, label: 'Profile & Settings', path: '/editorial/profile', key: 'profile' },
+    ],
+  };
+
+  const items = menuItems[userRole] ?? [];
+
+  return (
+    <div
+      className={`bg-sidebar border-r border-sidebar-border h-screen p-4 transition-all duration-300 relative flex flex-col ${isOpen ? 'w-64' : 'w-20'
+        }`}
+    >
+      <div className={`flex items-center mb-6 ${isOpen ? 'justify-end' : 'justify-center'}`}>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="p-1.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent border border-sidebar-border transition-colors"
+          title={isOpen ? "Đóng sidebar" : "Mở sidebar"}
+        >
+          {isOpen ? <Menu size={20} /> : <Menu size={20} />}
+        </button>
+      </div>
+
+      <nav className="space-y-1 flex-1">
+        {items.map((item) => {
+          const Icon = item.icon;
+          const isActive = location.pathname === item.path;
+
+          return (
+            <Link
+              key={item.key}
+              to={item.path}
+              className={`flex items-center border-1  gap-3 px-3 py-2 rounded-lg transition-colors unique-sidebar-item ${isActive
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-sidebar-foreground hover:bg-sidebar-accent'
+                } ${!isOpen && 'justify-center'}`}
+              title={!isOpen ? item.label : undefined}
+            >
+              <Icon size={20} className="shrink-0" />
+              {isOpen && <span className="truncate">{item.label}</span>}
+            </Link>
+          );
+        })}
+      </nav>
+    </div>
+  );
+}
