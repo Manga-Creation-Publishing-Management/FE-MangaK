@@ -11,17 +11,17 @@ export function HeaderPage ({roleName, avatarUrl}) {
                 </div>
 
                 <div className="col-span-3 content-center">
-                    <span className="text-lg font-medium">Welcome back!</span><br />
-                    <span className="text-gray-500">{roleName}</span>
+                    <span className="text-sidebar-foreground text-lg font-medium">Welcome back!</span><br />
+                    <span className="text-muted-foreground">{roleName}</span>
                 </div>
                 <div className="col-span-8 content-center p-2">
                     <div className='place-self-end'>
                         <button className='flex 
-                        bg-white text-gray-600
-                        hover:bg-red-300 hover:text-white
+                        color-background text-muted-foreground
+                        hover:text-accent
                         hover:rounded
                         p-2'>
-                            <div className='content-center'> <LogOut color='gray'/> </div>
+                            <div className='content-center'> <LogOut /> </div>
                             <span className='p-2 font-medium'>Logout</span>
                         </button>
                     </div>

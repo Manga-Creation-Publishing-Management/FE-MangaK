@@ -1,11 +1,2 @@
 @import "tailwindcss";
-
-:root {
-  color: #111;
-  background-color: #fff;
-}
-
-.dark{
-  color: #f8fafc;
-  background: #1A1525;
-}
+@import "./theme.css"
