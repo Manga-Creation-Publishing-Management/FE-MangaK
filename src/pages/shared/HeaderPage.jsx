@@ -1,12 +1,12 @@
 import { LogOut } from 'lucide-react';
 
-export function HeaderPage ({roleName, avatarUrl}) {
+export function HeaderPage({ roleName, avatarUrl }) {
     return (
         <>
-            <div className="grid grid-cols-12 shadow p-2 px-8">
+            <div className="grid grid-cols-12 shadow p-2 px-8 bg-background">
                 <div className="col-span-1 px-2 content-center">
-                    <img  className="rounded-full w-15"
-                    src = {avatarUrl} alt="Avatar Image" />               
+                    <img className="rounded-full w-15"
+                        src={avatarUrl} alt="Avatar Image" />
 
                 </div>
 

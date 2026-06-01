@@ -10,6 +10,10 @@ import { WelcomeLine } from '../pages/shared/WelcomeLine.jsx';
 import { OverviewCard } from '../pages/shared/OverviewCard.jsx';
 import avatarImgDemo from '../pages/shared/avatarImgDemo.png';
 import { LogIn } from 'lucide-react';
+import { HomePage } from '../pages/shared/HomePage.jsx';
+import { LoginPage } from '../pages/auth/Login.jsx';
+import { FooterPage } from '../pages/shared/FooterPage.jsx';
+import { LoginForm } from '../pages/auth/LoginForm.jsx';
 
 const roleDisplayNames = {
   mangaka: "Mangaka",
@@ -31,7 +35,7 @@ function Layout({ roleName }) {
       <main className="flex-1 flex flex-col h-full overflow-hidden bg-background">
         <HeaderPage roleName={displayRole} avatarUrl={url} />
         <WelcomeLine roleName={displayRole} />
-        <OverviewCard iconName={<LogIn color="#ebbfff" size={50} />} iconColor="bg-[#c8b4d1]" contentText="Assigned series" valueNum={3} />
+        <OverviewCard iconName={<LogIn className='text-sidebar-primary' size={50} />} contentText="Assigned series" valueNum={3} />
         <div className="flex-1 overflow-y-auto p-6">
           <Outlet />
         </div>
@@ -43,6 +47,8 @@ function Layout({ roleName }) {
 export function AppRoutes() {
   return (
     <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={<LoginForm />} />
 
       <Route path="/mangaka" element={<Layout roleName="mangaka" />}>
         <Route path="series" element={<SeriesManagement />} />
@@ -66,7 +72,7 @@ export function AppRoutes() {
       </Route>
 
 
-      <Route path="*" element={<Navigate to="/mangaka/series" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }

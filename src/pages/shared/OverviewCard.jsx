@@ -5,7 +5,7 @@ export function OverviewCard ({iconName, iconColor, contentText, valueNum}) {
         <>
             <div className="color-background rounded-2xl p-6 border-1 border-gray-200 
             flex flex-col items-center gap-2 hover:shadow">
-                <div className={"p-3 rounded-full color-primary-foreground"}>
+                <div className={"p-3 rounded-full sidebar"}>
                     {iconName}
                 </div>
 

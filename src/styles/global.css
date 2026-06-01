@@ -1,2 +1,8 @@
 @import "tailwindcss";
-@import "./theme.css"
+@import "./theme.css";
+
+/* Hide browser default password reveal and clear buttons (specifically in Microsoft Edge / IE) */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
