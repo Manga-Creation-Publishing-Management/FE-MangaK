@@ -77,7 +77,7 @@ export function Sidebar({ userRole }) {
             <Link
               key={item.key}
               to={item.path}
-              className={`flex items-center border-1  gap-3 px-3 py-2 rounded-lg transition-colors unique-sidebar-item ${isActive
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors unique-sidebar-item ${isActive
                   ? 'bg-primary text-primary-foreground'
                   : 'text-sidebar-foreground hover:bg-sidebar-accent'
                 } ${!isOpen && 'justify-center'}`}
