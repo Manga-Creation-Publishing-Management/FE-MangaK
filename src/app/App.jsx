@@ -1,5 +1,5 @@
 
-import '../styles/global.css'
+import '../styles/global.css';
 import { BrowserRouter } from 'react-router';
 import { AppRoutes } from '../routes/AppRoutes';
 import { ThemeProvider } from '../features/theme/ThemeContext.jsx'

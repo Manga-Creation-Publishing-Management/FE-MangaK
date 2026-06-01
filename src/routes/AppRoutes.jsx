@@ -1,14 +1,14 @@
 import { Routes, Route, Navigate, Outlet } from 'react-router';
 import { SeriesManagement } from "../pages/mangaka/SeriesManagement"
 import { Sidebar } from '../pages/shared/Sidebar';
+import { HeaderPage } from '../pages/shared/HeaderPage';
+import avatarImgDemo from '../pages/shared/avatarImgDemo.png';
 import { TaskManagement } from '../pages/mangaka/TaskManagement';
 import { MyTask } from '../pages/assistant/MyTask';
 import { SeriesReview } from '../pages/tantouEditor/SeriesReview';
 import { PublishingSchedule } from '../pages/editorialBoard/PublishingSchedule';
-import { HeaderPage } from '../pages/shared/HeaderPage.jsx';
 import { WelcomeLine } from '../pages/shared/WelcomeLine.jsx';
 import { OverviewCard } from '../pages/shared/OverviewCard.jsx';
-import avatarImgDemo from '../pages/shared/avatarImgDemo.png';
 import { LogIn } from 'lucide-react';
 import { HomePage } from '../pages/shared/HomePage.jsx';
 import { LoginPage } from '../pages/auth/LoginPage.jsx';

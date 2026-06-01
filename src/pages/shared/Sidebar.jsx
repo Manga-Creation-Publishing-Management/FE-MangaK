@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import {
-  Home, FolderKanban, DollarSign, TrendingUp, Upload, Settings,
-  CalendarClock, CheckSquare, ClipboardList, FileSearch, Users,
-  ShieldCheck, BookMarked,
+  Home, FolderKanban, DollarSign, TrendingUp, Settings,
+  CalendarClock, CheckSquare, ClipboardList, FileSearch, BookMarked,
   Menu
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router';
@@ -15,7 +14,7 @@ export function Sidebar({ userRole }) {
   const menuItems = {
     reader: [
       { icon: Home, label: 'Dashboard', path: '/reader', key: 'dashboard' },
-      { icon: BookMarked, label: 'Browse Series', path: '/reader', key: 'browse' },
+      { icon: BookMarked, label: 'Browse Series', path: '/reader/browse', key: 'browse' }, // Nên sửa lại path cụ thể thay vì trùng với dashboard
       { icon: Settings, label: 'Profile & Settings', path: '/reader/profile', key: 'profile' },
     ],
     admin: [
@@ -71,15 +70,17 @@ export function Sidebar({ userRole }) {
       <nav className="space-y-1 flex-1">
         {items.map((item) => {
           const Icon = item.icon;
-          const isActive = location.pathname === item.path;
+          const isActive = item.key === 'dashboard'
+            ? location.pathname === item.path
+            : location.pathname.startsWith(item.path);
 
           return (
             <Link
               key={item.key}
               to={item.path}
               className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors unique-sidebar-item ${isActive
-                  ? 'bg-primary text-primary-foreground'
-                  : 'text-sidebar-foreground hover:bg-sidebar-accent'
+                ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                : 'text-sidebar-foreground hover:bg-sidebar-accent'
                 } ${!isOpen && 'justify-center'}`}
               title={!isOpen ? item.label : undefined}
             >
