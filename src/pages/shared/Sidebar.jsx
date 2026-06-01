@@ -5,6 +5,7 @@ import {
   Menu
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router';
+import { Logo } from '../../shared/components/Logo';
 
 export function Sidebar({ userRole }) {
   const location = useLocation();
@@ -55,10 +56,11 @@ export function Sidebar({ userRole }) {
       className={`bg-sidebar border-r border-sidebar-border h-screen p-4 transition-all duration-300 relative flex flex-col ${isOpen ? 'w-64' : 'w-20'
         }`}
     >
-      <div className={`flex items-center mb-6 ${isOpen ? 'justify-end' : 'justify-center'}`}>
+      <div className={`flex items-center mb-6 ${isOpen ? 'justify-between' : 'justify-center flex-col gap-4'}`}>
+        <Logo size="sm" showText={isOpen} to={`/${userRole}`} />
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="p-1.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent border border-sidebar-border transition-colors"
+          className="p-1.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent border border-sidebar-border transition-colors shrink-0"
           title={isOpen ? "Đóng sidebar" : "Mở sidebar"}
         >
           <Menu size={20} />
