@@ -7,10 +7,8 @@ import { TaskManagement } from '../pages/mangaka/TaskManagement';
 import { MyTask } from '../pages/assistant/MyTask';
 import { SeriesReview } from '../pages/tantouEditor/SeriesReview';
 import { PublishingSchedule } from '../pages/editorialBoard/PublishingSchedule';
-import { HeaderPage } from '../pages/shared/HeaderPage.jsx';
 import { WelcomeLine } from '../pages/shared/WelcomeLine.jsx';
 import { OverviewCard } from '../pages/shared/OverviewCard.jsx';
-import avatarImgDemo from '../pages/shared/avatarImgDemo.png';
 import { LogIn } from 'lucide-react';
 
 const roleDisplayNames = {
@@ -37,7 +35,7 @@ function Layout({ roleName }) {
         <div className="flex-1 overflow-y-auto p-6">
           <Outlet />
         </div>
-      </main>=
+      </main>
     </div>
   );
 }

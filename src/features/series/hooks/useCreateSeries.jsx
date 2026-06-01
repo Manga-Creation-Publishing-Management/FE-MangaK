@@ -15,12 +15,8 @@ export default function useCreateSeries(onClose, onReload ) {
 
   useEffect(() => {
     const fetchApi = async () => {
-      fetch("http://localhost:3001/genre")
-        .then(res => res.json())
-        .then(data => {
-          console.log(data);
-          setGenreList(data);
-        })
+      const results = await get("genre");
+      setGenreList(results);
     };
     fetchApi();
   }, [])
