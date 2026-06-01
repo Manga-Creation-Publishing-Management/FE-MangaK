@@ -1,6 +1,8 @@
 import { LogOut } from 'lucide-react';
+import { LoginHook } from '../../features/auth/hooks/LoginHook';
 
 export function HeaderPage({ roleName, avatarUrl }) {
+    const { navigate } = LoginHook();
     return (
         <>
             <div className="grid grid-cols-12 shadow p-2 px-8 bg-background">
@@ -16,7 +18,8 @@ export function HeaderPage({ roleName, avatarUrl }) {
                 </div>
                 <div className="col-span-8 content-center p-2">
                     <div className='place-self-end'>
-                        <button className='flex 
+                        <button onClick={() => navigate('/')}
+                            className='flex 
                         color-background text-muted-foreground
                         hover:text-accent
                         hover:rounded

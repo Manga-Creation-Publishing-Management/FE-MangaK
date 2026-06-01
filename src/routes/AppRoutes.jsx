@@ -11,9 +11,7 @@ import { OverviewCard } from '../pages/shared/OverviewCard.jsx';
 import avatarImgDemo from '../pages/shared/avatarImgDemo.png';
 import { LogIn } from 'lucide-react';
 import { HomePage } from '../pages/shared/HomePage.jsx';
-import { LoginPage } from '../pages/auth/Login.jsx';
-import { FooterPage } from '../pages/shared/FooterPage.jsx';
-import { LoginForm } from '../pages/auth/LoginForm.jsx';
+import { LoginPage } from '../pages/auth/LoginPage.jsx';
 
 const roleDisplayNames = {
   mangaka: "Mangaka",
@@ -48,7 +46,7 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/login" element={<LoginForm />} />
+      <Route path="/login" element={<LoginPage />} />
 
       <Route path="/mangaka" element={<Layout roleName="mangaka" />}>
         <Route path="series" element={<SeriesManagement />} />

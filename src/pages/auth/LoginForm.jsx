@@ -22,7 +22,7 @@ export function LoginForm() {
             <form onSubmit={handleSignIn} className="space-y-5">
 
                 <div className="space-y-2">
-                    <label className="font-bold tracking-widest text-muted-foreground uppercase">
+                    <label className="text text-xs font-bold tracking-widest text-muted-foreground uppercase">
                         Email
                     </label>
                     <div className="w-full bg-muted/40 border border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 rounded-xl px-4 py-3 flex items-center gap-3 transition-all">
@@ -35,13 +35,14 @@ export function LoginForm() {
                             onChange={(e) => setEmail(e.target.value)}
                             className="bg-transparent text-foreground placeholder-muted-foreground/70 outline-none w-full text-sm font-medium"
                         />
+
                     </div>
                 </div>
 
 
                 <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                        <label className="text font-bold tracking-widest text-muted-foreground uppercase">
+                        <label className="text text-xs font-bold tracking-widest text-muted-foreground uppercase">
                             Password
                         </label>
                         <a
