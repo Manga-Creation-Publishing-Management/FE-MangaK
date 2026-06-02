@@ -79,8 +79,8 @@ export function Sidebar({ userRole }) {
               key={item.key}
               to={item.path}
               className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors unique-sidebar-item ${isActive
-                  ? 'bg-sidebar-primary text-sidebar-primary-foreground' 
-                  : 'text-sidebar-foreground hover:bg-sidebar-accent'
+                ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                : 'text-sidebar-foreground hover:bg-sidebar-accent'
                 } ${!isOpen && 'justify-center'}`}
               title={!isOpen ? item.label : undefined}
             >

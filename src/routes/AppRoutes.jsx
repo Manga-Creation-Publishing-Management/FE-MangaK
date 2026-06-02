@@ -10,7 +10,8 @@ import { PublishingSchedule } from '../pages/editorialBoard/PublishingSchedule';
 import { LogIn } from 'lucide-react';
 import { SeriesDetail } from '../pages/shared/SeriesDetail.jsx';
 import { Dashboard } from '../pages/shared/Dashboard.jsx';
-
+import { HomePage } from '../pages/shared/HomePage.jsx';
+import { LoginPage } from '../pages/auth/LoginPage.jsx';
 const roleDisplayNames = {
   mangaka: "Mangaka",
   assistant: "Assistant",
@@ -43,6 +44,8 @@ function Layout({ roleName }) {
 export function AppRoutes() {
   return (
     <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={<LoginPage />} />
 
       <Route path="/mangaka" element={<Layout roleName="mangaka" />}>
         <Route index element={<Dashboard role="mangaka"/>} />
@@ -68,7 +71,7 @@ export function AppRoutes() {
       </Route>
 
 
-      <Route path="*" element={<Navigate to="/mangaka/series" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }
