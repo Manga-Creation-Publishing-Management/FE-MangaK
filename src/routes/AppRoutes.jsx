@@ -31,8 +31,6 @@ function Layout({ roleName }) {
 
       <main className="flex-1 flex flex-col h-full overflow-hidden bg-background">
         <HeaderPage roleName={displayRole} avatarUrl={url} />
-        {/* <WelcomeLine roleName={displayRole} />
-        <OverviewCard iconName={<LogIn color="#ebbfff" size={50} />} iconColor="bg-[#c8b4d1]" contentText="Assigned series" valueNum={3} /> */}
         <div className="flex-1 overflow-y-auto p-1">
           <Outlet />
         </div>
@@ -48,7 +46,7 @@ export function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
 
       <Route path="/mangaka" element={<Layout roleName="mangaka" />}>
-        <Route index element={<Dashboard role="mangaka"/>} />
+        <Route index element={<Dashboard role={roleDisplayNames.mangaka} />} />
         <Route path="series" element={<SeriesManagement role="mangaka" />} />
         <Route path="series/:id" element={<SeriesDetail />} />
         <Route path="tasks" element={<TaskManagement />} />
@@ -72,6 +70,6 @@ export function AppRoutes() {
 
 
       <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    </Routes >
   )
 }

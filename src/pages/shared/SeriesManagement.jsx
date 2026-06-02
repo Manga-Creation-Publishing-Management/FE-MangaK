@@ -38,7 +38,9 @@ export function SeriesManagement({ role }) {
         <div className="grid grid-cols-3 gap-6">
           {seriesData.map(item => (
             <div key={item.id} className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
-              <div className={`h-48 ${item.coverFile}`} />
+              <div className='h-48 w-100 relative'>
+                <img className="w-full h-full object-cover" src={item.coverFile} alt="cover file" />
+              </div>
               <div className="p-6 space-y-4">
                 <div>
                   <h3>{item.title}</h3>

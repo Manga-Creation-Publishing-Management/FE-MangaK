@@ -8,7 +8,7 @@ export function LoginForm() {
 
     return (
         <div className="w-full bg-background border border-border rounded-xl p-8
-         shadow-xl transition-colors duration-300 relative">
+        shadow-xl transition-colors duration-300 relative">
             <div className="space-y-2 mb-8">
                 <h1 className="text-2xl font-extrabold tracking-tight text-foreground">
                     Sign in to Manga<span className="text-accent">K</span>

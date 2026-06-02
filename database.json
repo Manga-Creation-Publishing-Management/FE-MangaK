@@ -10,7 +10,7 @@
       "genres": [
         2
       ],
-      "coverFile": "one-piece-cover.jpg",
+      "coverFile": "https://th.bing.com/th/id/R.d3f983e8f1a75519f6a7068ede61a1dc?rik=FwYUAsoXJjc9sg&pid=ImgRaw&r=0",
       "nameFile": "one-piece"
     },
     {
@@ -23,7 +23,7 @@
       "genres": [
         2
       ],
-      "coverFile": "naruto-cover.jpg",
+      "coverFile": "https://static1.srcdn.com/wordpress/wp-content/uploads/wm/2024/09/naruto-shippuden-konoha-eleven.jpg",
       "nameFile": "naruto"
     },
     {
@@ -38,7 +38,7 @@
         3,
         4
       ],
-      "coverFile": "chainsaw-man-cover.jpg",
+      "coverFile": "https://tse2.mm.bing.net/th/id/OIP.rd9MHC8QzbOF3Rg8Mc8sHgHaFO?rs=1&pid=ImgDetMain&o=7&rm=3",
       "nameFile": "chainsaw-man"
     }
   ],

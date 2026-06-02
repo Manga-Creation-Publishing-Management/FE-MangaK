@@ -5,8 +5,7 @@ export function HomePage() {
   const { navigate } = LoginHook();
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300">
-      {/* Navbar */}
+    <div className="bg-muted min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300">
       <nav className="sticky top-0 z-40 bg-background/90 backdrop-blur border-b border-border transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -35,7 +34,7 @@ export function HomePage() {
       </nav>
 
 
-      <main className="flex-grow max-w-7xl mx-auto px-6 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
+      <main className=" flex-grow max-w-7xl mx-auto px-6 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
 
         <div className="lg:col-span-6 space-y-6 flex flex-col justify-center">
           <div className="bg-primary/10 text-primary text-[10px] md:text-xs font-bold tracking-widest uppercase px-4 py-2 rounded-full w-fit">
@@ -80,7 +79,8 @@ export function HomePage() {
           </div>
         </div>
 
-        <div className="lg:col-span-6 grid grid-cols-2 gap-4 md:gap-5">
+        {/* //image tab */}
+        <div className="animate-smallbounce lg:col-span-6 grid grid-cols-2 gap-4 md:gap-5">
           <div className="flex flex-col gap-4 md:gap-5 justify-center">
             <img
               src="https://images.unsplash.com/photo-1763732397784-c5ff2651d40c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxtYW5nYSUyMHBhZ2VzJTIwYmxhY2slMjB3aGl0ZSUyMGNvbWljJTIwYm9vayUyMHBhbmVscyUyMGlua3xlbnwxfHx8fDE3ODAwMjQ5NjV8MA&ixlib=rb-4.1.0&q=80&w=600"
@@ -94,7 +94,6 @@ export function HomePage() {
             />
           </div>
 
-          {/* Right Sub-column */}
           <div className="flex flex-col gap-4 md:gap-5 justify-center">
             <img
               src="https://images.unsplash.com/photo-1639634252346-0a27c7d168dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYW5nYSUyMHBhZ2VzJTIwYmxhY2slMjB3aGl0ZSUyMGNvbWljJTIwYm9vayUyMHBhbmVscyUyMGlua3xlbnwxfHx8fDE3ODAwMjQ5NjV8MA&ixlib=rb-4.1.0&q=80&w=600"

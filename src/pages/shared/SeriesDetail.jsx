@@ -23,8 +23,10 @@ export function SeriesDetail() {
           <ArrowLeft size={20} />
           Back
         </button>
-        <div className="bg-card border border-border rounded-xl overflow-hidden">
-          <div className={`h-64`} />
+        <div className="bg-card border-border  rounded-xl overflow-hidden">
+          <div className="h-68 w-full relative" >
+            <img className="w-full h-full object-cover" src={validSeriesData?.coverFile} alt="" />
+          </div>
           <div className="p-8 space-y-6">
             <div className="flex justify-between items-start">
               <div className="flex-1">
@@ -41,11 +43,11 @@ export function SeriesDetail() {
                     const nameGenre = genreList?.find(itemGenre => String(itemGenre.id) === String(item))
                     return (
                       <span
-                      key={index}
-                      className="px-3 py-1 text-xs font-medium rounded-full bg-secondary text-secondary-foreground border border-border"
-                    >
-                      {nameGenre.name}
-                    </span>
+                        key={index}
+                        className="px-3 py-1 text-xs font-medium rounded-full bg-secondary text-secondary-foreground border border-border"
+                      >
+                        {nameGenre.name}
+                      </span>
                     )
                   })}
                 </div>
