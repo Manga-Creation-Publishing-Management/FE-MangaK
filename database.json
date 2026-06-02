@@ -1,0 +1,84 @@
+{
+  "series": [
+    {
+      "id": "1",
+      "title": "One Piece",
+      "description": "Câu chuyện về cuộc hành trình của Monkey D. Luffy - thuyền trưởng của băng hải tặc Mũ Rơm và các đồng đội của cậu nhằm tìm kiếm vùng biển bí ẩn nơi lưu giữ kho báu lớn nhất thế giới One Piece.",
+      "status": "processing",
+      "createdAt": "2026-01-15T08:30:00Z",
+      "updatedAt": "2026-05-30T14:20:00Z",
+      "genres": [
+        2
+      ],
+      "coverFile": "https://th.bing.com/th/id/R.d3f983e8f1a75519f6a7068ede61a1dc?rik=FwYUAsoXJjc9sg&pid=ImgRaw&r=0",
+      "nameFile": "one-piece"
+    },
+    {
+      "id": "2",
+      "title": "Naruto",
+      "description": "Hành trình trưởng thành và nỗ lực khẳng định mình của Uzumaki Naruto, một ninja trẻ tuổi bị dân làng hắt hủi vì mang trong mình phong ấn Cửu Vĩ Hồ Ly, với ước mơ trở thành Hokage vĩ đại nhất.",
+      "status": "approved",
+      "createdAt": "2026-02-10T09:15:00Z",
+      "updatedAt": "2026-04-12T10:00:00Z",
+      "genres": [
+        2
+      ],
+      "coverFile": "https://static1.srcdn.com/wordpress/wp-content/uploads/wm/2024/09/naruto-shippuden-konoha-eleven.jpg",
+      "nameFile": "naruto"
+    },
+    {
+      "id": "3",
+      "title": "Chainsaw Man",
+      "description": "Denji, một thanh niên nghèo khổ phải làm thợ săn quỷ để trả nợ. Sau khi bị sát hại, anh đã lập khế ước với chú quỷ cưa Pochita của mình và hồi sinh thành Thợ săn quỷ có cơ thể nửa người nửa cưa.",
+      "status": "processing",
+      "createdAt": "2026-05-01T11:00:00Z",
+      "updatedAt": "2026-05-28T16:45:00Z",
+      "genres": [
+        2,
+        3,
+        4
+      ],
+      "coverFile": "https://tse2.mm.bing.net/th/id/OIP.rd9MHC8QzbOF3Rg8Mc8sHgHaFO?rs=1&pid=ImgDetMain&o=7&rm=3",
+      "nameFile": "chainsaw-man"
+    }
+  ],
+  "genre": [
+    {
+      "id": "1",
+      "name": "Action"
+    },
+    {
+      "id": "2",
+      "name": "Romance"
+    },
+    {
+      "id": "3",
+      "name": "Comedy"
+    },
+    {
+      "id": "4",
+      "name": "Drama"
+    },
+    {
+      "id": "5",
+      "name": "Fantasy"
+    },
+    {
+      "id": "6",
+      "name": "Sci-Fi"
+    },
+    {
+      "id": "7",
+      "name": "Horror"
+    },
+    {
+      "id": "8",
+      "name": "Mystery"
+    },
+    {
+      "id": "9",
+      "name": "Slice of Life"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

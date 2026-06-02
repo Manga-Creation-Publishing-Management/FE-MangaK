@@ -1,0 +1,69 @@
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-background: #faf8fc;
+  --color-foreground: #2d2438;
+  --color-card: #ffffff;
+  --color-card-foreground: #2d2438;
+  --color-primary: #9b7eb8;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #e8d5f2;
+  --color-secondary-foreground: #2d2438;
+  --color-muted: #f0ebf5;
+  --color-muted-foreground: #6b5e7a;
+  --color-accent: #ffb88c;
+  --color-accent-foreground: #2d2438;
+  --color-destructive: #e85d75;
+  --color-destructive-foreground: #ffffff;
+  --color-border: rgba(155, 126, 184, 0.2);
+  --color-ring: #9b7eb8;
+
+  --color-sidebar: #f5f0f9;
+  --color-sidebar-foreground: #2d2438;
+  --color-sidebar-primary: #9b7eb8;
+  --color-sidebar-primary-foreground: #ffffff;
+  --color-sidebar-accent: #e8d5f2;
+  --color-sidebar-accent-foreground: #2d2438;
+  --color-sidebar-border: rgba(155, 126, 184, 0.15);
+  --color-sidebar-ring: #9b7eb8;
+
+  --radius-lg: 0.75rem;
+  --radius-md: calc(0.75rem - 2px);
+  --radius-sm: calc(0.75rem - 4px);
+
+  --color-warning: #f59e0b;
+  --color-success: #10b981;
+  --color-info: #3b82f6;
+
+  --color-border: rgba(155, 126, 184, 0.2);
+}
+
+.dark {
+  --color-background: #1a1525;
+  --color-foreground: #f0ebf5;
+  --color-card: #251e30;
+  --color-card-foreground: #f0ebf5;
+  --color-primary: #b99bd1;
+  --color-primary-foreground: #1a1525;
+  --color-secondary: #3d2f4d;
+  --color-secondary-foreground: #f0ebf5;
+  --color-muted: #2d2438;
+  --color-muted-foreground: #a89bb5;
+  --color-destructive-foreground: #f0ebf5;
+  --color-border: rgba(185, 155, 209, 0.2);
+  --color-ring: #b99bd1;
+
+  --color-sidebar: #1f1929;
+  --color-sidebar-foreground: #f0ebf5;
+  --color-sidebar-primary: #b99bd1;
+  --color-sidebar-primary-foreground: #1a1525;
+  --color-sidebar-accent: #3d2f4d;
+  --color-sidebar-accent-foreground: #f0ebf5;
+  --color-sidebar-border: rgba(185, 155, 209, 0.15);
+  --color-sidebar-ring: #b99bd1;
+
+  --color-warning: #fbbf24;
+  --color-success: #34d399;
+  --color-info: #60a5fa;
+  --color-border: rgba(185, 155, 209, 0.2);
+}

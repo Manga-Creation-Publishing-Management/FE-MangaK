@@ -1,15 +1,17 @@
-import { useState } from 'react'
-import '../styles/global.css'
 
-function App() {
+import '../styles/global.css';
+import { BrowserRouter } from 'react-router';
+import { AppRoutes } from '../routes/AppRoutes';
+import { ThemeProvider } from '../features/theme/ThemeContext.jsx'
+import { ThemeToggle } from '../shared/components/ThemeToggle.jsx'
 
+export default function App() {
   return (
-    <>
-    <h1 className='text-3xl font-bold underline'>
-      Hello world!
-    </h1>
-    </>
+    <ThemeProvider>
+      <BrowserRouter>
+        <AppRoutes/>
+      </BrowserRouter>
+      <ThemeToggle />
+    </ThemeProvider>
   )
 }
-
-export default App
