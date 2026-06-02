@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate, Outlet } from 'react-router';
-import { SeriesManagement } from "../pages/mangaka/SeriesManagement"
+import { SeriesManagement } from "../pages/shared/SeriesManagement.jsx"
 import { Sidebar } from '../pages/shared/Sidebar';
 import { HeaderPage } from '../pages/shared/HeaderPage';
 import avatarImgDemo from '../pages/shared/avatarImgDemo.png';
@@ -7,9 +7,9 @@ import { TaskManagement } from '../pages/mangaka/TaskManagement';
 import { MyTask } from '../pages/assistant/MyTask';
 import { SeriesReview } from '../pages/tantouEditor/SeriesReview';
 import { PublishingSchedule } from '../pages/editorialBoard/PublishingSchedule';
-import { WelcomeLine } from '../pages/shared/WelcomeLine.jsx';
-import { OverviewCard } from '../pages/shared/OverviewCard.jsx';
 import { LogIn } from 'lucide-react';
+import { SeriesDetail } from '../pages/shared/SeriesDetail.jsx';
+import { Dashboard } from '../pages/shared/Dashboard.jsx';
 
 const roleDisplayNames = {
   mangaka: "Mangaka",
@@ -30,9 +30,9 @@ function Layout({ roleName }) {
 
       <main className="flex-1 flex flex-col h-full overflow-hidden bg-background">
         <HeaderPage roleName={displayRole} avatarUrl={url} />
-        <WelcomeLine roleName={displayRole} />
-        <OverviewCard iconName={<LogIn color="#ebbfff" size={50} />} iconColor="bg-[#c8b4d1]" contentText="Assigned series" valueNum={3} />
-        <div className="flex-1 overflow-y-auto p-6">
+        {/* <WelcomeLine roleName={displayRole} />
+        <OverviewCard iconName={<LogIn color="#ebbfff" size={50} />} iconColor="bg-[#c8b4d1]" contentText="Assigned series" valueNum={3} /> */}
+        <div className="flex-1 overflow-y-auto p-1">
           <Outlet />
         </div>
       </main>
@@ -45,7 +45,9 @@ export function AppRoutes() {
     <Routes>
 
       <Route path="/mangaka" element={<Layout roleName="mangaka" />}>
-        <Route path="series" element={<SeriesManagement />} />
+        <Route index element={<Dashboard role="mangaka"/>} />
+        <Route path="series" element={<SeriesManagement role="mangaka" />} />
+        <Route path="series/:id" element={<SeriesDetail />} />
         <Route path="tasks" element={<TaskManagement />} />
       </Route>
 

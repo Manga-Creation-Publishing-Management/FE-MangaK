@@ -5,7 +5,8 @@ export default function useCreateSeries(onClose, onReload ) {
 
   const [genreList, setGenreList] = useState([]);
   const [selectGenres, setSelectGenres] = useState([]);
-  const [seriesData, setSeriesData] = useState({});
+  const [formSeriesData, setFormSeriesData] = useState({});
+  const [seriesData, setSeriesData] = useState([]);
 
   const [coverFile, setCoverFile] = useState(null);
   const [storyFile, setStoryFile] = useState(null);
@@ -15,8 +16,10 @@ export default function useCreateSeries(onClose, onReload ) {
 
   useEffect(() => {
     const fetchApi = async () => {
-      const results = await get("genre");
-      setGenreList(results);
+      const resultsGenre = await get("genre");
+      const resultsSeries = await get("series");
+      setGenreList(resultsGenre);
+      setSeriesData(resultsSeries);
     };
     fetchApi();
   }, [])
@@ -35,8 +38,8 @@ export default function useCreateSeries(onClose, onReload ) {
     // console.log(e);
     const name = e.target.name;
     const value = e.target.value;
-    setSeriesData({
-      ...seriesData,
+    setFormSeriesData({
+      ...formSeriesData,
       [name]: value,
     })
   }
@@ -57,7 +60,7 @@ export default function useCreateSeries(onClose, onReload ) {
     e.preventDefault();
 
     const data = {
-      ...seriesData,
+      ...formSeriesData,
       genres: selectGenres,
       coverFile: coverFile ? coverFile.name : "default-cover.jpg",
       nameFile: storyFile ? storyFile.name : "default-story"
@@ -72,7 +75,7 @@ export default function useCreateSeries(onClose, onReload ) {
       }
 
     } catch (error) {
-      console.log("error");
+      console.log("error", error);
     }
 
     
@@ -84,6 +87,8 @@ export default function useCreateSeries(onClose, onReload ) {
     storyFile,
     coverInputRef,
     storyInputRef,
+    seriesData,
+    formSeriesData,
     handleActive,
     handleChange,
     handleCoverChange,
