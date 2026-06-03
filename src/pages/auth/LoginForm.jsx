@@ -25,11 +25,13 @@ export function LoginForm() {
                     <label className="text text-xs font-bold tracking-widest text-muted-foreground uppercase">
                         Email
                     </label>
-                    <div className="w-full bg-muted/40 border border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 rounded-xl px-4 py-3 flex items-center gap-3 transition-all">
+                    <div className="w-full bg-muted/40 border border-border focus-within:border-primary focus-within:ring-2 
+                    focus-within:ring-primary/20 rounded-xl px-4 py-3 flex items-center gap-3 transition-all">
                         <User size={18} className="text-muted-foreground/80 shrink-0" />
 
                         <input
-                            type="text"
+                            type="email"
+                            required
                             placeholder="Enter email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -45,12 +47,7 @@ export function LoginForm() {
                         <label className="text text-xs font-bold tracking-widest text-muted-foreground uppercase">
                             Password
                         </label>
-                        <a
-                            href="#"
-                            className="text-xs font-semibold text-primary hover:underline"
-                        >
-                            Forgot password?
-                        </a>
+
                     </div>
                     <div className="w-full bg-muted/40 border border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 rounded-xl px-4 py-3 flex items-center gap-3 transition-all">
                         <Lock size={18} className="text-muted-foreground/80 shrink-0" />
@@ -68,6 +65,14 @@ export function LoginForm() {
                         >
                             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>
+                    </div>
+                    <div className='flex w-full justify-end'>
+                        <a
+                            href="#"
+                            className="text-xs font-semibold text-primary hover:underline"
+                        >
+                            Forgot password?
+                        </a>
                     </div>
                 </div>
 

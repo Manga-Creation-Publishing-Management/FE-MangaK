@@ -5,8 +5,8 @@ export function HeaderPage({ roleName, avatarUrl }) {
     const { navigate } = LoginHook();
     return (
         <>
-            <div className="grid grid-cols-12 shadow p-2 px-8 bg-background">
-                <div className="col-span-1 px-2 content-center">
+            <div className="grid grid-cols-12 shadow p-2 px-8 bg-card">
+                <div className="hidden md:block col-span-1 px-2 content-center">
                     <img className="rounded-full w-10"
                         src={avatarUrl} alt="Avatar Image" />
 
