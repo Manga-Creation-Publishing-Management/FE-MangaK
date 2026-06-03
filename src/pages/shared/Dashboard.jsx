@@ -5,7 +5,7 @@ import { WelcomeLine } from "./WelcomeLine";
 export function Dashboard({ role }) {
   return (
     <>
-      {role == "mangaka" && (
+      {role == "Mangaka" && (
         <>
           <WelcomeLine roleName={role} />
           <div className="grid grid-cols-2 gap-6 w-full" >

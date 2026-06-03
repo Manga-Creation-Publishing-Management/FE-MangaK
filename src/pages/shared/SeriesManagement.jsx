@@ -48,7 +48,7 @@ export function SeriesManagement({ role }) {
                 </div>
                 <StatusBadge status={item.status} />
                 <button className="cursor-pointer w-full block text-center mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-                  onClick={() => handleNavigate(item.id)}
+                  onClick={() => handleNavigate(role, item.id)}
                 >
                   View Detail
                 </button>

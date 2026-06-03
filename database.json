@@ -80,5 +80,67 @@
       "name": "Slice of Life"
     }
   ],
+  "chapter": [
+    {
+      "id": "1",
+      "seriesId": "1",
+      "chapterNumber": 1,
+      "title": "Romance Dawn",
+      "summary": "Giới thiệu về Monkey D. Luffy và ước mơ trở thành Vua Hải Tặc sau khi ăn nhầm trái ác quỷ Gomu Gomu.",
+      "manuscriptFileUrl": "https://storage.example.com/manuscripts/one-piece/ch1_raw.docx",
+      "chapterFileUrl": "https://storage.example.com/chapters/one-piece/chapter-1.pdf",
+      "status": "approved",
+      "createdAt": "2026-01-16T10:00:00Z",
+      "updatedAt": "2026-01-20T15:30:00Z"
+    },
+    {
+      "id": "2",
+      "seriesId": "1",
+      "chapterNumber": 2,
+      "title": "Chàng Trai Mũ Rơm Luffy",
+      "summary": "Luffy ra khơi và gặp gỡ Coby, người bạn đầu tiên trên hành trình của mình.",
+      "manuscriptFileUrl": "https://storage.example.com/manuscripts/one-piece/ch2_raw.docx",
+      "chapterFileUrl": "https://storage.example.com/chapters/one-piece/chapter-2.pdf",
+      "status": "processing",
+      "createdAt": "2026-05-29T09:00:00Z",
+      "updatedAt": "2026-05-30T14:20:00Z"
+    },
+    {
+      "id": "3",
+      "seriesId": "2",
+      "chapterNumber": 1,
+      "title": "Uzumaki Naruto!",
+      "summary": "Naruto vượt qua kỳ thi tốt nghiệp ninja bằng nhẫn thuật Đa Trọng Ảnh Phân Thân và được thầy Iruka công nhận.",
+      "manuscriptFileUrl": "https://storage.example.com/manuscripts/naruto/ch1_raw.docx",
+      "chapterFileUrl": "https://storage.example.com/chapters/naruto/chapter-1.pdf",
+      "status": "approved",
+      "createdAt": "2026-02-11T14:00:00Z",
+      "updatedAt": "2026-02-12T10:00:00Z"
+    },
+    {
+      "id": "4",
+      "seriesId": "2",
+      "chapterNumber": 2,
+      "title": "Konohamaru fdsf  sdf sdf ds f ds f ds fsd f dsflfdnlk sdg  sgushfiuwe dsfdsf fsd fsdfsdf fsdfsdfdsf fsdfd ",
+      "summary": "Naruto gặp gỡ Konohamaru - cháu trai của Hokage Đệ Tam và trở thành người thầy đầu tiên của cậu bé.",
+      "manuscriptFileUrl": "https://storage.example.com/manuscripts/naruto/ch2_raw.docx",
+      "chapterFileUrl": "https://storage.example.com/chapters/naruto/chapter-2.pdf",
+      "status": "approved",
+      "createdAt": "2026-02-15T08:00:00Z",
+      "updatedAt": "2026-04-12T10:00:00Z"
+    },
+    {
+      "id": "5",
+      "seriesId": "3",
+      "chapterNumber": 1,
+      "title": "Chó và Cưa",
+      "summary": "Denji bị băng đảng Yakuza sát hại và được hồi sinh nhờ khế ước với Pochita, trở thành Chainsaw Man.",
+      "manuscriptFileUrl": "https://storage.example.com/manuscripts/chainsaw-man/ch1_raw.docx",
+      "chapterFileUrl": "https://storage.example.com/chapters/chainsaw-man/chapter-1.pdf",
+      "status": "processing",
+      "createdAt": "2026-05-02T13:00:00Z",
+      "updatedAt": "2026-05-28T16:45:00Z"
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }

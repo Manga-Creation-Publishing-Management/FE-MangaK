@@ -12,6 +12,7 @@ import { SeriesDetail } from '../pages/shared/SeriesDetail.jsx';
 import { Dashboard } from '../pages/shared/Dashboard.jsx';
 import { HomePage } from '../pages/shared/HomePage.jsx';
 import { LoginPage } from '../pages/auth/LoginPage.jsx';
+import { ChapterDetail } from '../pages/mangaka/ChapterDetail.jsx';
 const roleDisplayNames = {
   mangaka: "Mangaka",
   assistant: "Assistant",
@@ -49,6 +50,8 @@ export function AppRoutes() {
         <Route index element={<Dashboard role={roleDisplayNames.mangaka} />} />
         <Route path="series" element={<SeriesManagement role="mangaka" />} />
         <Route path="series/:id" element={<SeriesDetail />} />
+        <Route path="chapter/:chapterId" element={<ChapterDetail />} />
+
         <Route path="tasks" element={<TaskManagement />} />
       </Route>
 
