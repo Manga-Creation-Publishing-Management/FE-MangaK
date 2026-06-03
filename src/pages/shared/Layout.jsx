@@ -13,7 +13,7 @@ const roleDisplayNames = {
   reader: "Reader"
 };
 
-export function DashboardLayout({ roleName }) {
+export function Layout({ roleName }) {
   const [pageHeader, setPageHeader] = useState(null);
   const displayRole = roleDisplayNames[roleName] || roleName;
 
@@ -35,7 +35,7 @@ export function DashboardLayout({ roleName }) {
             </div>
           </div>
         )}
-        <div className="flex-1 overflow-y-auto p-1">
+        <div className="flex-1 overflow-y-auto p-1 bg-background">
           <Outlet context={{ setPageHeader }} />
         </div>
       </main>

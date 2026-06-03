@@ -5,26 +5,26 @@ import { useLocation } from 'react-router';
 export function ProfilePage() {
   const location = useLocation();
   const role = location.pathname.includes('mangaka') ? 'mangaka' :
-               location.pathname.includes('assistant') ? 'assistant' :
-               location.pathname.includes('tantou') ? 'tantou' :
-               location.pathname.includes('admin') ? 'admin' : 'editorial';
+    location.pathname.includes('assistant') ? 'assistant' :
+      location.pathname.includes('tantou') ? 'tantou' :
+        location.pathname.includes('admin') ? 'admin' : 'editorial';
 
   const [profileData, setProfileData] = useState({
     firstName: role === 'mangaka' ? 'Akira' :
-               role === 'assistant' ? 'John' :
-               role === 'tantou' ? 'Editor' :
-               role === 'admin' ? 'System' : 'Editorial',
+      role === 'assistant' ? 'John' :
+        role === 'tantou' ? 'Editor' :
+          role === 'admin' ? 'System' : 'Editorial',
     lastName: role === 'mangaka' ? 'Tanaka' :
-              role === 'assistant' ? 'Doe' :
-              role === 'tantou' ? 'Yamamoto' :
-              role === 'admin' ? 'Administrator' : 'Board',
+      role === 'assistant' ? 'Doe' :
+        role === 'tantou' ? 'Yamamoto' :
+          role === 'admin' ? 'Administrator' : 'Board',
     email: 'user@example.com',
     phone: '+1 234 567 8900',
     bio: role === 'mangaka' ? 'Professional mangaka with 5+ years experience in action and fantasy genres.' :
-         role === 'assistant' ? 'Skilled assistant specializing in lineart and coloring.' :
-         role === 'tantou' ? 'Experienced editor managing multiple successful series.' :
-         role === 'admin' ? 'System administrator overseeing platform configuration and user management.' :
-         'Editorial board member overseeing publication strategy.',
+      role === 'assistant' ? 'Skilled assistant specializing in lineart and coloring.' :
+        role === 'tantou' ? 'Experienced editor managing multiple successful series.' :
+          role === 'admin' ? 'System administrator overseeing platform configuration and user management.' :
+            'Editorial board member overseeing publication strategy.',
   });
 
   const handleSaveProfile = () => {
@@ -43,7 +43,7 @@ export function ProfilePage() {
   return (
     <div className="p-8 space-y-8">
       <div>
-        <h1>Profile Settings</h1>
+        <h1 className='text-sidebar-foreground font-medium text-2xl pb-1'>Profile Settings</h1>
         <p className="text-muted-foreground mt-1">Manage your account information and preferences</p>
       </div>
 

@@ -14,7 +14,6 @@ export function Sidebar({ userRole }) {
   const menuItems = {
     reader: [
       { icon: Home, label: 'Dashboard', path: '/reader', key: 'dashboard' },
-      { icon: BookMarked, label: 'Browse Series', path: '/reader/browse', key: 'browse' }, // Nên sửa lại path cụ thể thay vì trùng với dashboard
       { icon: Settings, label: 'Profile & Settings', path: '/reader/profile', key: 'profile' },
     ],
     admin: [
