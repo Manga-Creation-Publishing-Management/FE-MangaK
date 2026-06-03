@@ -39,6 +39,7 @@ export function AppRoutes() {
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
 
+
       <Route path="/mangaka" element={<Layout roleName="mangaka" />}>
         <Route index element={<MangakaDashboard />} />
         <Route path="series" element={<SeriesManagement role="mangaka" />} />
