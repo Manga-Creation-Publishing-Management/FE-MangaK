@@ -1,6 +1,7 @@
 import { usePublishingSchedule } from '../../features/schedule/PublishingSchedule';
 import { Calendar, Clock, Plus, Edit, Trash2 } from 'lucide-react';
 import { StatusBadge } from '@/pages/shared/StatusBadge';
+import { OverviewCard } from '../shared/OverviewCard';
 
 export function PublishingSchedule() {
   const {
@@ -34,27 +35,24 @@ export function PublishingSchedule() {
       </div>
 
       <div className="grid grid-cols-3 gap-6">
-        <div className="bg-card border border-border rounded-xl p-6">
-          <div className="w-12 h-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-4">
-            <Calendar size={24} />
-          </div>
-          <p className="text-muted-foreground text-sm">Active Schedules</p>
-          <p className="text-2xl mt-1">{schedules.filter(s => s.status === 'active').length}</p>
-        </div>
-        <div className="bg-card border border-border rounded-xl p-6">
-          <div className="w-12 h-12 rounded-lg bg-success/10 text-success flex items-center justify-center mb-4">
-            <Clock size={24} />
-          </div>
-          <p className="text-muted-foreground text-sm">This Month Releases</p>
-          <p className="text-2xl mt-1">18</p>
-        </div>
-        <div className="bg-card border border-border rounded-xl p-6">
-          <div className="w-12 h-12 rounded-lg bg-info/10 text-info flex items-center justify-center mb-4">
-            <Calendar size={24} />
-          </div>
-          <p className="text-muted-foreground text-sm">Total Series Scheduled</p>
-          <p className="text-2xl mt-1">{schedules.length}</p>
-        </div>
+        <OverviewCard
+          iconName={<Calendar size={24} />}
+          iconColor="#3b82f6" // custom color
+          contentText="Active Schedules"
+          valueNum={schedules.filter(s => s.status === 'active').length}
+        />
+        <OverviewCard
+          iconName={<Clock size={24} />}
+          iconColor="#10b981"
+          contentText="This Month Releases"
+          valueNum={18}
+        />
+        <OverviewCard
+          iconName={<Calendar size={24} />}
+          iconColor="#06b6d4"
+          contentText="Total Series Scheduled"
+          valueNum={schedules.length}
+        />
       </div>
 
       <div>
@@ -127,18 +125,16 @@ export function PublishingSchedule() {
                 <div className="grid grid-cols-2 gap-4">
                   <button
                     onClick={() => setFrequency('weekly')}
-                    className={`p-4 rounded-lg border-2 text-left transition-all ${
-                      frequency === 'weekly' ? 'border-primary bg-primary/10' : 'border-border'
-                    }`}
+                    className={`p-4 rounded-lg border-2 text-left transition-all ${frequency === 'weekly' ? 'border-primary bg-primary/10' : 'border-border'
+                      }`}
                   >
                     <p className="font-medium">Weekly</p>
                     <p className="text-sm text-muted-foreground">New chapter every week</p>
                   </button>
                   <button
                     onClick={() => setFrequency('monthly')}
-                    className={`p-4 rounded-lg border-2 text-left transition-all ${
-                      frequency === 'monthly' ? 'border-primary bg-primary/10' : 'border-border'
-                    }`}
+                    className={`p-4 rounded-lg border-2 text-left transition-all ${frequency === 'monthly' ? 'border-primary bg-primary/10' : 'border-border'
+                      }`}
                   >
                     <p className="font-medium">Monthly</p>
                     <p className="text-sm text-muted-foreground">New chapter every month</p>

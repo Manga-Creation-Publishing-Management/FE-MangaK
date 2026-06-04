@@ -12,6 +12,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { WelcomeLine } from "../shared/WelcomeLine.jsx";
+import { OverviewCard } from "../shared/OverviewCard.jsx";
 
 const roleLabels = {
   mangaka: "Mangaka",
@@ -169,10 +170,10 @@ export function AdminDashboard() {
       prev.map((u) =>
         u.id === confirmAction.user.id
           ? {
-              ...u,
-              status:
-                confirmAction.action === "suspend" ? "suspended" : "active",
-            }
+            ...u,
+            status:
+              confirmAction.action === "suspend" ? "suspended" : "active",
+          }
           : u,
       ),
     );
@@ -289,21 +290,17 @@ export function AdminDashboard() {
           {stats.map((stat) => {
             const Icon = stat.icon;
             return (
-              <div
+              <OverviewCard
                 key={stat.label}
-                className="bg-card border border-border rounded-xl p-6"
-              >
-                <div
-                  className={`w-12 h-12 rounded-lg ${stat.color} flex items-center justify-center mb-4`}
-                >
-                  <Icon size={24} />
-                </div>
-                <p className="text-muted-foreground text-sm">{stat.label}</p>
-                <p className="text-2xl mt-1">{stat.value}</p>
-              </div>
+                iconName={<Icon size={24} />}
+                iconColor={stat.color.includes("text-primary") ? "#3b82f6" : stat.color.includes("text-success") ? "#10b981" : stat.color.includes("text-destructive") ? "#ef4444" : "#06b6d4"}
+                contentText={stat.label}
+                valueNum={stat.value}
+              />
             );
           })}
         </div>
+
 
         {/* Filters */}
         <div className="flex gap-4 items-center">
@@ -408,11 +405,10 @@ export function AdminDashboard() {
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`px-3 py-1 rounded-full border text-sm ${
-                          user.status === "active"
-                            ? "bg-success/10 text-success border-success/30"
-                            : "bg-destructive/10 text-destructive border-destructive/30"
-                        }`}
+                        className={`px-3 py-1 rounded-full border text-sm ${user.status === "active"
+                          ? "bg-success/10 text-success border-success/30"
+                          : "bg-destructive/10 text-destructive border-destructive/30"
+                          }`}
                       >
                         {user.status === "active" ? "Active" : "Suspended"}
                       </span>
@@ -423,11 +419,10 @@ export function AdminDashboard() {
                     <td className="px-6 py-4">
                       <button
                         onClick={() => handleToggleStatus(user)}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                          user.status === "active"
-                            ? "text-destructive hover:bg-destructive/10 border border-destructive/30"
-                            : "text-success hover:bg-success/10 border border-success/30"
-                        }`}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${user.status === "active"
+                          ? "text-destructive hover:bg-destructive/10 border border-destructive/30"
+                          : "text-success hover:bg-success/10 border border-success/30"
+                          }`}
                       >
                         {user.status === "active" ? (
                           <UserX size={15} />
@@ -633,11 +628,10 @@ export function AdminDashboard() {
                 </button>
                 <button
                   onClick={confirmToggle}
-                  className={`flex-1 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity ${
-                    confirmAction.action === "suspend"
-                      ? "bg-destructive text-destructive-foreground"
-                      : "bg-success text-success-foreground"
-                  }`}
+                  className={`flex-1 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity ${confirmAction.action === "suspend"
+                    ? "bg-destructive text-destructive-foreground"
+                    : "bg-success text-success-foreground"
+                    }`}
                 >
                   {confirmAction.action === "suspend" ? "Suspend" : "Activate"}
                 </button>
