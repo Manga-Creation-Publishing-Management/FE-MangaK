@@ -57,12 +57,16 @@ export function AppRoutes() {
       <Route path="/tantou" element={<Layout roleName="tantou" />}>
         <Route index element={<TantouDashboard />} />
         <Route path="series" element={<SeriesReview />} />
+        <Route path="series/:id" element={<SeriesDetail />} />
+        <Route path="chapter/:chapterId" element={<ChapterDetail />} />
         <Route path="profile" element={<ProfilePage />} />
       </Route>
 
       <Route path="/editorial" element={<Layout roleName="editorial" />}>
         <Route index element={<EditorialDashboard />} />
         <Route path="series" element={<SeriesReview />} />
+        <Route path="series/:id" element={<SeriesDetail />} />
+        <Route path="chapter/:chapterId" element={<ChapterDetail />} />
         <Route path="schedule" element={<PublishingSchedule />} />
         <Route path="voting" element={<VotingDataImport />} />
         <Route path="profile" element={<ProfilePage />} />
