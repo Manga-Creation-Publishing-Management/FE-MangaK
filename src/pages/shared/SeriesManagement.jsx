@@ -44,11 +44,11 @@ export function SeriesManagement({ role }) {
               <div className="p-6 space-y-4">
                 <div>
                   <h3>{item.title}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">0 Chpaters</p>
+                  <p className="text-sm text-muted-foreground mt-1">0 Chapters</p>
                 </div>
                 <StatusBadge status={item.status} />
                 <button className="cursor-pointer w-full block text-center mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-                  onClick={() => handleNavigate(item.id)}
+                  onClick={() => handleNavigate(role, item.id)}
                 >
                   View Detail
                 </button>

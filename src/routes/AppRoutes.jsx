@@ -10,11 +10,10 @@ import { PublishingSchedule } from '../pages/editorialBoard/PublishingSchedule';
 import { SeriesDetail } from '../pages/shared/SeriesDetail.jsx';
 import { HomePage } from '../pages/shared/HomePage.jsx';
 import { LoginPage } from '../pages/auth/LoginPage.jsx';
+import { ChapterDetail } from '../pages/mangaka/ChapterDetail.jsx';
 import { ProfilePage } from '../pages/shared/ProfilePage.jsx';
 import { Layout } from '../pages/shared/Layout.jsx';
 import { AdminDashboard } from '../pages/admin/AdminDashboard.jsx';
-
-// Dashboards
 import { MangakaDashboard } from '../pages/mangaka/MangakaDashboard.jsx';
 import { AssistantDashboard } from '../pages/assistant/AssistantDashboard.jsx';
 import { TantouDashboard } from '../pages/tantouEditor/TantouDashboard.jsx';
@@ -44,6 +43,8 @@ export function AppRoutes() {
         <Route index element={<MangakaDashboard />} />
         <Route path="series" element={<SeriesManagement role="mangaka" />} />
         <Route path="series/:id" element={<SeriesDetail />} />
+        <Route path="chapter/:chapterId" element={<ChapterDetail />} />
+
         <Route path="tasks" element={<TaskManagement />} />
         <Route path="profile" element={<ProfilePage />} />
       </Route>
@@ -57,12 +58,16 @@ export function AppRoutes() {
       <Route path="/tantou" element={<Layout roleName="tantou" />}>
         <Route index element={<TantouDashboard />} />
         <Route path="series" element={<SeriesReview />} />
+        <Route path="series/:id" element={<SeriesDetail />} />
+        <Route path="chapter/:chapterId" element={<ChapterDetail />} />
         <Route path="profile" element={<ProfilePage />} />
       </Route>
 
       <Route path="/editorial" element={<Layout roleName="editorial" />}>
         <Route index element={<EditorialDashboard />} />
         <Route path="series" element={<SeriesReview />} />
+        <Route path="series/:id" element={<SeriesDetail />} />
+        <Route path="chapter/:chapterId" element={<ChapterDetail />} />
         <Route path="schedule" element={<PublishingSchedule />} />
         <Route path="voting" element={<VotingDataImport />} />
         <Route path="profile" element={<ProfilePage />} />
