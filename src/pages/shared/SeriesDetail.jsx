@@ -3,6 +3,7 @@ import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { Outlet, useLocation, useParams } from "react-router";
 import { StatusBadge } from "./StatusBadge";
 import { ChapterList } from "../../features/chapters/components/ChapterList";
+import { ApprovalPanel } from "./ApprovalPanel";
 
 export function SeriesDetail() {
 
@@ -66,7 +67,13 @@ export function SeriesDetail() {
 
         </div>
         <ChapterList roleName={roleFromState} seriesData={validSeriesData} />
+
+        {/* feedback box for roles tantou and editorial */}
+        {roleFromState == ('tantou' || 'editorial') &&
+          <ApprovalPanel />
+        }
       </div >
+
     </>
   )
 }
