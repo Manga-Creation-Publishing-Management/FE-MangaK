@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {
   Home, FolderKanban, DollarSign, TrendingUp, Settings,
   CalendarClock, CheckSquare, ClipboardList, FileSearch, BookMarked,
-  Menu
+  Menu, Upload
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router';
 import { Logo } from '../../shared/components/Logo';
@@ -14,7 +14,6 @@ export function Sidebar({ userRole }) {
   const menuItems = {
     reader: [
       { icon: Home, label: 'Dashboard', path: '/reader', key: 'dashboard' },
-      { icon: BookMarked, label: 'Browse Series', path: '/reader/browse', key: 'browse' }, // Nên sửa lại path cụ thể thay vì trùng với dashboard
       { icon: Settings, label: 'Profile & Settings', path: '/reader/profile', key: 'profile' },
     ],
     admin: [
@@ -44,6 +43,7 @@ export function Sidebar({ userRole }) {
       { icon: Home, label: 'Dashboard', path: '/editorial', key: 'dashboard' },
       { icon: FileSearch, label: 'Series Approval', path: '/editorial/series', key: 'series' },
       { icon: CalendarClock, label: 'Publishing Schedule', path: '/editorial/schedule', key: 'schedule' },
+      { icon: Upload, label: 'Rating Data Import', path: '/editorial/voting', key: 'voting' },
       { icon: TrendingUp, label: 'Leaderboard', path: '/editorial/tracking', key: 'tracking' },
       { icon: Settings, label: 'Profile & Settings', path: '/editorial/profile', key: 'profile' },
     ],
