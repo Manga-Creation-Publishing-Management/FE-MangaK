@@ -12,7 +12,7 @@ export function useSeriesManagement() {
   }
 
   const handleNavigateToChapter = (role, seriesId, chapterData) => {
-    navigate(`/${role}/chapter/${chapterData}`, { state: { role } });
+    navigate(`/${role}/chapter/${chapterData}`, { state: { role, seriesId, chapterData } });
   }
 
   const handleReload = () => {
