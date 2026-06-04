@@ -5,6 +5,7 @@ import { useSeriesManagement } from "../../features/series/hooks/useSeriesManage
 import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { StatusBadge } from "./StatusBadge";
 
+
 export function SeriesManagement({ role }) {
 
   const {
@@ -60,6 +61,7 @@ export function SeriesManagement({ role }) {
 
       </div>
       {showCreateSeriesModal && (<CreateSeriesModal onClose={handleClick} onReload={handleReload} />)}
+
 
     </>
 

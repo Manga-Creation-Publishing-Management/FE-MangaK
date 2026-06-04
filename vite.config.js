@@ -10,5 +10,15 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+    //config tránh CROS trong Vite
+    server: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:5000', //tùy đổi theo cổng của DB
+          changeOrigin: true,
+          secure: true
+        }
+      }
+    }
   },
 })

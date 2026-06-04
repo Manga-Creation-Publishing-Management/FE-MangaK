@@ -7,7 +7,7 @@ export function useSeriesManagement() {
 
   const navigate = useNavigate();
 
-  const handleNavigate = (role,seriesId) => {
+  const handleNavigate = (role, seriesId) => {
     navigate(`/${role}/series/${seriesId}`, { state: { role } });
   }
 
