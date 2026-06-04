@@ -65,7 +65,7 @@ export function SeriesDetail() {
           </div>
 
         </div>
-        <ChapterList roleName={roleFromState} seriesData={validSeriesData}/>
+        <ChapterList roleName={roleFromState} seriesData={validSeriesData} />
       </div >
     </>
   )
