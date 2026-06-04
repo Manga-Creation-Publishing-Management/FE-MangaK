@@ -16,7 +16,7 @@ export default defineConfig({
         '/api': {
           target: 'http://localhost:5000', //tùy đổi theo cổng của DB
           changeOrigin: true,
-          secure: true
+          secure: false
         }
       }
     }

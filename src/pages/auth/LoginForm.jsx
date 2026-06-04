@@ -4,7 +4,11 @@ import { LoginHook } from '../../features/auth/hooks/LoginHook';
 
 export function LoginForm() {
 
-    const { email, setEmail, password, setPassword, showPassword, setShowPassword, handleSignIn } = LoginHook();
+    const {
+        email, setEmail, password, setPassword,
+        showPassword, setShowPassword, handleSignIn,
+        error, isLoading
+    } = LoginHook();
 
     return (
         <div className="w-full bg-background border border-border rounded-xl p-8
@@ -52,6 +56,7 @@ export function LoginForm() {
                     <div className="w-full bg-muted/40 border border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 rounded-xl px-4 py-3 flex items-center gap-3 transition-all">
                         <Lock size={18} className="text-muted-foreground/80 shrink-0" />
                         <input
+                            required
                             type={showPassword ? 'text' : 'password'}
                             placeholder="Enter password"
                             value={password}
@@ -76,12 +81,13 @@ export function LoginForm() {
                     </div>
                 </div>
 
-                {/* Sign In Button */}
+                {error && <p className='text-warning font-sm'> {error} </p>}
+
                 <button
-                    type="submit"
+                    type="submit" disabled={isLoading}
                     className="w-full py-3.5 bg-primary text-primary-foreground font-semibold rounded-xl hover:opacity-95 transition-opacity shadow-sm text-sm mt-6 cursor-pointer"
                 >
-                    Sign In
+                    {isLoading ? 'Loging in...' : 'Log In'}
                 </button>
             </form>
 
@@ -95,6 +101,6 @@ export function LoginForm() {
                     Register now
                 </a>
             </div>
-        </div>
+        </div >
     )
 }
