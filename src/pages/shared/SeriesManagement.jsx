@@ -5,6 +5,7 @@ import { useSeriesManagement } from "../../features/series/hooks/useSeriesManage
 import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { StatusBadge } from "./StatusBadge";
 
+
 export function SeriesManagement({ role }) {
 
   const {
@@ -19,12 +20,12 @@ export function SeriesManagement({ role }) {
 
   return (
     <>
-      <div className="p-8 space-y-8">
+      <div className="p-3 mb-5">
         {role === "mangaka" &&
           <div className="flex justify-between items-center">
             <div>
-              <h1>Series Management</h1>
-              <p className="text-muted-foreground mt-1">Manage your series and chapters</p>
+              <h1 className="text-sidebar-foreground font-medium text-2xl pb-1">Series Management</h1>
+              <p className="text-muted-foreground">Manage your series and chapters</p>
             </div>
             <button
               onClick={handleClick}
@@ -44,11 +45,11 @@ export function SeriesManagement({ role }) {
               <div className="p-6 space-y-4">
                 <div>
                   <h3>{item.title}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">0 Chpaters</p>
+                  <p className="text-sm text-muted-foreground mt-1">0 Chapters</p>
                 </div>
                 <StatusBadge status={item.status} />
                 <button className="cursor-pointer w-full block text-center mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-                  onClick={() => handleNavigate(item.id)}
+                  onClick={() => handleNavigate(role, item.id)}
                 >
                   View Detail
                 </button>
@@ -57,9 +58,9 @@ export function SeriesManagement({ role }) {
           ))}
 
         </div>
-
       </div>
       {showCreateSeriesModal && (<CreateSeriesModal onClose={handleClick} onReload={handleReload} />)}
+
 
     </>
 

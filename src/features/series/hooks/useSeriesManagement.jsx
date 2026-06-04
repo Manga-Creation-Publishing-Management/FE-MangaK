@@ -7,10 +7,13 @@ export function useSeriesManagement() {
 
   const navigate = useNavigate();
 
-  const handleNavigate = (seriesId) => {
-    navigate(`${seriesId}`)
+  const handleNavigate = (role, seriesId) => {
+    navigate(`/${role}/series/${seriesId}`, { state: { role } });
   }
 
+  const handleNavigateToChapter = (role, seriesId, chapterData) => {
+    navigate(`/${role}/chapter/${chapterData}`, { state: { role } });
+  }
 
   const handleReload = () => {
     setReload(!reload);
@@ -24,6 +27,7 @@ export function useSeriesManagement() {
     reload,
     handleReload,
     handleClick,
-    handleNavigate
+    handleNavigate,
+    handleNavigateToChapter
   };
 }
