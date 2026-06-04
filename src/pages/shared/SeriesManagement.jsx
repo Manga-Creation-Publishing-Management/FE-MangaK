@@ -6,7 +6,7 @@ import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { StatusBadge } from "./StatusBadge";
 
 
-export function SeriesManagement({ role }) {
+export function SeriesManagement({ role, statusFilter }) {
 
   const {
     showCreateSeriesModal,
@@ -17,6 +17,11 @@ export function SeriesManagement({ role }) {
 
   const { seriesData } = useCreateSeries();
   console.log(seriesData);
+
+  // Filter series by status if statusFilter is provided
+  const filteredSeriesData = statusFilter
+    ? seriesData.filter(item => statusFilter.includes(item.status))
+    : seriesData;
 
   return (
     <>
@@ -37,7 +42,7 @@ export function SeriesManagement({ role }) {
         }
 
         <div className="grid grid-cols-3 gap-6">
-          {seriesData.map(item => (
+          {filteredSeriesData.map(item => (
             <div key={item.id} className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
               <div className='h-48 w-100 relative'>
                 <img className="w-full h-full object-cover" src={item.coverFile} alt="cover file" />

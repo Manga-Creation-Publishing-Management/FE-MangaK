@@ -4,14 +4,15 @@
       "id": "1",
       "title": "One Piece",
       "description": "Câu chuyện về cuộc hành trình của Monkey D. Luffy - thuyền trưởng của băng hải tặc Mũ Rơm và các đồng đội của cậu nhằm tìm kiếm vùng biển bí ẩn nơi lưu giữ kho báu lớn nhất thế giới One Piece.",
-      "status": "processing",
+      "status": "pending",
       "createdAt": "2026-01-15T08:30:00Z",
       "updatedAt": "2026-05-30T14:20:00Z",
       "genres": [
         2
       ],
       "coverFile": "https://th.bing.com/th/id/R.d3f983e8f1a75519f6a7068ede61a1dc?rik=FwYUAsoXJjc9sg&pid=ImgRaw&r=0",
-      "nameFile": "one-piece"
+      "nameFile": "one-piece",
+      "feedback": ""
     },
     {
       "id": "2",

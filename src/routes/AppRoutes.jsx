@@ -7,6 +7,7 @@ import { TaskManagement } from '../pages/mangaka/TaskManagement';
 import { MyTask } from '../pages/assistant/MyTask';
 import { SeriesReview } from '../pages/tantouEditor/SeriesReview';
 import { PublishingSchedule } from '../pages/editorialBoard/PublishingSchedule';
+import { SeriesApproval } from '../pages/editorialBoard/SeriesApproval';
 import { SeriesDetail } from '../pages/shared/SeriesDetail.jsx';
 import { HomePage } from '../pages/shared/HomePage.jsx';
 import { LoginPage } from '../pages/auth/LoginPage.jsx';
@@ -65,7 +66,7 @@ export function AppRoutes() {
 
       <Route path="/editorial" element={<Layout roleName="editorial" />}>
         <Route index element={<EditorialDashboard />} />
-        <Route path="series" element={<SeriesReview />} />
+        <Route path="series" element={<SeriesApproval />} />
         <Route path="series/:id" element={<SeriesDetail />} />
         <Route path="chapter/:chapterId" element={<ChapterDetail />} />
         <Route path="schedule" element={<PublishingSchedule />} />
