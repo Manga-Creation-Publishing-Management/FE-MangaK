@@ -6,7 +6,7 @@ import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { StatusBadge } from "./StatusBadge";
 
 
-export function SeriesManagement({ role }) {
+export function SeriesManagement({ role, statusFilter }) {
 
   const {
     showCreateSeriesModal,
@@ -18,14 +18,19 @@ export function SeriesManagement({ role }) {
   const { seriesData } = useCreateSeries();
   console.log(seriesData);
 
+  // Filter series by status if statusFilter is provided
+  const filteredSeriesData = statusFilter
+    ? seriesData.filter(item => statusFilter.includes(item.status))
+    : seriesData;
+
   return (
     <>
-      <div className="p-8 space-y-8">
+      <div className="p-3 mb-5">
         {role === "mangaka" &&
           <div className="flex justify-between items-center">
             <div>
-              <h1>Series Management</h1>
-              <p className="text-muted-foreground mt-1">Manage your series and chapters</p>
+              <h1 className="text-sidebar-foreground font-medium text-2xl pb-1">Series Management</h1>
+              <p className="text-muted-foreground">Manage your series and chapters</p>
             </div>
             <button
               onClick={handleClick}
@@ -37,7 +42,7 @@ export function SeriesManagement({ role }) {
         }
 
         <div className="grid grid-cols-3 gap-6">
-          {seriesData.map(item => (
+          {filteredSeriesData.map(item => (
             <div key={item.id} className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
               <div className='h-48 w-100 relative'>
                 <img className="w-full h-full object-cover" src={item.coverFile} alt="cover file" />
@@ -58,7 +63,6 @@ export function SeriesManagement({ role }) {
           ))}
 
         </div>
-
       </div>
       {showCreateSeriesModal && (<CreateSeriesModal onClose={handleClick} onReload={handleReload} />)}
 
