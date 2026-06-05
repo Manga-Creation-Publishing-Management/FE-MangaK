@@ -18,7 +18,7 @@ export default function useCreateSeries(onClose, onReload ) {
   useEffect(() => {
     const fetchApi = async () => {
       const resultsGenre = await api.get("genre");
-      const resultsSeries = await api.get("series");
+      const resultsSeries = await api.get("/Series/get-all-series");
       setGenreList(resultsGenre);
       setSeriesData(resultsSeries);
     };
@@ -73,7 +73,7 @@ export default function useCreateSeries(onClose, onReload ) {
 
     try {
       // 4. Gọi qua API client mới: api.post chứ không dùng post() lẻ loi nữa
-      const results = await api.post("/series", formData);
+      const results = await api.post("/Series/create-series", formData);
 
       if (results) {
         onClose();
