@@ -1,1 +1,0 @@
-# componet chuyên biệt cho feature

@@ -7,6 +7,8 @@ export function ApprovalPanel({
   onApprove,
   onReject,
   isLoading = false,
+  approveText = "Approve Names & Submit to Editorial Board",
+  rejectText = "Reject Names & Send Feedback",
 }) {
   return (
     <div className="space-y-4 bg-card border-t border-border rounded-xl p-5 hover:shadow-lg">
@@ -49,7 +51,7 @@ export function ApprovalPanel({
           "
         >
           <Check size={16} strokeWidth={2.5} />
-          Approve Names & Submit to Editorial Board
+          {approveText}
         </button>
 
         <button
@@ -67,7 +69,7 @@ export function ApprovalPanel({
           "
         >
           <X size={16} strokeWidth={2.5} />
-          Reject Names & Send Feedback
+          {rejectText}
         </button>
       </div>
     </div>

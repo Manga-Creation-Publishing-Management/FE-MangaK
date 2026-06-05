@@ -1,8 +1,15 @@
 import { LogOut } from 'lucide-react';
 import { LoginHook } from '../../features/auth/hooks/LoginHook';
+import { authService } from '../../services/authService';
 
 export function HeaderPage({ roleName, avatarUrl }) {
     const { navigate } = LoginHook();
+
+    const handleLogout = async () => {
+        await authService.logout();
+        navigate('/');
+    };
+
     return (
         <>
             <div className="grid grid-cols-12 shadow p-2 px-8 bg-card">
@@ -18,7 +25,7 @@ export function HeaderPage({ roleName, avatarUrl }) {
                 </div>
                 <div className="col-span-8 content-center">
                     <div className='place-self-end'>
-                        <button onClick={() => navigate('/')}
+                        <button onClick={handleLogout}
                             className='flex 
                         color-background text-muted-foreground
                         hover:text-accent
