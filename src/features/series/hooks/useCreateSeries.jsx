@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { get, post } from "../../shared/requests";
+import { api } from "../../../services/api";
 
 export default function useCreateSeries(onClose, onReload ) {
 
@@ -16,8 +17,8 @@ export default function useCreateSeries(onClose, onReload ) {
 
   useEffect(() => {
     const fetchApi = async () => {
-      const resultsGenre = await get("genre");
-      const resultsSeries = await get("series");
+      const resultsGenre = await api.get("genre");
+      const resultsSeries = await api.get("series");
       setGenreList(resultsGenre);
       setSeriesData(resultsSeries);
     };
@@ -59,23 +60,28 @@ export default function useCreateSeries(onClose, onReload ) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = {
-      ...formSeriesData,
-      genres: selectGenres,
-      coverFile: coverFile ? coverFile.name : "default-cover.jpg",
-      nameFile: storyFile ? storyFile.name : "default-story"
-    };
-    console.log(data);
+    const formData = new FormData();
+
+    Object.keys(formSeriesData).forEach((key) => {
+      formData.append(key, formSeriesData[key]);
+    });
+
+    formData.append("genres", JSON.stringify(selectGenres));
+
+    if (coverFile) formData.append("coverFile", coverFile); // File ảnh thật
+    if (storyFile) formData.append("storyFile", storyFile); // File truyện thật
+
     try {
-      const results = await post("series", data);
+      // 4. Gọi qua API client mới: api.post chứ không dùng post() lẻ loi nữa
+      const results = await api.post("/series", formData);
+
       if (results) {
         onClose();
-        alert("created");
+        alert("Created successfully!");
         onReload();
       }
-
     } catch (error) {
-      console.log("error", error);
+      console.log("Error tại hook:", error);
     }
 
     

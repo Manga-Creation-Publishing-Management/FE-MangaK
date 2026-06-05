@@ -4,9 +4,12 @@ async function request(endpoint, options = {}) {
   const token = localStorage.getItem('mangak-token');
   
   const headers = {
-    'Content-Type': 'application/json',
     ...options.headers,
   };
+
+  if (!(options.body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
+  }
 
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;

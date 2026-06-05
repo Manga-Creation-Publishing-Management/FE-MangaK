@@ -15,7 +15,7 @@ export function SeriesManagement({ role, statusFilter }) {
     handleNavigate
   } = useSeriesManagement();
 
-  const { seriesData } = useCreateSeries();
+  const { seriesData } = useCreateSeries(null, handleReload);
   console.log(seriesData);
 
   // Filter series by status if statusFilter is provided
