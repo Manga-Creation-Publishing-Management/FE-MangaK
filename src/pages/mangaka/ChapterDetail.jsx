@@ -7,7 +7,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
-import filePDF from "./Final_Report.pdf";
+import filePDF from "./Doremon_1.pdf";
 import { ArrowLeft } from "lucide-react";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;// File PDF thường rất nặng và tốn phần cứng để xử lý. Dòng này kích hoạt một "Worker" chạy ngầm dưới trình duyệt, giúp việc dịch file PDF diễn ra ở một luồng độc lập, không làm đơ/lag giao diện web
