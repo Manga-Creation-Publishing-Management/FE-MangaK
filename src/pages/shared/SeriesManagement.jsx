@@ -27,7 +27,7 @@ export function SeriesManagement({ role, statusFilter }) {
     <>
       <div className="p-3 mb-5">
         {role === "mangaka" &&
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mb-5">
             <div>
               <h1 className="text-sidebar-foreground font-medium text-2xl pb-1">Series Management</h1>
               <p className="text-muted-foreground">Manage your series and chapters</p>

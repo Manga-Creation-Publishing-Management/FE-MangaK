@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 // import { get, post } from "../../shared/requests";
 import { api } from "../../../services/api";
+import { seriesService } from "../../../services/seriesService";
 
 export default function useCreateSeries(onClose, onReload ) {
 
@@ -18,7 +19,7 @@ export default function useCreateSeries(onClose, onReload ) {
   useEffect(() => {
     const fetchApi = async () => {
       // const resultsGenre = await api.get("genre");
-      const resultsSeries = await api.get("/Series/get-all-series");
+      const resultsSeries = await seriesService.getAllSeries();
       // setGenreList(resultsGenre);
       setSeriesData(resultsSeries.data.reverse());
     };
