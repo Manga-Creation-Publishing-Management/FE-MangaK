@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 // import { get, post } from "../../shared/requests";
 import { api } from "../../../services/api";
+import { seriesService } from "../../../services/seriesService";
 
 export default function useCreateSeries(onClose, onReload ) {
 
-  const [genreList, setGenreList] = useState([]);
+  // const [genreList, setGenreList] = useState([]);
   const [selectGenres, setSelectGenres] = useState([]);
   const [formSeriesData, setFormSeriesData] = useState({});
   const [seriesData, setSeriesData] = useState([]);
@@ -17,10 +18,10 @@ export default function useCreateSeries(onClose, onReload ) {
 
   useEffect(() => {
     const fetchApi = async () => {
-      const resultsGenre = await api.get("genre");
-      const resultsSeries = await api.get("/Series/get-all-series");
-      setGenreList(resultsGenre);
-      setSeriesData(resultsSeries);
+      // const resultsGenre = await api.get("genre");
+      const resultsSeries = await seriesService.getAllSeries();
+      // setGenreList(resultsGenre);
+      setSeriesData(resultsSeries.data.reverse());
     };
     fetchApi();
   }, [])
@@ -87,7 +88,7 @@ export default function useCreateSeries(onClose, onReload ) {
     
   };
   return {
-    genreList,
+    // genreList,
     selectGenres,
     coverFile,
     storyFile,

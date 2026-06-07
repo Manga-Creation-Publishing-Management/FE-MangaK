@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 // import { get } from "../../shared/requests";
 
-export function useCreateChapter(seriesData) {
+export function useCreateChapter(seriesId) {
   const [chapterList, setChapterList] = useState([]);
   const [chapterListForm, setChapterListForm] = useState({});
 
   useEffect(() => {
     const fetchApi = async e => {
-      if (!seriesData || !seriesData.id) return;
+      if (!seriesId) return;
       try {
-        const resultChapterList = await get(`chapter?seriesId:contains=${seriesData.id}`);
+        const resultChapterList = await get(`chapter?seriesId:contains=${seriesId}`);
         const resultChapterListForm = await get("chapter");
         setChapterList(resultChapterList.reverse());
         setChapterListForm(resultChapterListForm);
@@ -19,7 +19,7 @@ export function useCreateChapter(seriesData) {
       }
     }
     fetchApi();
-  }, [seriesData])
+  }, [seriesId])
 
   return {
     chapterList,

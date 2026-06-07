@@ -104,7 +104,7 @@ export function SeriesDetail() {
             <div className="flex justify-between items-start">
               <div className="flex-1">
                 <h1>{validSeriesData?.title}</h1>
-                <p className="text-muted-foreground mt-1">Author Name</p>
+                <p className="text-muted-foreground mt-1">{validSeriesData?.mangakaName}</p>
               </div>
               <StatusBadge status={currentStatus} />
             </div>
@@ -112,7 +112,7 @@ export function SeriesDetail() {
               <div>
                 <p className="text-sm text-muted-foreground">Genres</p>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {validSeriesData?.genres?.map((item, index) => {
+                  {validSeriesData?.categories?.map((item, index) => {
                     const nameGenre = genreList?.find(itemGenre => String(itemGenre.id) === String(item))
                     return (
                       <span
