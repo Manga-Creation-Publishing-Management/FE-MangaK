@@ -118,7 +118,7 @@ export default function CreateSeriesModal({ onClose, onReload }) {
               )}
               <input
                 type="file"
-                accept="image/*"
+                accept=".pdf,.zip"
                 className="hidden"
                 ref={storyInputRef}
                 onChange={handleStoryChange}

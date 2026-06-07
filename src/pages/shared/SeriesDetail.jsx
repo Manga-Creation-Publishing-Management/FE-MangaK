@@ -5,7 +5,7 @@ import { StatusBadge } from "./StatusBadge";
 import { ChapterList } from "../../features/chapters/components/ChapterList";
 import { ApprovalPanel } from "./ApprovalPanel";
 import { useState } from "react";
-import { patch } from "../../features/shared/requests";
+// import { patch } from "../../features/shared/requests";
 
 export function SeriesDetail() {
 
@@ -153,4 +153,4 @@ export function SeriesDetail() {
 
     </>
   )
-}
+}

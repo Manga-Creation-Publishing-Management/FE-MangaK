@@ -2,6 +2,7 @@ export function StatusBadge({ status }) {
   const styles = {
     'need-review': 'bg-warning/10 text-warning border-warning/30',
     'processing': 'bg-info/10 text-info border-info/30',
+    'pending': 'bg-info/10 text-info border-info/30',
     'rejected': 'bg-destructive/10 text-destructive border-destructive/30',
     'approved': 'bg-success/10 text-success border-success/30',
   };
@@ -9,6 +10,7 @@ export function StatusBadge({ status }) {
   const labels = {
     'need-review': 'Need to Review',
     'processing': 'Processing',
+    'pending': 'Pending',
     'rejected': 'Rejected',
     'approved': 'Approved',
   };

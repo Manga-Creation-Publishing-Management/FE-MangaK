@@ -33,19 +33,19 @@ export function Sidebar({ userRole }) {
       { icon: DollarSign, label: 'Income', path: '/assistant/income', key: 'income' },
       { icon: Settings, label: 'Profile & Settings', path: '/assistant/profile', key: 'profile' },
     ],
-    tantou: [
-      { icon: Home, label: 'Dashboard', path: '/tantou', key: 'dashboard' },
-      { icon: FolderKanban, label: 'Series Review', path: '/tantou/series', key: 'series' },
-      { icon: TrendingUp, label: 'Leaderboard', path: '/tantou/tracking', key: 'tracking' },
-      { icon: Settings, label: 'Profile & Settings', path: '/tantou/profile', key: 'profile' },
+    tantouEditor: [
+      { icon: Home, label: 'Dashboard', path: '/tantouEditor', key: 'dashboard' },
+      { icon: FolderKanban, label: 'Series Review', path: '/tantouEditor/series', key: 'series' },
+      { icon: TrendingUp, label: 'Leaderboard', path: '/tantouEditor/tracking', key: 'tracking' },
+      { icon: Settings, label: 'Profile & Settings', path: '/tantouEditor/profile', key: 'profile' },
     ],
-    editorial: [
-      { icon: Home, label: 'Dashboard', path: '/editorial', key: 'dashboard' },
-      { icon: FileSearch, label: 'Series Approval', path: '/editorial/series', key: 'series' },
-      { icon: CalendarClock, label: 'Publishing Schedule', path: '/editorial/schedule', key: 'schedule' },
-      { icon: Upload, label: 'Rating Data Import', path: '/editorial/voting', key: 'voting' },
-      { icon: TrendingUp, label: 'Leaderboard', path: '/editorial/tracking', key: 'tracking' },
-      { icon: Settings, label: 'Profile & Settings', path: '/editorial/profile', key: 'profile' },
+    editorialBoard: [
+      { icon: Home, label: 'Dashboard', path: '/editorialBoard', key: 'dashboard' },
+      { icon: FileSearch, label: 'Series Approval', path: '/editorialBoard/series', key: 'series' },
+      { icon: CalendarClock, label: 'Publishing Schedule', path: '/editorialBoard/schedule', key: 'schedule' },
+      { icon: Upload, label: 'Rating Data Import', path: '/editorialBoard/voting', key: 'voting' },
+      { icon: TrendingUp, label: 'Leaderboard', path: '/editorialBoard/tracking', key: 'tracking' },
+      { icon: Settings, label: 'Profile & Settings', path: '/editorialBoard/profile', key: 'profile' },
     ],
   };
 

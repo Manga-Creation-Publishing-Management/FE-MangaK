@@ -1,22 +1,19 @@
-const BASE_URL = '/api';
+import { api } from "./api";
 
 export const authService = {
-    async Login(email,password) {
-        const response = await fetch(`${BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({email, password}),
-        //chuyen object thanh chuoi json
-        });
-        
-        if(!response.ok) { //throw neu co loi
-            const error = await response.json();
-            throw new Error(error.message || 'Login failed, please try again!');
-        }
+  async login(email, password) {
+    return await api.post("/Auth/login", { email, password });
+  },
 
-        const data = await response.json();
-        return data;
+  async logout() {
+    try {
+      await api.post("/Auth/logout", {refreshToken: localStorage.getItem('mangak-token')});
+    } catch (error) {
+      console.error("Failed to perform logout on backend:", error);
+    } finally {
+      localStorage.removeItem('mangak-token');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('user');
     }
-}
+  }
+};
