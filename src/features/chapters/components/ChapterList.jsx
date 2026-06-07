@@ -7,11 +7,11 @@ import { useSeriesManagement } from "../../series/hooks/useSeriesManagement";
 export function ChapterList({ roleName, seriesData }) {
 
 
-  const { chapterList } = useCreateChapter(seriesData);
+  const { chapterList } = useCreateChapter(seriesData?.id);
 
   const { handleNavigateToChapter  } = useSeriesManagement();
 
-  // console.log( "length", chapterList.length)
+  console.log( "length", chapterList.length)
 
   return (
     <>
