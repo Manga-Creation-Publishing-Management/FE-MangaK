@@ -10,12 +10,13 @@ export function SeriesManagement({ role, statusFilter }) {
 
   const {
     showCreateSeriesModal,
+    reload,
     handleReload,
     handleClick,
     handleNavigate
   } = useSeriesManagement();
 
-  const { seriesData } = useCreateSeries(null, handleReload);
+  const { seriesData } = useCreateSeries(null, handleReload, reload);
   console.log(seriesData);
 
   // Filter series by status if statusFilter is provided
