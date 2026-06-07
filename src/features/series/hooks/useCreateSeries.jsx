@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { get, post } from "../../shared/requests";
+// import { get, post } from "../../shared/requests";
 import { api } from "../../../services/api";
 
 export default function useCreateSeries(onClose, onReload ) {

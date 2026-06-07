@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { get } from "../../shared/requests";
+// import { get } from "../../shared/requests";
 
 export function useCreateChapter(seriesData) {
   const [chapterList, setChapterList] = useState([]);
