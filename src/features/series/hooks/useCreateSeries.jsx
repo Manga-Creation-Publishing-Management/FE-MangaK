@@ -3,12 +3,14 @@ import { useEffect, useRef, useState } from "react";
 import { api } from "../../../services/api";
 import { seriesService } from "../../../services/seriesService";
 
-export default function useCreateSeries(onClose, onReload ) {
+export default function useCreateSeries(onClose, onReload, reloadState ) {
 
-  // const [genreList, setGenreList] = useState([]);
+  const [genreList, setGenreList] = useState([]); 
   const [selectGenres, setSelectGenres] = useState([]);
   const [formSeriesData, setFormSeriesData] = useState({});
   const [seriesData, setSeriesData] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [coverFile, setCoverFile] = useState(null);
   const [storyFile, setStoryFile] = useState(null);
@@ -18,13 +20,13 @@ export default function useCreateSeries(onClose, onReload ) {
 
   useEffect(() => {
     const fetchApi = async () => {
-      // const resultsGenre = await api.get("genre");
+      const resultsGenre = await seriesService.getAllCategory();
       const resultsSeries = await seriesService.getAllSeries();
-      // setGenreList(resultsGenre);
-      setSeriesData(resultsSeries.data.reverse());
+      setGenreList(resultsGenre.data);
+      setSeriesData(resultsSeries.data.toReversed());
     };
     fetchApi();
-  }, [])
+  }, [reloadState])
   
 
   const handleActive = (genreId) => {
@@ -60,6 +62,7 @@ export default function useCreateSeries(onClose, onReload ) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const formData = new FormData();
 
@@ -67,28 +70,37 @@ export default function useCreateSeries(onClose, onReload ) {
       formData.append(key, formSeriesData[key]);
     });
 
-    formData.append("genres", JSON.stringify(selectGenres));
+    if (selectGenres && selectGenres.length > 0) {
+      selectGenres.forEach((id) => {
+        formData.append("CategoryIds", id);
+      });
+    }
 
     if (coverFile) formData.append("coverFile", coverFile); // File ảnh thật
-    if (storyFile) formData.append("storyFile", storyFile); // File truyện thật
+    if (storyFile) formData.append("nameFile", storyFile); // File truyện thật
 
     try {
       // 4. Gọi qua API client mới: api.post chứ không dùng post() lẻ loi nữa
-      const results = await api.post("/Series/create-series", formData);
+      const results = await seriesService.createSeries(formData);
 
       if (results) {
-        onClose();
         alert("Created successfully!");
-        onReload();
+        setTimeout(() => {
+          onClose();
+          onReload();
+        }, 500);
       }
     } catch (error) {
       console.log("Error tại hook:", error);
+    } finally {
+      setIsLoading(false);
     }
 
     
   };
   return {
-    // genreList,
+    isLoading,
+    genreList,
     selectGenres,
     coverFile,
     storyFile,

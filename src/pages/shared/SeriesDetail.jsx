@@ -4,7 +4,8 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import { StatusBadge } from "./StatusBadge";
 import { ChapterList } from "../../features/chapters/components/ChapterList";
 import { ApprovalPanel } from "./ApprovalPanel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { seriesService } from "../../services/seriesService";
 // import { patch } from "../../features/shared/requests";
 
 export function SeriesDetail() {
@@ -18,19 +19,33 @@ export function SeriesDetail() {
   console.log("roleFromState", roleFromState);
 
   const {
-    seriesData, genreList
+    genreList
   } = useCreateSeries();
-  const validSeriesData = seriesData?.find(item => item.id === id)
+
+  const [detailData, setDetailData] = useState(null);
 
   const [feedback, setFeedback] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [localStatus, setLocalStatus] = useState(null);
 
+  useEffect(() => {
+    const fetchSeriesDetail = async () => {
+      if (!id) return;
+      try {
+        const response = await seriesService.getSeriesById(id);
+          setDetailData(response.data);
+      } catch (error) {
+        console.log("Lỗi:", error);
+      }
+    };
+    fetchSeriesDetail();
+  }, [id]);
+
   // Use localStatus if it's been updated, otherwise use data from API
-  const currentStatus = localStatus || validSeriesData?.status;
+  const currentStatus = localStatus || detailData?.status;
 
   const handleApprove = async () => {
-    if (!validSeriesData) return;
+    if (!detailData) return;
 
     let newStatus;
     if (roleFromState === "tantou" && currentStatus === "processing") {
@@ -57,7 +72,7 @@ export function SeriesDetail() {
   };
 
   const handleReject = async () => {
-    if (!validSeriesData) return;
+    if (!detailData) return;
 
     if (!feedback.trim()) {
       alert("Please provide feedback before rejecting.");
@@ -97,14 +112,14 @@ export function SeriesDetail() {
           Back
         </button>
         <div className="bg-card border-border  rounded-xl overflow-hidden">
-          <div className="h-68 w-full relative" >
-            <img className="w-full h-full object-cover" src={validSeriesData?.coverFile} alt="" />
+          <div className="h-100 w-full relative" >
+            <img className="w-full h-full object-cover" src={detailData?.coverFile} alt="" />
           </div>
           <div className="p-8 space-y-6">
             <div className="flex justify-between items-start">
               <div className="flex-1">
-                <h1>{validSeriesData?.title}</h1>
-                <p className="text-muted-foreground mt-1">{validSeriesData?.mangakaName}</p>
+                <h1 className="text-2xl font-semibold">{detailData?.title}</h1>
+                <p className="text-muted-foreground mt-1">{detailData?.mangakaName}</p>
               </div>
               <StatusBadge status={currentStatus} />
             </div>
@@ -112,29 +127,29 @@ export function SeriesDetail() {
               <div>
                 <p className="text-sm text-muted-foreground">Genres</p>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {validSeriesData?.categories?.map((item, index) => {
-                    const nameGenre = genreList?.find(itemGenre => String(itemGenre.id) === String(item))
+                  {detailData?.categories?.map((item, index) => {
+                    const nameGenre = genreList?.find(itemGenre => String(itemGenre.categoryId) === String(item))
                     return (
                       <span
                         key={index}
                         className="px-3 py-1 text-xs font-medium rounded-full bg-secondary text-secondary-foreground border border-border"
                       >
-                        {nameGenre.name}
+                        {nameGenre ? nameGenre.name : item}
                       </span>
                     )
-                  })}
+                  })} 
                 </div>
               </div>
             </div>
 
             <div>
               <p className="text-sm text-muted-foreground">Description</p>
-              <p className="mt-1 text-foreground">{validSeriesData?.description}</p>
+              <p className="mt-1 text-foreground">{detailData?.description}</p>
             </div>
           </div>
 
         </div>
-        <ChapterList roleName={roleFromState} seriesData={validSeriesData} />
+        <ChapterList roleName={roleFromState} seriesData={detailData} />
 
         {/* feedback box for roles tantou and editorial, only when status is processing or pending */}
         {(roleFromState === 'tantou' || roleFromState === 'editorial') &&
