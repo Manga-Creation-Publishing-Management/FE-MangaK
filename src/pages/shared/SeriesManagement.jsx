@@ -23,6 +23,8 @@ export function SeriesManagement({ role, statusFilter }) {
   const filteredSeriesData = statusFilter
     ? seriesData.filter(item => statusFilter.includes(item.status))
     : seriesData;
+  console.log(role);
+  console.log("Filtered Data for Tantou:", filteredSeriesData);
 
   return (
     <>
