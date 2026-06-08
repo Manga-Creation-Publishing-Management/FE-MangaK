@@ -6,7 +6,7 @@ import { ChapterList } from "../../features/chapters/components/ChapterList";
 import { ApprovalPanel } from "./ApprovalPanel";
 import { useEffect, useState } from "react";
 import { seriesService } from "../../services/seriesService";
-// import { patch } from "../../features/shared/requests";
+import { useUpdateSeries } from "../../features/series/hooks/useUpdateSeries";
 
 export function SeriesDetail() {
 
@@ -23,10 +23,14 @@ export function SeriesDetail() {
   } = useCreateSeries();
 
   const [detailData, setDetailData] = useState(null);
-
-  const [feedback, setFeedback] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [localStatus, setLocalStatus] = useState(null);
+
+  const {
+    isLoading,
+    feedback,
+    setFeedback,
+    reviewSeries
+  } = useUpdateSeries();
 
   useEffect(() => {
     const fetchSeriesDetail = async () => {
@@ -57,17 +61,14 @@ export function SeriesDetail() {
       return;
     }
 
-    setIsLoading(true);
     try {
-      await patch(`series/${id}`, { status: newStatus, feedback });
+      await reviewSeries(id, roleFromState, true);
       setLocalStatus(newStatus);
       alert(`Series has been approved! New status: ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}`);
       navigate(-1);
     } catch (error) {
       console.error("Error approving series:", error);
       alert("Failed to approve series. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -79,17 +80,14 @@ export function SeriesDetail() {
       return;
     }
 
-    setIsLoading(true);
     try {
-      await patch(`series/${id}`, { status: "rejected", feedback });
+      await reviewSeries(id, roleFromState, false);
       setLocalStatus("rejected");
       alert("Series has been rejected.");
       navigate(-1);
     } catch (error) {
       console.error("Error rejecting series:", error);
       alert("Failed to reject series. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
   };
 
