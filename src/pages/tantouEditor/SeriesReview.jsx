@@ -1,3 +1,4 @@
+import { ApprovalPanel } from "../shared/ApprovalPanel";
 import { SeriesManagement } from "../shared/SeriesManagement";
 
 export function SeriesReview() {
@@ -10,7 +11,7 @@ export function SeriesReview() {
             <p className="text-muted-foreground">Review and approve series for Editorial Board</p>
           </div>
         </div>
-        <SeriesManagement role="tantou" statusFilter={["processing", "rejected"]} />
+        <SeriesManagement role="tantouEditor" statusFilter={["Processing", "rejected"]} />
 
       </div >
     </>

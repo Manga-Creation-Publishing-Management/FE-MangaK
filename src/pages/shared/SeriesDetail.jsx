@@ -14,7 +14,17 @@ export function SeriesDetail() {
   const navigate = useNavigate();
 
   const location = useLocation();
-  const roleFromState = location.state?.role;
+  const pathname = location.pathname.toLowerCase();
+
+  // Fallback to path checking if state was lost (e.g. page refresh)
+  let roleFromState = location.state?.role;
+  if (!roleFromState) {
+    if (pathname.includes("tantoueditor")) {
+      roleFromState = "tantouEditor";
+    } else if (pathname.includes("editorialboard")) {
+      roleFromState = "editorial";
+    }
+  }
 
   console.log("roleFromState", roleFromState);
 
@@ -29,7 +39,8 @@ export function SeriesDetail() {
     isLoading,
     feedback,
     setFeedback,
-    reviewSeries
+    handleApprove,
+    handleReject
   } = useUpdateSeries();
 
   useEffect(() => {
@@ -37,7 +48,7 @@ export function SeriesDetail() {
       if (!id) return;
       try {
         const response = await seriesService.getSeriesById(id);
-          setDetailData(response.data);
+        setDetailData(response.data);
       } catch (error) {
         console.log("Lỗi:", error);
       }
@@ -47,55 +58,28 @@ export function SeriesDetail() {
 
   // Use localStatus if it's been updated, otherwise use data from API
   const currentStatus = localStatus || detailData?.status;
+  const normalizedStatus = currentStatus?.toLowerCase();
+  const normalizedRole = roleFromState?.toLowerCase();
 
-  const handleApprove = async () => {
-    if (!detailData) return;
+  const isTantou = normalizedRole === "tantou" || normalizedRole === "tantoueditor";
+  const isEditorial = normalizedRole === "editorial" || normalizedRole === "editorialboard";
 
-    let newStatus;
-    if (roleFromState === "tantou" && currentStatus === "processing") {
-      newStatus = "pending";
-    } else if (roleFromState === "editorial" && currentStatus === "pending") {
-      newStatus = "approved";
-    } else {
-      alert("You cannot approve this series in its current state.");
-      return;
-    }
-
-    try {
-      await reviewSeries(id, roleFromState, true);
-      setLocalStatus(newStatus);
-      alert(`Series has been approved! New status: ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}`);
-      navigate(-1);
-    } catch (error) {
-      console.error("Error approving series:", error);
-      alert("Failed to approve series. Please try again.");
-    }
-  };
-
-  const handleReject = async () => {
-    if (!detailData) return;
-
-    if (!feedback.trim()) {
-      alert("Please provide feedback before rejecting.");
-      return;
-    }
-
-    try {
-      await reviewSeries(id, roleFromState, false);
-      setLocalStatus("rejected");
-      alert("Series has been rejected.");
-      navigate(-1);
-    } catch (error) {
-      console.error("Error rejecting series:", error);
-      alert("Failed to reject series. Please try again.");
-    }
-  };
+  console.log("SeriesDetail render debug:", {
+    detailData,
+    currentStatus,
+    normalizedStatus,
+    roleFromState,
+    normalizedRole,
+    isTantou,
+    isEditorial,
+    showPanel: (isTantou || isEditorial) && (normalizedStatus === 'processing' || normalizedStatus === 'pending')
+  });
 
   // Determine button text based on role
-  const approveText = roleFromState === "tantou"
+  const approveText = isTantou
     ? "Approve & Submit to Editorial Board"
     : "Approve Series";
-  const rejectText = roleFromState === "tantou"
+  const rejectText = isTantou
     ? "Reject & Send Feedback"
     : "Reject Series";
 
@@ -135,7 +119,7 @@ export function SeriesDetail() {
                         {nameGenre ? nameGenre.name : item}
                       </span>
                     )
-                  })} 
+                  })}
                 </div>
               </div>
             </div>
@@ -150,13 +134,13 @@ export function SeriesDetail() {
         <ChapterList roleName={roleFromState} seriesData={detailData} />
 
         {/* feedback box for roles tantou and editorial, only when status is processing or pending */}
-        {(roleFromState === 'tantou' || roleFromState === 'editorial') &&
-          (currentStatus === 'processing' || currentStatus === 'pending') &&
+        {(isTantou || isEditorial) &&
+          (normalizedStatus === 'processing' || normalizedStatus === 'pending') &&
           <ApprovalPanel
             feedback={feedback}
             onFeedbackChange={(e) => setFeedback(e.target.value)}
-            onApprove={handleApprove}
-            onReject={handleReject}
+            onApprove={() => handleApprove(id, roleFromState, currentStatus, setLocalStatus)}
+            onReject={() => handleReject(id, roleFromState, setLocalStatus)}
             isLoading={isLoading}
             approveText={approveText}
             rejectText={rejectText}

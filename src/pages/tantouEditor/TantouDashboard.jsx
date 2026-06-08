@@ -19,7 +19,7 @@ export function TantouDashboard() {
                 </div>
 
                 <div className='p-3 mt-2 text-2xl font-medium text-foreground'>Assigned Series</div>
-                <SeriesManagement role="tantou" />
+                <SeriesManagement role="tantouEditor" />
 
                 <div>Div này cho Mailbox (feedback)</div>
             </div>
