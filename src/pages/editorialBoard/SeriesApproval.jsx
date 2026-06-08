@@ -10,7 +10,7 @@ export function SeriesApproval() {
             <p className="text-muted-foreground">Review and approve series submitted by Tantou Editors</p>
           </div>
         </div>
-        <SeriesManagement role="editorial" statusFilter={["pending", "approved", "rejected"]} />
+        <SeriesManagement role="editorialBoard" statusFilter={["pending", "approved", "rejected"]} />
       </div>
     </>
   )

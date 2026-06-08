@@ -70,9 +70,11 @@ export function Sidebar({ userRole }) {
       <nav className="space-y-1 flex-1">
         {items.map((item) => {
           const Icon = item.icon;
+          const cleanPath = location.pathname.replace(/\/$/, "");
+          const cleanItemPath = item.path.replace(/\/$/, "");
           const isActive = item.key === 'dashboard'
-            ? location.pathname === item.path
-            : location.pathname.startsWith(item.path);
+            ? cleanPath === cleanItemPath
+            : cleanPath.startsWith(cleanItemPath);
 
           return (
             <Link

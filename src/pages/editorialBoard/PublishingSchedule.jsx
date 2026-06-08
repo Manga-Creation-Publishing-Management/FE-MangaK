@@ -2,6 +2,7 @@ import { usePublishingSchedule } from '../../features/schedule/PublishingSchedul
 import { Calendar, Clock, Plus, Edit, Trash2 } from 'lucide-react';
 import { StatusBadge } from '@/pages/shared/StatusBadge';
 import { OverviewCard } from '../shared/OverviewCard';
+import { useState } from 'react';
 
 export function PublishingSchedule() {
   const {
@@ -16,7 +17,31 @@ export function PublishingSchedule() {
     approvedSeries,
     schedules,
     handleCreateSchedule,
+    isEditing,
+    editingScheduleId,
+    handleEditClick,
+    handleDeleteConfirm,
+    handleCloseModal,
   } = usePublishingSchedule();
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteScheduleId, setDeleteScheduleId] = useState(null);
+  const [deleteSeriesName, setDeleteSeriesName] = useState('');
+
+  const handleDeleteClick = (schedule) => {
+    setDeleteScheduleId(schedule.id);
+    setDeleteSeriesName(schedule.seriesName);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (deleteScheduleId) {
+      await handleDeleteConfirm(deleteScheduleId);
+    }
+    setShowDeleteModal(false);
+    setDeleteScheduleId(null);
+    setDeleteSeriesName('');
+  };
 
   return (
     <div className="p-8 space-y-8 animate-in fade-in duration-300">
@@ -27,20 +52,14 @@ export function PublishingSchedule() {
         </div>
         <button
           onClick={() => setShowAddSchedule(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity cursor-pointer"
         >
           <Plus size={20} />
           Create Schedule
         </button>
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
-        <OverviewCard
-          iconName={<Calendar size={24} />}
-          iconColor="#3b82f6" // custom color
-          contentText="Active Schedules"
-          valueNum={schedules.filter(s => s.status === 'active').length}
-        />
+      <div className="grid grid-cols-2 gap-6">
         <OverviewCard
           iconName={<Clock size={24} />}
           iconColor="#10b981"
@@ -86,11 +105,18 @@ export function PublishingSchedule() {
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <StatusBadge status={schedule.status === 'active' ? 'approved' : 'processing'} />
-                <button className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors">
+                <button
+                  onClick={() => handleEditClick(schedule)}
+                  className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors cursor-pointer"
+                  title="Edit Schedule"
+                >
                   <Edit size={18} />
                 </button>
-                <button className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors">
+                <button
+                  onClick={() => handleDeleteClick(schedule)}
+                  className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors cursor-pointer"
+                  title="Delete Schedule"
+                >
                   <Trash2 size={18} />
                 </button>
               </div>
@@ -102,22 +128,31 @@ export function PublishingSchedule() {
       {showAddSchedule && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-card rounded-xl p-8 w-full max-w-2xl">
-            <h2 className="mb-6">Create Publishing Schedule</h2>
+            <h2 className="mb-6">{isEditing ? 'Update Publishing Schedule' : 'Create Publishing Schedule'}</h2>
             <div className="space-y-6 mb-6">
               <div>
                 <label className="text-sm text-muted-foreground mb-2 block">Select Series</label>
-                <select
-                  value={selectedSeries}
-                  onChange={(e) => setSelectedSeries(e.target.value)}
-                  className="w-full px-4 py-3 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-                >
-                  <option value="">Choose a series...</option>
-                  {approvedSeries.map((series) => (
-                    <option key={series.id} value={series.id}>
-                      {series.name} by {series.author}
-                    </option>
-                  ))}
-                </select>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    disabled
+                    value={schedules.find(s => s.id === editingScheduleId)?.seriesName || ''}
+                    className="w-full px-4 py-3 bg-muted rounded-lg border border-border text-muted-foreground cursor-not-allowed focus:outline-none"
+                  />
+                ) : (
+                  <select
+                    value={selectedSeries}
+                    onChange={(e) => setSelectedSeries(e.target.value)}
+                    className="w-full px-4 py-3 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <option value="">Choose a series...</option>
+                    {approvedSeries.map((series) => (
+                      <option key={series.id} value={series.id}>
+                        {series.name} by {series.author}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
 
               <div>
@@ -162,16 +197,45 @@ export function PublishingSchedule() {
             </div>
             <div className="flex gap-3">
               <button
-                onClick={() => setShowAddSchedule(false)}
-                className="flex-1 px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors"
+                onClick={handleCloseModal}
+                className="flex-1 px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleCreateSchedule}
-                className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity cursor-pointer"
               >
-                Create Schedule
+                {isEditing ? 'Update Schedule' : 'Create Schedule'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-card rounded-xl p-8 w-full max-w-md">
+            <h2 className="mb-4">Confirm Delete</h2>
+            <p className="text-sm text-muted-foreground mb-6">
+              Are you sure you want to delete the publishing schedule for <strong>{deleteSeriesName}</strong>? This action cannot be undone.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setDeleteScheduleId(null);
+                  setDeleteSeriesName('');
+                }}
+                className="flex-1 px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmDelete}
+                className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:opacity-90 transition-opacity cursor-pointer"
+              >
+                Confirm Delete
               </button>
             </div>
           </div>

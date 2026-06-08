@@ -1,11 +1,11 @@
 import { api } from "./api"
 
 export const updateSeries = {
-    async updateToPending (seriesId) {
-        return api.patch(`/api/Series/tantou-review/${seriesId}`);
+    async updateToPending (seriesId, data) {
+        return api.patch(`/Series/tantou-review/${seriesId}`, data);
     },
 
-    async updateToApprove (seriesId) {
-        return api.patch(`/api/Series/board-review/${seriesId}`);
+    async updateToApprove (seriesId, data) {
+        return api.patch(`/Series/board-review/${seriesId}`, data);
     }
 };
