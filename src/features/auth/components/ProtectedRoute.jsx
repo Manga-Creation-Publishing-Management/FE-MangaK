@@ -13,12 +13,22 @@ export function ProtectedRoute({ allowedRole }) {
     return <Navigate to="/login" replace />;
   }
 
+  const rolePathMap = {
+    mangaka: 'mangaka',
+    assistant: 'assistant',
+    tantoueditor: 'tantouEditor',
+    editorialboard: 'editorialBoard',
+    admin: 'admin',
+    reader: 'reader',
+  };
+
   try {
     const user = JSON.parse(userString);
     const userRole = (user.role || '').toLowerCase();
 
     if (userRole !== allowedRole.toLowerCase()) {
-      return <Navigate to={`/${userRole}`} replace />;
+      const rolePath = rolePathMap[userRole] || userRole;
+      return <Navigate to={`/${rolePath}`} replace />;
     }
   } catch (error) {
     // Clear potentially corrupted session data

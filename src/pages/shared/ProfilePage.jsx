@@ -41,9 +41,9 @@ export function ProfilePage() {
   };
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-9 space-y-8">
       <div>
-        <h1 className='text-sidebar-foreground font-medium text-2xl pb-1'>Profile Settings</h1>
+        <h1 className='text-sidebar-foreground font-medium text-2xl'>Profile Settings</h1>
         <p className="text-muted-foreground mt-1">Manage your account information and preferences</p>
       </div>
 

@@ -6,11 +6,9 @@ export const publishingScheduleService = {
   },
 
   async createSchedule(seriesId, { publishDate, publishPeriod }) {
-    return await api.get(`/PublishingSchedule/create-schedule?seriesId=${seriesId}`, {
-      body: {
-        publishDate,
-        publishPeriod
-      }
+    return await api.post(`/PublishingSchedule/create-schedule?seriesId=${seriesId}`, {
+      publishDate,
+      publishPeriod
     });
   },
 
