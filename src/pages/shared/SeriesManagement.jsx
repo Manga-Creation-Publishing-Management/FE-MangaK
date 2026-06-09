@@ -1,6 +1,6 @@
 import { useState } from "react";
 import CreateSeriesModal from "../../features/series/components/CreateSeriesModal";
-import { Link } from "react-router";
+// import { Link } from "react-router";
 import { useSeriesManagement } from "../../features/series/hooks/useSeriesManagement";
 import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { StatusBadge } from "./StatusBadge";
@@ -34,7 +34,8 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
   }
 
   console.log(role);
-  console.log("Filtered Data for Tantou:", filteredSeriesData);
+  // console.log("Filtered Data for Tantou:", filteredSeriesData);
+  console.log("Filtered Data for Editorial", filteredSeriesData);
 
   return (
     <>
@@ -65,7 +66,7 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
                   <h3>{item.title}</h3>
                   <p className="text-sm text-muted-foreground mt-1">{item.totalChapters || 0} Chapters</p>
                 </div>
-                <StatusBadge status={item.status} />
+                <StatusBadge status={item?.status.toLowerCase()} />
                 <button className="cursor-pointer w-full block text-center mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
                   onClick={() => handleNavigate(role, item.seriesId)}
                 >

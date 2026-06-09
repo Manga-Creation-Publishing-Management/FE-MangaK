@@ -16,10 +16,10 @@ import { MangakaDashboard } from '../pages/mangaka/MangakaDashboard.jsx';
 import { AssistantDashboard } from '../pages/assistant/AssistantDashboard.jsx';
 import { TantouDashboard } from '../pages/tantouEditor/TantouDashboard.jsx';
 import { EditorialDashboard } from '../pages/editorialBoard/EditorialDashboard.jsx';
-import { VotingDataImport } from '../pages/editorialBoard/VotingDataImport.jsx';
 import { ReaderDashboard } from '../pages/reader/ReaderDashboard.jsx';
 import { ProtectedRoute } from '../features/auth/components/ProtectedRoute';
 import { PublicRoute } from '../features/auth/components/PublicRoute';
+import { LeaderboardPage } from '../pages/shared/LeaderboardPage.jsx';
 
 const roleDisplayNames = {
   mangaka: "Mangaka",
@@ -50,6 +50,7 @@ export function AppRoutes() {
           <Route path="series/:id" element={<SeriesDetail />} />
           <Route path="chapter/:chapterId" element={<ChapterDetail />} />
           <Route path="tasks" element={<TaskManagement />} />
+          <Route path="leaderboard" element={<LeaderboardPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Route>
@@ -70,6 +71,7 @@ export function AppRoutes() {
           <Route path="series" element={<SeriesReview />} />
           <Route path="series/:id" element={<SeriesDetail />} />
           <Route path="chapter/:chapterId" element={<ChapterDetail />} />
+          <Route path="leaderboard" element={<LeaderboardPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Route>
@@ -82,7 +84,7 @@ export function AppRoutes() {
           <Route path="series/:id" element={<SeriesDetail />} />
           <Route path="chapter/:chapterId" element={<ChapterDetail />} />
           <Route path="schedule" element={<PublishingSchedule />} />
-          <Route path="voting" element={<VotingDataImport />} />
+          <Route path="leaderboard" element={<LeaderboardPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Route>
