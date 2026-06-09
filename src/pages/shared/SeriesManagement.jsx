@@ -6,7 +6,7 @@ import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { StatusBadge } from "./StatusBadge";
 
 
-export function SeriesManagement({ role, statusFilter }) {
+export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
 
   const {
     showCreateSeriesModal,
@@ -19,10 +19,20 @@ export function SeriesManagement({ role, statusFilter }) {
   const { seriesData } = useCreateSeries(null, handleReload, reload);
   console.log(seriesData);
 
-  // Filter series by status if statusFilter is provided
-  const filteredSeriesData = statusFilter
-    ? seriesData.filter(item => statusFilter.includes(item.status))
-    : seriesData;
+  //Nếu seriesFilterd: bên ngoài truyền vào dữ liệu đã lọc thì ưu tiên 
+  // in ra dữ liệu đã lọc đó
+  let filteredSeriesData;
+
+  if (seriesFiltered) {
+    filteredSeriesData = seriesFiltered;
+  }
+  else {
+    // Filter series by status if statusFilter is provided
+    filteredSeriesData = statusFilter
+      ? seriesData.filter(item => statusFilter.includes(item.status))
+      : seriesData;
+  }
+
   console.log(role);
   console.log("Filtered Data for Tantou:", filteredSeriesData);
 
