@@ -6,16 +6,17 @@ import { useSeriesManagement } from "../../series/hooks/useSeriesManagement";
 
 export function ChapterList({ roleName, seriesData }) {
 
-
-  const { chapterList } = useCreateChapter(seriesData?.id);
+  console.log("seriesID:", seriesData?.seriesId)
+  const { chapterList } = useCreateChapter(seriesData?.seriesId);
 
   const { handleNavigateToChapter  } = useSeriesManagement();
 
   console.log( "length", chapterList.length)
+  
 
   return (
     <>
-      { seriesData?.status === "approved" && (
+      { seriesData?.status === "Approved" && (
         <>
           <div className="flex justify-between items-center">
             <div>
@@ -44,7 +45,7 @@ export function ChapterList({ roleName, seriesData }) {
           </div>
           <div className="space-y-4">
             {chapterList?.map((chapter) => (
-              <div key={chapter.id} className="bg-card border border-border rounded-xl p-5 hover:shadow-lg transition-shadow">
+              <div key={chapter.chapterId} className="bg-card border border-border rounded-xl p-5 hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between">
                   <div className="flex-1 min-w-0">
                     <h3 className="py-1 font-semibold text-xl break-words">
@@ -61,7 +62,7 @@ export function ChapterList({ roleName, seriesData }) {
                     {console.log(`${roleName?.toLowerCase()}${seriesData.id}${chapter.id}`)}
                     <button
                       className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-                      onClick={() => handleNavigateToChapter(roleName?.toLowerCase(), seriesData?.id, chapter?.id)}
+                      onClick={() => handleNavigateToChapter(roleName?.toLowerCase(), seriesData?.seriesId, chapter?.chapterId)}
                     >
 
                       View Detail
