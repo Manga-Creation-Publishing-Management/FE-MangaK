@@ -39,12 +39,12 @@ export function Sidebar({ userRole }) {
       { icon: TrendingUp, label: 'Leaderboard', path: '/tantou/leaderboard', key: 'leaderboard' },
       { icon: Settings, label: 'Profile & Settings', path: '/tantou/profile', key: 'profile' },
     ],
-    editorialBoard: [
-      { icon: Home, label: 'Dashboard', path: '/editorialBoard', key: 'dashboard' },
-      { icon: FileSearch, label: 'Series Approval', path: '/editorialBoard/series', key: 'series' },
-      { icon: CalendarClock, label: 'Publishing Schedule', path: '/editorialBoard/schedule', key: 'schedule' },
-      { icon: TrendingUp, label: 'Leaderboard', path: '/editorialBoard/leaderboard', key: 'leaderboard' },
-      { icon: Settings, label: 'Profile & Settings', path: '/editorialBoard/profile', key: 'profile' },
+    editorial: [
+      { icon: Home, label: 'Dashboard', path: '/editorial', key: 'dashboard' },
+      { icon: FileSearch, label: 'Series Approval', path: '/editorial/series', key: 'series' },
+      { icon: CalendarClock, label: 'Publishing Schedule', path: '/editorial/schedule', key: 'schedule' },
+      { icon: TrendingUp, label: 'Leaderboard', path: '/editorial/leaderboard', key: 'leaderboard' },
+      { icon: Settings, label: 'Profile & Settings', path: '/editorial/profile', key: 'profile' },
     ],
   };
 

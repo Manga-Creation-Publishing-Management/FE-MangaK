@@ -77,8 +77,8 @@ export function AppRoutes() {
       </Route>
 
       {/* Editorial Board Routes */}
-      <Route element={<ProtectedRoute allowedRole="editorialBoard" />}>
-        <Route path="/editorialBoard" element={<Layout roleName="editorialBoard" />}>
+      <Route element={<ProtectedRoute allowedRole="editorial" />}>
+        <Route path="/editorial" element={<Layout roleName="editorial" />}>
           <Route index element={<EditorialDashboard />} />
           <Route path="series" element={<SeriesApproval />} />
           <Route path="series/:id" element={<SeriesDetail />} />
