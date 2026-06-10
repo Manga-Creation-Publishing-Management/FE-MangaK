@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { X } from 'lucide-react';
+import { X, CheckCircle } from 'lucide-react';
 import { StatusBadge } from '@/pages/shared/StatusBadge';
 import { Link } from 'react-router';
 import { WelcomeLine } from '../shared/WelcomeLine';
 // Service gọi API lấy danh sách series
 import { seriesService } from '../../services/seriesService';
-// [TẠM ẨN] Service gọi API cập nhật trạng thái series (duyệt/huỷ) — chờ backend API huỷ series
-// import { updateSeries } from '../../services/updateSeriesService';
+// Service gọi API cập nhật trạng thái series
+import { updateSeries } from '../../services/updateSeriesService';
 
 export function EditorialDashboard() {
 
@@ -26,6 +26,12 @@ export function EditorialDashboard() {
 
   // isLoading: Trạng thái đang tải dữ liệu từ API (hiển thị loading text)
   const [isLoading, setIsLoading] = useState(true);
+
+  // showSuccessModal: Điều khiển hiển thị modal thông báo huỷ thành công
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  // cancelledSeriesName: Lưu tên series vừa huỷ thành công để hiển thị trong modal
+  const [cancelledSeriesName, setCancelledSeriesName] = useState('');
 
   // ==================== HÀM GỌI API ====================
 
@@ -79,18 +85,27 @@ export function EditorialDashboard() {
   };
 
   // handleCancelConfirm: Khi nhấn "Confirm Cancel" trong modal
-  // [TẠM ẨN] Chờ backend API hoàn thành để thêm logic gọi API huỷ series
-  const handleCancelConfirm = () => {
+  const handleCancelConfirm = async () => {
     if (!cancelFeedback.trim()) {
       alert('Please provide feedback for cancellation');
       return;
     }
-    // TODO: Gọi API huỷ series khi backend hoàn thành
-    // await updateSeries.updateToApprove(selectedSeries.id, { isApproved: false, note: cancelFeedback });
-    alert('Chức năng huỷ series chưa sẵn sàng — chờ backend API.');
-    setShowCancelModal(false);
-    setCancelFeedback('');
-    setSelectedSeries(null);
+    
+    try {
+      await updateSeries.cancelSeries(selectedSeries.id, cancelFeedback);
+      // Lưu tên series vừa huỷ để hiển thị trong modal thành công
+      setCancelledSeriesName(selectedSeries.name);
+      setShowCancelModal(false);
+      setCancelFeedback('');
+      setSelectedSeries(null);
+      // Hiển thị modal thông báo thành công
+      setShowSuccessModal(true);
+      // Refresh list after successful cancellation
+      fetchApprovedSeries();
+    } catch (error) {
+      console.error('Failed to cancel series:', error);
+      alert('Failed to cancel series. Please try again.');
+    }
   };
 
   // ==================== PHẦN RENDER (JSX) ====================
@@ -211,6 +226,35 @@ export function EditorialDashboard() {
                 Confirm Cancel
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ==================== MODAL THÔNG BÁO HUỶ THÀNH CÔNG ==================== */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-card rounded-xl p-8 w-full max-w-sm text-center">
+
+            {/* Icon thành công */}
+            <div className="flex justify-center mb-4">
+              <CheckCircle size={56} className="text-success" />
+            </div>
+
+            {/* Tiêu đề */}
+            <h2 className="mb-2 text-xl font-semibold">Series Cancelled</h2>
+
+            {/* Nội dung */}
+            <p className="text-sm text-muted-foreground mb-6">
+              <strong>{cancelledSeriesName}</strong> has been cancelled successfully.
+            </p>
+
+            {/* Nút đóng */}
+            <button
+              onClick={() => setShowSuccessModal(false)}
+              className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+            >
+              OK
+            </button>
           </div>
         </div>
       )}

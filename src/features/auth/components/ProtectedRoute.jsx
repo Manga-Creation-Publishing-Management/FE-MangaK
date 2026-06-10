@@ -16,7 +16,9 @@ export function ProtectedRoute({ allowedRole }) {
   const rolePathMap = {
     mangaka: 'mangaka',
     assistant: 'assistant',
+    tantou: 'tantouEditor',
     tantoueditor: 'tantouEditor',
+    editorial: 'editorialBoard',
     editorialboard: 'editorialBoard',
     admin: 'admin',
     reader: 'reader',
@@ -25,10 +27,10 @@ export function ProtectedRoute({ allowedRole }) {
   try {
     const user = JSON.parse(userString);
     const userRole = (user.role || '').toLowerCase();
+    const normalizedUserRole = rolePathMap[userRole] || userRole;
 
-    if (userRole !== allowedRole.toLowerCase()) {
-      const rolePath = rolePathMap[userRole] || userRole;
-      return <Navigate to={`/${rolePath}`} replace />;
+    if (normalizedUserRole !== allowedRole) {
+      return <Navigate to={`/${normalizedUserRole}`} replace />;
     }
   } catch (error) {
     // Clear potentially corrupted session data

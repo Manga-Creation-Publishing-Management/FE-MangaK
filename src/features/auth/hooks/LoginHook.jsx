@@ -56,7 +56,9 @@ export function LoginHook() {
             const rolePathMap = {
                 mangaka: 'mangaka',
                 assistant: 'assistant',
+                tantou: 'tantouEditor',
                 tantoueditor: 'tantouEditor',
+                editorial: 'editorialBoard',
                 editorialboard: 'editorialBoard',
                 admin: 'admin',
                 reader: 'reader',

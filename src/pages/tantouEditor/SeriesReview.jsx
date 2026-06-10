@@ -11,7 +11,7 @@ export function SeriesReview() {
           <p className="text-muted-foreground">Review and approve series for Editorial Board</p>
         </div>
       </div>
-      <SeriesManagement role="tantouEditor" statusFilter={["Processing", "Rejected", "PendingBoard", "Approved"]} />
+      <SeriesManagement role="tantouEditor" statusFilter={["Processing", "Rejected", "Publishing", "Approved", "Cancelled"]} />
 
       {/* </div > */}
     </>
