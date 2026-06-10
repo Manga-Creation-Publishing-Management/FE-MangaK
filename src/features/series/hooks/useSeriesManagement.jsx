@@ -11,8 +11,8 @@ export function useSeriesManagement() {
     navigate(`/${role}/series/${seriesId}`, { state: { role } });
   }
 
-  const handleNavigateToChapter = (role, seriesId, chapterData) => {
-    navigate(`/${role}/chapter/${chapterData}`, { state: { role } });
+  const handleNavigateToChapter = (role, seriesId, chapterId) => {
+    navigate(`/${role}/chapter/${chapterId}`, { state: { role, seriesId, chapterId } });
   }
 
   const handleReload = () => {

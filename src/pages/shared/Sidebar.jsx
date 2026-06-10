@@ -24,7 +24,7 @@ export function Sidebar({ userRole }) {
       { icon: Home, label: 'Dashboard', path: '/mangaka', key: 'dashboard' },
       { icon: FolderKanban, label: 'Series Management', path: '/mangaka/series', key: 'series' },
       { icon: ClipboardList, label: 'Task Management', path: '/mangaka/tasks', key: 'tasks' },
-      { icon: TrendingUp, label: 'Leaderboard', path: '/mangaka/tracking', key: 'tracking' },
+      { icon: TrendingUp, label: 'Leaderboard', path: '/mangaka/leaderboard', key: 'leaderboard' },
       { icon: Settings, label: 'Profile & Settings', path: '/mangaka/profile', key: 'profile' },
     ],
     assistant: [
@@ -36,15 +36,14 @@ export function Sidebar({ userRole }) {
     tantou: [
       { icon: Home, label: 'Dashboard', path: '/tantou', key: 'dashboard' },
       { icon: FolderKanban, label: 'Series Review', path: '/tantou/series', key: 'series' },
-      { icon: TrendingUp, label: 'Leaderboard', path: '/tantou/tracking', key: 'tracking' },
+      { icon: TrendingUp, label: 'Leaderboard', path: '/tantou/leaderboard', key: 'leaderboard' },
       { icon: Settings, label: 'Profile & Settings', path: '/tantou/profile', key: 'profile' },
     ],
     editorial: [
       { icon: Home, label: 'Dashboard', path: '/editorial', key: 'dashboard' },
       { icon: FileSearch, label: 'Series Approval', path: '/editorial/series', key: 'series' },
       { icon: CalendarClock, label: 'Publishing Schedule', path: '/editorial/schedule', key: 'schedule' },
-      { icon: Upload, label: 'Rating Data Import', path: '/editorial/voting', key: 'voting' },
-      { icon: TrendingUp, label: 'Leaderboard', path: '/editorial/tracking', key: 'tracking' },
+      { icon: TrendingUp, label: 'Leaderboard', path: '/editorial/leaderboard', key: 'leaderboard' },
       { icon: Settings, label: 'Profile & Settings', path: '/editorial/profile', key: 'profile' },
     ],
   };
@@ -70,9 +69,11 @@ export function Sidebar({ userRole }) {
       <nav className="space-y-1 flex-1">
         {items.map((item) => {
           const Icon = item.icon;
+          const cleanPath = location.pathname.replace(/\/$/, "");
+          const cleanItemPath = item.path.replace(/\/$/, "");
           const isActive = item.key === 'dashboard'
-            ? location.pathname === item.path
-            : location.pathname.startsWith(item.path);
+            ? cleanPath === cleanItemPath
+            : cleanPath.startsWith(cleanItemPath);
 
           return (
             <Link

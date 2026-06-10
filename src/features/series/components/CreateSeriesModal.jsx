@@ -1,8 +1,10 @@
 import { useEffect } from "react";
+import { X } from "lucide-react";
 import useCreateSeries from "../hooks/useCreateSeries";
 export default function CreateSeriesModal({ onClose, onReload }) {
 
   const {
+    isLoading,
     genreList,
     selectGenres,
     coverFile,
@@ -20,9 +22,11 @@ export default function CreateSeriesModal({ onClose, onReload }) {
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-card rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-card border-b border-border p-6 flex justify-between items-center">
-          <h2>Create New Series</h2>
-          <button className="p-2 hover:bg-muted rounded-lg transition-colors">
-
+          <div className="text-2xl font-semibold">Create New Series</div>
+          <button onClick={onClose}
+            className="p-2 hover:bg-muted rounded-lg transition-colors"
+            disabled={isLoading}>
+              <X/>
           </button>
         </div>
 
@@ -44,11 +48,11 @@ export default function CreateSeriesModal({ onClose, onReload }) {
             <label>Genres</label>
             <div className="flex flex-wrap gap-2">
               {genreList.map(item => {
-                const isSelected = selectGenres.includes(item.id);
+                const isSelected = selectGenres.includes(item.categoryId);
                 return (<button
                   type="button"
-                  key={item.id}
-                  onClick={() => handleActive(item.id)}
+                  key={item.categoryId}
+                  onClick={() => handleActive(item.categoryId)}
                   className={`px-3 py-1.5 rounded-lg border text-sm transition-colors cursor-pointer ${isSelected
                     ? "bg-primary text-primary-foreground border-primary" 
                     : "bg-background border-border hover:bg-muted"     
@@ -118,7 +122,7 @@ export default function CreateSeriesModal({ onClose, onReload }) {
               )}
               <input
                 type="file"
-                accept="image/*"
+                accept=".pdf,.zip"
                 className="hidden"
                 ref={storyInputRef}
                 onChange={handleStoryChange}
@@ -135,9 +139,10 @@ export default function CreateSeriesModal({ onClose, onReload }) {
             </button>
             <button
               type="submit"
+              disabled={isLoading}
               className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
             >
-              Create
+              {isLoading ? "Creating..." : "Create"}
             </button>
           </div>
         </form>

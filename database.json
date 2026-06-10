@@ -4,14 +4,15 @@
       "id": "1",
       "title": "One Piece",
       "description": "Câu chuyện về cuộc hành trình của Monkey D. Luffy - thuyền trưởng của băng hải tặc Mũ Rơm và các đồng đội của cậu nhằm tìm kiếm vùng biển bí ẩn nơi lưu giữ kho báu lớn nhất thế giới One Piece.",
-      "status": "processing",
+      "status": "pending",
       "createdAt": "2026-01-15T08:30:00Z",
       "updatedAt": "2026-05-30T14:20:00Z",
       "genres": [
         2
       ],
       "coverFile": "https://th.bing.com/th/id/R.d3f983e8f1a75519f6a7068ede61a1dc?rik=FwYUAsoXJjc9sg&pid=ImgRaw&r=0",
-      "nameFile": "one-piece"
+      "nameFile": "one-piece",
+      "feedback": ""
     },
     {
       "id": "2",
@@ -40,6 +41,18 @@
       ],
       "coverFile": "https://tse2.mm.bing.net/th/id/OIP.rd9MHC8QzbOF3Rg8Mc8sHgHaFO?rs=1&pid=ImgDetMain&o=7&rm=3",
       "nameFile": "chainsaw-man"
+    },
+    {
+      "title": "Doreamon",
+      "description": "ABC",
+      "genres": [
+        "1",
+        "3",
+        "5"
+      ],
+      "coverFile": "image.png",
+      "nameFile": "MODEL-Statechart.drawio.png",
+      "id": "5kpxP-1Grto"
     }
   ],
   "genre": [
@@ -121,7 +134,7 @@
       "id": "4",
       "seriesId": "2",
       "chapterNumber": 2,
-      "title": "Konohamaru fdsf  sdf sdf ds f ds f ds fsd f dsflfdnlk sdg  sgushfiuwe dsfdsf fsd fsdfsdf fsdfsdfdsf fsdfd ",
+      "title": "Konohamaru!",
       "summary": "Naruto gặp gỡ Konohamaru - cháu trai của Hokage Đệ Tam và trở thành người thầy đầu tiên của cậu bé.",
       "manuscriptFileUrl": "https://storage.example.com/manuscripts/naruto/ch2_raw.docx",
       "chapterFileUrl": "https://storage.example.com/chapters/naruto/chapter-2.pdf",

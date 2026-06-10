@@ -18,8 +18,8 @@ export function TantouDashboard() {
                         iconColor="#fbbf24" valueNum={3} />
                 </div>
 
-                <div className='p-3 mt-2 text-2xl font-medium text-foreground'>Assigned Series</div>
-                <SeriesManagement role="tantou" />
+                <div className='p-3 mt-5 ml-1 text-2xl font-medium text-foreground'>Assigned Series</div>
+                <SeriesManagement role="tantouEditor" statusFilter={["Processing", "PendingBoard", "Rejected", "Approved"]} />
 
                 <div>Div này cho Mailbox (feedback)</div>
             </div>

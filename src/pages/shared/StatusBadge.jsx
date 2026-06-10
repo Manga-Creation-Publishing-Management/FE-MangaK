@@ -4,14 +4,17 @@ export function StatusBadge({ status }) {
     'rejected': 'bg-destructive/10 text-destructive border-destructive/30',
     'approved': 'bg-success/10 text-success border-success/30',
     'pending': 'bg-warning/10 text-warning border-warning/30',
+    'publishing': 'bg-green-500 text-white border-green-500/30',
+    'cancelled': 'bg-red-500 text-white border-red-500/30'
   };
 
   const labels = {
-    'need-review': 'Need to Review',
     'processing': 'Processing',
     'rejected': 'Rejected',
     'approved': 'Approved',
     'pending': 'Pending',
+    'publishing': 'Publishing',
+    'cancelled': 'Cancelled'
   };
 
   const currentStyle = styles[status] || '';
