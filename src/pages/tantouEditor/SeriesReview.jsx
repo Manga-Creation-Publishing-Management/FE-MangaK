@@ -1,4 +1,3 @@
-import { ApprovalPanel } from "../shared/ApprovalPanel";
 import { SeriesManagement } from "../shared/SeriesManagement";
 
 export function SeriesReview() {

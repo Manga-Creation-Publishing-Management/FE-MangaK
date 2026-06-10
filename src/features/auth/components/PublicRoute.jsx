@@ -9,11 +9,23 @@ export function PublicRoute() {
   const userString = localStorage.getItem('user');
 
   if (token && userString) {
+    const rolePathMap = {
+      mangaka: 'mangaka',
+      assistant: 'assistant',
+      tantou: 'tantouEditor',
+      tantoueditor: 'tantouEditor',
+      editorial: 'editorialBoard',
+      editorialboard: 'editorialBoard',
+      admin: 'admin',
+      reader: 'reader',
+    };
+
     try {
       const user = JSON.parse(userString);
       const userRole = (user.role || '').toLowerCase();
       if (userRole) {
-        return <Navigate to={`/${userRole}`} replace />;
+        const rolePath = rolePathMap[userRole] || userRole;
+        return <Navigate to={`/${rolePath}`} replace />;
       }
     } catch (error) {
       // Clear corrupted local storage data so user can re-authenticate

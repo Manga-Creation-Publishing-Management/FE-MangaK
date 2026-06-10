@@ -106,7 +106,7 @@ export function SeriesDetail() {
                 <h1 className="text-2xl font-semibold">{detailData?.title}</h1>
                 <p className="text-muted-foreground mt-1">{detailData?.mangakaName}</p>
               </div>
-              <StatusBadge status={currentStatus} />
+              <StatusBadge status={currentStatus?.toLowerCase()} />
             </div>
             <div className="grid grid-cols-2 gap-6">
               <div>
