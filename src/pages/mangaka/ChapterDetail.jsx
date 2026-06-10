@@ -1,4 +1,4 @@
-import { useLocation, useParams } from "react-router";
+import { useLocation, useParams, useNavigate } from "react-router";
 import { StatusBadge } from "../shared/StatusBadge";
 import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { useState } from 'react';
@@ -13,6 +13,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 
 export function ChapterDetail() {
 
+  const navigate = useNavigate();
   const [numPages, setNumPages] = useState(null);
 
   function onDocumentLoadSuccess({ numPages }) {
@@ -35,7 +36,7 @@ export function ChapterDetail() {
     <>
       <div className="p-8 space-y-8">
         <button
-          // onClick={() => navigate(-1)}
+          onClick={() => navigate(-1)}
           className="flex cursor-pointer items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft size={20} />
@@ -51,7 +52,7 @@ export function ChapterDetail() {
                 <p className="mt-1 text-foreground">Summary: {chapterDetail?.summary}</p>
               </div>
             </div>
-            
+
 
             {/* Cụm bên phải: Gom Badge và Upload Date lại chung một nhóm */}
             <div className="flex flex-col items-end space-y-2">
@@ -62,7 +63,7 @@ export function ChapterDetail() {
                 </div>
               }
             </div>
-            
+
           </div>
 
           <div className="w-full h-[350px] overflow-y-auto border border-gray-300 bg-zinc-700 p-4 rounded-lg shadow-inner">
