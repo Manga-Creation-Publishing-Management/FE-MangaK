@@ -19,9 +19,9 @@ export function SeriesDetail() {
   // Fallback to path checking if state was lost (e.g. page refresh)
   let roleFromState = location.state?.role;
   if (!roleFromState) {
-    if (pathname.includes("tantoueditor")) {
-      roleFromState = "tantouEditor";
-    } else if (pathname.includes("editorialboard")) {
+    if (pathname.includes("tantou")) {
+      roleFromState = "tantou";
+    } else if (pathname.includes("editorial")) {
       roleFromState = "editorial";
     }
   }
@@ -61,8 +61,10 @@ export function SeriesDetail() {
   const normalizedStatus = currentStatus?.toLowerCase();
   const normalizedRole = roleFromState?.toLowerCase();
 
-  const isTantou = normalizedRole === "tantou" || normalizedRole === "tantoueditor";
-  const isEditorial = normalizedRole === "editorial" || normalizedRole === "editorialboard";
+  const isTantou = normalizedRole === "tantou";
+  const isEditorial = normalizedRole === "editorial";
+
+  console.log(`Is tantou? ${isTantou}`);
 
   console.log("SeriesDetail render debug:", {
     detailData,
@@ -72,7 +74,8 @@ export function SeriesDetail() {
     normalizedRole,
     isTantou,
     isEditorial,
-    showPanel: (isTantou || isEditorial) && (normalizedStatus === 'processing' || normalizedStatus === 'pending')
+    showPanel: (((isTantou) && (normalizedStatus === 'processing'))
+      || ((isEditorial) && (normalizedStatus === 'pending')))
   });
 
   // Determine button text based on role
