@@ -24,8 +24,8 @@ import { LeaderboardPage } from '../pages/shared/LeaderboardPage.jsx';
 const roleDisplayNames = {
   mangaka: "Mangaka",
   assistant: "Assistant",
-  tantouEditor: "Tantou Editor",
-  editorialBoard: "Editorial Board",
+  tantou: "Tantou Editor",
+  editorial: "Editorial Board",
   admin: "Admin",
   reader: "Reader"
 };
@@ -65,8 +65,8 @@ export function AppRoutes() {
       </Route>
 
       {/* Tantou Editor Routes */}
-      <Route element={<ProtectedRoute allowedRole="tantouEditor" />}>
-        <Route path="/tantouEditor" element={<Layout roleName="tantouEditor" />}>
+      <Route element={<ProtectedRoute allowedRole="tantou" />}>
+        <Route path="/tantou" element={<Layout roleName="tantou" />}>
           <Route index element={<TantouDashboard />} />
           <Route path="series" element={<SeriesReview />} />
           <Route path="series/:id" element={<SeriesDetail />} />
@@ -101,6 +101,7 @@ export function AppRoutes() {
       <Route element={<ProtectedRoute allowedRole="reader" />}>
         <Route path="/reader" element={<Layout roleName="reader" />}>
           <Route index element={<ReaderDashboard />} />
+          <Route path="series/:id" element={<SeriesDetail />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Route>

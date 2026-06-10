@@ -58,7 +58,7 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
         <div className="grid grid-cols-3 gap-6">
           {filteredSeriesData?.map(item => (
             <div key={item.seriesId} className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
-              <div className='h-48 w-100 relative'>
+              <div className='h-48 w-full relative'>
                 <img className="w-full h-full object-cover" src={item.coverFile} alt="cover file" />
               </div>
               <div className="p-6 space-y-4">

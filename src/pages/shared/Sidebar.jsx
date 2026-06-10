@@ -33,11 +33,11 @@ export function Sidebar({ userRole }) {
       { icon: DollarSign, label: 'Income', path: '/assistant/income', key: 'income' },
       { icon: Settings, label: 'Profile & Settings', path: '/assistant/profile', key: 'profile' },
     ],
-    tantouEditor: [
-      { icon: Home, label: 'Dashboard', path: '/tantouEditor', key: 'dashboard' },
-      { icon: FolderKanban, label: 'Series Review', path: '/tantouEditor/series', key: 'series' },
-      { icon: TrendingUp, label: 'Leaderboard', path: '/tantouEditor/leaderboard', key: 'leaderboard' },
-      { icon: Settings, label: 'Profile & Settings', path: '/tantouEditor/profile', key: 'profile' },
+    tantou: [
+      { icon: Home, label: 'Dashboard', path: '/tantou', key: 'dashboard' },
+      { icon: FolderKanban, label: 'Series Review', path: '/tantou/series', key: 'series' },
+      { icon: TrendingUp, label: 'Leaderboard', path: '/tantou/leaderboard', key: 'leaderboard' },
+      { icon: Settings, label: 'Profile & Settings', path: '/tantou/profile', key: 'profile' },
     ],
     editorialBoard: [
       { icon: Home, label: 'Dashboard', path: '/editorialBoard', key: 'dashboard' },
