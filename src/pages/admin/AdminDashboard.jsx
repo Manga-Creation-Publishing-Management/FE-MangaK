@@ -14,6 +14,7 @@ import {
 import { WelcomeLine } from "../shared/WelcomeLine.jsx";
 import { OverviewCard } from "../shared/OverviewCard.jsx";
 import { userService } from "../../services/userService.js";
+import { CustomSelect } from "../../shared/components/CustomSelect.jsx";
 
 const roleLabels = {
   mangaka: "Mangaka",
@@ -58,7 +59,8 @@ export function AdminDashboard() {
   const [newLastName, setNewLastName] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [newPhone, setNewPhone] = useState("");
-  const [newRole, setNewRole] = useState("mangaka");
+  const [newAuthorName, setNewAuthorName] = useState("");
+  const [newRole, setNewRole] = useState("editorial");
   const [newPassword, setNewPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [createError, setCreateError] = useState("");
@@ -196,6 +198,7 @@ export function AdminDashboard() {
         email: newEmail.trim(),
         password: newPassword.trim(),
         phone: newPhone.trim(),
+        authorName: newRole === 'mangaka' ? newAuthorName.trim() : null,
         status: "Active",
       });
 
@@ -204,6 +207,7 @@ export function AdminDashboard() {
       setNewLastName("");
       setNewEmail("");
       setNewPhone("");
+      setNewAuthorName("");
       setNewRole("mangaka");
       setNewPassword("");
       setCreateError("");
@@ -306,26 +310,30 @@ export function AdminDashboard() {
               className="w-full pl-10 pr-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
-          <select
-            value={filterRole}
-            onChange={(e) => setFilterRole(e.target.value)}
-            className="px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-          >
-            <option value="all">All Roles</option>
-            <option value="mangaka">Mangaka</option>
-            <option value="assistant">Assistant</option>
-            <option value="tantou">Tantou Editor</option>
-            <option value="editorial">Editorial Board</option>
-          </select>
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-          >
-            <option value="all">All Status</option>
-            <option value="active">Active</option>
-            <option value="suspended">Suspended</option>
-          </select>
+          <div className="w-48">
+            <CustomSelect
+              value={filterRole}
+              onChange={setFilterRole}
+              options={[
+                { value: "all", label: "All Roles" },
+                { value: "mangaka", label: "Mangaka" },
+                { value: "assistant", label: "Assistant" },
+                { value: "tantou", label: "Tantou Editor" },
+                { value: "editorial", label: "Editorial Board" }
+              ]}
+            />
+          </div>
+          <div className="w-40">
+            <CustomSelect
+              value={filterStatus}
+              onChange={setFilterStatus}
+              options={[
+                { value: "all", label: "All Status" },
+                { value: "active", label: "Active" },
+                { value: "suspended", label: "Suspended" }
+              ]}
+            />
+          </div>
         </div>
 
         {/* User Table */}
@@ -503,20 +511,36 @@ export function AdminDashboard() {
                   </div>
                 </div>
 
-                <div>
-                  <label className="text-sm text-muted-foreground mb-1.5 block">
-                    Role
-                  </label>
-                  <select
-                    value={newRole}
-                    onChange={(e) => setNewRole(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-                  >
-                    <option value="mangaka">Mangaka</option>
-                    <option value="assistant">Assistant</option>
-                    <option value="tantou">Tantou Editor</option>
-                    <option value="editorial">Editorial Board</option>
-                  </select>
+                <div className={`grid ${newRole === 'mangaka' ? 'grid-cols-2 gap-4' : 'grid-cols-1'}`}>
+                  <div>
+                    <label className="text-sm text-muted-foreground mb-1.5 block">
+                      Role
+                    </label>
+                    <CustomSelect
+                      value={newRole}
+                      onChange={setNewRole}
+                      options={[
+                        { value: "mangaka", label: "Mangaka" },
+                        { value: "assistant", label: "Assistant" },
+                        { value: "tantou", label: "Tantou Editor" },
+                        { value: "editorial", label: "Editorial Board" }
+                      ]}
+                    />
+                  </div>
+                  {newRole === 'mangaka' && (
+                    <div>
+                      <label className="text-sm text-muted-foreground mb-1.5 block">
+                        Author Name
+                      </label>
+                      <input
+                        type="text"
+                        value={newAuthorName}
+                        onChange={(e) => setNewAuthorName(e.target.value)}
+                        placeholder="Pen Name"
+                        className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div>
