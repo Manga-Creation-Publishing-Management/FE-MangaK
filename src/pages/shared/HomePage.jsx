@@ -1,8 +1,8 @@
-import { LoginHook } from '../../features/auth/hooks/LoginHook'
+import { useNavigate } from 'react-router';
 import { FooterPage } from './FooterPage';
 
 export function HomePage() {
-  const { navigate } = LoginHook();
+  const navigate = useNavigate();
 
   return (
     <div className="bg-muted min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300">

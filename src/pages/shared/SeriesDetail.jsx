@@ -61,7 +61,7 @@ export function SeriesDetail() {
   const normalizedStatus = currentStatus?.toLowerCase();
   const normalizedRole = roleFromState?.toLowerCase();
 
-  const isTantou = normalizedRole === "tantou" || normalizedRole === "tantouEditor";
+  const isTantou = normalizedRole === "tantou" || normalizedRole === "tantoueditor";
   const isEditorial = normalizedRole === "editorial" || normalizedRole === "editorialboard";
 
   console.log("SeriesDetail render debug:", {
@@ -103,7 +103,7 @@ export function SeriesDetail() {
                 <h1 className="text-2xl font-semibold">{detailData?.title}</h1>
                 <p className="text-muted-foreground mt-1">{detailData?.mangakaName}</p>
               </div>
-              <StatusBadge status={currentStatus} />
+              <StatusBadge status={currentStatus?.toLowerCase()} />
             </div>
             <div className="grid grid-cols-2 gap-6">
               <div>
@@ -135,7 +135,7 @@ export function SeriesDetail() {
 
         {/* feedback box for roles tantou and editorial, only when status is processing or pending */}
         {(isTantou || isEditorial) &&
-          (normalizedStatus === 'Processing' || normalizedStatus === 'pending') &&
+          (normalizedStatus === 'processing' || normalizedStatus === 'pending') &&
           <ApprovalPanel
             feedback={feedback}
             onFeedbackChange={(e) => setFeedback(e.target.value)}

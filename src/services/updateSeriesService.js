@@ -7,5 +7,9 @@ export const updateSeries = {
 
     async updateToApprove(seriesId, data) {
         return api.patch(`/Series/board-review/${seriesId}`, data);
+    },
+
+    async cancelSeries(seriesId, reason) {
+        return api.post(`/Series/${seriesId}/cancel`, { reason });
     }
 };
