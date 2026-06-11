@@ -8,6 +8,7 @@ import 'react-pdf/dist/Page/TextLayer.css';
 
 import { ArrowLeft } from "lucide-react";
 import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
+import { ApprovalPanel } from "../shared/ApprovalPanel";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;// File PDF thường rất nặng và tốn phần cứng để xử lý. Dòng này kích hoạt một "Worker" chạy ngầm dưới trình duyệt, giúp việc dịch file PDF diễn ra ở một luồng độc lập, không làm đơ/lag giao diện web
 
@@ -100,6 +101,8 @@ export function ChapterDetail() {
             </Document>
 
           </div>
+
+          {/* <ApprovalPanel chapterId={chapterId} role=''/> */}
 
 
 

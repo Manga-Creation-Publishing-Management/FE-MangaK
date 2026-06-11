@@ -16,7 +16,7 @@ export function ChapterList({ roleName, seriesData }) {
 
   return (
     <>
-      {seriesData?.status === "Approved" || seriesData?.status === "Publishing" && (
+      {(seriesData?.status === "Approved" || seriesData?.status === "Publishing") && (
         <>
           <div className="flex justify-between items-center">
             <div>
@@ -44,39 +44,46 @@ export function ChapterList({ roleName, seriesData }) {
             </div>
           </div>
           <div className="space-y-4">
-            {chapterList?.map((chapter) => (
-              <div key={chapter.chapterId} className="bg-card border border-border rounded-xl p-5 hover:shadow-lg transition-shadow">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="py-1 font-semibold text-xl break-words">
-                      Chapter {chapter.chapterNumber}: {chapter.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground py-2">
-                      Uploaded: {chapter.createdAt}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-4 shrink-0">
-                    <StatusBadge status={chapter.status} />
+            {chapterList?.map((chapter) => {
+              const showChapter = roleName === 'reader'
+                ? chapter.status?.toLowerCase() === 'publishing'
+                : true; // nếu là reader, chapter k pub thì false, nếu không là reader thì true, 
+              // nếu vừa là reader và pub thì true
 
-                    {/* Đã xóa mt-4 thừa ở nút bấm để không bị lệch trục dọc */}
-                    {console.log(`${roleName?.toLowerCase()}${seriesData.id}${chapter.id}`)}
-                    <button
-                      className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-                      onClick={() => handleNavigateToChapter(roleName?.toLowerCase(), seriesData?.seriesId, chapter?.chapterId)}
-                    >
+              if (!showChapter) return null; //tức là nếu là reader mà chapter không pub sẽ không trả về
 
-                      View Detail
-                    </button>
+              return (
+                <div key={chapter.chapterId} className="bg-card border border-border rounded-xl p-5 hover:shadow-lg transition-shadow">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="py-1 font-semibold text-xl break-words">
+                        Chapter {chapter.chapterNumber}: {chapter.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground py-2">
+                        Uploaded: {chapter.createdAt}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-4 shrink-0">
+                      <StatusBadge status={chapter.status} />
 
+                      {/* Đã xóa mt-4 thừa ở nút bấm để không bị lệch trục dọc */}
+                      {console.log(`${roleName?.toLowerCase()}${seriesData.id}${chapter.id}`)}
+                      <button
+                        className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                        onClick={() => handleNavigateToChapter(roleName?.toLowerCase(), seriesData?.seriesId, chapter?.chapterId)}
+                      >
+
+                        View Detail
+                      </button>
+
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </>
-      )
-
-      }
+      )}
 
     </>
   )
