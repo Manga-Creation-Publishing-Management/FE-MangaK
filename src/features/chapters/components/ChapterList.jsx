@@ -4,36 +4,43 @@ import { Outdent, Plus } from "lucide-react";
 import { useCreateChapter } from "../hooks/useCreateChapter";
 import { useSeriesManagement } from "../../series/hooks/useSeriesManagement";
 
+// Component hiển thị danh sách các Chapter (chương) thuộc về một bộ truyện (Series)
 export function ChapterList({ roleName, seriesData }) {
 
   console.log("seriesID:", seriesData?.seriesId)
+  
+  // Dùng hook useCreateChapter để fetch danh sách các chapter dựa trên seriesId
   const { chapterList } = useCreateChapter(seriesData?.seriesId);
 
+  // Hook hỗ trợ việc điều hướng (chuyển trang) sang xem chi tiết một chapter
   const { handleNavigateToChapter } = useSeriesManagement();
 
   console.log("length", chapterList.length)
 
-
   return (
     <>
+      {/* Chỉ hiển thị danh sách Chapter khi bộ truyện có trạng thái là Approved (Đã duyệt) hoặc Publishing (Đang xuất bản) */}
       {seriesData?.status === "Approved" || seriesData?.status === "Publishing" && (
         <>
+          {/* Header của phần danh sách Chapter */}
           <div className="flex justify-between items-center">
             <div>
+              {/* Tiêu đề hiển thị kèm tổng số lượng chapter */}
               <h2 className="text-2xl ps-2 font-semibold ">Chapters ({chapterList?.length})</h2>
             </div>
+            
+            {/* Cụm nút bấm phía bên phải */}
             <div className="flex gap-3">
               <>
-                {/* <Link
-                  to={`/${role}/series/${id}/tasks`}
-                  className="flex items-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:opacity-90 transition-opacity"
-                >
-                  <Users size={20} />
-                  Manage Tasks
-                </Link> */}
+                {/* 
+                  Đoạn code comment cũ có vẻ là tính năng Manage Tasks (Quản lý công việc),
+                  tạm thời bị ẩn đi.
+                */}
+                
+                {/* Chỉ hiển thị nút "Add New Chapter" nếu user hiện tại là Mangaka */}
                 {roleName?.toLowerCase() === "mangaka" &&
                   <button
-                    // onClick={() => setShowAddChapter(true)}
+                    // onClick={() => setShowAddChapter(true)} // Tạm ẩn chức năng mở form thêm
                     className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:opacity-90 transition-opacity"
                   >
                     <Plus size={20} />
@@ -43,10 +50,14 @@ export function ChapterList({ roleName, seriesData }) {
               </>
             </div>
           </div>
+          
+          {/* Danh sách các card hiển thị thông tin từng chapter */}
           <div className="space-y-4">
             {chapterList?.map((chapter) => (
               <div key={chapter.chapterId} className="bg-card border border-border rounded-xl p-5 hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between">
+                  
+                  {/* Thông tin chữ bên trái: Số chương, Tựa đề, Ngày tải lên */}
                   <div className="flex-1 min-w-0">
                     <h3 className="py-1 font-semibold text-xl break-words">
                       Chapter {chapter.chapterNumber}: {chapter.title}
@@ -55,16 +66,20 @@ export function ChapterList({ roleName, seriesData }) {
                       Uploaded: {chapter.createdAt}
                     </p>
                   </div>
+                  
+                  {/* Cụm trạng thái và nút thao tác bên phải */}
                   <div className="flex items-center gap-4 shrink-0">
+                    {/* Component huy hiệu trạng thái của chapter */}
                     <StatusBadge status={chapter.status} />
 
-                    {/* Đã xóa mt-4 thừa ở nút bấm để không bị lệch trục dọc */}
+                    {/* Log debug */}
                     {console.log(`${roleName?.toLowerCase()}${seriesData.id}${chapter.id}`)}
+                    
+                    {/* Nút xem chi tiết (View Detail) chapter */}
                     <button
                       className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
                       onClick={() => handleNavigateToChapter(roleName?.toLowerCase(), seriesData?.seriesId, chapter?.chapterId)}
                     >
-
                       View Detail
                     </button>
 
@@ -75,7 +90,6 @@ export function ChapterList({ roleName, seriesData }) {
           </div>
         </>
       )
-
       }
 
     </>
