@@ -99,11 +99,8 @@ export function AppRoutes() {
 
       {/* Reader Routes */}
       <Route element={<ProtectedRoute allowedRole="reader" />}>
-        <Route path="/reader" element={<Layout roleName="reader" />}>
-          <Route index element={<ReaderDashboard />} />
-          <Route path="series/:id" element={<SeriesDetail />} />
-          <Route path="profile" element={<ProfilePage />} />
-        </Route>
+        <Route path="/reader" element={<ReaderDashboard />} />
+        <Route path="reader/series/:id" element={<SeriesDetail />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />
