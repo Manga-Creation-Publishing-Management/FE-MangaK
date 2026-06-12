@@ -56,23 +56,16 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
         }
 
         <div className="grid grid-cols-3 gap-6">
-
-
           {filteredSeriesData?.map(item => (
             <div key={item.seriesId} className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
-              
-                <div className='h-48 w-full relative'>
-                  <img className="w-full h-full object-cover" src={item.coverFile} alt="cover file" />
-                </div>
-                <div className="p-6 space-y-4">
-                  <div>
-                    <h3>{item.title}</h3>
-                    <p className="text-sm text-muted-foreground mt-1">{item.totalChapters || 0} Chapters</p>
-                  </div>
-
+              <div className='h-48 w-full relative'>
+                <img className="w-full h-full object-cover" src={item.coverFile} alt="cover file" />
               </div>
-              <div className="p-3">
-
+              <div className="p-6 space-y-4">
+                <div>
+                  <h3>{item.title}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">{item.totalChapters || 0} Chapters</p>
+                </div>
                 <StatusBadge status={item?.status.toLowerCase()} />
                 <button className="cursor-pointer w-full block text-center mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
                   onClick={() => handleNavigate(role, item.seriesId)}
@@ -84,7 +77,6 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
           ))}
 
         </div>
-        {showCreateSeriesModal && (<CreateSeriesModal onClose={handleClick} onReload={handleReload} />)}
       </div>
 
 
