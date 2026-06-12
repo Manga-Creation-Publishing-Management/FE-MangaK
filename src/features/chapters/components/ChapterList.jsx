@@ -3,19 +3,24 @@ import { StatusBadge } from "../../../pages/shared/StatusBadge";
 import { Outdent, Plus } from "lucide-react";
 import { useCreateChapter } from "../hooks/useCreateChapter";
 import { useSeriesManagement } from "../../series/hooks/useSeriesManagement";
-import { ApprovalPanel } from "../../../pages/shared/ApprovalPanel";
 import { useUpdateChapter } from "../hooks/useUpdateChapter";
-
+import { useChapterRate } from "../hooks/useChapterRate";
+import { RatePanel } from "../../../pages/reader/RatePanel";
+import { useUpdateRateChapter } from "../hooks/useUpdateRateChapter";
 
 export function ChapterList({ roleName, seriesData }) {
 
   console.log("seriesID:", seriesData?.seriesId)
   const { chapterList } = useCreateChapter(seriesData?.seriesId);
   const { handleApprove, handleReject } = useUpdateChapter();
-
   const { handleNavigateToChapter } = useSeriesManagement();
 
-  console.log("length", chapterList.length)
+  //nhằm lấy series ID của chapter lấy đánh giá
+  const { activeChapterId, handlePopUp } = useChapterRate();
+
+  //gọi hook update
+  const { handleRateSubmit } = useUpdateRateChapter();
+  // console.log("length", chapterList.length)
 
 
   return (
@@ -72,15 +77,27 @@ export function ChapterList({ roleName, seriesData }) {
 
                       {/* Đã xóa mt-4 thừa ở nút bấm để không bị lệch trục dọc */}
                       {console.log(`${roleName?.toLowerCase()}${seriesData.id}${chapter.id}`)}
-                      <button
-                        className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-                        onClick={() => handleNavigateToChapter(roleName?.toLowerCase(), seriesData?.seriesId, chapter?.chapterId)}
-                      >
+                      {roleName !== 'reader' ?
+                        <div>
+                          <button
+                            className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                            onClick={() => handleNavigateToChapter(roleName?.toLowerCase(), seriesData?.seriesId, chapter?.chapterId)}
+                          >
 
-                        View Detail
-                      </button>
+                            View Detail
+                          </button>
+                        </div>
+                        :
+                        //nếu là reader thì hiện nút để Rate, không thì hiện nút view details
+                        <div>
+                          <button
+                            className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                            onClick={() => handlePopUp(chapter.chapterId)}
+                          >
 
-
+                            Rate chapter
+                          </button>
+                        </div>}
                     </div>
                   </div>
 
@@ -88,8 +105,18 @@ export function ChapterList({ roleName, seriesData }) {
               );
             })}
           </div>
+          {activeChapterId &&
+            <RatePanel
+              onClose={() => handlePopUp(null)}
+              onSubmit={async (rating) => {
+                await handleRateSubmit(activeChapterId, rating);
+                handlePopUp(null); //đóng popup
+              }}
+            />
+          }
         </>
-      )}
+      )
+      }
 
     </>
   )
