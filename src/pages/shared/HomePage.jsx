@@ -20,14 +20,11 @@ export function HomePage() {
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <button className="text-sm px-5 py-2.5 border border-border text-foreground hover:bg-muted/50 rounded-xl font-semibold transition-colors cursor-pointer">
-              Register
-            </button>
             <button
-              onClick={() => navigate('/login')}
+              onClick={() => navigate('/loginReader')}
               className="text-sm px-6 py-2.5 bg-primary text-primary-foreground hover:opacity-90 rounded-xl font-semibold shadow-sm transition-opacity cursor-pointer"
             >
-              Login
+              Reader Login
             </button>
           </div>
         </div>
