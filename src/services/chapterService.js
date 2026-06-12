@@ -18,5 +18,10 @@ export const chaptersService = {
   // có thể đây là code nháp (placeholder) của người phát triển trước)
   async createSeries(formData) {
     return await api.post("/Series/create-series", formData);
+  },
+  
+  async updateChapterStatus(seriesId, chapterId, data) {
+    return await api.patch(`/chapter/${seriesId}/${chapterId}`, data);
   }
+
 };

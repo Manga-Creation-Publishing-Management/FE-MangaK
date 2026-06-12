@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { chaptersService } from "../../../services/chapterService";
 
@@ -29,6 +30,8 @@ export function useChapterDetail(seriesId, chapterId) {
 
   // Trả về dữ liệu chi tiết để component giao diện có thể sử dụng
   return {
-    chapterDetail
+    chapterDetail,
+    setChapterDetail
+    // chapterListForm
   }
 }

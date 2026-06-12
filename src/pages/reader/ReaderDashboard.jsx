@@ -13,9 +13,7 @@ export function ReaderDashboard() {
 
     return (
         <div className='h-screen p-2 bg-background'>
-            {/* Thanh Header dành riêng cho Reader, hiển thị avatar */}
-            <HeaderPage roleName="reader" avatarUrl={avatarImgDemo} />
-            
+            <HeaderPage roleName="Reader" avatarUrl={avatarImgDemo} />
             <div className='p-5 bg-background'>
                 {/* Lời chào */}
                 <WelcomeLine roleName="Reader" />
