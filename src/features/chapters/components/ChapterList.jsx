@@ -16,7 +16,7 @@ export function ChapterList({ roleName, seriesData }) {
 
   return (
     <>
-      {(seriesData?.status === "Approved" || seriesData?.status === "Publishing") && (
+      {seriesData?.status === "Approved" || seriesData?.status === "Publishing" && (
         <>
           <div className="flex justify-between items-center">
             <div>
