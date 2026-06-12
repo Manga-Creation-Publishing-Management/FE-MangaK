@@ -1,5 +1,6 @@
-import { useLocation, useParams, useNavigate } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { StatusBadge } from "../shared/StatusBadge";
+import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -7,14 +8,11 @@ import 'react-pdf/dist/Page/TextLayer.css';
 
 import { ArrowLeft } from "lucide-react";
 import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
-import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter";
-import { ApprovalPanel } from "../shared/ApprovalPanel";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;// File PDF thường rất nặng và tốn phần cứng để xử lý. Dòng này kích hoạt một "Worker" chạy ngầm dưới trình duyệt, giúp việc dịch file PDF diễn ra ở một luồng độc lập, không làm đơ/lag giao diện web
 
 export function ChapterDetail() {
 
-  const navigate = useNavigate();
   const [numPages, setNumPages] = useState(null);
 
   function onDocumentLoadSuccess({ numPages }) {
@@ -24,15 +22,12 @@ export function ChapterDetail() {
   const seriesId = useLocation().state?.seriesId;
 
   const chapterId = useLocation().state?.chapterId;
-  const currentRole = useLocation().state?.role;
 
   // const validSeriesData = seriesData.find(item => String(item.id) == String(seriesIdFromState))
 
   // const validChapterData = chapterList.find(item => String(item.id) == String(chapterId))
 
-  const { chapterDetail, setChapterDetail } = useChapterDetail(seriesId, chapterId);
-  const { handleApprove, handleReject, feedback, setFeedback } = useUpdateChapter(seriesId, chapterId);
-
+  const { chapterDetail } = useChapterDetail(seriesId, chapterId)
 
   console.log(chapterDetail);
 
@@ -40,7 +35,7 @@ export function ChapterDetail() {
     <>
       <div className="p-8 space-y-8">
         <button
-          onClick={() => navigate(-1)}
+          // onClick={() => navigate(-1)}
           className="flex cursor-pointer items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft size={20} />
@@ -56,7 +51,7 @@ export function ChapterDetail() {
                 <p className="mt-1 text-foreground">Summary: {chapterDetail?.summary}</p>
               </div>
             </div>
-
+            
 
             {/* Cụm bên phải: Gom Badge và Upload Date lại chung một nhóm */}
             <div className="flex flex-col items-end space-y-2">
@@ -67,7 +62,7 @@ export function ChapterDetail() {
                 </div>
               }
             </div>
-
+            
           </div>
 
           <div className="w-full h-[350px] overflow-y-auto border border-gray-300 bg-zinc-700 p-4 rounded-lg shadow-inner">
@@ -104,11 +99,6 @@ export function ChapterDetail() {
             </Document>
 
           </div>
-          {currentRole.toLowerCase() == 'tantou' &&
-
-            < ApprovalPanel onApprove={() =>
-              handleApprove(chapterId, currentRole, chapterDetail?.status, setChapterDetail)} />
-          }
 
 
 

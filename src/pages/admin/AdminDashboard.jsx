@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Plus,
   Search,
@@ -13,8 +13,6 @@ import {
 } from "lucide-react";
 import { WelcomeLine } from "../shared/WelcomeLine.jsx";
 import { OverviewCard } from "../shared/OverviewCard.jsx";
-import { userService } from "../../services/userService.js";
-import { CustomSelect } from "../../shared/components/CustomSelect.jsx";
 
 const roleLabels = {
   mangaka: "Mangaka",
@@ -30,23 +28,83 @@ const roleColors = {
   editorial: "bg-success/10 text-success border-success/30",
 };
 
-// Map role từ API về key nội bộ dùng trong FE
-const mapApiRole = (role) => {
-  const roleMap = {
-    mangaka: "mangaka",
-    assistant: "assistant",
-    tantou: "tantou",
-    tantoureditor: "tantou",
-    editorial: "editorial",
-    editorialboard: "editorial",
-    admin: "admin",
-  };
-  return roleMap[role?.toLowerCase()] || role?.toLowerCase() || "mangaka";
-};
+const initialUsers = [
+  {
+    id: 1,
+    name: "Akira Tanaka",
+    email: "akira@comicmanager.com",
+    phone: "+84 987 654 321",
+    role: "mangaka",
+    status: "active",
+    createdAt: "2026-01-10",
+  },
+  {
+    id: 2,
+    name: "Yuki Sato",
+    email: "yuki@comicmanager.com",
+    phone: "+84 912 345 678",
+    role: "mangaka",
+    status: "active",
+    createdAt: "2026-01-15",
+  },
+  {
+    id: 3,
+    name: "Hiro Yamada",
+    email: "hiro@comicmanager.com",
+    phone: "+84 903 111 222",
+    role: "mangaka",
+    status: "suspended",
+    createdAt: "2026-02-01",
+  },
+  {
+    id: 4,
+    name: "Mei Nakamura",
+    email: "mei@comicmanager.com",
+    phone: "+84 977 333 444",
+    role: "assistant",
+    status: "active",
+    createdAt: "2026-01-20",
+  },
+  {
+    id: 5,
+    name: "Ryu Watanabe",
+    email: "ryu@comicmanager.com",
+    phone: "+84 966 555 666",
+    role: "assistant",
+    status: "active",
+    createdAt: "2026-02-10",
+  },
+  {
+    id: 6,
+    name: "Sara Ito",
+    email: "sara@comicmanager.com",
+    phone: "+84 988 777 888",
+    role: "assistant",
+    status: "suspended",
+    createdAt: "2026-03-05",
+  },
+  {
+    id: 7,
+    name: "Kenji Suzuki",
+    email: "kenji@comicmanager.com",
+    phone: "+84 901 888 999",
+    role: "tantou",
+    status: "active",
+    createdAt: "2026-01-08",
+  },
+  {
+    id: 8,
+    name: "Aiko Matsuda",
+    email: "aiko@comicmanager.com",
+    phone: "+84 909 222 333",
+    role: "editorial",
+    status: "active",
+    createdAt: "2026-01-05",
+  },
+];
 
 export function AdminDashboard() {
-  const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [users, setUsers] = useState(initialUsers);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterRole, setFilterRole] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -59,42 +117,10 @@ export function AdminDashboard() {
   const [newLastName, setNewLastName] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [newPhone, setNewPhone] = useState("");
-  const [newAuthorName, setNewAuthorName] = useState("");
-  const [newRole, setNewRole] = useState("editorial");
+  const [newRole, setNewRole] = useState("mangaka");
   const [newPassword, setNewPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [createError, setCreateError] = useState("");
-
-  // ==================== GỌI API LẤY DANH SÁCH USER ====================
-
-  const fetchUsers = async () => {
-    try {
-      const response = await userService.getUserList();
-      // response có thể là mảng trực tiếp hoặc nằm trong response.data
-      const userList = Array.isArray(response) ? response : (response.data || []);
-
-      const mapped = userList.map((user) => ({
-        id: user.id || user.userId,
-        name: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.userName || 'N/A',
-        email: user.email || '',
-        phone: user.phoneNumber || user.phone || '',
-        role: mapApiRole(user.role),
-        status: user.isActive === false || user.status?.toLowerCase() === 'suspended' ? 'suspended' : 'active',
-      }));
-
-      setUsers(mapped);
-    } catch (error) {
-      console.error('Failed to fetch user list:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  // ==================== THỐNG KÊ ====================
 
   const stats = [
     {
@@ -117,7 +143,7 @@ export function AdminDashboard() {
     },
     {
       label: "Roles Assigned",
-      value: new Set(users.map((u) => u.role)).size,
+      value: 4,
       icon: ShieldCheck,
       color: "bg-info/10 text-info",
     },
@@ -164,17 +190,7 @@ export function AdminDashboard() {
     );
   };
 
-  // Map role key nội bộ FE sang giá trị API yêu cầu
-  const feRoleToApiRole = {
-    mangaka: "Mangaka",
-    assistant: "Assistant",
-    tantou: "Tantou",
-    editorial: "Editorial",
-  };
-
-  const [isCreating, setIsCreating] = useState(false);
-
-  const handleCreate = async (e) => {
+  const handleCreate = (e) => {
     e.preventDefault();
     if (
       !newFirstName.trim() ||
@@ -186,42 +202,33 @@ export function AdminDashboard() {
       setCreateError("All fields are required.");
       return;
     }
-
-    setIsCreating(true);
-    setCreateError("");
-
-    try {
-      const apiRole = feRoleToApiRole[newRole] || "Mangaka";
-      await userService.createUser(apiRole, {
-        firstName: newFirstName.trim(),
-        lastName: newLastName.trim(),
-        email: newEmail.trim(),
-        password: newPassword.trim(),
-        phone: newPhone.trim(),
-        authorName: newRole === 'mangaka' ? newAuthorName.trim() : null,
-        status: "Active",
-      });
-
-      setShowCreateModal(false);
-      setNewFirstName("");
-      setNewLastName("");
-      setNewEmail("");
-      setNewPhone("");
-      setNewAuthorName("");
-      setNewRole("mangaka");
-      setNewPassword("");
-      setCreateError("");
-      // Refresh danh sách user từ API
-      fetchUsers();
-    } catch (error) {
-      console.error("Failed to create user:", error);
-      setCreateError(error.message || "Failed to create account. Please try again.");
-    } finally {
-      setIsCreating(false);
+    if (users.some((u) => u.email === newEmail)) {
+      setCreateError("Email already in use.");
+      return;
     }
+    const newUser = {
+      id: Math.max(...users.map((u) => u.id)) + 1,
+      name: `${newFirstName.trim()} ${newLastName.trim()}`,
+      email: newEmail.trim(),
+      phone: newPhone.trim(),
+      role: newRole,
+      status: "active",
+      createdAt: new Date().toISOString().split("T")[0],
+    };
+    setUsers((prev) => [...prev, newUser]);
+    setShowCreateModal(false);
+    setNewFirstName("");
+    setNewLastName("");
+    setNewEmail("");
+    setNewPhone("");
+    setNewRole("mangaka");
+    setNewPassword("");
+    setCreateError("");
   };
 
-
+  const handleRoleChange = (userId, role) => {
+    setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, role } : u)));
+  };
 
   const permissionMatrix = {
     mangaka: [
@@ -310,30 +317,26 @@ export function AdminDashboard() {
               className="w-full pl-10 pr-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
-          <div className="w-48">
-            <CustomSelect
-              value={filterRole}
-              onChange={setFilterRole}
-              options={[
-                { value: "all", label: "All Roles" },
-                { value: "mangaka", label: "Mangaka" },
-                { value: "assistant", label: "Assistant" },
-                { value: "tantou", label: "Tantou Editor" },
-                { value: "editorial", label: "Editorial Board" }
-              ]}
-            />
-          </div>
-          <div className="w-40">
-            <CustomSelect
-              value={filterStatus}
-              onChange={setFilterStatus}
-              options={[
-                { value: "all", label: "All Status" },
-                { value: "active", label: "Active" },
-                { value: "suspended", label: "Suspended" }
-              ]}
-            />
-          </div>
+          <select
+            value={filterRole}
+            onChange={(e) => setFilterRole(e.target.value)}
+            className="px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            <option value="all">All Roles</option>
+            <option value="mangaka">Mangaka</option>
+            <option value="assistant">Assistant</option>
+            <option value="tantou">Tantou Editor</option>
+            <option value="editorial">Editorial Board</option>
+          </select>
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            <option value="all">All Status</option>
+            <option value="active">Active</option>
+            <option value="suspended">Suspended</option>
+          </select>
         </div>
 
         {/* User Table */}
@@ -358,79 +361,88 @@ export function AdminDashboard() {
                     Status
                   </th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
+                    Created At
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
                     Actions
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {isLoading ? (
-                  <tr>
-                    <td
-                      colSpan={6}
-                      className="px-6 py-12 text-center text-muted-foreground"
-                    >
-                      Loading users...
+                {filtered.map((user) => (
+                  <tr
+                    key={user.id}
+                    className={`hover:bg-muted/30 transition-colors ${user.status === "suspended" ? "opacity-60" : ""}`}
+                  >
+                    <td className="px-6 py-4 font-semibold text-foreground">
+                      {user.name}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground">
+                      {user.email}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground font-mono">
+                      {user.phone}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="relative inline-block">
+                        <select
+                          value={user.role}
+                          onChange={(e) =>
+                            handleRoleChange(user.id, e.target.value)
+                          }
+                          className={`appearance-none pl-3 pr-7 py-1 rounded-full border text-sm font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary ${roleColors[user.role]}`}
+                        >
+                          <option value="mangaka">Mangaka</option>
+                          <option value="assistant">Assistant</option>
+                          <option value="tantou">Tantou Editor</option>
+                          <option value="editorial">Editorial Board</option>
+                        </select>
+                        <ChevronDown
+                          size={12}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none"
+                        />
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`px-3 py-1 rounded-full border text-sm ${user.status === "active"
+                          ? "bg-success/10 text-success border-success/30"
+                          : "bg-destructive/10 text-destructive border-destructive/30"
+                          }`}
+                      >
+                        {user.status === "active" ? "Active" : "Suspended"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground font-mono">
+                      {user.createdAt}
+                    </td>
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() => handleToggleStatus(user)}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${user.status === "active"
+                          ? "text-destructive hover:bg-destructive/10 border border-destructive/30"
+                          : "text-success hover:bg-success/10 border border-success/30"
+                          }`}
+                      >
+                        {user.status === "active" ? (
+                          <UserX size={15} />
+                        ) : (
+                          <UserCheck size={15} />
+                        )}
+                        {user.status === "active" ? "Suspend" : "Activate"}
+                      </button>
                     </td>
                   </tr>
-                ) : filtered.length === 0 ? (
+                ))}
+                {filtered.length === 0 && (
                   <tr>
                     <td
-                      colSpan={6}
+                      colSpan={7}
                       className="px-6 py-12 text-center text-muted-foreground"
                     >
                       No users match your search.
                     </td>
                   </tr>
-                ) : (
-                  filtered.map((user) => (
-                    <tr
-                      key={user.id}
-                      className={`hover:bg-muted/30 transition-colors ${user.status === "suspended" ? "opacity-60" : ""}`}
-                    >
-                      <td className="px-6 py-4 font-semibold text-foreground">
-                        {user.name}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-muted-foreground">
-                        {user.email}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-muted-foreground font-mono">
-                        {user.phone}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`inline-block px-3 py-1 rounded-full border text-sm font-medium ${roleColors[user.role] || ''}`}
-                        >
-                          {roleLabels[user.role] || user.role}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`px-3 py-1 rounded-full border text-sm ${user.status === "active"
-                            ? "bg-success/10 text-success border-success/30"
-                            : "bg-destructive/10 text-destructive border-destructive/30"
-                            }`}
-                        >
-                          {user.status === "active" ? "Active" : "Suspended"}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <button
-                          onClick={() => handleToggleStatus(user)}
-                          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${user.status === "active"
-                            ? "text-destructive hover:bg-destructive/10 border border-destructive/30"
-                            : "text-success hover:bg-success/10 border border-success/30"
-                            }`}
-                        >
-                          {user.status === "active" ? (
-                            <UserX size={15} />
-                          ) : (
-                            <UserCheck size={15} />
-                          )}
-                          {user.status === "active" ? "Suspend" : "Activate"}
-                        </button>
-                      </td>
-                    </tr>
-                  ))
                 )}
               </tbody>
             </table>
@@ -511,36 +523,20 @@ export function AdminDashboard() {
                   </div>
                 </div>
 
-                <div className={`grid ${newRole === 'mangaka' ? 'grid-cols-2 gap-4' : 'grid-cols-1'}`}>
-                  <div>
-                    <label className="text-sm text-muted-foreground mb-1.5 block">
-                      Role
-                    </label>
-                    <CustomSelect
-                      value={newRole}
-                      onChange={setNewRole}
-                      options={[
-                        { value: "mangaka", label: "Mangaka" },
-                        { value: "assistant", label: "Assistant" },
-                        { value: "tantou", label: "Tantou Editor" },
-                        { value: "editorial", label: "Editorial Board" }
-                      ]}
-                    />
-                  </div>
-                  {newRole === 'mangaka' && (
-                    <div>
-                      <label className="text-sm text-muted-foreground mb-1.5 block">
-                        Author Name
-                      </label>
-                      <input
-                        type="text"
-                        value={newAuthorName}
-                        onChange={(e) => setNewAuthorName(e.target.value)}
-                        placeholder="Pen Name"
-                        className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-                      />
-                    </div>
-                  )}
+                <div>
+                  <label className="text-sm text-muted-foreground mb-1.5 block">
+                    Role
+                  </label>
+                  <select
+                    value={newRole}
+                    onChange={(e) => setNewRole(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <option value="mangaka">Mangaka</option>
+                    <option value="assistant">Assistant</option>
+                    <option value="tantou">Tantou Editor</option>
+                    <option value="editorial">Editorial Board</option>
+                  </select>
                 </div>
 
                 <div>
@@ -599,10 +595,9 @@ export function AdminDashboard() {
                   </button>
                   <button
                     type="submit"
-                    disabled={isCreating}
-                    className="flex-1 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
                   >
-                    {isCreating ? "Creating..." : "Create Account"}
+                    Create Account
                   </button>
                 </div>
               </form>

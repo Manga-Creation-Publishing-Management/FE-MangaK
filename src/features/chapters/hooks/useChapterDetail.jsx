@@ -1,4 +1,4 @@
-
+ 
 import { useEffect, useState } from "react";
 import { chaptersService } from "../../../services/chapterService";
 export function useChapterDetail(seriesId, chapterId) {
@@ -19,8 +19,7 @@ export function useChapterDetail(seriesId, chapterId) {
   }, [chapterId]);
 
   return {
-    chapterDetail,
-    setChapterDetail
+    chapterDetail
     // chapterListForm
   }
 }

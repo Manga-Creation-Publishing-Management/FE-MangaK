@@ -11,10 +11,5 @@ export const chaptersService = {
 
   async createSeries(formData) {
     return await api.post("/Series/create-series", formData);
-  },
-  
-  async updateChapterStatus(seriesId, chapterId, data) {
-    return await api.patch(`/chapter/${seriesId}/${chapterId}`, data);
   }
-
 };
