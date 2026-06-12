@@ -2,7 +2,6 @@ import { usePublishingSchedule } from '../../features/schedule/PublishingSchedul
 import { Calendar, Clock, Plus, Edit, Trash2 } from 'lucide-react';
 import { StatusBadge } from '@/pages/shared/StatusBadge';
 import { OverviewCard } from '../shared/OverviewCard';
-import { CustomSelect } from '../../shared/components/CustomSelect';
 import { useState } from 'react';
 
 export function PublishingSchedule() {
@@ -198,17 +197,19 @@ export function PublishingSchedule() {
                   />
                 ) : (
                   // Chế độ tạo mới: Dropdown chọn từ danh sách series đã duyệt
-                  <CustomSelect
+                  <select
                     value={selectedSeries}
-                    onChange={setSelectedSeries}
-                    options={[
-                      { value: "", label: "Choose a series..." },
-                      ...approvedSeries.map((series) => ({
-                        value: series.id,
-                        label: `${series.name} by ${series.author}`
-                      }))
-                    ]}
-                  />
+                    onChange={(e) => setSelectedSeries(e.target.value)}
+                    className="w-full px-4 py-3 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <option value="">Choose a series...</option>
+                    {/* Render danh sách series đã duyệt làm options */}
+                    {approvedSeries.map((series) => (
+                      <option key={series.id} value={series.id}>
+                        {series.name} by {series.author}
+                      </option>
+                    ))}
+                  </select>
                 )}
               </div>
 

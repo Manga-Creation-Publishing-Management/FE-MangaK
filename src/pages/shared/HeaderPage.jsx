@@ -1,7 +1,6 @@
 import { LogOut } from 'lucide-react';
 import { LoginHook } from '../../features/auth/hooks/LoginHook';
 import { authService } from '../../services/authService';
-import { Logo } from '../../shared/components/Logo';
 
 export function HeaderPage({ roleName, avatarUrl }) {
     const { navigate } = LoginHook();
@@ -20,16 +19,11 @@ export function HeaderPage({ roleName, avatarUrl }) {
 
                 </div>
 
-                <div className={`${roleName === 'reader' ? 'col-span-3' : 'col-span-5'} content-center`}>
+                <div className="col-span-3 content-center">
                     <span className="text-sidebar-foreground text-lg font-medium">Welcome back!</span><br />
                     <span className="text-muted-foreground">{roleName}</span>
                 </div>
-                {roleName === 'reader' &&
-                    <div className="col-span-4 content-center justify-center">
-                        <Logo />
-                    </div>}
-
-                <div className={`${roleName === 'reader' ? 'col-span-4' : 'col-span-6'} content-center`}>
+                <div className="col-span-8 content-center">
                     <div className='place-self-end'>
                         <button onClick={handleLogout}
                             className='flex 
