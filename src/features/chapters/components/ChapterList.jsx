@@ -3,11 +3,15 @@ import { StatusBadge } from "../../../pages/shared/StatusBadge";
 import { Outdent, Plus } from "lucide-react";
 import { useCreateChapter } from "../hooks/useCreateChapter";
 import { useSeriesManagement } from "../../series/hooks/useSeriesManagement";
+import { ApprovalPanel } from "../../../pages/shared/ApprovalPanel";
+import { useUpdateChapter } from "../hooks/useUpdateChapter";
+
 
 export function ChapterList({ roleName, seriesData }) {
 
   console.log("seriesID:", seriesData?.seriesId)
   const { chapterList } = useCreateChapter(seriesData?.seriesId);
+  const { handleApprove, handleReject } = useUpdateChapter();
 
   const { handleNavigateToChapter } = useSeriesManagement();
 
@@ -76,8 +80,10 @@ export function ChapterList({ roleName, seriesData }) {
                         View Detail
                       </button>
 
+
                     </div>
                   </div>
+
                 </div>
               );
             })}

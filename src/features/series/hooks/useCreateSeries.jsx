@@ -88,7 +88,7 @@ export default function useCreateSeries(onClose, onReload, reloadState ) {
         setTimeout(() => {
           onClose();
           onReload();
-        }, 500);
+        },0);
       }
     } catch (error) {
       console.log("Error tại hook:", error);

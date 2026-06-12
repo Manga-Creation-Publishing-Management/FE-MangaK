@@ -31,7 +31,7 @@ export function ChapterDetail() {
   // const validChapterData = chapterList.find(item => String(item.id) == String(chapterId))
 
   const { chapterDetail, setChapterDetail } = useChapterDetail(seriesId, chapterId);
-  const { handleApprove, handleReject, feedback, setFeedback } = useUpdateChapter(seriesId, chapterId);
+  const { handleApprove, handleReject, feedback, setFeedback, isLoading } = useUpdateChapter(seriesId, chapterId);
 
 
   console.log(chapterDetail);
@@ -104,10 +104,17 @@ export function ChapterDetail() {
             </Document>
 
           </div>
-          {currentRole.toLowerCase() == 'tantou' &&
 
-            < ApprovalPanel onApprove={() =>
-              handleApprove(chapterId, currentRole, chapterDetail?.status, setChapterDetail)} />
+          {currentRole?.toLowerCase() === "tantou" &&
+            <ApprovalPanel
+              feedback={feedback}
+              onFeedbackChange={(e) => setFeedback(e.target.value)}
+              onApprove={() => handleApprove(currentRole, chapterDetail?.status, setChapterDetail)}
+              onReject={() => handleReject(currentRole, chapterDetail?.status, setChapterDetail)}
+              approveText={"Approve chapter for publishing"}
+              rejectText={"Reject chapter for reviewing"}
+              isLoading={isLoading}
+            />
           }
 
 
