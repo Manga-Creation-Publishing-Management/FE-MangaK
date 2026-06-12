@@ -21,6 +21,7 @@ export function ReaderLoginPage() {
             }
             localStorage.setItem("user", JSON.stringify(user));
 
+            // in ra để check xem thông tin nhận về
             console.log("Acess token:", localStorage.getItem('mangak-token'));
             console.log("Info user:", response.data);
             navigate("/reader");

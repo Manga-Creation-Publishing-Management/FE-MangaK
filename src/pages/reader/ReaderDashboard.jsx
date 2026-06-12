@@ -12,7 +12,7 @@ export function ReaderDashboard() {
 
     return (
         <div className='h-screen p-2 bg-background'>
-            <HeaderPage roleName="reader" avatarUrl={avatarImgDemo} />
+            <HeaderPage roleName="Reader" avatarUrl={avatarImgDemo} />
             <div className='p-5 bg-background'>
                 <WelcomeLine roleName="Reader" />
 
