@@ -16,16 +16,17 @@ import { MangakaDashboard } from '../pages/mangaka/MangakaDashboard.jsx';
 import { AssistantDashboard } from '../pages/assistant/AssistantDashboard.jsx';
 import { TantouDashboard } from '../pages/tantouEditor/TantouDashboard.jsx';
 import { EditorialDashboard } from '../pages/editorialBoard/EditorialDashboard.jsx';
-import { VotingDataImport } from '../pages/editorialBoard/VotingDataImport.jsx';
 import { ReaderDashboard } from '../pages/reader/ReaderDashboard.jsx';
 import { ProtectedRoute } from '../features/auth/components/ProtectedRoute';
 import { PublicRoute } from '../features/auth/components/PublicRoute';
+import { LeaderboardPage } from '../pages/shared/LeaderboardPage.jsx';
+import { ReaderLoginPage } from '../pages/reader/ReaderLoginPage.jsx';
 
 const roleDisplayNames = {
   mangaka: "Mangaka",
   assistant: "Assistant",
-  tantouEditor: "Tantou Editor",
-  editorialBoard: "Editorial Board",
+  tantou: "Tantou Editor",
+  editorial: "Editorial Board",
   admin: "Admin",
   reader: "Reader"
 };
@@ -39,6 +40,7 @@ export function AppRoutes() {
       {/* Guest/Anonymous Routes */}
       <Route element={<PublicRoute />}>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="loginReader" element={<ReaderLoginPage />} />
       </Route>
 
 
@@ -50,6 +52,7 @@ export function AppRoutes() {
           <Route path="series/:id" element={<SeriesDetail />} />
           <Route path="chapter/:chapterId" element={<ChapterDetail />} />
           <Route path="tasks" element={<TaskManagement />} />
+          <Route path="leaderboard" element={<LeaderboardPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Route>
@@ -64,25 +67,26 @@ export function AppRoutes() {
       </Route>
 
       {/* Tantou Editor Routes */}
-      <Route element={<ProtectedRoute allowedRole="tantouEditor" />}>
-        <Route path="/tantouEditor" element={<Layout roleName="tantouEditor" />}>
+      <Route element={<ProtectedRoute allowedRole="tantou" />}>
+        <Route path="/tantou" element={<Layout roleName="tantou" />}>
           <Route index element={<TantouDashboard />} />
           <Route path="series" element={<SeriesReview />} />
           <Route path="series/:id" element={<SeriesDetail />} />
           <Route path="chapter/:chapterId" element={<ChapterDetail />} />
+          <Route path="leaderboard" element={<LeaderboardPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Route>
 
       {/* Editorial Board Routes */}
-      <Route element={<ProtectedRoute allowedRole="editorialBoard" />}>
-        <Route path="/editorialBoard" element={<Layout roleName="editorialBoard" />}>
+      <Route element={<ProtectedRoute allowedRole="editorial" />}>
+        <Route path="/editorial" element={<Layout roleName="editorial" />}>
           <Route index element={<EditorialDashboard />} />
           <Route path="series" element={<SeriesApproval />} />
           <Route path="series/:id" element={<SeriesDetail />} />
           <Route path="chapter/:chapterId" element={<ChapterDetail />} />
           <Route path="schedule" element={<PublishingSchedule />} />
-          <Route path="voting" element={<VotingDataImport />} />
+          <Route path="leaderboard" element={<LeaderboardPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Route>
@@ -97,10 +101,8 @@ export function AppRoutes() {
 
       {/* Reader Routes */}
       <Route element={<ProtectedRoute allowedRole="reader" />}>
-        <Route path="/reader" element={<Layout roleName="reader" />}>
-          <Route index element={<ReaderDashboard />} />
-          <Route path="profile" element={<ProfilePage />} />
-        </Route>
+        <Route path="/reader" element={<ReaderDashboard />} />
+        <Route path="reader/series/:id" element={<SeriesDetail />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

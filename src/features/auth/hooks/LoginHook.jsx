@@ -53,8 +53,17 @@ export function LoginHook() {
             localStorage.setItem('accessToken', token);
             localStorage.setItem('user', JSON.stringify(user));
 
+            const rolePathMap = {
+                mangaka: 'mangaka',
+                assistant: 'assistant',
+                tantou: 'tantou',
+                editorial: 'editorial',
+                admin: 'admin',
+                reader: 'reader',
+            };
             const role = (user.role || '').toLowerCase();
-            navigate(`/${role}`);
+            const rolePath = rolePathMap[role] || role;
+            navigate(`/${rolePath}`);
         } catch (err) {
             setError(err.message);
         }

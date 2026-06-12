@@ -1,41 +1,46 @@
-import { useLocation, useParams } from "react-router";
+import { useLocation, useParams, useNavigate } from "react-router";
 import { StatusBadge } from "../shared/StatusBadge";
-import useCreateSeries from "../../features/series/hooks/useCreateSeries";
-import { useCreateChapter } from "../../features/chapters/hooks/useCreateChapter";
 import { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
-import filePDF from "./Doremon_1.pdf";
 import { ArrowLeft } from "lucide-react";
+import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
+import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter";
+import { ApprovalPanel } from "../shared/ApprovalPanel";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;// File PDF thường rất nặng và tốn phần cứng để xử lý. Dòng này kích hoạt một "Worker" chạy ngầm dưới trình duyệt, giúp việc dịch file PDF diễn ra ở một luồng độc lập, không làm đơ/lag giao diện web
 
 export function ChapterDetail() {
 
+  const navigate = useNavigate();
   const [numPages, setNumPages] = useState(null);
 
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
   }
 
-  const seriesIdFromState = useLocation().state?.seriesId;
+  const seriesId = useLocation().state?.seriesId;
 
-  const { seriesData } = useCreateSeries();
+  const chapterId = useLocation().state?.chapterId;
+  const currentRole = useLocation().state?.role;
 
-  const { chapterList } = useCreateChapter(seriesIdFromState);
+  // const validSeriesData = seriesData.find(item => String(item.id) == String(seriesIdFromState))
 
-  const {chapterId} = useParams();
+  // const validChapterData = chapterList.find(item => String(item.id) == String(chapterId))
 
-  const validSeriesData = seriesData.find(item => String(item.id) == String(seriesIdFromState))
+  const { chapterDetail, setChapterDetail } = useChapterDetail(seriesId, chapterId);
+  const { handleApprove, handleReject, feedback, setFeedback } = useUpdateChapter(seriesId, chapterId);
 
-  const validChapterData = chapterList.find(item => String(item.id) == String(chapterId))
+
+  console.log(chapterDetail);
+
   return (
-    <> 
+    <>
       <div className="p-8 space-y-8">
         <button
-          // onClick={() => navigate(-1)}
+          onClick={() => navigate(-1)}
           className="flex cursor-pointer items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft size={20} />
@@ -45,23 +50,30 @@ export function ChapterDetail() {
           <div className="flex justify-between items-start">
             {/* Cụm bên trái: Tiêu đề và Tên Series */}
             <div>
-              <h1 className="font-semibold text-xl">Chapter {validChapterData?.chapterNumber}: {validChapterData?.title}</h1>
-              <p className="text-muted-foreground mt-1">{validSeriesData?.title}</p>
+              <h1 className="font-semibold text-xl">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h1>
+              {/* <p className="text-muted-foreground mt-1">{chapterDetail?.seriesTitle}</p> */}
+              <div>
+                <p className="mt-1 text-foreground">Summary: {chapterDetail?.summary}</p>
+              </div>
             </div>
+
 
             {/* Cụm bên phải: Gom Badge và Upload Date lại chung một nhóm */}
             <div className="flex flex-col items-end space-y-2">
-              <StatusBadge status={validSeriesData?.status} />
-              <div className="text-right">
-                <p className="text-sm text-muted-foreground">Upload Date: { validChapterData?.updatedAt}</p>
-              </div>
+              <StatusBadge status={chapterDetail?.status} />
+              {chapterDetail?.updatedAt != null &&
+                <div className="text-right">
+                  <p className="text-sm text-muted-foreground">Upload Date: {chapterDetail?.updatedAt}</p>
+                </div>
+              }
             </div>
+
           </div>
 
           <div className="w-full h-[350px] overflow-y-auto border border-gray-300 bg-zinc-700 p-4 rounded-lg shadow-inner">
 
             <Document
-              file={filePDF}
+              file={chapterDetail?.manuscriptFileUrl}
               onLoadSuccess={onDocumentLoadSuccess}
               loading={
                 <div className="flex justify-center items-center h-full text-white font-medium">
@@ -92,13 +104,18 @@ export function ChapterDetail() {
             </Document>
 
           </div>
+          {currentRole.toLowerCase() == 'tantou' &&
 
-          
+            < ApprovalPanel onApprove={() =>
+              handleApprove(chapterId, currentRole, chapterDetail?.status, setChapterDetail)} />
+          }
 
-          
+
+
+
         </div>
 
-        
+
       </div>
     </>
   )
