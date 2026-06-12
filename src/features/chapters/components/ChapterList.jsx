@@ -9,14 +9,14 @@ export function ChapterList({ roleName, seriesData }) {
   console.log("seriesID:", seriesData?.seriesId)
   const { chapterList } = useCreateChapter(seriesData?.seriesId);
 
-  const { handleNavigateToChapter } = useSeriesManagement();
+  const { handleNavigateToChapter  } = useSeriesManagement();
 
-  console.log("lengthq", chapterList.length)
-
+  console.log( "length", chapterList.length)
+  
 
   return (
     <>
-      {seriesData?.status === "Approved" || seriesData?.status === "Publishing" && (
+      { seriesData?.status === "Approved" && (
         <>
           <div className="flex justify-between items-center">
             <div>
@@ -67,7 +67,7 @@ export function ChapterList({ roleName, seriesData }) {
 
                       View Detail
                     </button>
-
+                 
                   </div>
                 </div>
               </div>

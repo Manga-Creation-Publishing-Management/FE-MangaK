@@ -3,16 +3,12 @@ import { WelcomeLine } from '../shared/WelcomeLine'
 import { Search } from 'lucide-react'
 import { SeriesManagement } from '../shared/SeriesManagement'
 import { useSearch } from '../../features/series/hooks/useSearch'
-import { HeaderPage } from '../shared/HeaderPage';
-import avatarImgDemo from "../shared/avatarImgDemo.png";
-import { Outlet } from 'react-router';
 
 export function ReaderDashboard() {
     const { searchTxt, searchResult, handleSearch } = useSearch();
 
     return (
         <div className='h-screen p-2 bg-background'>
-            <HeaderPage roleName="reader" avatarUrl={avatarImgDemo} />
             <div className='p-5 bg-background'>
                 <WelcomeLine roleName="Reader" />
 
@@ -33,6 +29,8 @@ export function ReaderDashboard() {
                         : <SeriesManagement role="reader" seriesFiltered={searchResult} />
                     )
                     : <SeriesManagement role="reader" statusFilter={"Publishing"} />}
+
+
 
             </div>
         </div >
