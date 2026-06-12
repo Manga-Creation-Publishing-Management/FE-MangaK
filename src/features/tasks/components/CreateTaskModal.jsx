@@ -3,9 +3,18 @@ import { X, Upload, FileImage } from 'lucide-react';
 import { useCreateTask } from '../hooks/useCreateTask';
 
 
-export default function CreateTaskModal({ onClose, showSeriesApproval, showAssistantList }) {
+export default function CreateTaskModal({
+  onClose,
+  showSeriesApproval,
+  showAssistantList,
+  chapters,
+  selectedSeriesId,
+  onSeriesChange,
+  onSubmitCreateTask
+}) {
 
 
+  let manuscriptUrl = chapters
   return (
     <>
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -13,7 +22,7 @@ export default function CreateTaskModal({ onClose, showSeriesApproval, showAssis
           <div className="sticky top-0 bg-card border-b border-border p-6 flex justify-between items-center">
             <div className="text-2xl font-semibold">Create New Task</div>
             <button
-              // onClick={onClose}
+              onClick={onClose}
               className="p-2 hover:bg-muted rounded-lg transition-colors"
               
             >
@@ -21,108 +30,88 @@ export default function CreateTaskModal({ onClose, showSeriesApproval, showAssis
             </button>
           </div>
 
-          <form className="p-6 space-y-6">
+          <form className="p-6 space-y-6" onSubmit={onSubmitCreateTask}>
 
-            <div className="space-y-2">
+            <div className="mb-4">
+              <div className='mb-2 text-xl'>
               <label htmlFor="seriesName">Series</label>
-              <select className='w-full px-4 py-3 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary' name="" id="">
-                <option value="">Choose a series...</option>
+              </div>
+              <select
+                name="seriesId"
+                onChange={(e) => onSeriesChange(e.target.value)}
+                value={selectedSeriesId}
+                className='w-full px-4 py-3 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary'>
+                <option  value="">Choose a series...</option>
                 {showSeriesApproval?.map((item) => (
-                  <option key={item.seriesId} value={item.seriesId}>{item.title}</option>
+                  <option
+                    key={item.seriesId}
+                    value={item.seriesId}
+                    onChange={selectedSeriesId}
+                  >{item.title}</option>
+                ))}
+                </select>
+            </div>
+            <div className="mb-4">
+              <div className='mb-2 text-xl'>
+                <label htmlFor="seriesName">Chapter Number</label>
+              </div>
+              <select name="chapterId" className='w-full px-4 py-3 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary' id="">
+                <option value="">Choose a chapter...</option>
+                {chapters?.map((item) => (
+                  <option
+                    key={item.chapterId}
+                    value={item.chapterId}
+                  >Chapter {item.chapterNumber}</option>
                 ))}
               </select>
             </div>
-            <div className="space-y-2">
-              <label htmlFor="seriesName">Chapter Name</label>
-              <input
-                id="title"
-                type="text"
-                className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-                placeholder="Enter series name"
-                required
-                // onChange={handleChange}
-                name="title"
-              />
-            </div>
 
-            <div className="space-y-2">
-              <label>Assistant</label>
-              <select className='w-full px-4 py-3 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary' name="" id="">
-                <option value="">Choose a series...</option>
+            <div className="mb-4">
+              <div className='mb-2 text-xl'>
+                <label htmlFor="seriesName">Assistant</label>
+              </div>
+              <select name="assignedToId" className='w-full px-4 py-3 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary' >
+                <option value="">Choose a Assistant...</option>
                 {showAssistantList?.map((item) => (
-                  <option key={item.userId} value={item.userId}>{item.firstName}</option>
+                  <option
+                    key={item.userId}
+                    value={item.userId}
+                  >{item.firstName}</option>
                 ))}
               </select>
             </div>
 
-            <div className="space-y-2">
-              <label htmlFor="description">Description</label>
-              <textarea
-                id="description"
-                className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary min-h-32 resize-none"
+            <div className="mb-4">
+              <div className='mb-2 text-xl'>
+                <label htmlFor="seriesName">Page Range</label>
+              </div>
+              <input
+                id="description" name="taskDescription"
+                className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary  resize-none"
                 placeholder="Enter series description"
                 required
                 // onChange={handleChange}
-                name="description"
+              />
+            </div>
+            <div className="mb-4">
+              <div className='mb-2 text-xl'>
+                <label htmlFor="deadline">Deadline</label>
+              </div>
+              <input
+                type="datetime-local"
+                name="deadline" // Tên thuộc tính sẽ gửi lên Backend
+                required
+                className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
 
-            <div className="space-y-2">
-              <label>Upload Cover Page</label>
-              <div
-                // onClick={() => coverInputRef.current.click()}
-                name="coverFile"
-                className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer"
-              >
-                {/* {coverFile ? ( */}
-                <div className="text-primary font-medium">
-                  {/* Selected: {coverFile.name} */}
-                </div>
-                {/* ) : ( */}
-                <>
-                  <p className="text-muted-foreground">Click to upload or drag and drop</p>
-                  <p className="text-sm text-muted-foreground mt-1">PNG, JPG up to 10MB</p>
-                </>
-                {/* )} */}
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                // ref={coverInputRef}
-                // onChange={handleCoverChange}
-                />
-              </div>
-            </div>
+            
+            
 
-            <div className="space-y-2">
-              <label>Upload Story Name</label>
-              <div
-                // onClick={() => storyInputRef.current.click()}
-                name="nameFile"
-                className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer"
-              >
-                {/* {storyFile ? ( */}
-                <div className="text-primary font-medium">
-                  {/* Selected: {storyFile.name} */}
-                </div>
-                {/* ) : ( */}
-                <>
-                  <p className="text-muted-foreground">Click to upload or drag and drop</p>
-                  <p className="text-sm text-muted-foreground mt-1">PNG, JPG up to 10MB</p>
-                </>
-                {/* )} */}
-                <input
-                  type="file"
-                  accept=".pdf,.zip"
-                  className="hidden"
-                // ref={storyInputRef}
-                // onChange={handleStoryChange}
-                />
-              </div>
-            </div>
+            
             <div className="flex justify-end gap-3 pt-4">
               <button
-                // onClick={onClose}
+                onClick={onClose}
                 type="button"
                 className=" cursor-pointer px-6 py-2 rounded-lg border border-border hover:bg-muted transition-colors"
               >

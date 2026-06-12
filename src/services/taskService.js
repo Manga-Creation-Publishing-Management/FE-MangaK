@@ -7,5 +7,9 @@ export const taskService = {
 
   async getTaskList() {
     return await api.get(`/MangaTask/get-tasks-list`)
+  },
+
+  async createTask(taskData) {
+    return await api.post(`/MangaTask/create-tasks`, taskData);
   }
 };

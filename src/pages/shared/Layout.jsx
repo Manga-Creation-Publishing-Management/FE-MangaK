@@ -7,8 +7,8 @@ import { useState } from 'react';
 const roleDisplayNames = {
   mangaka: "Mangaka",
   assistant: "Assistant",
-  tantouEditor: "Tantou Editor",
-  editorialBoard: "Editorial Board",
+  tantou: "Tantou Editor",
+  editorial: "Editorial Board",
   admin: "Admin",
   reader: "Reader"
 };

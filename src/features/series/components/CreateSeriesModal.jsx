@@ -22,7 +22,7 @@ export default function CreateSeriesModal({ onClose, onReload }) {
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-card rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-card border-b border-border p-6 flex justify-between items-center">
-          <div className="text-2xl font-semibold">Create New Series</div>
+          <div className="text-2xl font-semibold">Create New Task</div>
           <button onClick={onClose}
             className="p-2 hover:bg-muted rounded-lg transition-colors"
             disabled={isLoading}>
