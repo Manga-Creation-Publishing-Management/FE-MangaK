@@ -10,8 +10,8 @@ export function useUpdateSeries() {
   const handleApprove = async (id, roleFromState, currentStatus, setLocalStatus) => {
     const normalizedStatus = currentStatus?.toLowerCase();
     const normalizedRole = roleFromState?.toLowerCase();
-    const isTantou = normalizedRole === "tantou";
-    const isEditorial = normalizedRole === "editorial";
+    const isTantou = normalizedRole === "tantou" || normalizedRole === "tantoueditor";
+    const isEditorial = normalizedRole === "editorial" || normalizedRole === "editorialboard";
 
     let newStatus;
     if (isTantou && normalizedStatus === "processing") {
