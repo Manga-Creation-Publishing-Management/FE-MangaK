@@ -7,8 +7,8 @@ export function ApprovalPanel({
   onApprove,
   onReject,
   isLoading = false,
-  approveText = "Approve Series/ Chapter",
-  rejectText = "Reject & Send Feedback",
+  approveText = "Approve Names & Submit to Editorial Board",
+  rejectText = "Reject Names & Send Feedback",
 }) {
   return (
     <div className="space-y-4 bg-card border-t border-border rounded-xl p-5 hover:shadow-lg">

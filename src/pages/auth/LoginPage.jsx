@@ -1,3 +1,4 @@
+import { FooterPage } from '../shared/FooterPage';
 import { LoginForm } from './LoginForm';
 import { BackButton } from './BackButton';
 
