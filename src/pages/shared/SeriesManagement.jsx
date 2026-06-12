@@ -80,6 +80,8 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
       </div>
       {showCreateSeriesModal && (<CreateSeriesModal onClose={handleClick} onReload={handleReload} />)}
 
+      <p>Add one more tmp line</p>
+
 
     </>
 
