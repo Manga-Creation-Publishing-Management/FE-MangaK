@@ -16,6 +16,10 @@ export const chaptersService = {
   async updateChapterStatus(seriesId, chapterId, formData) {
     const url = seriesId ? `/Chapter/${chapterId}?seriesId=${seriesId}` : `/Chapter/${chapterId}`
     return await api.patch(url, formData);
+  },
+
+  async updateChapterRate (chapterId, rate) {
+    return await api.post(`/Vote/voting-chapter`, {chapterId, rate});
   }
 
 };

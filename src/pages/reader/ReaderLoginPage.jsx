@@ -10,9 +10,12 @@ export function ReaderLoginPage() {
     const handleSucessLogin = async (credentialResponse) => {
         try {
             const idToken = credentialResponse.credential;
+            console.log(idToken);
+
             const response = await authService.loginGoogle(idToken);
+
             alert("Login with Google sucessfully!");
-            localStorage.setItem("mangak-token", JSON.stringify(response.data?.acessToken));
+            localStorage.setItem("mangak-token", response.data?.accessToken);
 
             const user = {
                 role: response.data?.role || "reader",
@@ -22,7 +25,7 @@ export function ReaderLoginPage() {
             localStorage.setItem("user", JSON.stringify(user));
 
             // in ra để check xem thông tin nhận về
-            console.log("Acess token:", localStorage.getItem('mangak-token'));
+            console.log("Access token:", localStorage.getItem('mangak-token'));
             console.log("Info user:", response.data);
             navigate("/reader");
         } catch (error) {
