@@ -104,11 +104,15 @@ export function ChapterDetail() {
             </Document>
 
           </div>
-          {currentRole.toLowerCase() == 'tantou' &&
+          {currentRole.toLowerCase() == 'tantou' && (
+            <ApprovalPanel
+              feedback={feedback}
+              onFeedbackChange={(e) => setFeedback(e.target.value)}
+              onApprove={() => handleApprove(currentRole, chapterDetail?.status, setChapterDetail)}
+              onReject={() => handleReject(currentRole, chapterDetail?.status, setChapterDetail)}
+            />
+          )}
 
-            < ApprovalPanel onApprove={() =>
-              handleApprove(chapterId, currentRole, chapterDetail?.status, setChapterDetail)} />
-          }
 
 
 
