@@ -11,5 +11,8 @@ export const taskService = {
 
   async createTask(taskData) {
     return await api.post(`/MangaTask/create-tasks`, taskData);
-  }
+  },
+  async getTaskListByAssistant() {
+    return await api.get(`/MangaTask/get-tasks-list`)
+  },
 };

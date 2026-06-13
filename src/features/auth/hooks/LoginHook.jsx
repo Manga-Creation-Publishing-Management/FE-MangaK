@@ -33,8 +33,10 @@ export function LoginHook() {
             // If the user object is not nested, check if role is present directly on the response or response.data (flat structure)
             if (!user) {
                 const source = res.data || res;
+                console.log("Dữ liệu gốc từ API:", source);
                 if (source && source.role) {
                     user = {
+                        id: source.userId || source.userid || source.userId || source.UserId,
                         role: source.role,
                         email: source.email || email,
                         name: source.name || source.fullName || ""

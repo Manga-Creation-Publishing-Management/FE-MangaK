@@ -30,6 +30,7 @@ export function ReaderLoginPage() {
             navigate("/reader");
         } catch (error) {
             console.log("Login with Google failed!")
+            console.error("login error: ", error)
         }
     }
 
