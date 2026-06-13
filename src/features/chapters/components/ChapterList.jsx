@@ -15,17 +15,13 @@ export function ChapterList({ roleName, seriesData }) {
   const { handleApprove, handleReject } = useUpdateChapter();
   const { handleNavigateToChapter } = useSeriesManagement();
 
-  //nhằm lấy series ID của chapter lấy đánh giá
-  const { activeChapterId, handlePopUp } = useChapterRate();
 
-  //gọi hook update
-  const { handleRateSubmit } = useUpdateRateChapter();
-  // console.log("length", chapterList.length)
+  console.log("length", chapterList.length)
 
 
   return (
     <>
-      {seriesData?.status === "Approved" || seriesData?.status === "Publishing" && (
+      {(seriesData?.status === "Approved" || seriesData?.status === "Publishing") && (
         <>
           <div className="flex justify-between items-center">
             <div>
@@ -77,30 +73,16 @@ export function ChapterList({ roleName, seriesData }) {
 
                       {/* Đã xóa mt-4 thừa ở nút bấm để không bị lệch trục dọc */}
                       {console.log(`${roleName?.toLowerCase()}${seriesData.id}${chapter.id}`)}
-                      {roleName !== 'reader' ?
-                        <div>
-                          <button
-                            className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-                            onClick={() => handleNavigateToChapter(roleName?.toLowerCase(), seriesData?.seriesId, chapter?.chapterId)}
-                          >
+                      <button
+                        className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                        onClick={() => handleNavigateToChapter(roleName?.toLowerCase(), seriesData?.seriesId, chapter?.chapterId)}
+                      >
 
-                            View Detail
-                          </button>
-                        </div>
-                        :
-                        //nếu là reader thì hiện nút để Rate, không thì hiện nút view details
-                        <div>
-                          <button
-                            className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-                            onClick={() => handlePopUp(chapter.chapterId)}
-                          >
+                        View Detail
+                      </button>
 
-                            Rate chapter
-                          </button>
-                        </div>}
                     </div>
                   </div>
-
                 </div>
               );
             })}
@@ -115,8 +97,7 @@ export function ChapterList({ roleName, seriesData }) {
             />
           }
         </>
-      )
-      }
+      )}
 
     </>
   )

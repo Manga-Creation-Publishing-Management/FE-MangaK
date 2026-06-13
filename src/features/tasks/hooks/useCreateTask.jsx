@@ -85,7 +85,7 @@ export function useCreateTask() {
     const taskData = {
       seriesId: allFields.seriesId || null,
       taskTitle: "hehe",
-      taskDescription: allFields.taskDescription || "",
+      page_range: allFields.page_range || "",
       deadline: formattedDeadline,
       chapterId: allFields.chapterId || null,
       assignedToId: allFields.assignedToId || null, // Nhận từ select name="assignedToId"

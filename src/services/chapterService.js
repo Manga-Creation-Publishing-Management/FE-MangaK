@@ -9,17 +9,12 @@ export const chaptersService = {
     return await await api.get(`/Chapter/get-chapter-details?seriesId=${seriesId}&chapterId=${chapterId}`);
   },
 
-  async createSeries(formData) {
-    return await api.post("/Series/create-series", formData);
+  async createChapter(formData) {
+    return await api.post("/Chapter/create-chapter", formData);
   },
-
-  async updateChapterStatus(seriesId, chapterId, formData) {
-    const url = seriesId ? `/Chapter/${chapterId}?seriesId=${seriesId}` : `/Chapter/${chapterId}`
-    return await api.patch(url, formData);
-  },
-
-  async updateChapterRate (chapterId, rate) {
-    return await api.post(`/Vote/voting-chapter`, {chapterId, rate});
+  
+  async updateChapterStatus(seriesId, chapterId, data) {
+    return await api.patch(`/chapter/${seriesId}/${chapterId}`, data);
   }
 
 };

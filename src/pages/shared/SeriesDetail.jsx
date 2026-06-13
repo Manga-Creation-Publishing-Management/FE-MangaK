@@ -135,7 +135,8 @@ export function SeriesDetail() {
 
         </div>
         <ChapterList roleName={roleFromState} seriesData={detailData} />
-
+        {console.log("Checkrolehientai:", roleFromState)}
+        
         {/* feedback box for roles tantou and editorial, only when status is processing or pending */}
         {(isTantou || isEditorial) &&
           (normalizedStatus === 'processing' || normalizedStatus === 'pending') &&

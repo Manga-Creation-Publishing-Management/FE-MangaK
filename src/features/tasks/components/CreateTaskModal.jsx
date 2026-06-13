@@ -86,7 +86,7 @@ export default function CreateTaskModal({
                 <label htmlFor="seriesName">Page Range</label>
               </div>
               <input
-                id="description" name="taskDescription"
+                id="description" name="page_range"
                 className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary  resize-none"
                 placeholder="Enter series description"
                 required
