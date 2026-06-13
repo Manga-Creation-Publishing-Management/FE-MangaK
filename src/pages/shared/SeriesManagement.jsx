@@ -39,7 +39,7 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
 
   return (
     <>
-      <div className="p-3 mb-5">
+      <div className="p-9 mb-5">
         {role === "mangaka" &&
           <div className="flex justify-between items-center mb-5">
             <div>

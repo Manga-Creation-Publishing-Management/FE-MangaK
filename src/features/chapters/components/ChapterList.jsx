@@ -7,13 +7,24 @@ import { useUpdateChapter } from "../hooks/useUpdateChapter";
 import { useChapterRate } from "../hooks/useChapterRate";
 import { RatePanel } from "../../../pages/reader/RatePanel";
 import { useUpdateRateChapter } from "../hooks/useUpdateRateChapter";
+import { CreateChapterModal } from "./CreateChapterModal";
+import { useChapterList } from "../hooks/useChapterList";
 
 export function ChapterList({ roleName, seriesData }) {
 
+  const { reload, handleReload } = useSeriesManagement();
   console.log("seriesID:", seriesData?.seriesId)
-  const { chapterList } = useCreateChapter(seriesData?.seriesId);
+  const { 
+    chapterList,
+    showCreateChapterModal,
+    handleShowChapterModal
+   } = useChapterList(seriesData?.seriesId, reload);
   const { handleApprove, handleReject } = useUpdateChapter();
   const { handleNavigateToChapter } = useSeriesManagement();
+
+  
+
+  
 
   //nhằm lấy series ID của chapter lấy đánh giá
   const { activeChapterId, handlePopUp } = useChapterRate();
@@ -25,7 +36,7 @@ export function ChapterList({ roleName, seriesData }) {
 
   return (
     <>
-      {seriesData?.status === "Approved" || seriesData?.status === "Publishing" && (
+      {(seriesData?.status === "Approved" || seriesData?.status === "Publishing") && (
         <>
           <div className="flex justify-between items-center">
             <div>
@@ -42,7 +53,7 @@ export function ChapterList({ roleName, seriesData }) {
                 </Link> */}
                 {roleName?.toLowerCase() === "mangaka" &&
                   <button
-                    // onClick={() => setShowAddChapter(true)}
+                    onClick={() => handleShowChapterModal()}
                     className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:opacity-90 transition-opacity"
                   >
                     <Plus size={20} />
@@ -116,6 +127,15 @@ export function ChapterList({ roleName, seriesData }) {
           }
         </>
       )
+      }
+
+      {
+        showCreateChapterModal &&
+        <CreateChapterModal
+          seriesId={seriesData?.seriesId}
+          onClose={handleShowChapterModal}
+          onReload={handleReload}
+        />
       }
 
     </>
