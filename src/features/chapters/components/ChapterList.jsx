@@ -14,17 +14,17 @@ export function ChapterList({ roleName, seriesData }) {
 
   const { reload, handleReload } = useSeriesManagement();
   console.log("seriesID:", seriesData?.seriesId)
-  const { 
+  const {
     chapterList,
     showCreateChapterModal,
     handleShowChapterModal
-   } = useChapterList(seriesData?.seriesId, reload);
+  } = useChapterList(seriesData?.seriesId, reload);
   const { handleApprove, handleReject } = useUpdateChapter();
   const { handleNavigateToChapter } = useSeriesManagement();
 
-  
 
-  
+
+
 
   //nhằm lấy series ID của chapter lấy đánh giá
   const { activeChapterId, handlePopUp } = useChapterRate();
@@ -32,7 +32,7 @@ export function ChapterList({ roleName, seriesData }) {
   //gọi hook update
   const { handleRateSubmit } = useUpdateRateChapter();
   // console.log("length", chapterList.length)
-
+  console.log(`view series info: ${seriesData?.seriesId}`);
 
   return (
     <>
@@ -87,7 +87,7 @@ export function ChapterList({ roleName, seriesData }) {
                       <StatusBadge status={chapter.status} />
 
                       {/* Đã xóa mt-4 thừa ở nút bấm để không bị lệch trục dọc */}
-                      {console.log(`${roleName?.toLowerCase()}${seriesData.id}${chapter.id}`)}
+                      {console.log(`${roleName?.toLowerCase()} ChapterId: ${chapter.chapterId}`)}
                       {roleName !== 'reader' ?
                         <div>
                           <button

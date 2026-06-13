@@ -14,7 +14,12 @@ export const chaptersService = {
   },
   
   async updateChapterStatus(seriesId, chapterId, data) {
-    return await api.patch(`/chapter/${seriesId}/${chapterId}`, data);
+    return await api.patch(`/Chapter/${chapterId}?seriesId=${seriesId}`, data);
+  },
+  
+  async updateChapterRate (chapterId, rate) {
+    return await api.post(`/Vote/voting-chapter`, {chapterId, rate});
   }
+
 
 };
