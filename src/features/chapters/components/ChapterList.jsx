@@ -7,16 +7,31 @@ import { useUpdateChapter } from "../hooks/useUpdateChapter";
 import { useChapterRate } from "../hooks/useChapterRate";
 import { RatePanel } from "../../../pages/reader/RatePanel";
 import { useUpdateRateChapter } from "../hooks/useUpdateRateChapter";
+import { CreateChapterModal } from "./CreateChapterModal";
+import { useChapterList } from "../hooks/useChapterList";
 
 export function ChapterList({ roleName, seriesData }) {
 
+  const { reload, handleReload } = useSeriesManagement();
   console.log("seriesID:", seriesData?.seriesId)
-  const { chapterList } = useCreateChapter(seriesData?.seriesId);
+  const { 
+    chapterList,
+    showCreateChapterModal,
+    handleShowChapterModal
+   } = useChapterList(seriesData?.seriesId, reload);
   const { handleApprove, handleReject } = useUpdateChapter();
   const { handleNavigateToChapter } = useSeriesManagement();
 
+  
 
-  console.log("length", chapterList.length)
+  
+
+  //nhằm lấy series ID của chapter lấy đánh giá
+  const { activeChapterId, handlePopUp } = useChapterRate();
+
+  //gọi hook update
+  const { handleRateSubmit } = useUpdateRateChapter();
+  // console.log("length", chapterList.length)
 
 
   return (
@@ -38,7 +53,7 @@ export function ChapterList({ roleName, seriesData }) {
                 </Link> */}
                 {roleName?.toLowerCase() === "mangaka" &&
                   <button
-                    // onClick={() => setShowAddChapter(true)}
+                    onClick={() => handleShowChapterModal()}
                     className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:opacity-90 transition-opacity"
                   >
                     <Plus size={20} />
@@ -73,16 +88,30 @@ export function ChapterList({ roleName, seriesData }) {
 
                       {/* Đã xóa mt-4 thừa ở nút bấm để không bị lệch trục dọc */}
                       {console.log(`${roleName?.toLowerCase()}${seriesData.id}${chapter.id}`)}
-                      <button
-                        className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-                        onClick={() => handleNavigateToChapter(roleName?.toLowerCase(), seriesData?.seriesId, chapter?.chapterId)}
-                      >
+                      {roleName !== 'reader' ?
+                        <div>
+                          <button
+                            className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                            onClick={() => handleNavigateToChapter(roleName?.toLowerCase(), seriesData?.seriesId, chapter?.chapterId)}
+                          >
 
-                        View Detail
-                      </button>
+                            View Detail
+                          </button>
+                        </div>
+                        :
+                        //nếu là reader thì hiện nút để Rate, không thì hiện nút view details
+                        <div>
+                          <button
+                            className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                            onClick={() => handlePopUp(chapter.chapterId)}
+                          >
 
+                            Rate chapter
+                          </button>
+                        </div>}
                     </div>
                   </div>
+
                 </div>
               );
             })}
@@ -97,7 +126,17 @@ export function ChapterList({ roleName, seriesData }) {
             />
           }
         </>
-      )}
+      )
+      }
+
+      {
+        showCreateChapterModal &&
+        <CreateChapterModal
+          seriesId={seriesData?.seriesId}
+          onClose={handleShowChapterModal}
+          onReload={handleReload}
+        />
+      }
 
     </>
   )

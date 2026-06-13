@@ -9,8 +9,8 @@ export const chaptersService = {
     return await await api.get(`/Chapter/get-chapter-details?seriesId=${seriesId}&chapterId=${chapterId}`);
   },
 
-  async createChapter(formData) {
-    return await api.post("/Chapter/create-chapter", formData);
+  async createChapter(seriesId,formData) {
+    return await api.post(`/Chapter/create-chapter?seriesId=${seriesId}`, formData);
   },
   
   async updateChapterStatus(seriesId, chapterId, data) {
