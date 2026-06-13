@@ -19,7 +19,7 @@ export function TantouDashboard() {
                 </div>
 
                 <div className='p-3 mt-5 ml-1 text-2xl font-medium text-foreground'>Assigned Series</div>
-                <SeriesManagement role="tantouEditor" statusFilter={["Processing", "PendingBoard", "Rejected", "Approved"]} />
+                <SeriesManagement role="tantou" statusFilter={["Processing", "PendingBoard", "Rejected", "Approved", "Publishing"]} />
 
                 <div>Div này cho Mailbox (feedback)</div>
             </div>

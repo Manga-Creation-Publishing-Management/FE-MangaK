@@ -19,7 +19,7 @@ export function Logo({ className = "", size = "md", to, showText = true }) {
   const selectedSize = sizeClasses[size] || sizeClasses.md;
 
   const content = (
-    <div className={`flex items-center gap-2.5 select-none ${className}`}>
+    <div className={`flex items-center gap-2.5 select-none justify-center ${className}`}>
       <img
         src="/logo.png"
         alt="MangaK Logo"

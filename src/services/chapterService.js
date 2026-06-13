@@ -11,5 +11,15 @@ export const chaptersService = {
 
   async createSeries(formData) {
     return await api.post("/Series/create-series", formData);
+  },
+
+  async updateChapterStatus(seriesId, chapterId, formData) {
+    const url = seriesId ? `/Chapter/${chapterId}?seriesId=${seriesId}` : `/Chapter/${chapterId}`
+    return await api.patch(url, formData);
+  },
+
+  async updateChapterRate (chapterId, rate) {
+    return await api.post(`/Vote/voting-chapter`, {chapterId, rate});
   }
+
 };

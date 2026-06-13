@@ -5,7 +5,7 @@ export function HomePage() {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-muted min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300">
+    <div className="bg-muted h-full flex flex-col bg-background text-foreground transition-colors duration-300">
       <nav className="sticky top-0 z-40 bg-background/90 backdrop-blur border-b border-border transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -20,65 +20,18 @@ export function HomePage() {
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <button className="text-sm px-5 py-2.5 border border-border text-foreground hover:bg-muted/50 rounded-xl font-semibold transition-colors cursor-pointer">
-              Register
-            </button>
             <button
-              onClick={() => navigate('/login')}
+              onClick={() => navigate('/loginReader')}
               className="text-sm px-6 py-2.5 bg-primary text-primary-foreground hover:opacity-90 rounded-xl font-semibold shadow-sm transition-opacity cursor-pointer"
             >
-              Login
+              Reader Login
             </button>
           </div>
         </div>
       </nav>
 
 
-      <main className=" flex-grow max-w-7xl mx-auto px-6 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
-
-        <div className="lg:col-span-6 space-y-6 flex flex-col justify-center">
-          <div className="bg-primary/10 text-primary text-[10px] md:text-xs font-bold tracking-widest uppercase px-4 py-2 rounded-full w-fit">
-            Manga Production & Publishing Management Platform
-          </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] text-foreground">
-            Professional Manga <br />
-            <span className="text-primary">Creative Workflow</span>
-          </h1>
-          <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-xl">
-            A comprehensive platform for managing manga production and publishing workflows — from sketching, coloring, to publication — supporting efficient collaboration between Mangakas and Assistants.
-          </p>
-
-          <button
-            onClick={() => navigate('/login')}
-            className="px-8 py-3.5 bg-foreground text-background font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-md inline-block w-fit cursor-pointer text-sm"
-          >
-            Enter System
-          </button>
-
-          <div className="border-t border-border/60 pt-6">
-            <div className="flex items-center gap-8 md:gap-12">
-              <div>
-                <div className="text-2xl md:text-3xl font-extrabold text-foreground">500+</div>
-                <div className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-0.5">
-                  Mangakas
-                </div>
-              </div>
-              <div>
-                <div className="text-2xl md:text-3xl font-extrabold text-foreground">2.4K+</div>
-                <div className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-0.5">
-                  Assistants
-                </div>
-              </div>
-              <div>
-                <div className="text-2xl md:text-3xl font-extrabold text-foreground">1,200+</div>
-                <div className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-0.5">
-                  Published Works
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+      <main className="h-full flex-grow max-w-7xl mx-auto px-6 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
         {/* //image tab */}
         <div className="animate-smallbounce lg:col-span-6 grid grid-cols-2 gap-4 md:gap-5">
           <div className="flex flex-col gap-4 md:gap-5 justify-center">
@@ -112,9 +65,56 @@ export function HomePage() {
             />
           </div>
         </div>
+
+        <div className="lg:col-span-6 space-y-6 flex flex-col justify-end">
+          <div className="w-full flex justify-center bg-primary/10 text-primary text-[10px] md:text-xs font-bold tracking-widest uppercase px-4 py-2 rounded-full w-fit">
+            Manga Production & Publishing Management Platform
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] text-foreground">
+            Professional Manga <br />
+            <span className="text-primary">Creative Workflow</span>
+          </h1>
+          <p className="w-full flex justify-end text-muted-foreground text-sm md:text-base leading-relaxed max-w-xl">
+            A comprehensive platform for managing manga production and publishing workflows — from sketching, coloring, to publication — supporting efficient collaboration between Mangakas and Assistants.
+          </p>
+
+          <div className='w-full flex justify-end px-5'>
+            <button
+              onClick={() => navigate('/login')}
+              className="px-8 py-3.5 bg-foreground text-background font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-md inline-block w-fit cursor-pointer text-sm"
+            >
+              Enter System
+            </button>
+          </div>
+
+          <div className="border-t border-border/60 pt-6 w-full flex justify-end">
+            <div className="flex items-center gap-8 md:gap-12">
+              <div>
+                <div className="text-2xl md:text-3xl font-extrabold text-foreground">500+</div>
+                <div className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-0.5">
+                  Mangakas
+                </div>
+              </div>
+              <div>
+                <div className="text-2xl md:text-3xl font-extrabold text-foreground">2.4K+</div>
+                <div className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-0.5">
+                  Assistants
+                </div>
+              </div>
+              <div>
+                <div className="text-2xl md:text-3xl font-extrabold text-foreground">1,200+</div>
+                <div className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-0.5">
+                  Published Works
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
       </main>
 
-      <FooterPage />
+      <FooterPage className="h-full" />
 
     </div>
   );
