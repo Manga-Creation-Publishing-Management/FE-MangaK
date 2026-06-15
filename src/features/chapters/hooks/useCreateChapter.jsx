@@ -1,34 +1,82 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { chaptersService } from "../../../services/chapterService";
 
-// Hook tự tạo (Custom hook) dùng để lấy danh sách toàn bộ chapter của một bộ truyện (series)
-export function useCreateChapter(seriesId) {
-  // State lưu trữ danh sách các chapter thuộc bộ truyện
-  const [chapterList, setChapterList] = useState([]);
+export function useCreateChapter(seriesId, onClose, onReload) {
+  const [chapterListForm, setChapterListForm] = useState({});
+  const [seriesData, setSeriesData] = useState([]);
 
-  // useEffect tự động fetch danh sách chapter mỗi khi component render hoặc khi seriesId thay đổi
-  useEffect(() => {
-    const fetchApi = async e => {
-      // Nếu chưa có seriesId, không gọi API
-      if (!seriesId) return;
-      try {
-        // Gọi service để lấy toàn bộ danh sách chapter bằng seriesId
-        const resultChapterList = await chaptersService.getAllSeriesBySeriesId(seriesId);
-        
-        // Cập nhật state bằng dữ liệu lấy về từ API
-        setChapterList(resultChapterList.data);
-        console.log("..", resultChapterList.data)
-      } catch (error) {
-        // Hiển thị thông báo lỗi nếu quá trình lấy dữ liệu thất bại
-        console.error("Error fetching chapters:", error);
-      }
+  const [storyFile, setStoryFile] = useState(null);
+
+  const storyInputRef = useRef(null);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleStoryChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setStoryFile(e.target.files[0]);
     }
-    // Thực thi hàm lấy dữ liệu
-    fetchApi();
-  }, [seriesId]) // Dependency array: Hook sẽ gọi lại API nếu seriesId bị đổi
+  };
+
+
+  const handleChange = (e) => {
+    // console.log(e);
+    const name = e.target.name;
+    const value = e.target.value;
+    setChapterListForm({
+      ...chapterListForm,
+      [name]: value,
+    })
+  }
+
+  const handleSubmitChapter = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    if (!chapterListForm.Title?.trim()) {
+      alert("Title is required");
+      return;
+    }
+    if (!storyFile) {
+      alert("Manuscript file is required");
+      return;
+    }
+
+    const formData = new FormData();
+
+    Object.keys(chapterListForm).forEach((key) => {
+      formData.append(key, chapterListForm[key]);
+    });
+    if (storyFile) formData.append("ManuscriptFileUrl", storyFile); // File truyện thật
+
+    try {
+      // 4. Gọi qua API client mới: api.post chứ không dùng post() lẻ loi nữa
+      const results = await chaptersService.createChapter(seriesId, formData);
+
+      if (results) {
+        alert("Created successfully!");
+        setTimeout(() => {
+          onClose();
+          onReload();
+        }, 0);
+      } else {
+        alert(results?.Message || "Failed to create chapter");
+      }
+    } catch (error) {
+      alert(error.response?.data?.Message || "Error creating chapter");
+      console.error("Error:", error);
+    }
+
+
+  };
+
 
   // Trả về danh sách chapter để các component (như ChapterList) có thể render
   return {
-    chapterList,
+    handleSubmitChapter,
+    handleStoryChange,
+    handleChange,
+    storyInputRef,
+    storyFile,
+    isLoading
   }
 }

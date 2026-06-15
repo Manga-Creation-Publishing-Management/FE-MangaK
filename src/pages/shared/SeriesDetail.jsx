@@ -163,9 +163,15 @@ export function SeriesDetail() {
         
         {/* Component hiển thị Danh sách các Chapter thuộc bộ truyện này */}
         <ChapterList roleName={roleFromState} seriesData={detailData} />
+<<<<<<< HEAD
 
         {/* Hộp thoại Phản hồi / Phê duyệt dành cho Tantou hoặc Editorial Board. 
             Chỉ hiển thị khi Status đang ở mức cần xử lý (processing hoặc pending) */}
+=======
+        {console.log("Checkrolehientai:", roleFromState)}
+        
+        {/* feedback box for roles tantou and editorial, only when status is processing or pending */}
+>>>>>>> 0b26e21b3b492525e93748e53e05227366a59d7f
         {(isTantou || isEditorial) &&
           (normalizedStatus === 'processing' || normalizedStatus === 'pending') &&
           <ApprovalPanel

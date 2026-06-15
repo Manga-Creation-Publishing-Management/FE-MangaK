@@ -109,9 +109,9 @@ export default function useCreateSeries(onClose, onReload, reloadState ) {
         alert("Created successfully!");
         // Chờ 0.5s rồi gọi onClose và onReload để đóng form và tải lại trang
         setTimeout(() => {
-          if (onClose) onClose();
-          if (onReload) onReload();
-        }, 500);
+          onClose();
+          onReload();
+        },0);
       }
     } catch (error) {
       // Ghi log nếu xảy ra lỗi trong quá trình tạo

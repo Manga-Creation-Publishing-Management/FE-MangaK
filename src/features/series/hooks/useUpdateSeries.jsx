@@ -13,10 +13,8 @@ export function useUpdateSeries() {
     // Ép chữ thường để dễ so sánh chuỗi
     const normalizedStatus = currentStatus?.toLowerCase();
     const normalizedRole = roleFromState?.toLowerCase();
-    
-    // Kiểm tra xem người dùng hiện tại có thuộc nhóm quyền tương ứng không
-    const isTantou = normalizedRole === "tantou" || normalizedRole === "tantoueditor";
-    const isEditorial = normalizedRole === "editorial" || normalizedRole === "editorialboard";
+    const isTantou = normalizedRole === "tantou";
+    const isEditorial = normalizedRole === "editorial";
 
     let newStatus;
     // Logic quy trình duyệt:

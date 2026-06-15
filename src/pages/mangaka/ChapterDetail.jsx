@@ -1,6 +1,5 @@
 import { useLocation, useParams, useNavigate } from "react-router";
 import { StatusBadge } from "../shared/StatusBadge";
-import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -8,6 +7,8 @@ import 'react-pdf/dist/Page/TextLayer.css';
 
 import { ArrowLeft } from "lucide-react";
 import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
+import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter";
+import { ApprovalPanel } from "../shared/ApprovalPanel";
 
 // Kích hoạt Web Worker để thư viện react-pdf xử lý PDF ở một luồng độc lập (tránh đơ UI)
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -30,9 +31,20 @@ export function ChapterDetail() {
   // Lấy seriesId và chapterId được truyền ngầm qua state khi gọi hàm navigate từ component cha (VD: ChapterList)
   const seriesId = useLocation().state?.seriesId;
   const chapterId = useLocation().state?.chapterId;
+  const currentRole = useLocation().state?.role;
 
+<<<<<<< HEAD
   // Gọi API lấy dữ liệu chi tiết của chapter thông qua hook useChapterDetail
   const { chapterDetail } = useChapterDetail(seriesId, chapterId)
+=======
+  // const validSeriesData = seriesData.find(item => String(item.id) == String(seriesIdFromState))
+
+  // const validChapterData = chapterList.find(item => String(item.id) == String(chapterId))
+
+  const { chapterDetail, setChapterDetail } = useChapterDetail(seriesId, chapterId);
+  const { handleApprove, handleReject, feedback, setFeedback } = useUpdateChapter(seriesId, chapterId);
+
+>>>>>>> 0b26e21b3b492525e93748e53e05227366a59d7f
 
   console.log(chapterDetail);
 
@@ -110,6 +122,15 @@ export function ChapterDetail() {
               ))}
             </Document>
           </div>
+          {currentRole.toLowerCase() == 'tantou' && (
+            <ApprovalPanel
+              feedback={feedback}
+              onFeedbackChange={(e) => setFeedback(e.target.value)}
+              onApprove={() => handleApprove(currentRole, chapterDetail?.status, setChapterDetail)}
+              onReject={() => handleReject(currentRole, chapterDetail?.status, setChapterDetail)}
+            />
+          )}
+
 
         </div>
       </div>

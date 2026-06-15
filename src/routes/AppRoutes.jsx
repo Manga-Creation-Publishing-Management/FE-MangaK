@@ -20,6 +20,7 @@ import { ReaderDashboard } from '../pages/reader/ReaderDashboard.jsx';
 import { ProtectedRoute } from '../features/auth/components/ProtectedRoute';
 import { PublicRoute } from '../features/auth/components/PublicRoute';
 import { LeaderboardPage } from '../pages/shared/LeaderboardPage.jsx';
+import { ReaderLoginPage } from '../pages/reader/ReaderLoginPage.jsx';
 
 const roleDisplayNames = {
   mangaka: "Mangaka",
@@ -39,6 +40,7 @@ export function AppRoutes() {
       {/* Guest/Anonymous Routes */}
       <Route element={<PublicRoute />}>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="loginReader" element={<ReaderLoginPage />} />
       </Route>
 
 

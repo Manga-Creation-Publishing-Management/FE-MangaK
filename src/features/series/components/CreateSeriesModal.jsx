@@ -31,8 +31,7 @@ export default function CreateSeriesModal({ onClose, onReload }) {
         
         {/* Phần Header của Modal, dính cố định trên cùng khi cuộn (sticky) */}
         <div className="sticky top-0 bg-card border-b border-border p-6 flex justify-between items-center">
-          <div className="text-2xl font-semibold">Create New Series</div>
-          {/* Nút tắt Modal (Icon X) */}
+          <div className="text-2xl font-semibold">Create New Task</div>
           <button onClick={onClose}
             className="p-2 hover:bg-muted rounded-lg transition-colors cursor-pointer"
             disabled={isLoading}>

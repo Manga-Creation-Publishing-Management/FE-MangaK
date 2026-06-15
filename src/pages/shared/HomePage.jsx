@@ -6,10 +6,14 @@ export function HomePage() {
   const navigate = useNavigate();
 
   return (
+<<<<<<< HEAD
     // Container chính bao bọc toàn bộ trang, sử dụng min-h-screen để phủ đầy chiều cao màn hình
     <div className="bg-muted min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300">
       
       {/* Thanh điều hướng (Navbar) trên cùng */}
+=======
+    <div className="bg-muted h-full flex flex-col bg-background text-foreground transition-colors duration-300">
+>>>>>>> 0b26e21b3b492525e93748e53e05227366a59d7f
       <nav className="sticky top-0 z-40 bg-background/90 backdrop-blur border-b border-border transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           
@@ -28,19 +32,21 @@ export function HomePage() {
           
           {/* Các nút bấm ở góc phải (Đăng ký, Đăng nhập) */}
           <div className="flex items-center gap-4">
-            <button className="text-sm px-5 py-2.5 border border-border text-foreground hover:bg-muted/50 rounded-xl font-semibold transition-colors cursor-pointer">
-              Register
-            </button>
             <button
+<<<<<<< HEAD
               onClick={() => navigate('/login')} // Chuyển sang trang đăng nhập khi click
+=======
+              onClick={() => navigate('/loginReader')}
+>>>>>>> 0b26e21b3b492525e93748e53e05227366a59d7f
               className="text-sm px-6 py-2.5 bg-primary text-primary-foreground hover:opacity-90 rounded-xl font-semibold shadow-sm transition-opacity cursor-pointer"
             >
-              Login
+              Reader Login
             </button>
           </div>
         </div>
       </nav>
 
+<<<<<<< HEAD
       {/* Nội dung chính của trang (Main Content) */}
       <main className="flex-grow max-w-7xl mx-auto px-6 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
         
@@ -97,6 +103,11 @@ export function HomePage() {
         </div>
 
         {/* Phần hình ảnh minh họa bên phải */}
+=======
+
+      <main className="h-full flex-grow max-w-7xl mx-auto px-6 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
+        {/* //image tab */}
+>>>>>>> 0b26e21b3b492525e93748e53e05227366a59d7f
         <div className="animate-smallbounce lg:col-span-6 grid grid-cols-2 gap-4 md:gap-5">
           
           {/* Cột ảnh thứ nhất */}
@@ -132,10 +143,61 @@ export function HomePage() {
             />
           </div>
         </div>
+
+        <div className="lg:col-span-6 space-y-6 flex flex-col justify-end">
+          <div className="w-full flex justify-center bg-primary/10 text-primary text-[10px] md:text-xs font-bold tracking-widest uppercase px-4 py-2 rounded-full w-fit">
+            Manga Production & Publishing Management Platform
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] text-foreground">
+            Professional Manga <br />
+            <span className="text-primary">Creative Workflow</span>
+          </h1>
+          <p className="w-full flex justify-end text-muted-foreground text-sm md:text-base leading-relaxed max-w-xl">
+            A comprehensive platform for managing manga production and publishing workflows — from sketching, coloring, to publication — supporting efficient collaboration between Mangakas and Assistants.
+          </p>
+
+          <div className='w-full flex justify-end px-5'>
+            <button
+              onClick={() => navigate('/login')}
+              className="px-8 py-3.5 bg-foreground text-background font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-md inline-block w-fit cursor-pointer text-sm"
+            >
+              Enter System
+            </button>
+          </div>
+
+          <div className="border-t border-border/60 pt-6 w-full flex justify-end">
+            <div className="flex items-center gap-8 md:gap-12">
+              <div>
+                <div className="text-2xl md:text-3xl font-extrabold text-foreground">500+</div>
+                <div className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-0.5">
+                  Mangakas
+                </div>
+              </div>
+              <div>
+                <div className="text-2xl md:text-3xl font-extrabold text-foreground">2.4K+</div>
+                <div className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-0.5">
+                  Assistants
+                </div>
+              </div>
+              <div>
+                <div className="text-2xl md:text-3xl font-extrabold text-foreground">1,200+</div>
+                <div className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-0.5">
+                  Published Works
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
       </main>
 
+<<<<<<< HEAD
       {/* Tích hợp component Footer */}
       <FooterPage />
+=======
+      <FooterPage className="h-full" />
+>>>>>>> 0b26e21b3b492525e93748e53e05227366a59d7f
 
     </div>
   );

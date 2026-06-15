@@ -22,5 +22,10 @@ export const authService = {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('user');
     }
+  },
+
+  async loginGoogle (idToken) {
+    return await api.post("/Auth/google-login", {idTokenGoogle: idToken});
   }
+
 };
