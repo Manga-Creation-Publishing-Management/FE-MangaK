@@ -104,7 +104,6 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
 <<<<<<< HEAD
 =======
 
-      <p>Add one more tmp line</p>
 
 
 >>>>>>> 0b26e21b3b492525e93748e53e05227366a59d7f

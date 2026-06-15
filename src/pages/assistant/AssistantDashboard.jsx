@@ -1,15 +1,13 @@
 import { OverviewCard } from '../shared/OverviewCard'
 import { WelcomeLine } from '../shared/WelcomeLine'
 import { CircleCheckBig, CircleDashed, CircleAlert } from 'lucide-react'
+import Notification from '../shared/Notification';
 
 // Component Trang chủ (Dashboard) dành riêng cho role Assistant (Trợ lý)
 export function AssistantDashboard() {
   return (
-    // Vỏ ngoài thiết lập full height
-    <div className='h-screen p-2 bg-background'>
-      <div className='p-5 bg-background'>
-        
-        {/* Lời chào đầu trang */}
+    <div className='h-full bg-background'>
+      <div className='p-9 bg-background'>
         <WelcomeLine roleName="Assistant" />
 
         {/* Cụm thống kê công việc của Assistant */}
@@ -22,9 +20,10 @@ export function AssistantDashboard() {
         {/* Placeholder: Khu vực dự kiến hiển thị component TaskManagement */}
         <div className='pt-3'>Đây là chỗ cho component TaskManagement</div>
 
-        {/* Placeholder: Khu vực dự kiến hiển thị hộp thư hoặc nhận xét (feedback) */}
-        <div>Div này cho Mailbox (feedback)</div>
 
+      </div>
+      <div className='mt-5 px-9 mb-10'>
+        <Notification />
       </div>
     </div >
   )

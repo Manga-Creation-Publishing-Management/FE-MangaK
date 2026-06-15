@@ -2,15 +2,13 @@ import { OverviewCard } from '../shared/OverviewCard'
 import { SeriesManagement } from '../shared/SeriesManagement'
 import { WelcomeLine } from '../shared/WelcomeLine'
 import { CircleCheckBig, CircleEllipsis, CircleX } from 'lucide-react'
+import { Notification } from '../shared/Notification'
 
 // Component Trang chủ (Dashboard) dành riêng cho role Tantou Editor (Biên tập viên phụ trách)
 export function TantouDashboard() {
     return (
-        // Vỏ bao full chiều cao
-        <div className='h-screen p-2 bg-background'>
-            <div className='p-5 bg-background'>
-                
-                {/* Lời chào đầu trang */}
+        <div className='h-full bg-background'>
+            <div className='p-9 bg-background'>
                 <WelcomeLine roleName="Tantou Editor" />
 
                 {/* Các thẻ (Card) tổng quan trạng thái công việc của Tantou */}
@@ -22,13 +20,12 @@ export function TantouDashboard() {
                     <OverviewCard contentText="Rejected Series" iconName={<CircleX size={30} />}
                         iconColor="#fbbf24" valueNum={3} />
                 </div>
+            </div>
+            <div className='px-9 mt-5 text-2xl font-medium text-primary'>Assigned Series</div>
+            <SeriesManagement role="tantou" statusFilter={["Processing", "PendingBoard", "Rejected", "Approved", "Publishing"]} />
 
-                {/* Danh sách các bộ truyện được phân công (Assigned Series) */}
-                <div className='p-3 mt-5 ml-1 text-2xl font-medium text-foreground'>Assigned Series</div>
-                <SeriesManagement role="tantou" statusFilter={["Processing", "PendingBoard", "Rejected", "Approved", "Publishing"]} />
-
-                {/* Placeholder: Vùng dự định làm Mailbox/Feedback */}
-                <div>Div này cho Mailbox (feedback)</div>
+            <div className='px-9 mb-10'>
+                <Notification />
             </div>
         </div >
     )
