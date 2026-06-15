@@ -18,7 +18,7 @@ export function ChapterDetail() {
 
   // Hook dùng để quay lại trang trước đó
   const navigate = useNavigate();
-  
+
   // State lưu tổng số trang của file PDF
   const [numPages, setNumPages] = useState(null);
 
@@ -33,10 +33,6 @@ export function ChapterDetail() {
   const chapterId = useLocation().state?.chapterId;
   const currentRole = useLocation().state?.role;
 
-<<<<<<< HEAD
-  // Gọi API lấy dữ liệu chi tiết của chapter thông qua hook useChapterDetail
-  const { chapterDetail } = useChapterDetail(seriesId, chapterId)
-=======
   // const validSeriesData = seriesData.find(item => String(item.id) == String(seriesIdFromState))
 
   // const validChapterData = chapterList.find(item => String(item.id) == String(chapterId))
@@ -44,7 +40,6 @@ export function ChapterDetail() {
   const { chapterDetail, setChapterDetail } = useChapterDetail(seriesId, chapterId);
   const { handleApprove, handleReject, feedback, setFeedback } = useUpdateChapter(seriesId, chapterId);
 
->>>>>>> 0b26e21b3b492525e93748e53e05227366a59d7f
 
   console.log(chapterDetail);
 
@@ -52,7 +47,7 @@ export function ChapterDetail() {
     <>
       {/* Vùng chứa toàn bộ nội dung của trang chi tiết */}
       <div className="p-8 space-y-8">
-        
+
         {/* Nút Back quay lại trang trước */}
         <button
           onClick={() => navigate(-1)} // navigate(-1) tương đương với bấm nút Back trên trình duyệt
@@ -65,7 +60,7 @@ export function ChapterDetail() {
         {/* Khung (Card) chứa thông tin chính của Chapter */}
         <div className="bg-card border border-border rounded-xl p-8 space-y-6">
           <div className="flex justify-between items-start">
-            
+
             {/* Cụm thông tin bên trái: Tiêu đề Chapter, Số thứ tự, Tóm tắt */}
             <div>
               <h1 className="font-semibold text-xl">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h1>
@@ -89,7 +84,7 @@ export function ChapterDetail() {
           {/* Vùng hiển thị nội dung PDF đọc truyện. 
               Sử dụng h-[350px] overflow-y-auto để có thể cuộn danh sách các trang PDF */}
           <div className="w-full h-[350px] overflow-y-auto border border-gray-300 bg-zinc-700 p-4 rounded-lg shadow-inner">
-            
+
             {/* Component Document của react-pdf để tải file PDF từ URL trả về */}
             <Document
               file={chapterDetail?.manuscriptFileUrl}
@@ -114,7 +109,7 @@ export function ChapterDetail() {
                       pageNumber={index + 1} // Render trang PDF thứ i+1
                       width={600}            // Kích thước chuẩn hiển thị
                       renderTextLayer={true} // Cho phép người dùng bôi đen text trên PDF
-                      renderAnnotationLayer={true} 
+                      renderAnnotationLayer={true}
                     />
                   </div>
                 </div>

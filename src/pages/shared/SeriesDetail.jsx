@@ -22,7 +22,7 @@ export function SeriesDetail() {
   // Thử lấy 'role' (vai trò) từ location.state. 
   // Việc này quan trọng để hiển thị giao diện tuỳ chỉnh theo role
   let roleFromState = location.state?.role;
-  
+
   // Dự phòng (Fallback): Nếu state bị mất (ví dụ do người dùng f5/refresh trang),
   // Cố gắng tự nội suy role bằng cách nhìn vào đường dẫn URL (pathname)
   if (!roleFromState) {
@@ -40,7 +40,7 @@ export function SeriesDetail() {
 
   // State lưu trữ dữ liệu chi tiết của bộ truyện lấy từ server
   const [detailData, setDetailData] = useState(null);
-  
+
   // State lưu trữ trạng thái hiện tại (cục bộ) của bộ truyện để không phải gọi API lại ngay lập tức khi vừa approve/reject
   const [localStatus, setLocalStatus] = useState(null);
 
@@ -102,7 +102,7 @@ export function SeriesDetail() {
   return (
     <>
       <div className="p-8 space-y-8">
-        
+
         {/* Nút quay lại trang trước */}
         <button
           onClick={() => navigate(-1)}
@@ -111,15 +111,15 @@ export function SeriesDetail() {
           <ArrowLeft size={20} />
           Back
         </button>
-        
+
         {/* Khung chứa ảnh bìa và thông tin cơ bản của bộ truyện */}
         <div className="bg-card border-border rounded-xl overflow-hidden">
-          
+
           {/* Vùng hiển thị Ảnh bìa */}
           <div className="h-100 w-full relative" >
             <img className="w-full h-full object-cover" src={detailData?.coverFile} alt="" />
           </div>
-          
+
           <div className="p-8 space-y-6">
             <div className="flex justify-between items-start">
               <div className="flex-1">
@@ -130,7 +130,7 @@ export function SeriesDetail() {
               {/* Huy hiệu hiển thị trạng thái (Processing, Pending, Approved...) */}
               <StatusBadge status={currentStatus?.toLowerCase()} />
             </div>
-            
+
             <div className="grid grid-cols-2 gap-6">
               <div>
                 <p className="text-sm text-muted-foreground">Genres</p>
@@ -160,18 +160,12 @@ export function SeriesDetail() {
             </div>
           </div>
         </div>
-        
+
         {/* Component hiển thị Danh sách các Chapter thuộc bộ truyện này */}
         <ChapterList roleName={roleFromState} seriesData={detailData} />
-<<<<<<< HEAD
-
-        {/* Hộp thoại Phản hồi / Phê duyệt dành cho Tantou hoặc Editorial Board. 
-            Chỉ hiển thị khi Status đang ở mức cần xử lý (processing hoặc pending) */}
-=======
         {console.log("Checkrolehientai:", roleFromState)}
-        
+
         {/* feedback box for roles tantou and editorial, only when status is processing or pending */}
->>>>>>> 0b26e21b3b492525e93748e53e05227366a59d7f
         {(isTantou || isEditorial) &&
           (normalizedStatus === 'processing' || normalizedStatus === 'pending') &&
           <ApprovalPanel

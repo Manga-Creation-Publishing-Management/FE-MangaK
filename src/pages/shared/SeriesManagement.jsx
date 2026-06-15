@@ -42,13 +42,7 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
 
   return (
     <>
-<<<<<<< HEAD
-      <div className="p-3 mb-5">
-
-        {/* Header đặc biệt chỉ dành cho role Mangaka (cho phép tạo truyện mới) */}
-=======
       <div className="p-9 mb-5">
->>>>>>> 0b26e21b3b492525e93748e53e05227366a59d7f
         {role === "mangaka" &&
           <div className="flex justify-between items-center mb-5">
             <div>
@@ -101,12 +95,9 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
       {/* Component Modal (Popup) để tạo bộ truyện mới.
           Chỉ render khi state showCreateSeriesModal là true */}
       {showCreateSeriesModal && (<CreateSeriesModal onClose={handleClick} onReload={handleReload} />)}
-<<<<<<< HEAD
-=======
 
 
 
->>>>>>> 0b26e21b3b492525e93748e53e05227366a59d7f
     </>
 
   );

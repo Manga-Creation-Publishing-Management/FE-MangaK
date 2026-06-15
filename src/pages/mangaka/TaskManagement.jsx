@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-// Component TaskManagement: Màn hình quản lý các công việc (task) của Mangaka
-// (Hiện tại đang là placeholder chờ phát triển tiếp)
-=======
 import { CalendarClock, Plus } from "lucide-react";
 import { useCreateTask } from "../../features/tasks/hooks/useCreateTask";
 import CreateTaskModal from "../../features/tasks/components/CreateTaskModal";
@@ -9,7 +5,6 @@ import { useTaskList } from "../../features/tasks/hooks/useTaskList";
 import { StatusBadge } from "../shared/StatusBadge";
 import dayjs from 'dayjs';
 
->>>>>>> 0b26e21b3b492525e93748e53e05227366a59d7f
 export function TaskManagement() {
 
   const {
@@ -27,7 +22,7 @@ export function TaskManagement() {
     taskList
   } = useTaskList();
 
-  console.log( "chapet",taskList.chapterNumber);
+  console.log("chapet", taskList.chapterNumber);
 
   return (
     <>

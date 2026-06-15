@@ -3,15 +3,6 @@ import { Check, X } from "lucide-react";
 // Component ApprovalPanel: Bảng điều khiển dùng để gửi nhận xét (Feedback) 
 // và nút Phê duyệt / Từ chối (Approve / Reject) dành cho Tantou hoặc Editorial Board.
 export function ApprovalPanel({
-<<<<<<< HEAD
-  feedback = "",            // Nội dung phản hồi (nếu có)
-  onFeedbackChange,         // Hàm xử lý khi người dùng gõ vào ô feedback
-  onApprove,                // Hàm xử lý khi người dùng nhấn nút Approve
-  onReject,                 // Hàm xử lý khi người dùng nhấn nút Reject
-  isLoading = false,        // Trạng thái đang tải (đang gọi API duyệt/từ chối)
-  approveText = "Approve Names & Submit to Editorial Board", // Text mặc định cho nút Approve
-  rejectText = "Reject Names & Send Feedback",               // Text mặc định cho nút Reject
-=======
   feedback = "",
   onFeedbackChange,
   onApprove,
@@ -19,7 +10,6 @@ export function ApprovalPanel({
   isLoading = false,
   approveText = "Approve Series/ Chapter",
   rejectText = "Reject & Send Feedback",
->>>>>>> 0b26e21b3b492525e93748e53e05227366a59d7f
 }) {
   return (
     // Vỏ ngoài của bảng điều khiển, cách điệu với viền trên và shadow khi hover
@@ -52,7 +42,7 @@ export function ApprovalPanel({
 
       {/* Khung chứa các nút bấm hành động (Approve & Reject) */}
       <div className="flex flex-wrap gap-3">
-        
+
         {/* Nút Phê Duyệt (Approve) */}
         <button
           type="button"
