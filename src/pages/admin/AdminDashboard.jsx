@@ -16,18 +16,29 @@ import { OverviewCard } from "../shared/OverviewCard.jsx";
 import { userService } from "../../services/userService.js";
 import { CustomSelect } from "../../shared/components/CustomSelect.jsx";
 
+// Hook form & Yup
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+// Định nghĩa nhãn hiển thị cho các quyền (roles) trên UI
 const roleLabels = {
   mangaka: "Mangaka",
   assistant: "Assistant",
   tantou: "Tantou Editor",
   editorial: "Editorial Board",
+  reader: "Reader",
+  admin: "Administrator",
 };
 
+// Định nghĩa màu sắc hiển thị (Tailwind classes) cho các badge dựa trên quyền
 const roleColors = {
-  mangaka: "bg-primary/10 text-primary border-primary/30",
+  mangaka: "bg-pink-400/10 text-pink-500 border-pink-300/50",
   assistant: "bg-accent/10 text-accent border-accent/30",
   tantou: "bg-info/10 text-info border-info/30",
   editorial: "bg-success/10 text-success border-success/30",
+  reader: "bg-purple-500/10 text-purple-500 border-purple-500/30",
+  admin: "bg-rose-500/10 text-rose-500 border-rose-500/30",
 };
 
 // Map role từ API về key nội bộ dùng trong FE
@@ -36,13 +47,37 @@ const mapApiRole = (role) => {
     mangaka: "mangaka",
     assistant: "assistant",
     tantou: "tantou",
-    tantoureditor: "tantou",
     editorial: "editorial",
-    editorialboard: "editorial",
     admin: "admin",
+    reader: "reader",
   };
   return roleMap[role?.toLowerCase()] || role?.toLowerCase() || "mangaka";
 };
+
+// Map role key nội bộ FE sang giá trị API yêu cầu
+const feRoleToApiRole = {
+  mangaka: "Mangaka",
+  assistant: "Assistant",
+  tantou: "Tantou",
+  editorial: "Editorial",
+  admin: "Admin",
+  reader: "Reader",
+};
+
+// Validation Schema với Yup cho form Tạo Tài Khoản
+const schema = yup.object().shape({
+  firstName: yup.string().required("First name is required"),
+  lastName: yup.string().required("Last name is required"),
+  phone: yup.string().required("Phone number is required"),
+  email: yup.string().email("Invalid email format").required("Email is required"),
+  role: yup.string().required("Role is required"),
+  authorName: yup.string().when("role", {
+    is: "mangaka",
+    then: (schema) => schema.required("Author name is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  password: yup.string().required("Password is required").min(6, "Password must be at least 6 characters"),
+});
 
 export function AdminDashboard() {
   const [users, setUsers] = useState([]);
@@ -54,23 +89,36 @@ export function AdminDashboard() {
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
 
-  // Create account form state (Uses First Name & Last Name instead of Full Name)
-  const [newFirstName, setNewFirstName] = useState("");
-  const [newLastName, setNewLastName] = useState("");
-  const [newEmail, setNewEmail] = useState("");
-  const [newPhone, setNewPhone] = useState("");
-  const [newAuthorName, setNewAuthorName] = useState("");
-  const [newRole, setNewRole] = useState("editorial");
-  const [newPassword, setNewPassword] = useState("");
+  // Khởi tạo React Hook Form để thay thế quản lý state thủ công
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    watch,
+    reset,
+    formState: { errors, isSubmitting }
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      phone: "",
+      email: "",
+      role: "editorial",
+      authorName: "",
+      password: ""
+    }
+  });
+
+  const selectedRole = watch("role");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [createError, setCreateError] = useState("");
 
   // ==================== GỌI API LẤY DANH SÁCH USER ====================
-
   const fetchUsers = async () => {
     try {
       const response = await userService.getUserList();
-      // response có thể là mảng trực tiếp hoặc nằm trong response.data
       const userList = Array.isArray(response) ? response : (response.data || []);
 
       const mapped = userList.map((user) => ({
@@ -79,7 +127,7 @@ export function AdminDashboard() {
         email: user.email || '',
         phone: user.phoneNumber || user.phone || '',
         role: mapApiRole(user.role),
-        status: user.isActive === false || user.status?.toLowerCase() === 'suspended' ? 'suspended' : 'active',
+        status: user.isActive === false || user.status?.toLowerCase() === 'suspended' || user.status?.toLowerCase() === 'inactive' ? 'inactive' : 'active',
       }));
 
       setUsers(mapped);
@@ -95,7 +143,6 @@ export function AdminDashboard() {
   }, []);
 
   // ==================== THỐNG KÊ ====================
-
   const stats = [
     {
       label: "Total Accounts",
@@ -110,8 +157,8 @@ export function AdminDashboard() {
       color: "bg-success/10 text-success",
     },
     {
-      label: "Suspended",
-      value: users.filter((u) => u.status === "suspended").length,
+      label: "Inactive",
+      value: users.filter((u) => u.status === "inactive").length,
       icon: UserX,
       color: "bg-destructive/10 text-destructive",
     },
@@ -133,96 +180,74 @@ export function AdminDashboard() {
     return matchesSearch && matchesRole && matchesStatus;
   });
 
+  // Hàm xử lý mở popup xác nhận việc Khóa (Deactivate) hoặc Mở Khóa (Activate) tài khoản
   const handleToggleStatus = (user) => {
-    const action = user.status === "active" ? "suspend" : "activate";
+    const action = user.status === "active" ? "inactive" : "activate";
     setConfirmAction({ user, action });
   };
 
-  const confirmToggle = () => {
+  // Hàm thực thi việc cập nhật trạng thái tài khoản sau khi người dùng xác nhận
+  const confirmToggle = async () => {
     if (!confirmAction) return;
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.id === confirmAction.user.id
-          ? {
-            ...u,
-            status:
-              confirmAction.action === "suspend" ? "suspended" : "active",
-          }
-          : u,
-      ),
-    );
-    setConfirmAction(null);
+    
+    try {
+      const apiStatus = confirmAction.action === "inactive" ? "Inactive" : "Active";
+      await userService.updateUserStatus(confirmAction.user.id, apiStatus);
+
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.id === confirmAction.user.id
+            ? {
+              ...u,
+              status: confirmAction.action === "inactive" ? "inactive" : "active",
+            }
+            : u,
+        ),
+      );
+    } catch (error) {
+      console.error("Failed to toggle user status:", error);
+      alert("Đã xảy ra lỗi khi cập nhật trạng thái tài khoản. Vui lòng thử lại!");
+    } finally {
+      setConfirmAction(null);
+    }
   };
 
+  // Hàm tự động sinh mật khẩu ngẫu nhiên (12 ký tự) cho tài khoản mới
   const generatePassword = () => {
     const chars = "ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$";
-    setNewPassword(
-      Array.from(
-        { length: 12 },
-        () => chars[Math.floor(Math.random() * chars.length)],
-      ).join(""),
-    );
+    const newPass = Array.from(
+      { length: 12 },
+      () => chars[Math.floor(Math.random() * chars.length)],
+    ).join("");
+    // Gắn giá trị mới vào form và kích hoạt trigger để tắt báo lỗi nếu có
+    setValue("password", newPass, { shouldValidate: true });
   };
 
-  // Map role key nội bộ FE sang giá trị API yêu cầu
-  const feRoleToApiRole = {
-    mangaka: "Mangaka",
-    assistant: "Assistant",
-    tantou: "Tantou",
-    editorial: "Editorial",
-  };
-
-  const [isCreating, setIsCreating] = useState(false);
-
-  const handleCreate = async (e) => {
-    e.preventDefault();
-    if (
-      !newFirstName.trim() ||
-      !newLastName.trim() ||
-      !newEmail.trim() ||
-      !newPhone.trim() ||
-      !newPassword.trim()
-    ) {
-      setCreateError("All fields are required.");
-      return;
-    }
-
-    setIsCreating(true);
+  // Hàm xử lý hành động submit form Tạo mới tài khoản (gọi API)
+  const onSubmit = async (data) => {
     setCreateError("");
-
     try {
-      const apiRole = feRoleToApiRole[newRole] || "Mangaka";
+      const apiRole = feRoleToApiRole[data.role] || "Mangaka";
       await userService.createUser(apiRole, {
-        firstName: newFirstName.trim(),
-        lastName: newLastName.trim(),
-        email: newEmail.trim(),
-        password: newPassword.trim(),
-        phone: newPhone.trim(),
-        authorName: newRole === 'mangaka' ? newAuthorName.trim() : null,
+        firstName: data.firstName.trim(),
+        lastName: data.lastName.trim(),
+        email: data.email.trim(),
+        password: data.password.trim(),
+        phone: data.phone.trim(),
+        authorName: data.role === 'mangaka' ? data.authorName.trim() : null,
         status: "Active",
       });
 
       setShowCreateModal(false);
-      setNewFirstName("");
-      setNewLastName("");
-      setNewEmail("");
-      setNewPhone("");
-      setNewAuthorName("");
-      setNewRole("mangaka");
-      setNewPassword("");
-      setCreateError("");
-      // Refresh danh sách user từ API
+      reset(); // Reset form về trạng thái trống
       fetchUsers();
     } catch (error) {
       console.error("Failed to create user:", error);
       setCreateError(error.message || "Failed to create account. Please try again.");
-    } finally {
-      setIsCreating(false);
     }
   };
 
-
-
+  // Ma trận định nghĩa các quyền (Permission) để hiển thị trong popup Role Permissions
   const permissionMatrix = {
     mangaka: [
       "Create series",
@@ -254,7 +279,7 @@ export function AdminDashboard() {
   };
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-6 space-y-8">
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between top-align">
           <div>
@@ -278,7 +303,7 @@ export function AdminDashboard() {
           </div>
         </div>
 
-        {/* Stats */}
+        {/* Hiển thị các thẻ Thống Kê (OverviewCard) */}
         <div className="grid grid-cols-4 gap-6">
           {stats.map((stat) => {
             const Icon = stat.icon;
@@ -295,7 +320,7 @@ export function AdminDashboard() {
         </div>
 
 
-        {/* Filters */}
+        {/* Vùng bộ lọc: Tìm kiếm theo tên, Lọc theo Role, Lọc theo Trạng thái */}
         <div className="flex gap-4 items-center">
           <div className="relative flex-1 max-w-sm">
             <Search
@@ -319,7 +344,9 @@ export function AdminDashboard() {
                 { value: "mangaka", label: "Mangaka" },
                 { value: "assistant", label: "Assistant" },
                 { value: "tantou", label: "Tantou Editor" },
-                { value: "editorial", label: "Editorial Board" }
+                { value: "editorial", label: "Editorial Board" },
+                { value: "reader", label: "Reader" },
+                { value: "admin", label: "Admin" }
               ]}
             />
           </div>
@@ -330,13 +357,13 @@ export function AdminDashboard() {
               options={[
                 { value: "all", label: "All Status" },
                 { value: "active", label: "Active" },
-                { value: "suspended", label: "Suspended" }
+                { value: "inactive", label: "Inactive" }
               ]}
             />
           </div>
         </div>
 
-        {/* User Table */}
+        {/* Bảng hiển thị danh sách người dùng (User Table) */}
         <div className="bg-card border border-border rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -385,7 +412,7 @@ export function AdminDashboard() {
                   filtered.map((user) => (
                     <tr
                       key={user.id}
-                      className={`hover:bg-muted/30 transition-colors ${user.status === "suspended" ? "opacity-60" : ""}`}
+                      className={`hover:bg-muted/30 transition-colors ${user.status === "inactive" ? "opacity-60" : ""}`}
                     >
                       <td className="px-6 py-4 font-semibold text-foreground">
                         {user.name}
@@ -410,7 +437,7 @@ export function AdminDashboard() {
                             : "bg-destructive/10 text-destructive border-destructive/30"
                             }`}
                         >
-                          {user.status === "active" ? "Active" : "Suspended"}
+                          {user.status === "active" ? "Active" : "Inactive"}
                         </span>
                       </td>
                       <td className="px-6 py-4">
@@ -426,7 +453,7 @@ export function AdminDashboard() {
                           ) : (
                             <UserCheck size={15} />
                           )}
-                          {user.status === "active" ? "Suspend" : "Activate"}
+                          {user.status === "active" ? "Deactivate" : "Activate"}
                         </button>
                       </td>
                     </tr>
@@ -437,16 +464,17 @@ export function AdminDashboard() {
           </div>
         </div>
 
-        {/* Create Account Modal */}
+        {/* Modal (Popup) Tạo tài khoản mới */}
         {showCreateModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-card rounded-xl p-8 w-full max-w-lg">
               <div className="flex justify-between items-center mb-6">
-                <h2>Create Account</h2>
+                <h2 className="font-semibold text-xl">Create Account</h2>
                 <button
                   onClick={() => {
                     setShowCreateModal(false);
                     setCreateError("");
+                    reset();
                   }}
                   className="text-muted-foreground hover:text-foreground"
                 >
@@ -454,7 +482,7 @@ export function AdminDashboard() {
                 </button>
               </div>
 
-              <form onSubmit={handleCreate} className="space-y-4">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 {/* Row 1: First Name & Last Name */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -463,11 +491,11 @@ export function AdminDashboard() {
                     </label>
                     <input
                       type="text"
-                      value={newFirstName}
-                      onChange={(e) => setNewFirstName(e.target.value)}
+                      {...register("firstName")}
                       placeholder="First name"
                       className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
                     />
+                    {errors.firstName && <p className="text-xs text-destructive mt-1">{errors.firstName.message}</p>}
                   </div>
                   <div>
                     <label className="text-sm text-muted-foreground mb-1.5 block">
@@ -475,11 +503,11 @@ export function AdminDashboard() {
                     </label>
                     <input
                       type="text"
-                      value={newLastName}
-                      onChange={(e) => setNewLastName(e.target.value)}
+                      {...register("lastName")}
                       placeholder="Last name"
                       className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
                     />
+                    {errors.lastName && <p className="text-xs text-destructive mt-1">{errors.lastName.message}</p>}
                   </div>
                 </div>
 
@@ -491,11 +519,11 @@ export function AdminDashboard() {
                     </label>
                     <input
                       type="text"
-                      value={newPhone}
-                      onChange={(e) => setNewPhone(e.target.value)}
+                      {...register("phone")}
                       placeholder="e.g. +84 987 654 321"
                       className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
                     />
+                    {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone.message}</p>}
                   </div>
                   <div>
                     <label className="text-sm text-muted-foreground mb-1.5 block">
@@ -503,42 +531,49 @@ export function AdminDashboard() {
                     </label>
                     <input
                       type="email"
-                      value={newEmail}
-                      onChange={(e) => setNewEmail(e.target.value)}
+                      {...register("email")}
                       placeholder="email@comicmanager.com"
                       className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
                     />
+                    {errors.email && <p className="text-xs text-destructive mt-1">{errors.email.message}</p>}
                   </div>
                 </div>
 
-                <div className={`grid ${newRole === 'mangaka' ? 'grid-cols-2 gap-4' : 'grid-cols-1'}`}>
+                <div className={`grid ${selectedRole === 'mangaka' ? 'grid-cols-2 gap-4' : 'grid-cols-1'}`}>
                   <div>
                     <label className="text-sm text-muted-foreground mb-1.5 block">
                       Role
                     </label>
-                    <CustomSelect
-                      value={newRole}
-                      onChange={setNewRole}
-                      options={[
-                        { value: "mangaka", label: "Mangaka" },
-                        { value: "assistant", label: "Assistant" },
-                        { value: "tantou", label: "Tantou Editor" },
-                        { value: "editorial", label: "Editorial Board" }
-                      ]}
+                    <Controller
+                      name="role"
+                      control={control}
+                      render={({ field }) => (
+                        <CustomSelect
+                          value={field.value}
+                          onChange={field.onChange}
+                          options={[
+                            { value: "mangaka", label: "Mangaka" },
+                            { value: "assistant", label: "Assistant" },
+                            { value: "tantou", label: "Tantou Editor" },
+                            { value: "editorial", label: "Editorial Board" }
+                          ]}
+                        />
+                      )}
                     />
+                    {errors.role && <p className="text-xs text-destructive mt-1">{errors.role.message}</p>}
                   </div>
-                  {newRole === 'mangaka' && (
+                  {selectedRole === 'mangaka' && (
                     <div>
                       <label className="text-sm text-muted-foreground mb-1.5 block">
                         Author Name
                       </label>
                       <input
                         type="text"
-                        value={newAuthorName}
-                        onChange={(e) => setNewAuthorName(e.target.value)}
+                        {...register("authorName")}
                         placeholder="Pen Name"
                         className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
                       />
+                      {errors.authorName && <p className="text-xs text-destructive mt-1">{errors.authorName.message}</p>}
                     </div>
                   )}
                 </div>
@@ -551,8 +586,7 @@ export function AdminDashboard() {
                     <div className="relative flex-1">
                       <input
                         type={showNewPassword ? "text" : "password"}
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
+                        {...register("password")}
                         placeholder="Set a password"
                         className="w-full px-4 py-2.5 pr-10 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary font-mono"
                       />
@@ -576,9 +610,9 @@ export function AdminDashboard() {
                       Generate
                     </button>
                   </div>
+                  {errors.password && <p className="text-xs text-destructive mt-1">{errors.password.message}</p>}
                   <p className="text-xs text-muted-foreground mt-1.5">
-                    This password will be shared with the user at account
-                    creation.
+                    This password will be shared with the user at account creation.
                   </p>
                 </div>
 
@@ -592,6 +626,7 @@ export function AdminDashboard() {
                     onClick={() => {
                       setShowCreateModal(false);
                       setCreateError("");
+                      reset();
                     }}
                     className="flex-1 px-4 py-2.5 border border-border rounded-lg hover:bg-muted transition-colors"
                   >
@@ -599,10 +634,10 @@ export function AdminDashboard() {
                   </button>
                   <button
                     type="submit"
-                    disabled={isCreating}
+                    disabled={isSubmitting}
                     className="flex-1 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isCreating ? "Creating..." : "Create Account"}
+                    {isSubmitting ? "Creating..." : "Create Account"}
                   </button>
                 </div>
               </form>
@@ -610,18 +645,18 @@ export function AdminDashboard() {
           </div>
         )}
 
-        {/* Confirm Suspend/Activate Modal */}
+        {/* Modal xác nhận Khóa/Mở khóa tài khoản */}
         {confirmAction && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-card rounded-xl p-8 w-full max-w-sm">
               <h2 className="mb-4">
-                {confirmAction.action === "suspend"
-                  ? "Suspend Account"
+                {confirmAction.action === "inactive"
+                  ? "Deactivate Account"
                   : "Activate Account"}
               </h2>
               <p className="text-sm text-muted-foreground mb-6">
-                {confirmAction.action === "suspend"
-                  ? `Are you sure you want to suspend ${confirmAction.user.name}'s account? They will lose access immediately.`
+                {confirmAction.action === "inactive"
+                  ? `Are you sure you want to deactivate ${confirmAction.user.name}'s account? They will lose access immediately.`
                   : `Restore access for ${confirmAction.user.name}? They will be able to log in again.`}
               </p>
               <div className="flex gap-3">
@@ -633,19 +668,19 @@ export function AdminDashboard() {
                 </button>
                 <button
                   onClick={confirmToggle}
-                  className={`flex-1 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity ${confirmAction.action === "suspend"
+                  className={`flex-1 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity ${confirmAction.action === "inactive"
                     ? "bg-destructive text-destructive-foreground"
                     : "bg-success text-success-foreground"
                     }`}
                 >
-                  {confirmAction.action === "suspend" ? "Suspend" : "Activate"}
+                  {confirmAction.action === "inactive" ? "Deactivate" : "Activate"}
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Role Permissions Modal */}
+        {/* Modal hiển thị chi tiết bảng quyền hạn của từng Role */}
         {showPermissionsModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-card rounded-xl p-8 w-full max-w-2xl max-h-[80vh] overflow-y-auto">

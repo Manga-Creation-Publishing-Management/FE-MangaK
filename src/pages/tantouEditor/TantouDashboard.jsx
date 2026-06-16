@@ -4,12 +4,14 @@ import { WelcomeLine } from '../shared/WelcomeLine'
 import { CircleCheckBig, CircleEllipsis, CircleX } from 'lucide-react'
 import { Notification } from '../shared/Notification'
 
+// Component Trang chủ (Dashboard) dành riêng cho role Tantou Editor (Biên tập viên phụ trách)
 export function TantouDashboard() {
     return (
         <div className='h-full bg-background'>
             <div className='p-9 bg-background'>
                 <WelcomeLine roleName="Tantou Editor" />
 
+                {/* Các thẻ (Card) tổng quan trạng thái công việc của Tantou */}
                 <div className='flex gap-10 xs:flex-col'>
                     <OverviewCard contentText="Processing Series" iconName={<CircleEllipsis size={30} />}
                         iconColor="#60a5fa" valueNum={3} />

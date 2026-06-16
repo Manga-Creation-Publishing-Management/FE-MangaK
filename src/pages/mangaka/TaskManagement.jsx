@@ -29,7 +29,7 @@ export function TaskManagement() {
     handleNavigateToTask
   } = useTaskList();
 
-  console.log( "chapet",taskList.chapterNumber);
+  console.log("chapet", taskList.chapterNumber);
 
   return (
     <>

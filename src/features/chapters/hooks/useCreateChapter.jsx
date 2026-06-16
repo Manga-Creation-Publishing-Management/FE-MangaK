@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { chaptersService } from "../../../services/chapterService";
-// import { get } from "../../shared/requests";
 
 export function useCreateChapter(seriesId, onClose, onReload) {
   const [chapterListForm, setChapterListForm] = useState({});
@@ -71,6 +70,7 @@ export function useCreateChapter(seriesId, onClose, onReload) {
   };
 
 
+  // Trả về danh sách chapter để các component (như ChapterList) có thể render
   return {
     handleSubmitChapter,
     handleStoryChange,

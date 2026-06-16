@@ -38,19 +38,22 @@ export function ChapterList({ roleName, seriesData }) {
     <>
       {(seriesData?.status === "Approved" || seriesData?.status === "Publishing") && (
         <>
+          {/* Header của phần danh sách Chapter */}
           <div className="flex justify-between items-center">
             <div>
+              {/* Tiêu đề hiển thị kèm tổng số lượng chapter */}
               <h2 className="text-2xl ps-2 font-semibold ">Chapters ({chapterList?.length})</h2>
             </div>
+
+            {/* Cụm nút bấm phía bên phải */}
             <div className="flex gap-3">
               <>
-                {/* <Link
-                  to={`/${role}/series/${id}/tasks`}
-                  className="flex items-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:opacity-90 transition-opacity"
-                >
-                  <Users size={20} />
-                  Manage Tasks
-                </Link> */}
+                {/* 
+                  Đoạn code comment cũ có vẻ là tính năng Manage Tasks (Quản lý công việc),
+                  tạm thời bị ẩn đi.
+                */}
+
+                {/* Chỉ hiển thị nút "Add New Chapter" nếu user hiện tại là Mangaka */}
                 {roleName?.toLowerCase() === "mangaka" &&
                   <button
                     onClick={() => handleShowChapterModal()}
@@ -63,6 +66,8 @@ export function ChapterList({ roleName, seriesData }) {
               </>
             </div>
           </div>
+
+          {/* Danh sách các card hiển thị thông tin từng chapter */}
           <div className="space-y-4">
             {chapterList?.map((chapter) => {
               const showChapter = roleName === 'reader'

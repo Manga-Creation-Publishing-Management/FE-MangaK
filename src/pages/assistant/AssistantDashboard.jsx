@@ -4,6 +4,7 @@ import { CircleCheckBig, CircleDashed, CircleAlert } from 'lucide-react'
 import Notification from '../shared/Notification';
 import { MyTask } from './MyTask';
 
+// Component Trang chủ (Dashboard) dành riêng cho role Assistant (Trợ lý)
 export function AssistantDashboard() {
   return (
     <div className='h-full bg-background'>
