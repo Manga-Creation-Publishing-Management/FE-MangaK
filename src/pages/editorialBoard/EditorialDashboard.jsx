@@ -7,6 +7,7 @@ import { WelcomeLine } from '../shared/WelcomeLine';
 import { seriesService } from '../../services/seriesService';
 // Service gọi API cập nhật trạng thái series
 import { updateSeries } from '../../services/updateSeriesService';
+import Notification from '../shared/Notification';
 
 export function EditorialDashboard() {
 
@@ -90,7 +91,7 @@ export function EditorialDashboard() {
       alert('Please provide feedback for cancellation');
       return;
     }
-    
+
     try {
       await updateSeries.cancelSeries(selectedSeries.id, cancelFeedback);
       // Lưu tên series vừa huỷ để hiển thị trong modal thành công
@@ -110,7 +111,7 @@ export function EditorialDashboard() {
 
   // ==================== PHẦN RENDER (JSX) ====================
   return (
-    <div className="p-6 space-y-8">
+    <div className="p-9 space-y-8">
 
       {/* ---------- DÒNG CHÀO MỪNG ---------- */}
       {/* Hiển thị lời chào theo vai trò "Editorial Board" */}
@@ -258,6 +259,10 @@ export function EditorialDashboard() {
           </div>
         </div>
       )}
+      {/* Mail box nè */}
+      <div className='mb-10'>
+        <Notification />
+      </div>
     </div>
   );
 }
