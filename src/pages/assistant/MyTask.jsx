@@ -21,7 +21,10 @@ console.log(taskListByAssistant)
       {
         taskListByAssistant?.length === 0 && 
         <>
-          làm component hiển thị chưa có task
+          <div className="text-center text-3xl">
+            Not Assigned Tasks.
+          </div>
+
         </>
         
       }
@@ -32,7 +35,7 @@ console.log(taskListByAssistant)
             <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-shadow">
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-card-foreground truncate text-xl font-semibold">Chapter {item.chapterNumber}</p>
+                  <p className="font-semibold text-card-foreground truncate text-xl font-semibold">Chapter {item.chapterNumber} - { item.seriesTitle}</p>
                   <p className="text-sm text-muted-foreground mt-1">Page Range: {item.taskDescription} </p>
                   </div>
 
@@ -40,7 +43,7 @@ console.log(taskListByAssistant)
                   
                   <span className="text-2xl font-semibold text-success flex items-center gap-0.5">
                     <JapaneseYen size={23} strokeWidth={2.5} className="shrink-0 translate-y-[2px]" />
-                    <span>{ item.income}</span>
+                    <span>{item.incomeAmount}</span>
                   </span>
 
                 </div>
@@ -57,7 +60,7 @@ console.log(taskListByAssistant)
                   <StatusBadge status={item.status} />
                   <button
                     className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
-                  onClick={() => handleNavigateToTask(role.toLowerCase(), item.taskId)}
+                  onClick={() => handleNavigateToTask(role.toLowerCase(), item.id)}
                   >
                     View Detail
                   </button>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { chaptersService } from "../../../services/chapterService";
-// import { get } from "../../shared/requests";
+import dayjs from "dayjs";
 
 export function useCreateChapter(seriesId, onClose, onReload) {
   const [chapterListForm, setChapterListForm] = useState({});
@@ -33,25 +33,33 @@ export function useCreateChapter(seriesId, onClose, onReload) {
     e.preventDefault();
     setIsLoading(true);
 
-    if (!chapterListForm.Title?.trim()) {
-      alert("Title is required");
-      return;
+    const formElement = e.target;
+    // 1. Khởi tạo một đối tượng FormData trống hoàn toàn
+    const formDataToSend = new FormData();
+
+    // 2. Append các chuỗi text thông thường (Lưu ý: Viết hoa chữ cái đầu y hệt Swagger)
+    formDataToSend.append("Title", formElement.elements["Title"].value);
+    formDataToSend.append("Summary", formElement.elements["Summary"].value);
+
+    // 3. Xử lý định dạng Deadline và append vào FormData
+    const rawDeadline = formElement.elements["deadline"].value;
+    if (rawDeadline) {
+      const formattedDeadline = dayjs(rawDeadline).toISOString();
+      formDataToSend.append("Deadline", formattedDeadline);
     }
-    if (!storyFile) {
-      alert("Manuscript file is required");
-      return;
+
+    // 4. Append FILE NHỊ PHÂN thực tế (Lấy từ state storyFile đã chọn)
+    if (storyFile) {
+      // Key "ManuscriptFileUrl" phải trùng khớp hoàn toàn với tên biến bên Swagger
+      formDataToSend.append("ManuscriptFileUrl", storyFile);
     }
 
-    const formData = new FormData();
-
-    Object.keys(chapterListForm).forEach((key) => {
-      formData.append(key, chapterListForm[key]);
-    });
-    if (storyFile) formData.append("ManuscriptFileUrl", storyFile); // File truyện thật
-
+    // console.log("du lieu tra ve", chapterData);
     try {
       // 4. Gọi qua API client mới: api.post chứ không dùng post() lẻ loi nữa
-      const results = await chaptersService.createChapter(seriesId, formData);
+      const results = await chaptersService.createChapter(seriesId, formDataToSend);
+
+      
 
       if (results) {
         alert("Created successfully!");
@@ -71,6 +79,7 @@ export function useCreateChapter(seriesId, onClose, onReload) {
   };
 
 
+  // Trả về danh sách chapter để các component (như ChapterList) có thể render
   return {
     handleSubmitChapter,
     handleStoryChange,
