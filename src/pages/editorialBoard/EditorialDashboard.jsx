@@ -8,8 +8,10 @@ import { seriesService } from '../../services/seriesService';
 // Service gọi API cập nhật trạng thái series
 import { updateSeries } from '../../services/updateSeriesService';
 import Notification from '../shared/Notification';
+import { useSeriesManagement } from '../../features/series/hooks/useSeriesManagement';
 
 export function EditorialDashboard() {
+  const { handleNavigate } = useSeriesManagement();
 
   // ==================== KHAI BÁO STATE ====================
 
@@ -51,7 +53,7 @@ export function EditorialDashboard() {
 
       // Chuyển đổi (map) dữ liệu API sang format dùng trong component
       const mapped = filtered.map((serie) => ({
-        id: serie.seriesId,
+        id: serie.seriesId || serie.id,
         name: serie.title,
         author: serie.mangakaName,
         chapters: serie.totalChapters || 0,
@@ -162,12 +164,12 @@ export function EditorialDashboard() {
                   </button>
 
                   {/* Link xem chi tiết series -> điều hướng đến trang detail */}
-                  <Link
-                    to={`/editorialBoard/series/${item.id}`}
+                  <button
+                    onClick={() => handleNavigate('editorial', item.id)}
                     className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
                   >
                     View Details
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>

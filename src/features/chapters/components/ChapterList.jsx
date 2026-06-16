@@ -44,7 +44,7 @@ export function ChapterList({ roleName, seriesData }) {
               {/* Tiêu đề hiển thị kèm tổng số lượng chapter */}
               <h2 className="text-2xl ps-2 font-semibold ">Chapters ({chapterList?.length})</h2>
             </div>
-            
+
             {/* Cụm nút bấm phía bên phải */}
             <div className="flex gap-3">
               <>
@@ -52,7 +52,7 @@ export function ChapterList({ roleName, seriesData }) {
                   Đoạn code comment cũ có vẻ là tính năng Manage Tasks (Quản lý công việc),
                   tạm thời bị ẩn đi.
                 */}
-                
+
                 {/* Chỉ hiển thị nút "Add New Chapter" nếu user hiện tại là Mangaka */}
                 {roleName?.toLowerCase() === "mangaka" &&
                   <button
@@ -66,7 +66,7 @@ export function ChapterList({ roleName, seriesData }) {
               </>
             </div>
           </div>
-          
+
           {/* Danh sách các card hiển thị thông tin từng chapter */}
           <div className="space-y-4">
             {chapterList?.map((chapter) => {

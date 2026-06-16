@@ -43,15 +43,15 @@ export function useCreateTask() {
       }
 
       // Gọi API Publishing bằng try-catch riêng biệt
-      // try {
-      //   const seriesPublishing = await seriesService.getSeriesByStatus("Publishing");
-      //   resultPublishing = seriesPublishing?.data ? seriesPublishing.data : [];
-      // } catch (error) {
-      //   console.warn("Không tìm thấy series Publishing hoặc có lỗi xảy ra:", error);
-      // }
+      try {
+        const seriesPublishing = await seriesService.getSeriesByStatus("Publishing");
+        resultPublishing = seriesPublishing?.data ? seriesPublishing.data : [];
+      } catch (error) {
+        console.warn("Không tìm thấy series Publishing hoặc có lỗi xảy ra:", error);
+      }
 
       // Gộp 2 mảng lại thành một mảng duy nhất và cập nhật vào State
-      setShowSeriesApproval([...resultApproved]);
+      setShowSeriesApproval([...resultApproved, ...resultPublishing]);
     }
     fetchApi();
   }, [])
@@ -84,12 +84,12 @@ export function useCreateTask() {
     // Xây dựng Object JSON khớp hoàn toàn với cấu trúc Swagger
     const taskData = {
       seriesId: allFields.seriesId || null,
-      taskTitle: "hehe",
+      taskTitle: allFields.taskTitle || null,
       page_range: allFields.page_range || "",
       deadline: formattedDeadline,
       chapterId: allFields.chapterId || null,
       assignedToId: allFields.assignedToId || null, // Nhận từ select name="assignedToId"
-      amountIncome: 20 // Gửi giá trị mặc định là số 0 theo yêu cầu Schema
+      amountIncome: allFields.amountIncome ? Number(allFields.amountIncome) : 0 // Gửi giá trị mặc định là số 0 theo yêu cầu Schema
     };
 
     // Log ra console để bạn kiểm tra kỹ trước khi bay lên server
