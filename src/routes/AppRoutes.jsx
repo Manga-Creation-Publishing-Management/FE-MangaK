@@ -21,6 +21,7 @@ import { ProtectedRoute } from '../features/auth/components/ProtectedRoute';
 import { PublicRoute } from '../features/auth/components/PublicRoute';
 import { LeaderboardPage } from '../pages/shared/LeaderboardPage.jsx';
 import { ReaderLoginPage } from '../pages/reader/ReaderLoginPage.jsx';
+import { TaskDetail } from '../pages/mangaka/TaskDetail.jsx';
 
 const roleDisplayNames = {
   mangaka: "Mangaka",
@@ -52,6 +53,7 @@ export function AppRoutes() {
           <Route path="series/:id" element={<SeriesDetail />} />
           <Route path="chapter/:chapterId" element={<ChapterDetail />} />
           <Route path="tasks" element={<TaskManagement />} />
+          <Route path="tasks/:taskId" element={<TaskDetail />} />
           <Route path="leaderboard" element={<LeaderboardPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
@@ -62,6 +64,7 @@ export function AppRoutes() {
         <Route path="/assistant" element={<Layout roleName="assistant" />}>
           <Route index element={<AssistantDashboard />} />
           <Route path="tasks" element={<MyTask />} />
+          <Route path="tasks/:taskId" element={<TaskDetail />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Route>

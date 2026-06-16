@@ -12,9 +12,29 @@ export default function CreateTaskModal({
   onSeriesChange,
   onSubmitCreateTask
 }) {
+  const [pageRangeError, setPageRangeError] = useState("");
 
+  // 2. Hàm kiểm tra định dạng khi người dùng click ra ngoài (Blur)
+  const handlePageRangeBlur = (e) => {
+    const value = e.target.value.trim();
 
-  let manuscriptUrl = chapters
+    // Nếu ô này trống và đang là required, bạn có thể check trống
+    if (!value) {
+      setPageRangeError("Page range is required.");
+      return;
+    }
+
+    // Định nghĩa Regex: bắt buộc phải có dạng [Số]-[Số]
+    const regex = /^\d+-\d+$/;
+
+    if (!regex.test(value)) {
+      // Nếu nhập sai định dạng, set câu thông báo lỗi
+      setPageRangeError("Please use the format: number-number (e.g. 1-30).");
+    } else {
+      // Nếu nhập đúng, xóa bỏ thông báo lỗi
+      setPageRangeError("");
+    }
+  };
   return (
     <>
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -46,7 +66,6 @@ export default function CreateTaskModal({
                   <option
                     key={item.seriesId}
                     value={item.seriesId}
-                    onChange={selectedSeriesId}
                   >{item.title}</option>
                 ))}
                 </select>
@@ -80,18 +99,59 @@ export default function CreateTaskModal({
                 ))}
               </select>
             </div>
-
-            <div className="mb-4">
+            <div>
               <div className='mb-2 text-xl'>
-                <label htmlFor="seriesName">Page Range</label>
+                <label htmlFor="page_range">Description</label>
               </div>
-              <input
-                id="description" name="page_range"
-                className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary  resize-none"
-                placeholder="Enter series description"
+              <textarea
+                id="page_range"
+                name="taskTitle"
+                className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                // placeholder="..."
                 required
-                // onChange={handleChange}
+                rows={3}
               />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              {/* Bên trái: Page Range */}
+              <div>
+                <div className='mb-2 text-xl'>
+                  <label htmlFor="page_range">Page Range</label>
+                </div>
+                <input
+                  id="page_range"
+                  name="page_range"
+                  className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                  placeholder="e.g. 1-20"
+                  required
+                  type="text"
+                  onBlur={handlePageRangeBlur}
+                  onChange={() => setPageRangeError("")}
+                />
+                {/* 3. Hiển thị dòng chữ báo lỗi màu đỏ ngay dưới ô nhập nếu có lỗi */}
+                {pageRangeError && (
+                  <span className="text-red-500 text-sm mt-1 block">
+                    {pageRangeError}
+                  </span>
+                )}
+              </div>
+
+              {/* Bên phải: Income */}
+              <div>
+                <div className='mb-2 text-xl'>
+                  <label htmlFor="income">Income</label>
+                </div>
+                <input
+                  min={0}
+                  type="number"
+                  id="income"
+                  name="amountIncome"
+                  className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Enter income"
+                  required
+                />
+              </div>
             </div>
             <div className="mb-4">
               <div className='mb-2 text-xl'>

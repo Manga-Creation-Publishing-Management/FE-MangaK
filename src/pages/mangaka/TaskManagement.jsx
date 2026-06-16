@@ -4,8 +4,14 @@ import CreateTaskModal from "../../features/tasks/components/CreateTaskModal";
 import { useTaskList } from "../../features/tasks/hooks/useTaskList";
 import { StatusBadge } from "../shared/StatusBadge";
 import dayjs from 'dayjs';
-
+import { useParams } from "react-router";
+import utc from 'dayjs/plugin/utc'; 
+dayjs.extend(utc);
 export function TaskManagement() {
+
+  const userString = localStorage.getItem('user');
+  const currentUser = JSON.parse(userString);
+  const role = currentUser.role;
 
   const {
     handleShowCreateTaskModal,
@@ -19,7 +25,8 @@ export function TaskManagement() {
   } = useCreateTask();
 
   const {
-    taskList
+    taskList,
+    handleNavigateToTask
   } = useTaskList();
 
   console.log( "chapet",taskList.chapterNumber);
@@ -55,12 +62,12 @@ export function TaskManagement() {
                 <div className="flex items-center gap-4 shrink-0">
                   {/* <StatusBadge status={task.status} /> */}
                   <span className="text-sm font-medium text-muted-foreground">
-                    <StatusBadge status={item.status.toLowerCase()} />
+                    <StatusBadge status={item.status} />
                   </span>
 
                   <button
                     className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
-                    onClick={() => handleNavigateToTask(task.id)}
+                    onClick={() => handleNavigateToTask(role.toLowerCase(), item.taskId)}
                   >
                     View Detail
                   </button>
@@ -76,7 +83,7 @@ export function TaskManagement() {
                 {/* Deadline được đẩy hẳn sang bên phải */}
                 <div className="flex items-center gap-1.5 text-sm text-destructive font-medium shrink-0">
                   <CalendarClock size={16} />
-                  <span>Deadline: {dayjs(item.deadline).format('DD/MM/YYYY HH:mm')}</span>
+                  <span>Deadline: {dayjs(item.deadline).utc(true).format('DD/MM/YYYY HH:mm')}</span>
                 </div>
               </div>
             </div>

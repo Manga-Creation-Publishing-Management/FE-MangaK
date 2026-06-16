@@ -2,13 +2,16 @@ import { BadgeDollarSign, Banknote, Bitcoin, CalendarClock, DollarSign, Japanese
 import { useTaskListByAssistant } from "../../features/tasks/hooks/useTaskListByAssistant";
 import { StatusBadge } from "../shared/StatusBadge";
 import dayjs from "dayjs";
+import { useTaskList } from "../../features/tasks/hooks/useTaskList";
 
 export function MyTask() {
   const userString = localStorage.getItem('user');
   const currentUser = JSON.parse(userString);
   const assistantId = currentUser.id;
+  const role = currentUser.role;
   // console.log(assistantId);
 
+  const { handleNavigateToTask} = useTaskList();
   const { taskListByAssistant} = useTaskListByAssistant(assistantId);
   
 
@@ -47,7 +50,7 @@ console.log(taskListByAssistant)
                   <StatusBadge status={item.status} />
                   <button
                     className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
-                  // onClick={() => handleNavigateToTask(item.id)}
+                  onClick={() => handleNavigateToTask(role.toLowerCase(), item.taskId)}
                   >
                     View Detail
                   </button>
