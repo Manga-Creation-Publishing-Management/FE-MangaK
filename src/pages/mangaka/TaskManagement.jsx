@@ -5,6 +5,7 @@ import { useTaskList } from "../../features/tasks/hooks/useTaskList";
 import { StatusBadge } from "../shared/StatusBadge";
 import dayjs from 'dayjs';
 import { useParams } from "react-router";
+// import { useSeriesManagement } from "../../series/hooks/useSeriesManagement";
 import utc from 'dayjs/plugin/utc'; 
 dayjs.extend(utc);
 export function TaskManagement() {
@@ -12,6 +13,7 @@ export function TaskManagement() {
   const userString = localStorage.getItem('user');
   const currentUser = JSON.parse(userString);
   const role = currentUser.role;
+
 
   const {
     handleShowCreateTaskModal,
@@ -28,6 +30,8 @@ export function TaskManagement() {
     taskList,
     handleNavigateToTask
   } = useTaskList();
+
+  
 
   console.log( "chapet",taskList.chapterNumber);
 
