@@ -31,7 +31,7 @@ export default function CreateSeriesModal({ onClose, onReload }) {
         
         {/* Phần Header của Modal, dính cố định trên cùng khi cuộn (sticky) */}
         <div className="sticky top-0 bg-card border-b border-border p-6 flex justify-between items-center">
-          <div className="text-2xl font-semibold">Create New Task</div>
+          <div className="text-2xl font-semibold">Create New Series</div>
           <button onClick={onClose}
             className="p-2 hover:bg-muted rounded-lg transition-colors cursor-pointer"
             disabled={isLoading}>
@@ -166,7 +166,7 @@ export default function CreateSeriesModal({ onClose, onReload }) {
             <button
               type="submit"
               disabled={isLoading} // Khóa nút bấm khi đang lưu để tránh spam
-              className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+              className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:cursor-not-allowed"
             >
               {isLoading ? "Creating..." : "Create"}
             </button>

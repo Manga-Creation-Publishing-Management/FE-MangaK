@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Download } from "lucide-react";
 import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { StatusBadge } from "./StatusBadge";
@@ -7,6 +7,9 @@ import { ApprovalPanel } from "./ApprovalPanel";
 import { useEffect, useState } from "react";
 import { seriesService } from "../../services/seriesService";
 import { useUpdateSeries } from "../../features/series/hooks/useUpdateSeries";
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
 // Component hiển thị trang chi tiết của một bộ truyện (Series)
 export function SeriesDetail() {
@@ -131,18 +134,44 @@ export function SeriesDetail() {
               <StatusBadge status={currentStatus?.toLowerCase()} />
             </div>
 
+            <div className="grid grid-cols-2 md:grid-cols-12 gap-6 border-b border-gray-200 pb-6">
+              
+              <div className="md:col-span-6 space-y-2">
+                <div className="bg-muted/30 p-3 rounded-lg border border-border text-foreground text-sm leading-relaxed">
+                  <h3 className="font-normal text-sm text-muted-foreground  tracking-wider">Upcoming Chapter Release Date</h3>
+                  {detailData?.publishDate ? (
+                    <div className="text-sm my-2 font-semibold">{dayjs(detailData?.publishDate).utc(true).format('DD/MM/YYYY HH:mm')}</div>
+                  ) : (
+                      <div className="text-sm ms-0.5">— — — —</div>
+                  )}
+                  
+                </div>
+              </div>
+              <div className="md:col-span-6 space-y-2">
+                <div className="bg-muted/30 p-3 rounded-lg border border-border  text-foreground text-sm leading-relaxed">
+                  <h3 className="font-normal text-sm text-muted-foreground  tracking-wider">Publish Period</h3>
+                  {detailData?.publishPeriod ? (
+                    <div className="text-sm my-2 font-semibold capitalize">{detailData?.publishPeriod}</div>
+                  ) : (
+                      <div className="text-sm ms-0.5"> — — — —</div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+
             <div className="grid grid-cols-2 gap-6">
-              <div>
-                <p className="text-sm text-muted-foreground">Genres</p>
+              <div className=" space-y-3">
+                <h3 className="text-sm text-muted-foreground uppercase font-semibold">Genres</h3>
                 {/* Danh sách các thể loại */}
-                <div className="flex flex-wrap gap-2 mt-2">
+                <div className="flex flex-wrap gap-2 ">
                   {detailData?.categories?.map((item, index) => {
                     // Ánh xạ từ ID của genre sang Tên thể loại dựa vào genreList
                     const nameGenre = genreList?.find(itemGenre => String(itemGenre.categoryId) === String(item))
                     return (
                       <span
                         key={index}
-                        className="px-3 py-1 text-xs font-medium rounded-full bg-secondary text-secondary-foreground border border-border"
+                        className="px-3 py-1 text-xs font-medium rounded-full bg-secondary/50 text-secondary-foreground border border-border"
                       >
                         {/* Nếu tìm thấy tên thì in ra, không thì in id (dự phòng) */}
                         {nameGenre ? nameGenre.name : item}
@@ -151,12 +180,27 @@ export function SeriesDetail() {
                   })}
                 </div>
               </div>
+
+              <div className="space-y-3 text-right">
+                <h3 className="font-medium text-sm text-muted-foreground uppercase">Original Manuscript</h3>
+                <div className="flex flex-col items-end justify-center text-center">
+                  {/* <p className="text-xs text-muted-foreground">Download the initial manuscript file to start working</p> */}
+                  <a
+                    href={detailData?.nameFile}
+                    download
+                    className="inline-flex items-center gap-2 bg-secondary/50 text-secondary-foreground hover:bg-secondary/80  p-4 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
+                  >
+                    <Download size={16} />
+                    Download Manuscript
+                  </a>
+                </div>
+              </div>
             </div>
 
             {/* Mô tả bộ truyện */}
             <div>
-              <p className="text-sm text-muted-foreground">Description</p>
-              <p className="mt-1 text-foreground">{detailData?.description}</p>
+              <p className="text-sm text-muted-foreground uppercase font-semibold">Description</p>
+              <p className="mt-2 text-foreground text-justify">{detailData?.description}</p>
             </div>
           </div>
         </div>

@@ -21,7 +21,6 @@ export function TaskDetail() {
     handleStoryChange,
     handleGetTask,
     isLoading
-
   } = useTaskDetail(taskId);
 
   console.log("sss", taskDetail);
@@ -64,53 +63,51 @@ export function TaskDetail() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-2 space-y-2">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+            <div className="md:col-span-6 space-y-2">
               <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">Task Description</h3>
-              <div className="bg-muted/30 p-4 rounded-lg border border-border min-h-[100px] text-foreground text-sm leading-relaxed">
+              <div className="bg-muted/30 p-4 rounded-lg border border-border min-h-[100px] text-foreground text-sm leading-relaxed max-h-20 overflow-y-auto">
                 {taskDetail?.taskTitle}
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className=" md:col-span-3 space-y-2">
+              <h3 className="font-medium text-sm text-muted-foreground uppercase">Original Manuscript</h3>
+              <div className="border  border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center space-y-2 h-[100px]">
+                {/* <p className="text-xs text-muted-foreground">Download the initial manuscript file to start working</p> */}
+                <a
+                  href={taskDetail?.manuscriptFileUrl}
+                  download
+                  className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80  py-2 px-4 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
+                >
+                  <Download size={16} />
+                  Download 
+                </a>
+              </div>
+            </div>
+
+            <div className="md:col-span-3 space-y-2">
               <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">Income Amount</h3>
-              <div className="bg-emerald-500/10 border border-emerald-500/20 p-4 rounded-lg flex items-center gap-3 h-[100px]">
-                <div className="p-3 bg-emerald-500 rounded-lg text-white">
-                  <JapaneseYen size={24} />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-                    {taskDetail?.incomeAmount}
-                  </p>
-                </div>
+              <div className="bg-muted/30 p-4 rounded-lg border border-border p-4 rounded-lg flex items-center gap-3 h-[100px] justify-center ">
+                <span className="text-4xl font-semibold text-success flex items-center gap-0.5">
+                  <JapaneseYen size={28} strokeWidth={2.5} className="shrink-0 translate-y-[2px]" />
+                  <span>{taskDetail?.incomeAmount}</span>
+                </span>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-border">
+          <div className="grid grid-cols-1  md:grid-cols-1 gap-6 pt-4 border-t border-border">
 
-            <div className="space-y-3">
-              <h3 className="font-medium text-sm text-muted-foreground">Original Manuscript</h3>
-              <div className="border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center space-y-3 h-[160px]">
-                <p className="text-xs text-muted-foreground">Download the initial manuscript file to start working</p>
-                <a
-                  href={taskDetail?.manuscriptFileUrl}
-                  download
-                  className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
-                >
-                  <Download size={16} />
-                  Download Manuscript
-                </a>
-              </div>
-            </div>
-            <div className="space-y-3">
+            
+            <div className="space-y-3 w-full">
               {role === "assistant" &&
                 <>
                   <h3 className="font-medium text-sm text-muted-foreground">Submit Your Work</h3>
                   <div
                     onClick={() => storyInputRef.current.click()}
                     name="nameFile"
-                    className="border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center h-[160px] hover:border-primary transition-colors cursor-pointer"
+                    className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center h-[160px] hover:border-primary transition-colors cursor-pointer"
                   >
                     {storyFile ? (
                       <div className="text-primary font-medium">
@@ -136,16 +133,24 @@ export function TaskDetail() {
               {role === "mangaka" &&
                 <>
                 <h3 className="font-medium text-sm text-muted-foreground">Submited File by Assistant</h3>
-                <div className="border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center space-y-3 h-[160px]">
-                  <p className="text-xs text-muted-foreground">Download the submitted file to review</p>
-                  <a
-                    href={taskDetail?.submittedFileUrl}
-                    download
-                    className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-10 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
-                  >
-                    <Download size={16} />
-                    Download File
-                  </a>
+                <div className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center space-y-3 h-[160px] ">
+                  {taskDetail?.submittedFileUrl ? (
+                    <>
+                      <p className="text-xs text-muted-foreground">Download the submitted file to review</p>
+                      <a
+                        href={taskDetail?.submittedFileUrl}
+                        download
+                        className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-10 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
+                      >
+                        <Download size={16} />
+                        Download File
+                      </a>
+                    </>
+                  ) : (
+                      <>
+                        <p className="text-xl font-semibold text-muted-foreground">No file has been submitted by the assistant yet.</p>
+                      </>
+                  )}
                 </div>
                 </>
               }

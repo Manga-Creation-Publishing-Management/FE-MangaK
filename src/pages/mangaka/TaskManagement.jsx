@@ -5,6 +5,7 @@ import { useTaskList } from "../../features/tasks/hooks/useTaskList";
 import { StatusBadge } from "../shared/StatusBadge";
 import dayjs from 'dayjs';
 import { useParams } from "react-router";
+// import { useSeriesManagement } from "../../series/hooks/useSeriesManagement";
 import utc from 'dayjs/plugin/utc'; 
 dayjs.extend(utc);
 export function TaskManagement() {
@@ -12,6 +13,7 @@ export function TaskManagement() {
   const userString = localStorage.getItem('user');
   const currentUser = JSON.parse(userString);
   const role = currentUser.role;
+
 
   const {
     handleShowCreateTaskModal,
@@ -29,7 +31,7 @@ export function TaskManagement() {
     handleNavigateToTask
   } = useTaskList();
 
-  console.log("chapet", taskList.chapterNumber);
+  console.log("chapet", taskList);
 
   return (
     <>
@@ -54,8 +56,8 @@ export function TaskManagement() {
               {/* Phần trên: Tiêu đề bên trái, Trạng thái & Nút bấm bên phải */}
               <div className="flex items-center justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-card-foreground truncate text-xl font-semibold">Task - Chapter {item.chapterNumber}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">Chapter {item.chapterNumber} • Page Range: {item.taskDescription}</p>
+                  <h3 className="font-semibold text-card-foreground truncate text-xl font-semibold">Chapter {item.chapterNumber} - { item.seriesTitle}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">Page Range: {item.taskDescription}</p>
                 </div>
 
                 {/* Cụm Status và Button bên phải (Đồng bộ từ bên Chapter qua) */}
@@ -67,7 +69,7 @@ export function TaskManagement() {
 
                   <button
                     className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
-                    onClick={() => handleNavigateToTask(role.toLowerCase(), item.taskId)}
+                    onClick={() => handleNavigateToTask(role.toLowerCase(), item.id)}
                   >
                     View Detail
                   </button>

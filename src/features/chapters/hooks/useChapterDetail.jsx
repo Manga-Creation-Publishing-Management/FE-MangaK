@@ -1,11 +1,25 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { chaptersService } from "../../../services/chapterService";
 
 // Hook tự tạo (Custom hook) dùng để lấy chi tiết của một chapter cụ thể
 export function useChapterDetail(seriesId, chapterId) {
   // State lưu trữ dữ liệu chi tiết của chapter sau khi gọi API thành công
   const [chapterDetail, setChapterDetail] = useState(null);
+
+  const [storyFile, setStoryFile] = useState(null);
+  
+    const storyInputRef = useRef(null);
+  
+    // const [isLoading, setIsLoading] = useState(false);
+  
+  
+    const handleStoryChange = (e) => {
+      if (e.target.files && e.target.files[0]) {
+        setStoryFile(e.target.files[0]);
+      }
+    };
+  
 
   // useEffect sẽ tự động chạy mỗi khi component sử dụng hook này được render lần đầu,
   // hoặc mỗi khi 'chapterId' thay đổi
@@ -31,7 +45,10 @@ export function useChapterDetail(seriesId, chapterId) {
   // Trả về dữ liệu chi tiết để component giao diện có thể sử dụng
   return {
     chapterDetail,
-    setChapterDetail
+    setChapterDetail,
+    storyFile,
+    storyInputRef,
+    handleStoryChange
     // chapterListForm
   }
 }
