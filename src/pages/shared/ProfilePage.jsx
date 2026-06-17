@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { User, Mail, Phone, Camera, Save, CheckCircle, AlertTriangle, X } from 'lucide-react';
 import { useLocation } from 'react-router';
 import { userService } from '../../services/userService';
+import { useToast } from '../../shared/hooks/useToast';
 
 export function ProfilePage() {
+  const { showAlert } = useToast();
   // Lấy thông tin đường dẫn hiện tại từ react-router để xác định vai trò (role) của người dùng
   const location = useLocation();
   
@@ -110,7 +112,7 @@ export function ProfilePage() {
       setShowSuccessModal(true);
     } catch (error) {
       console.error('Failed to update profile:', error);
-      alert('Failed to update profile: ' + error.message);
+      showAlert('Failed to update profile: ' + error.message, 'error');
     } finally {
       setIsSaving(false); // Tắt trạng thái đang lưu
     }

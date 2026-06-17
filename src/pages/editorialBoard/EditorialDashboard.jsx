@@ -9,9 +9,11 @@ import { seriesService } from '../../services/seriesService';
 import { updateSeries } from '../../services/updateSeriesService';
 import Notification from '../shared/Notification';
 import { useSeriesManagement } from '../../features/series/hooks/useSeriesManagement';
+import { useToast } from '../../shared/hooks/useToast';
 
 export function EditorialDashboard() {
   const { handleNavigate } = useSeriesManagement();
+  const { showAlert } = useToast();
 
   // ==================== KHAI BÁO STATE ====================
 
@@ -90,7 +92,7 @@ export function EditorialDashboard() {
   // handleCancelConfirm: Khi nhấn "Confirm Cancel" trong modal
   const handleCancelConfirm = async () => {
     if (!cancelFeedback.trim()) {
-      alert('Please provide feedback for cancellation');
+      showAlert('Please provide feedback for cancellation', 'warning');
       return;
     }
 
@@ -107,7 +109,7 @@ export function EditorialDashboard() {
       fetchApprovedSeries();
     } catch (error) {
       console.error('Failed to cancel series:', error);
-      alert('Failed to cancel series. Please try again.');
+      showAlert('Failed to cancel series. Please try again.', 'error');
     }
   };
 

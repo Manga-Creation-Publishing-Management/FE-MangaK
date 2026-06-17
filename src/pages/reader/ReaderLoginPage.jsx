@@ -2,10 +2,11 @@ import { BackButton } from '../auth/BackButton';
 import { GoogleLogin } from '@react-oauth/google';
 import { authService } from '../../services/authService';
 import { useNavigate } from 'react-router';
-
+import { useToast } from '../../shared/hooks/useToast';
 
 export function ReaderLoginPage() {
     const navigate = useNavigate();
+    const { showAlert } = useToast();
 
     const handleSucessLogin = async (credentialResponse) => {
         try {
@@ -14,7 +15,10 @@ export function ReaderLoginPage() {
 
             const response = await authService.loginGoogle(idToken);
 
-            alert("Login with Google sucessfully!");
+
+            showAlert("Login with Google sucessfully!");
+            // alert("Login with Google sucessfully!");
+            console.log("Login sucess!");
             localStorage.setItem("mangak-token", response.data?.accessToken);
 
             const user = {
@@ -29,6 +33,7 @@ export function ReaderLoginPage() {
             console.log("Info user:", response.data);
             navigate("/reader");
         } catch (error) {
+            showAlert("Login with Google failed!")
             console.log("Login with Google failed!")
             console.error("login error: ", error)
         }
@@ -43,7 +48,6 @@ export function ReaderLoginPage() {
 
     return (
         <>
-
 
             <div className='min-h-screen flex flex-col '>
                 <div className="flex-1 grid grid-cols-1 md:grid-cols-12 bg-background text-foreground transition-colors duration-300 font-sans">

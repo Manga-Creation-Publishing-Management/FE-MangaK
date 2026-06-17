@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { chaptersService } from "../../../services/chapterService";
+import { useToast } from "../../../shared/hooks/useToast";
 
 export function useCreateChapter(seriesId, onClose, onReload) {
+  const { showAlert } = useToast();
   const [chapterListForm, setChapterListForm] = useState({});
   const [seriesData, setSeriesData] = useState([]);
 
@@ -33,11 +35,11 @@ export function useCreateChapter(seriesId, onClose, onReload) {
     setIsLoading(true);
 
     if (!chapterListForm.Title?.trim()) {
-      alert("Title is required");
+      showAlert("Title is required", "warning");
       return;
     }
     if (!storyFile) {
-      alert("Manuscript file is required");
+      showAlert("Manuscript file is required", "warning");
       return;
     }
 
@@ -53,16 +55,16 @@ export function useCreateChapter(seriesId, onClose, onReload) {
       const results = await chaptersService.createChapter(seriesId, formData);
 
       if (results) {
-        alert("Created successfully!");
+        showAlert("Created successfully!");
         setTimeout(() => {
           onClose();
           onReload();
         }, 0);
       } else {
-        alert(results?.Message || "Failed to create chapter");
+        showAlert(results?.Message || "Failed to create chapter", "error");
       }
     } catch (error) {
-      alert(error.response?.data?.Message || "Error creating chapter");
+      showAlert(error.response?.data?.Message || "Error creating chapter", "error");
       console.error("Error:", error);
     }
 

@@ -3,8 +3,10 @@ import { taskService } from "../../../services/taskService";
 import { seriesService } from "../../../services/seriesService";
 import { chaptersService } from "../../../services/chapterService";
 import dayjs from 'dayjs';
+import { useToast } from "../../../shared/hooks/useToast";
 
 export function useCreateTask() {
+  const { showAlert } = useToast();
 
   const [showCreateTaskModal, setShowCreateTaskModal] = useState(false);
   const [showAssistantList, setShowAsssitantList] = useState([]);
@@ -97,17 +99,19 @@ export function useCreateTask() {
 
     // Kiểm tra nhanh các trường ID cốt lõi tránh gửi chuỗi rỗng lên DB
     if (!taskData.seriesId || !taskData.chapterId || !taskData.assignedToId || !taskData.deadline) {
-      alert("Vui lòng chọn đầy đủ Series, Chapter, Assistant và Deadline!");
+      showAlert("Vui lòng chọn đầy đủ Series, Chapter, Assistant và Deadline!", "warning");
       return;
     }
 
     try {
       const response = await taskService.createTask(taskData);
-      alert("Tạo task thành công!");
-      window.location.reload();
+      showAlert("Tạo task thành công!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       console.error("Chi tiết lỗi:", error);
-      alert("Tạo thất bại: " + error.message);
+      showAlert("Tạo thất bại: " + error.message, "error");
     }
   }
 

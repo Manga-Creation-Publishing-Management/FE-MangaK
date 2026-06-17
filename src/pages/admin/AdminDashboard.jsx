@@ -15,6 +15,7 @@ import { WelcomeLine } from "../shared/WelcomeLine.jsx";
 import { OverviewCard } from "../shared/OverviewCard.jsx";
 import { userService } from "../../services/userService.js";
 import { CustomSelect } from "../../shared/components/CustomSelect.jsx";
+import { useToast } from "../../shared/hooks/useToast";
 
 // Hook form & Yup
 import { useForm, Controller } from "react-hook-form";
@@ -80,6 +81,7 @@ const schema = yup.object().shape({
 });
 
 export function AdminDashboard() {
+  const { showAlert } = useToast();
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -206,7 +208,7 @@ export function AdminDashboard() {
       );
     } catch (error) {
       console.error("Failed to toggle user status:", error);
-      alert("Đã xảy ra lỗi khi cập nhật trạng thái tài khoản. Vui lòng thử lại!");
+      showAlert("Đã xảy ra lỗi khi cập nhật trạng thái tài khoản. Vui lòng thử lại!", "error");
     } finally {
       setConfirmAction(null);
     }

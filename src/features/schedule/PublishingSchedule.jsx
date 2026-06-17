@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { seriesService } from '../../services/seriesService';
 import { publishingScheduleService } from '../../services/publishingScheduleService';
+import { useToast } from '../../shared/hooks/useToast';
 
 // Custom hook dùng để quản lý logic của màn hình Lịch Xuất Bản (Publishing Schedule)
 export function usePublishingSchedule() {
+  const { showAlert } = useToast();
   // Trạng thái hiển thị modal (popup) thêm/sửa lịch xuất bản
   const [showAddSchedule, setShowAddSchedule] = useState(false);
   
@@ -103,7 +105,7 @@ export function usePublishingSchedule() {
   const handleSaveSchedule = async () => {
     // Ràng buộc yêu cầu phải nhập đủ thông tin
     if (!selectedSeries || !startDate) {
-      alert('Please select a series and start date');
+      showAlert('Please select a series and start date', 'warning');
       return;
     }
 
@@ -117,14 +119,14 @@ export function usePublishingSchedule() {
           publishDate,
           publishPeriod: frequency,
         });
-        alert('Publishing schedule updated successfully!');
+        showAlert('Publishing schedule updated successfully!');
       } else {
         // NẾU LÀ TẠO MỚI: Gọi API create
         await publishingScheduleService.createSchedule(selectedSeries, {
           publishDate,
           publishPeriod: frequency,
         });
-        alert('Publishing schedule created successfully!');
+        showAlert('Publishing schedule created successfully!');
       }
       // Lưu xong thì tắt popup
       handleCloseModal();
@@ -134,7 +136,7 @@ export function usePublishingSchedule() {
       fetchSchedules();
     } catch (error) {
       console.error('Failed to save publishing schedule:', error);
-      alert(error.message || 'Failed to save publishing schedule. Please try again.');
+      showAlert(error.message || 'Failed to save publishing schedule. Please try again.');
     }
   };
 
@@ -142,13 +144,13 @@ export function usePublishingSchedule() {
   const handleDeleteConfirm = async (scheduleId) => {
     try {
       await publishingScheduleService.deleteSchedule(scheduleId);
-      alert('Publishing schedule deleted successfully!');
+      showAlert('Publishing schedule deleted successfully!');
       // Load lại dữ liệu
       fetchApprovedSeries();
       fetchSchedules();
     } catch (error) {
       console.error('Failed to delete publishing schedule:', error);
-      alert(error.message || 'Failed to delete publishing schedule. Please try again.');
+      showAlert(error.message || 'Failed to delete publishing schedule. Please try again.');
     }
   };
 
