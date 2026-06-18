@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { chaptersService } from "../../../services/chapterService";
+import { useToast } from "../../../shared/hooks/useToast";
 
 export function useUpdateChapter(seriesId, chapterId) {
+    const { showAlert } = useToast();
     const [isLoading, setIsLoading] = useState(false);
     const [feedback, setFeedback] = useState("");
     const navigate = useNavigate();
@@ -16,7 +18,7 @@ export function useUpdateChapter(seriesId, chapterId) {
         if (isTantou && normalizedStatus === "processing") {
             newStatus = "publishing";
         } else {
-            alert("Chapter cannot be approved in its current state.");
+            showAlert("Chapter cannot be approved in its current state.", "error");
             return;
         }
 
@@ -29,11 +31,11 @@ export function useUpdateChapter(seriesId, chapterId) {
             await chaptersService.updateChapterStatus(seriesId, chapterId, formData);
 
             setLocalStatus(prev => ({ ...prev, status: "Publishing" }));
-            alert(`Chapter has been approved! New status: ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}`);
+            showAlert(`Chapter has been approved! New status: ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}`);
             navigate(-1);
         } catch (error) {
             console.error("Error approving chapter:", error);
-            alert("Failed to approve chapter. Please try again.");
+            showAlert("Failed to approve chapter. Please try again.", "error");
         } finally {
             setIsLoading(false);
         }
@@ -41,7 +43,7 @@ export function useUpdateChapter(seriesId, chapterId) {
 
     const handleReject = async (roleFromState, currentStatus, setLocalStatus) => {
         if (!feedback.trim()) {
-            alert("Please provide feedback before rejecting.");
+            showAlert("Please provide feedback before rejecting.", "warning");
             return;
         }
 
@@ -53,7 +55,7 @@ export function useUpdateChapter(seriesId, chapterId) {
         if (isTantou && normalizedStatus === "processing") {
             newStatus = "rejected";
         } else {
-            alert("Chapter cannot be rejected in its current state.");
+            showAlert("Chapter cannot be rejected in its current state.", "error");
             return;
         }
 
@@ -66,11 +68,11 @@ export function useUpdateChapter(seriesId, chapterId) {
             await chaptersService.updateChapterStatus(seriesId, chapterId, formData);
 
             setLocalStatus(prev => ({ ...prev, status: "Rejected" }));
-            alert("Chapter has been rejected.");
+            showAlert("Chapter has been rejected.");
             navigate(-1);
         } catch (error) {
             console.error("Error rejecting chapter:", error);
-            alert("Failed to reject chapter. Please try again.");
+            showAlert("Failed to reject chapter. Please try again.", "error");
         } finally {
             setIsLoading(false);
         }

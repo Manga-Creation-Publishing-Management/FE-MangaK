@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { chaptersService } from "../../../services/chapterService";
+import { useToast } from "../../../shared/hooks/useToast";
 import dayjs from "dayjs";
 
 export function useCreateChapter(seriesId, onClose, onReload) {
+  const { showAlert } = useToast();
   const [chapterListForm, setChapterListForm] = useState({});
   const [seriesData, setSeriesData] = useState([]);
 
@@ -33,6 +35,14 @@ export function useCreateChapter(seriesId, onClose, onReload) {
     e.preventDefault();
     setIsLoading(true);
 
+    if (!chapterListForm.Title?.trim()) {
+      showAlert("Title is required", "warning");
+      return;
+    }
+    if (!storyFile) {
+      showAlert("Manuscript file is required", "warning");
+      return;
+    }
     const formElement = e.target;
     // 1. Khởi tạo một đối tượng FormData trống hoàn toàn
     const formDataToSend = new FormData();
@@ -59,19 +69,19 @@ export function useCreateChapter(seriesId, onClose, onReload) {
       // 4. Gọi qua API client mới: api.post chứ không dùng post() lẻ loi nữa
       const results = await chaptersService.createChapter(seriesId, formDataToSend);
 
-      
+
 
       if (results) {
-        alert("Created successfully!");
+        showAlert("Created successfully!");
         setTimeout(() => {
           onClose();
           onReload();
         }, 0);
       } else {
-        alert(results?.Message || "Failed to create chapter");
+        showAlert(results?.Message || "Failed to create chapter", "error");
       }
     } catch (error) {
-      alert(error.response?.data?.Message || "Error creating chapter");
+      showAlert(error.response?.data?.Message || "Error creating chapter", "error");
       console.error("Error:", error);
     }
 

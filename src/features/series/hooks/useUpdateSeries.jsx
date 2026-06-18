@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { updateSeries } from "../../../services/updateSeriesService";
+import { useToast } from "../../../shared/hooks/useToast";
 
 // Custom hook xử lý logic duyệt truyện (Phê duyệt hoặc Từ chối)
 export function useUpdateSeries() {
+  const { showAlert } = useToast();
   const [isLoading, setIsLoading] = useState(false); // Trạng thái đang gọi API
   const [feedback, setFeedback] = useState("");      // Nội dung phản hồi của người duyệt
   const navigate = useNavigate();                    // Hook điều hướng trang
@@ -26,7 +28,7 @@ export function useUpdateSeries() {
       newStatus = "approved";
     } else {
       // Báo lỗi nếu trạng thái hiện tại không cho phép người này duyệt (bảo mật quy trình)
-      alert("You cannot approve this series in its current state.");
+      showAlert("You cannot approve this series in its current state.", "error");
       return;
     }
 
@@ -47,13 +49,13 @@ export function useUpdateSeries() {
 
       // Cập nhật lại trạng thái local trên giao diện (tránh phải reload toàn trang)
       setLocalStatus(newStatus);
-      alert(`Series has been approved! New status: ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}`);
+      showAlert(`Series has been approved! New status: ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}`);
       
       // Chuyển hướng quay lại trang trước đó
       navigate(-1);
     } catch (error) {
       console.error("Error approving series:", error);
-      alert("Failed to approve series. Please try again.");
+      showAlert("Failed to approve series. Please try again.", "error");
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +65,7 @@ export function useUpdateSeries() {
   const handleReject = async (id, roleFromState, setLocalStatus) => {
     // Ràng buộc bắt buộc phải nhập lý do (feedback) khi từ chối
     if (!feedback.trim()) {
-      alert("Please provide feedback before rejecting.");
+      showAlert("Please provide feedback before rejecting.", "warning");
       return;
     }
 
@@ -87,12 +89,12 @@ export function useUpdateSeries() {
 
       // Ghi đè trạng thái local thành "rejected"
       setLocalStatus("rejected");
-      alert("Series has been rejected.");
+      showAlert("Series has been rejected.");
       
       navigate(-1);
     } catch (error) {
       console.error("Error rejecting series:", error);
-      alert("Failed to reject series. Please try again.");
+      showAlert("Failed to reject series. Please try again.", "error");
     } finally {
       setIsLoading(false);
     }

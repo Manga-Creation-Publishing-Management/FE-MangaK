@@ -1,13 +1,15 @@
 import { chaptersService } from "../../../services/chapterService";
+import { useToast } from "../../../shared/hooks/useToast";
 
 export function useUpdateRateChapter() {
+    const { showAlert } = useToast();
     const handleRateSubmit = async (chapterId, rateRange) => {
         try {
             await chaptersService.updateChapterRate(chapterId, rateRange);
-            alert("Your rate submit successfully!");
+            showAlert("Your rate submit successfully!");
         } catch (error) {
             console.log("Cannot submit rate", error);
-            alert("Error occured when rating, pleasing try again!");
+            showAlert("Error occured when rating, pleasing try again!", "error");
         }
     }
 

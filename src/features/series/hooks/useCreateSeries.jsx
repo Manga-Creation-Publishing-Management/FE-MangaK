@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from "react";
 // import { get, post } from "../../shared/requests";
 import { api } from "../../../services/api";
 import { seriesService } from "../../../services/seriesService";
+import { useToast } from "../../../shared/hooks/useToast";
 
 // Custom hook quản lý trạng thái và logic cho form tạo mới bộ truyện (Create Series)
 export default function useCreateSeries(onClose, onReload, reloadState ) {
+  const { showAlert } = useToast();
 
   // State lưu danh sách thể loại lấy từ API
   const [genreList, setGenreList] = useState([]); 
@@ -106,7 +108,7 @@ export default function useCreateSeries(onClose, onReload, reloadState ) {
       const results = await seriesService.createSeries(formData);
 
       if (results) {
-        alert("Created successfully!");
+        showAlert("Created successfully!");
         // Chờ 0.5s rồi gọi onClose và onReload để đóng form và tải lại trang
         setTimeout(() => {
           onClose();

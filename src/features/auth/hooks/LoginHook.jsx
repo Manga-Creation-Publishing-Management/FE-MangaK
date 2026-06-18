@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useToast } from "../../../shared/hooks/useToast";
 import { authService } from "../../../services/authService";
 
 // Hook tự tạo (Custom Hook) quản lý toàn bộ logic liên quan đến đăng nhập
 export function LoginHook() {
     const navigate = useNavigate(); // Hook dùng để điều hướng trang (chuyển trang)
+    const { showAlert } = useToast();
 
     // Khởi tạo các State để lưu trữ dữ liệu form và trạng thái giao diện
     const [email, setEmail] = useState('');
@@ -63,6 +65,8 @@ export function LoginHook() {
             localStorage.setItem('mangak-token', token);
             localStorage.setItem('accessToken', token); // Lưu dự phòng cho các logic cũ nếu có
             localStorage.setItem('user', JSON.stringify(user));
+            // Đăng nhập thành công thì thông báo ở trang layout
+
 
             // Đối tượng ánh xạ từ role của user sang đường dẫn trên thanh URL
             const rolePathMap = {
@@ -73,16 +77,17 @@ export function LoginHook() {
                 admin: 'admin',
                 reader: 'reader',
             };
-            
+
             // Ép kiểu role về in thường và lấy đường dẫn tương ứng
             const role = (user.role || '').toLowerCase();
             const rolePath = rolePathMap[role] || role;
-            
+
             // Chuyển hướng người dùng sang trang dashboard tương ứng
             navigate(`/${rolePath}`);
-            
+
         } catch (err) {
             // Nếu có lỗi (sai mật khẩu, lỗi mạng,...), lưu lại thông báo lỗi để hiển thị lên UI
+            showAlert("Login failed! Please try again later.");
             setError(err.message);
         }
         finally {

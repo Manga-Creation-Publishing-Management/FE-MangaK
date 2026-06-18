@@ -17,9 +17,7 @@ export function PublicRoute() {
       mangaka: 'mangaka',
       assistant: 'assistant',
       tantou: 'tantouEditor', // tantou trong DB map với route /tantouEditor
-      tantoueditor: 'tantouEditor',
       editorial: 'editorialBoard',
-      editorialboard: 'editorialBoard',
       admin: 'admin',
       reader: 'reader',
     };
@@ -28,7 +26,7 @@ export function PublicRoute() {
       // Giải mã JSON thông tin user
       const user = JSON.parse(userString);
       const userRole = (user.role || '').toLowerCase();
-      
+
       // Nếu user có role hợp lệ, tự động đẩy họ về trang dashboard tương ứng với role đó
       if (userRole) {
         const rolePath = rolePathMap[userRole] || userRole;

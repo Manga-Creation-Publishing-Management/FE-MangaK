@@ -1,7 +1,9 @@
 import { useEffect, useState, useRef } from "react"
 import { taskService } from "../../../services/taskService";
+import { useToast } from "../../../shared/hooks/useToast";
 
 export function useTaskDetail(taskId, role) {
+  const { showAlert } = useToast();
 
   const [taskDetail, setTaskDetail] = useState(null);
 
@@ -32,7 +34,7 @@ export function useTaskDetail(taskId, role) {
 
   const handleGetTask = async () => {
     if (!taskId) {
-      alert("TaskId không tồn tại");
+      showAlert("TaskId không tồn tại", "error");
       return;
     }
 
@@ -47,12 +49,10 @@ export function useTaskDetail(taskId, role) {
         status: "Processing"
       });
 
-      alert("Bạn đã nhận task này!")
-
-
+      showAlert("Bạn đã nhận task này!");
     } catch (error) {
       console.error("Lỗi khi cập nhật status:", error);
-      alert("Cập nhật thất bại: " + error.message);
+      showAlert("Cập nhật thất bại: " + error.message, "error");
     } finally {
       setIsLoading(false);
     }
