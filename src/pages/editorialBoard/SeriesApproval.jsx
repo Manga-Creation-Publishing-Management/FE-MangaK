@@ -12,12 +12,12 @@ export function SeriesApproval() {
             <p className="text-muted-foreground">Review and approve series submitted by Tantou Editors</p>
           </div>
         </div>
-        
+
         {/* Nhúng component SeriesManagement:
             - Truyền role="editorial" để điều chỉnh hiển thị/logic phù hợp.
             - statusFilter: Giới hạn chỉ hiển thị các truyện có trạng thái nằm trong mảng này (Pending, Approved, v.v.)
         */}
-        <SeriesManagement role="editorial" statusFilter={["Pending", "Approved", "Rejected", "Publishing", "Cancelled"]} />
+        <SeriesManagement role="editorial" statusFilter={["Pending", "Approved", "Publishing", "Cancelled"]} />
       </div>
     </>
   )

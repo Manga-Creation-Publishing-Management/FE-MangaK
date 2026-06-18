@@ -11,7 +11,7 @@ export function useCreateTask() {
   const [showCreateTaskModal, setShowCreateTaskModal] = useState(false);
   const [showAssistantList, setShowAsssitantList] = useState([]);
 
-  const [showSeriesApproval, setShowSeriesApproval] = useState([]); 
+  const [showSeriesApproval, setShowSeriesApproval] = useState([]);
 
   const [chapters, setChapters] = useState([]);
   const [selectedSeriesId, setSelectedSeriesId] = useState('');
@@ -99,19 +99,19 @@ export function useCreateTask() {
 
     // Kiểm tra nhanh các trường ID cốt lõi tránh gửi chuỗi rỗng lên DB
     if (!taskData.seriesId || !taskData.chapterId || !taskData.assignedToId || !taskData.deadline) {
-      showAlert("Vui lòng chọn đầy đủ Series, Chapter, Assistant và Deadline!", "warning");
+      showAlert("Please choose all fields Series, Chapter, Assistant và Deadline!", "warning");
       return;
     }
 
     try {
       const response = await taskService.createTask(taskData);
-      showAlert("Tạo task thành công!");
+      showAlert("Created task successfully!");
       setTimeout(() => {
         window.location.reload();
       }, 1500);
     } catch (error) {
       console.error("Chi tiết lỗi:", error);
-      showAlert("Tạo thất bại: " + error.message, "error");
+      showAlert("Create task failed, " + error.message, "error");
     }
   }
 

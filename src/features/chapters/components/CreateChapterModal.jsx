@@ -84,14 +84,14 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
                 className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer"
               >
                 {storyFile ? (
-                <div className="text-primary font-medium">
-                  Selected: {storyFile.name}
-                </div>
+                  <div className="text-primary font-medium">
+                    Selected: {storyFile.name}
+                  </div>
                 ) : (
-                <>
-                  <p className="text-muted-foreground">Click to upload or drag and drop</p>
-                  <p className="text-sm text-muted-foreground mt-1">PNG, JPG up to 10MB</p>
-                </>
+                  <>
+                    <p className="text-muted-foreground">Click to upload or drag and drop</p>
+                    <p className="text-sm text-muted-foreground mt-1">PNG, JPG up to 10MB</p>
+                  </>
                 )}
                 <input
                   type="file"
