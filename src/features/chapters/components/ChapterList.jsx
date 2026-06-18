@@ -41,18 +41,11 @@ export function ChapterList({ roleName, seriesData }) {
           {/* Header của phần danh sách Chapter */}
           <div className="flex justify-between items-center">
             <div>
-              {/* Tiêu đề hiển thị kèm tổng số lượng chapter */}
               <h2 className="text-2xl ps-2 font-semibold ">Chapters ({chapterList?.length})</h2>
             </div>
 
-            {/* Cụm nút bấm phía bên phải */}
             <div className="flex gap-3">
               <>
-                {/* 
-                  Đoạn code comment cũ có vẻ là tính năng Manage Tasks (Quản lý công việc),
-                  tạm thời bị ẩn đi.
-                */}
-
                 {/* Chỉ hiển thị nút "Add New Chapter" nếu user hiện tại là Mangaka */}
                 {roleName?.toLowerCase() === "mangaka" &&
                   <button
@@ -91,7 +84,6 @@ export function ChapterList({ roleName, seriesData }) {
                     <div className="flex items-center gap-4 shrink-0">
                       <StatusBadge status={chapter.status} />
 
-                      {/* Đã xóa mt-4 thừa ở nút bấm để không bị lệch trục dọc */}
                       {console.log(`${roleName?.toLowerCase()} ChapterId: ${chapter.chapterId}`)}
                       {roleName !== 'reader' ?
                         <div>
@@ -113,6 +105,7 @@ export function ChapterList({ roleName, seriesData }) {
 
                             Rate chapter
                           </button>
+                          <p className="text-muted-foreground text-sm">You can only update rate of a chapter one (01) time</p>
                         </div>}
                     </div>
                   </div>

@@ -33,9 +33,10 @@ export function RatePanel({ onClose, onSubmit, initialRating = 0 }) {
 
         {/* Tiêu đề thông báo */}
         <p className="text-muted-foreground text-sm font-medium">Rate this chapter:</p>
+        <p className="text-muted-foreground text-sm italic">You can only update rate of a chapter one (01) time</p>
 
         {/* Danh sách 5 ngôi sao để chọn số điểm đánh giá */}
-        <div className="flex items-center gap-2">
+        <div className="flex justify-center items-center gap-2">
           {[1, 2, 3, 4, 5].map((index) => {
             // Xác định ngôi sao này có được tô màu hay không (dựa trên điểm đã chọn hoặc điểm đang hover)
             const isFilled = index <= (hover || rating);
@@ -65,9 +66,11 @@ export function RatePanel({ onClose, onSubmit, initialRating = 0 }) {
               </button>
             );
           })}
+
         </div>
 
         {/* Nút Submit gửi đánh giá */}
+
         <div className="flex justify-center">
           <button
             type="button"
