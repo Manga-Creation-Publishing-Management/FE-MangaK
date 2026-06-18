@@ -60,7 +60,7 @@ export function useTaskDetail(taskId, role) {
 
   const handleApprovedTask = async () => {
     if (!taskId) {
-      alert("TaskId không tồn tại");
+      showAlert("TaskId không tồn tại");
       return;
     }
 
@@ -71,12 +71,12 @@ export function useTaskDetail(taskId, role) {
 
       // Cập nhật state taskDetail với status mới
 
-      alert("Approved Task!")
+      showAlert("Approved Task!")
 
 
     } catch (error) {
       console.error("Lỗi khi cập nhật status:", error);
-      alert("Cập nhật thất bại: " + error.message);
+      showAlert("Cập nhật thất bại: " + error.message);
     } finally {
       setIsLoading(false);
     }
@@ -84,11 +84,11 @@ export function useTaskDetail(taskId, role) {
 
   const handleSubmitTask = async () => {
     if (!taskId) {
-      alert("TaskId không tồn tại");
+      showAlert("TaskId không tồn tại");
       return;
     }
     if (!storyFile) {
-      alert("Vui lòng chọn file trước khi nộp bài!");
+      showAlert("Vui lòng chọn file trước khi nộp bài!");
       return;
     }
 
@@ -103,11 +103,11 @@ export function useTaskDetail(taskId, role) {
       // Cập nhật lại status hiển thị thành "Submitted" (hoặc trạng thái tương ứng phía Backend)
 
 
-      alert("Nộp bài (Submit task) thành công!");
+      showAlert("Nộp bài (Submit task) thành công!");
       // setStoryFile(null); // Reset lại file đã chọn sau khi nộp thành công
     } catch (error) {
       console.error("Lỗi khi submit task:", error);
-      alert("Nộp bài thất bại: " + error.message);
+      showAlert("Nộp bài thất bại: " + error.message);
     } finally {
       setIsLoading(false);
     }
