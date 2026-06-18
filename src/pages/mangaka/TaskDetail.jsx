@@ -20,8 +20,10 @@ export function TaskDetail() {
     storyInputRef,
     handleStoryChange,
     handleGetTask,
-    isLoading
-  } = useTaskDetail(taskId);
+    isLoading,
+    handleSubmitTask,
+    handleApprovedTask
+  } = useTaskDetail(taskId, role);
 
   console.log("sss", taskDetail);
 
@@ -165,13 +167,16 @@ export function TaskDetail() {
               <>
                 {taskDetail?.status == "Available" &&
                   <button
-                    onClick={handleGetTask}
+                  onClick={handleGetTask}
                     className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
                     Get Task
                   </button>
                 }
-                <button className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
-                  Submit Task
+              <button
+                onClick={handleSubmitTask}
+                disabled={isLoading}
+                className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50 disabled:cursor-not-allowed">
+                {isLoading ? "Submitting..." : "Submit Task"}
                 </button>
               </>
             }
@@ -182,8 +187,10 @@ export function TaskDetail() {
 
                   Reject & Feedback
                 </button>
-                <button className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
-                  Approve
+              <button
+                onClick={handleApprovedTask}
+                className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                  Approve Task
                 </button>
               </>
             }

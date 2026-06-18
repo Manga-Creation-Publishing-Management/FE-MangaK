@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from "react"
 import { taskService } from "../../../services/taskService";
 
-export function useTaskDetail(taskId) {
-  
+export function useTaskDetail(taskId, role) {
+
   const [taskDetail, setTaskDetail] = useState(null);
 
   const [storyFile, setStoryFile] = useState(null);
@@ -29,7 +29,7 @@ export function useTaskDetail(taskId) {
     }
     fetchApi();
   }, [])
-  
+
   const handleGetTask = async () => {
     if (!taskId) {
       alert("TaskId không tồn tại");
@@ -47,10 +47,67 @@ export function useTaskDetail(taskId) {
         status: "Processing"
       });
 
-      alert("Bạn đã nhận task này!");
+      alert("Bạn đã nhận task này!")
+
+
     } catch (error) {
       console.error("Lỗi khi cập nhật status:", error);
       alert("Cập nhật thất bại: " + error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleApprovedTask = async () => {
+    if (!taskId) {
+      alert("TaskId không tồn tại");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await taskService.approvedTask(taskId);
+      console.log("Update status thành công:", response);
+
+      // Cập nhật state taskDetail với status mới
+
+      alert("Approved Task!")
+
+
+    } catch (error) {
+      console.error("Lỗi khi cập nhật status:", error);
+      alert("Cập nhật thất bại: " + error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmitTask = async () => {
+    if (!taskId) {
+      alert("TaskId không tồn tại");
+      return;
+    }
+    if (!storyFile) {
+      alert("Vui lòng chọn file trước khi nộp bài!");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("TaskId", taskId);
+      formData.append("SubmittedFileUrl", storyFile);
+      const response = await taskService.submitTask(formData);
+      console.log("Submit task thành công:", response);
+
+      // Cập nhật lại status hiển thị thành "Submitted" (hoặc trạng thái tương ứng phía Backend)
+
+
+      alert("Nộp bài (Submit task) thành công!");
+      // setStoryFile(null); // Reset lại file đã chọn sau khi nộp thành công
+    } catch (error) {
+      console.error("Lỗi khi submit task:", error);
+      alert("Nộp bài thất bại: " + error.message);
     } finally {
       setIsLoading(false);
     }
@@ -63,6 +120,8 @@ export function useTaskDetail(taskId) {
     storyInputRef,
     handleStoryChange,
     handleGetTask,      // ← Thêm hàm này
-    isLoading
+    isLoading,
+    handleSubmitTask,
+    handleApprovedTask
   }
 }
