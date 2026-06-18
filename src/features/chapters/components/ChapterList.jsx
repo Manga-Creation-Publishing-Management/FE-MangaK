@@ -26,10 +26,10 @@ export function ChapterList({ roleName, seriesData }) {
 
 
 
-  //nhằm lấy series ID của chapter lấy đánh giá
+  // Hook quản lý trạng thái hiển thị Popup đánh giá của từng chapter
   const { activeChapterId, handlePopUp } = useChapterRate();
 
-  //gọi hook update
+  // Hook thực hiện gửi số sao đánh giá (API submit)
   const { handleRateSubmit } = useUpdateRateChapter();
   // console.log("length", chapterList.length)
   console.log(`view series info: ${seriesData?.seriesId}`);
@@ -41,18 +41,11 @@ export function ChapterList({ roleName, seriesData }) {
           {/* Header của phần danh sách Chapter */}
           <div className="flex justify-between items-center">
             <div>
-              {/* Tiêu đề hiển thị kèm tổng số lượng chapter */}
               <h2 className="text-2xl ps-2 font-semibold ">Chapters ({chapterList?.length})</h2>
             </div>
 
-            {/* Cụm nút bấm phía bên phải */}
             <div className="flex gap-3">
               <>
-                {/* 
-                  Đoạn code comment cũ có vẻ là tính năng Manage Tasks (Quản lý công việc),
-                  tạm thời bị ẩn đi.
-                */}
-
                 {/* Chỉ hiển thị nút "Add New Chapter" nếu user hiện tại là Mangaka */}
                 {roleName?.toLowerCase() === "mangaka" &&
                   <button
@@ -91,7 +84,6 @@ export function ChapterList({ roleName, seriesData }) {
                     <div className="flex items-center gap-4 shrink-0">
                       <StatusBadge status={chapter.status} />
 
-                      {/* Đã xóa mt-4 thừa ở nút bấm để không bị lệch trục dọc */}
                       {console.log(`${roleName?.toLowerCase()} ChapterId: ${chapter.chapterId}`)}
                       {roleName !== 'reader' ?
                         <div>
@@ -104,15 +96,16 @@ export function ChapterList({ roleName, seriesData }) {
                           </button>
                         </div>
                         :
-                        //nếu là reader thì hiện nút để Rate, không thì hiện nút view details
+                        // Nếu là người đọc (reader) thì hiển thị nút "Rate chapter" để mở Popup đánh giá, ngược lại hiển thị nút "View Detail"
                         <div>
                           <button
                             className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-                            onClick={() => handlePopUp(chapter.chapterId)}
+                            onClick={() => handlePopUp(chapter.chapterId)} // Mở popup đánh giá cho chapter này
                           >
 
                             Rate chapter
                           </button>
+                          <p className="text-muted-foreground text-sm">You can only update rate of a chapter one (01) time</p>
                         </div>}
                     </div>
                   </div>
@@ -121,12 +114,14 @@ export function ChapterList({ roleName, seriesData }) {
               );
             })}
           </div>
+          {/* Nếu activeChapterId không null (tức đang chọn đánh giá cho một chapter nào đó), hiển thị RatePanel Popup */}
           {activeChapterId &&
             <RatePanel
-              onClose={() => handlePopUp(null)}
+              onClose={() => handlePopUp(null)} // Đóng popup khi nhấn nút hủy/X
               onSubmit={async (rating) => {
+                // Gọi API gửi điểm đánh giá số sao lên server
                 await handleRateSubmit(activeChapterId, rating);
-                handlePopUp(null); //đóng popup
+                handlePopUp(null); // Đóng popup sau khi submit thành công
               }}
             />
           }
