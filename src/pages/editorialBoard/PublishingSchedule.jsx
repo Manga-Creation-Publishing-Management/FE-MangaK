@@ -134,7 +134,7 @@ export function PublishingSchedule() {
                   </div>
                   <div>
                     <p className="text-lg font-semibold">Frequency</p>
-                    <p className="text-sm text-muted-foreground mt-1">{schedule.frequency}</p>
+                    <p className="text-sm text-muted-foreground mt-1 capitalize">{schedule.frequency}</p>
                   </div>
                   <div>
                     <p className="text-lg font-semibold">Publishing Date</p>
@@ -219,8 +219,8 @@ export function PublishingSchedule() {
                 <div className="grid grid-cols-2 gap-4">
                   {/* Nút chọn "Weekly" */}
                   <button
-                    onClick={() => setFrequency('weekly')}
-                    className={`p-4 rounded-lg border-2 text-left transition-all ${frequency === 'weekly' ? 'border-primary bg-primary/10' : 'border-border'
+                    onClick={() => setFrequency('Weekly')}
+                    className={`p-4 rounded-lg border-2 text-left transition-all ${frequency === 'Weekly' ? 'border-primary bg-primary/10' : 'border-border'
                       }`}
                   >
                     <p className="font-medium">Weekly</p>
@@ -228,8 +228,8 @@ export function PublishingSchedule() {
                   </button>
                   {/* Nút chọn "Monthly" */}
                   <button
-                    onClick={() => setFrequency('monthly')}
-                    className={`p-4 rounded-lg border-2 text-left transition-all ${frequency === 'monthly' ? 'border-primary bg-primary/10' : 'border-border'
+                    onClick={() => setFrequency('Monthly')}
+                    className={`p-4 rounded-lg border-2 text-left transition-all ${frequency === 'Monthly' ? 'border-primary bg-primary/10' : 'border-border'
                       }`}
                   >
                     <p className="font-medium">Monthly</p>

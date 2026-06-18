@@ -2,6 +2,23 @@ import { useState, useEffect, useRef } from 'react';
 import { User, Mail, Phone, Camera, Save, CheckCircle, AlertTriangle, X } from 'lucide-react';
 import { useLocation } from 'react-router';
 import { userService } from '../../services/userService';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+const profileSchema = yup.object().shape({
+  firstName: yup.string().trim().required("First name is required"),
+  lastName: yup.string().trim().required("Last name is required"),
+  email: yup.string().email("Invalid email format"),
+  phone: yup.string()
+    .nullable()
+    .notRequired()
+    .test("is-valid-phone", "Phone number must contain only numbers and be 10-11 digits", (value) => {
+      if (!value || value.trim() === "") return true;
+      return /^[0-9]{10,11}$/.test(value);
+    }),
+  bio: yup.string().max(500, "Bio cannot exceed 500 characters").nullable(),
+});
 import { useToast } from '../../shared/hooks/useToast';
 
 export function ProfilePage() {
@@ -16,17 +33,32 @@ export function ProfilePage() {
       location.pathname.includes('tantou') ? 'tantou' :
         location.pathname.includes('admin') ? 'admin' : 'editorial';
 
-  // Khởi tạo state để lưu trữ dữ liệu hồ sơ người dùng
-  const [profileData, setProfileData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    bio: '',
-    avatarUrl: '', // URL ảnh đại diện hiện tại từ server
-    avatarFile: null, // File ảnh mới được người dùng chọn để upload
-    avatarPreview: null, // URL tạm thời để hiển thị trước (preview) ảnh vừa chọn
+  // React Hook Form
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(profileSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      bio: '',
+    }
   });
+
+  const watchedFirstName = watch("firstName");
+  const watchedLastName = watch("lastName");
+
+  // Khởi tạo state để lưu trữ dữ liệu avatar người dùng và dữ liệu submit tạm thời
+  const [avatarUrl, setAvatarUrl] = useState('');
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(null);
+  const [pendingData, setPendingData] = useState(null);
   
   // State để quản lý trạng thái đang tải dữ liệu (loading)
   const [isLoading, setIsLoading] = useState(true);
@@ -42,32 +74,35 @@ export function ProfilePage() {
   // Giúp kích hoạt việc chọn file khi click vào nút hoặc ảnh đại diện
   const fileInputRef = useRef(null);
 
+  // Hàm bất đồng bộ để gọi API lấy thông tin profile từ server
+  const fetchProfile = async () => {
+    try {
+      const res = await userService.getProfile();
+      if (res) {
+        // Dữ liệu profile nằm trong object 'data' trả về từ API
+        const data = res.data;
+        // Cập nhật các giá trị của form
+        reset({
+          firstName: data.firstName || '',
+          lastName: data.lastName || '',
+          email: data.email || '',
+          phone: data.phone || '',
+          bio: data.bio || '',
+        });
+        setAvatarUrl(data.avatarUrl || '');
+        setAvatarFile(null);
+        setAvatarPreview(null);
+      }
+    } catch (error) {
+      console.error("Failed to fetch profile:", error);
+    } finally {
+      // Tắt trạng thái loading bất kể thành công hay thất bại
+      setIsLoading(false);
+    }
+  };
+
   // useEffect này chạy một lần duy nhất khi component được render lần đầu (do dependency array là [])
   useEffect(() => {
-    // Hàm bất đồng bộ để gọi API lấy thông tin profile từ server
-    const fetchProfile = async () => {
-      try {
-        const res = await userService.getProfile();
-        if (res) {
-          // Dữ liệu profile nằm trong object 'data' trả về từ API
-          const data = res.data;
-          // Cập nhật state profileData với dữ liệu lấy được
-          setProfileData({
-            firstName: data.firstName || '',
-            lastName: data.lastName || '',
-            email: data.email || '',
-            phone: data.phone || '',
-            bio: data.bio || '',
-            avatarUrl: data.avatarUrl || '',
-          });
-        }
-      } catch (error) {
-        console.error("Failed to fetch profile:", error);
-      } finally {
-        // Tắt trạng thái loading bất kể thành công hay thất bại
-        setIsLoading(false);
-      }
-    };
     fetchProfile();
   }, []);
 
@@ -75,11 +110,8 @@ export function ProfilePage() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setProfileData({
-        ...profileData, // Giữ nguyên các thông tin khác
-        avatarFile: file, // Lưu file để sau này gửi lên server
-        avatarPreview: URL.createObjectURL(file) // Tạo URL tạm thời để xem trước ảnh
-      });
+      setAvatarFile(file); // Lưu file để sau này gửi lên server
+      setAvatarPreview(URL.createObjectURL(file)); // Tạo URL tạm thời để xem trước ảnh
     }
   };
 
@@ -88,26 +120,35 @@ export function ProfilePage() {
     fileInputRef.current?.click();
   };
 
-  // Hàm xử lý khi người dùng nhấn nút "Save Profile"
+  // Hàm xử lý khi form được validate thành công
+  const onFormSubmit = (data) => {
+    setPendingData(data);
+    setShowConfirmModal(true);
+  };
+
+  // Hàm xử lý khi người dùng nhấn nút "Save Profile" sau khi xác nhận
   const handleSaveProfile = async () => {
+    if (!pendingData) return;
     try {
       setIsSaving(true); // Bật trạng thái đang lưu
       setShowConfirmModal(false); // Ẩn modal xác nhận
       
       // Sử dụng FormData để có thể gửi cả dữ liệu text và file (ảnh)
       const formData = new FormData();
-      formData.append('FirstName', profileData.firstName);
-      formData.append('LastName', profileData.lastName);
-      formData.append('Phone', profileData.phone);
-      formData.append('Bio', profileData.bio);
+      formData.append('FirstName', pendingData.firstName);
+      formData.append('LastName', pendingData.lastName);
+      formData.append('Phone', pendingData.phone);
+      formData.append('Bio', pendingData.bio || '');
 
       // Nếu có chọn ảnh mới thì mới thêm vào FormData
-      if (profileData.avatarFile) {
-        formData.append('AvatarFile', profileData.avatarFile);
+      if (avatarFile) {
+        formData.append('AvatarFile', avatarFile);
       }
 
       // Gọi API để cập nhật profile
       await userService.updateProfile(formData);
+      // Làm mới dữ liệu từ server và xóa các preview file
+      await fetchProfile();
       // Hiện modal thông báo thành công thay vì alert
       setShowSuccessModal(true);
     } catch (error) {
@@ -147,16 +188,16 @@ export function ProfilePage() {
             <div className="flex items-start gap-6">
               <div className="relative">
                 {/* Ưu tiên hiển thị ảnh preview (nếu vừa chọn file mới), nếu không thì hiển thị ảnh từ URL */}
-                {profileData.avatarPreview || profileData.avatarUrl ? (
+                {avatarPreview || avatarUrl ? (
                   <img
-                    src={profileData.avatarPreview || profileData.avatarUrl}
+                    src={avatarPreview || avatarUrl}
                     alt="Avatar"
                     className="w-24 h-24 rounded-full object-cover"
                   />
                 ) : (
                   // Hiển thị avatar mặc định (chữ cái đầu của tên) nếu không có ảnh
                   <div className="w-24 h-24 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-primary-foreground text-2xl">
-                    {profileData.firstName?.charAt(0) || ''}
+                    {watchedFirstName?.charAt(0) || ''}
                   </div>
                 )}
                 
@@ -180,7 +221,7 @@ export function ProfilePage() {
 
               {/* Thông tin hiển thị tóm tắt: Tên, Vai trò và Trạng thái */}
               <div className="flex-1">
-                <h2>{`${profileData.firstName} ${profileData.lastName}`}</h2>
+                <h2>{`${watchedFirstName || ''} ${watchedLastName || ''}`}</h2>
                 <p className="text-muted-foreground mt-1">{roleLabels[role]}</p>
                 <span className="inline-block mt-2 px-3 py-1 bg-success/10 text-success border border-success/30 rounded-full text-sm">
                   Active
@@ -192,7 +233,7 @@ export function ProfilePage() {
       </div>
 
       {/* Phần form để chỉnh sửa Thông tin cá nhân (Personal Information) */}
-      <div className="bg-card border border-border rounded-xl p-8 space-y-6">
+      <form onSubmit={handleSubmit(onFormSubmit)} className="bg-card border border-border rounded-xl p-8 space-y-6">
         <h2>Personal Information</h2>
 
         <div className="grid grid-cols-2 gap-6">
@@ -205,10 +246,14 @@ export function ProfilePage() {
             <input
               id="firstName"
               type="text"
-              value={profileData.firstName}
-              onChange={(e) => setProfileData({ ...profileData, firstName: e.target.value })}
-              className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+              {...register("firstName")}
+              className={`w-full px-4 py-2 bg-input-background rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary ${
+                errors.firstName ? 'border-destructive focus:ring-destructive' : 'border-border'
+              }`}
             />
+            {errors.firstName && (
+              <p className="text-xs text-destructive mt-1">{errors.firstName.message}</p>
+            )}
           </div>
 
           {/* Input cho Last Name */}
@@ -220,10 +265,14 @@ export function ProfilePage() {
             <input
               id="lastName"
               type="text"
-              value={profileData.lastName}
-              onChange={(e) => setProfileData({ ...profileData, lastName: e.target.value })}
-              className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+              {...register("lastName")}
+              className={`w-full px-4 py-2 bg-input-background rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary ${
+                errors.lastName ? 'border-destructive focus:ring-destructive' : 'border-border'
+              }`}
             />
+            {errors.lastName && (
+              <p className="text-xs text-destructive mt-1">{errors.lastName.message}</p>
+            )}
           </div>
 
           {/* Input cho Email Address */}
@@ -235,9 +284,9 @@ export function ProfilePage() {
             <input
               id="email"
               type="email"
-              value={profileData.email}
-              onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
-              className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+              {...register("email")}
+              disabled
+              className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none opacity-60 cursor-not-allowed"
             />
           </div>
 
@@ -249,11 +298,15 @@ export function ProfilePage() {
             </label>
             <input
               id="phone"
-              type="tel"
-              value={profileData.phone}
-              onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-              className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+              type="text"
+              {...register("phone")}
+              className={`w-full px-4 py-2 bg-input-background rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary ${
+                errors.phone ? 'border-destructive focus:ring-destructive' : 'border-border'
+              }`}
             />
+            {errors.phone && (
+              <p className="text-xs text-destructive mt-1">{errors.phone.message}</p>
+            )}
           </div>
         </div>
 
@@ -262,18 +315,22 @@ export function ProfilePage() {
           <label htmlFor="bio" className="text-sm text-muted-foreground">Bio</label>
           <textarea
             id="bio"
-            value={profileData.bio}
-            onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
-            className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary min-h-24 resize-none"
+            {...register("bio")}
+            className={`w-full px-4 py-2 bg-input-background rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary min-h-24 resize-none ${
+              errors.bio ? 'border-destructive focus:ring-destructive' : 'border-border'
+            }`}
           />
+          {errors.bio && (
+            <p className="text-xs text-destructive mt-1">{errors.bio.message}</p>
+          )}
         </div>
 
         {/* Nút lưu profile */}
         <div className="flex justify-end pt-4">
           <button
-            onClick={() => setShowConfirmModal(true)}
+            type="submit"
             disabled={isSaving} // Vô hiệu hóa nút khi đang lưu để tránh click nhiều lần
-            className="flex items-center gap-2 px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="flex items-center gap-2 px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
           >
             {isSaving ? (
               // Icon loading hiển thị khi đang lưu
@@ -285,7 +342,7 @@ export function ProfilePage() {
             {isSaving ? 'Saving...' : 'Save Profile'}
           </button>
         </div>
-      </div>
+      </form>
 
       {/* Confirm Modal */}
       {showConfirmModal && (
