@@ -4,6 +4,7 @@ import { useLocation } from 'react-router';
 import { userService } from '../../services/userService';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useToast } from '../../shared/hooks/useToast';
 import * as yup from 'yup';
 
 const profileSchema = yup.object().shape({
@@ -19,7 +20,7 @@ const profileSchema = yup.object().shape({
     }),
   bio: yup.string().max(500, "Bio cannot exceed 500 characters").nullable(),
 });
-import { useToast } from '../../shared/hooks/useToast';
+
 
 export function ProfilePage() {
   const { showAlert } = useToast();
