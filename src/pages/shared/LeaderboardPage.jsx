@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Trophy, TrendingUp, TrendingDown, Medal, Loader2, AlertCircle } from 'lucide-react';
+import { Trophy, TrendingUp, TrendingDown, Medal, Loader2, AlertCircle, Star } from 'lucide-react';
 import { leaderboardService } from '../../services/leaderboardService';
 
 // Component hiển thị Bảng Xếp Hạng (Leaderboard) của các bộ truyện
@@ -89,7 +89,7 @@ export function LeaderboardPage() {
 
       {/* Card (Khung) bọc ngoài danh sách xếp hạng */}
       <div className="bg-card border border-border rounded-xl overflow-hidden">
-        
+
         {/* Banner tiêu đề bên trong Card */}
         <div className="p-6 border-b border-border bg-gradient-to-r from-primary/10 to-accent/10">
           <div className="flex items-center gap-3">
@@ -138,7 +138,7 @@ export function LeaderboardPage() {
                   }`}
               >
                 <div className="flex items-center gap-6">
-                  
+
                   {/* Cột 1: Icon/Số Rank */}
                   <div className="w-16 text-center">
                     {getRankIcon(item.rank)}
@@ -150,7 +150,9 @@ export function LeaderboardPage() {
                     <p className="text-sm text-muted-foreground mt-1">by {item.author}</p>
                   </div>
 
-                  {/* Cột 3: Lượt Vote */}
+
+
+                  {/* Cột 4: Số lượng người đánh giá */}
                   <div className="text-center">
                     <p className="text-muted-foreground text-sm">Votes</p>
                     <p className="text-xl mt-1">{item.votes.toLocaleString()}</p>
@@ -160,8 +162,7 @@ export function LeaderboardPage() {
                   {/* Trending được xác định từ chuỗi change: bắt đầu bằng "-" = down, còn lại = up */}
                   <div className="text-center min-w-24">
                     <p className="text-muted-foreground text-sm">Growth</p>
-                    <div className={`flex items-center justify-center gap-1 mt-1 ${
-                      isTrendingUp(item.change) ? 'text-success' : 'text-destructive'
+                    <div className={`flex items-center justify-center gap-1 mt-1 ${isTrendingUp(item.change) ? 'text-success' : 'text-destructive'
                       }`}>
                       {isTrendingUp(item.change) ? (
                         <TrendingUp size={18} />
@@ -169,6 +170,17 @@ export function LeaderboardPage() {
                         <TrendingDown size={18} />
                       )}
                       <span className="font-medium">{item.change}</span>
+                    </div>
+                  </div>
+
+                  {/* Cột 3: Điểm đánh giá trung bình (Average Rating) */}
+                  <div className="text-center">
+                    <p className="text-muted-foreground text-sm">Avg Rating</p>
+                    <div className="flex items-center justify-center gap-1 mt-1">
+                      <p className="text-xl">
+                        {(item.averageRate ?? 0).toFixed(1)}
+                      </p>
+                      <Star size={16} className="text-yellow-500 fill-yellow-500" />
                     </div>
                   </div>
                 </div>
