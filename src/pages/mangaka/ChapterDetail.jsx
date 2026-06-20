@@ -169,10 +169,14 @@ export function ChapterDetail() {
                 </div>
               </div>
             }
-
-            
           </div>
 
+
+
+
+                        {/* PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ
+                        PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ
+                        PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ */}
           <div className="space-y-3">
             {currentRole === "mangaka" &&
               <>
@@ -203,6 +207,12 @@ export function ChapterDetail() {
               </>
             }
           </div>
+
+                    {/* KẾT THÚC PHẦN CHÈN
+                    KẾT THÚC PHẦN CHÈN
+                    KẾT THÚC PHẦN CHÈN
+                    KẾT THÚC PHẦN CHÈN */}
+
 
           {currentRole.toLowerCase() === "mangaka" &&
             <>
