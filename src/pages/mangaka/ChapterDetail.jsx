@@ -7,16 +7,37 @@ import 'react-pdf/dist/Page/TextLayer.css';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
-import { ArrowLeft, Download } from "lucide-react";
+import { ArrowLeft, Download, Undo } from "lucide-react";
 import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
 import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter";
 import { ApprovalPanel } from "../shared/ApprovalPanel";
+import { KonvaDraw } from "../shared/KonvaDraw";
+
 
 // Kích hoạt Web Worker để thư viện react-pdf xử lý PDF ở một luồng độc lập (tránh đơ UI)
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 // Component hiển thị chi tiết của một Chapter cụ thể (để đọc truyện/xem nháp)
 export function ChapterDetail() {
+
+  const [annotationData, setAnnotationData] = useState({});
+  const [brushColor, setBrushColor] = useState("#ef4444");
+
+
+  //Hàm undo
+  const handleUndo = (pageIndex) => {
+    const currentPageLines = annotationData[pageIndex] || [];
+    if (currentPageLines.length === 0) return;
+
+    //Xóa nét vẽ cuối cùng của trang hiện tại
+    const newLines = currentPageLines.slice(0, -1); // xoa net vua ve
+
+    setAnnotationData({
+      ...annotationData,
+      [pageIndex]: newLines
+    });
+  };
+
 
   // Hook dùng để quay lại trang trước đó
   const navigate = useNavigate();
@@ -143,9 +164,22 @@ export function ChapterDetail() {
           </div>
 
           <div className="space-y-3">
-            {role === "mangaka" &&
+            {role === "mangaka" || "tantou" &&
               <>
                 <h3 className="font-medium text-sm text-muted-foreground">Submit Official Chapter</h3>
+                {/* NHÃ THÊM CÁI KONVA VÀO ĐÂY NHAAA */}
+                {/* Cái này là thêm tool - màu vẽ */}
+                {role?.toLowerCase() === 'mangaka' && (
+                  <div className="flex gap-4 mb-4 bg-white p-2 rounded justify-center sticky top-0 z-20 shadow">
+                    <span className="text-lg font-bold flex items-center">Edit tool: </span>
+                    <input
+                      type="color"
+                      value={brushColor}
+                      onChange={(e) => setBrushColor(e.target.value)}
+                      className="cursor-pointer h-8 w-8 rounded border-none"
+                    />
+                  </div>
+                )}
                 <div
                   onClick={() => storyInputRef?.current.click()}
                   name="nameFile"
@@ -175,15 +209,43 @@ export function ChapterDetail() {
                               key={`page_wrapper_${index + 1}`}
                               className="mb-6 flex justify-center"
                             >
+
+
                               {/* Khung hiển thị từng trang PDF riêng lẻ. Thêm shadow và bo góc cho giống trang giấy thật */}
                               <div className="shadow-2xl rounded-sm overflow-hidden bg-white">
                                 <Page
                                   pageNumber={index + 1} // Render trang PDF thứ i+1
                                   width={600}            // Kích thước chuẩn hiển thị
-                                  renderTextLayer={true} // Cho phép người dùng bôi đen text trên PDF
+                                  renderTextLayer={false} // Cho phép người dùng bôi đen text trên PDF - VẼ NÊN CHO FALSE
                                   renderAnnotationLayer={true}
                                 />
                               </div>
+
+                              <div className="absolute top-0 left-0 w-full h-full z-10">
+                                <KonvaDraw
+                                  width={600}
+                                  height={800}
+                                  color={brushColor}
+                                  isReadOnly={role?.toLowerCase() !== 'mangaka'} //chỉ cho tantou vẽ
+                                  lines={annotationData[pageNumber] || []}
+                                  setLines={(newLinesForThisPage) => {
+                                    setAnnotationData({
+                                      ...annotationData,
+                                      [pageNumber]: newLinesForThisPage,
+                                    });
+                                  }}
+                                />
+                              </div>
+
+                              {/* undo của từng trang */}
+                              {role?.toLowerCase() !== 'mangaka' && (
+                                <button
+                                  onClick={(e) => { e.preventDefault(); handleUndo(1); }} // Ví dụ undo trang 1
+                                  className="flex items-center gap-1 text-sm bg-gray-200 hover:bg-gray-300 px-2 rounded"
+                                >
+                                  <Undo size={16} />
+                                </button>
+                              )}
                             </div>
 
                           ))}
@@ -228,6 +290,7 @@ export function ChapterDetail() {
               onReject={() => handleReject(currentRole, chapterDetail?.status, setChapterDetail)}
             />
           )}
+
 
 
         </div>
