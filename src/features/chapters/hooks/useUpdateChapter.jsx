@@ -15,7 +15,7 @@ export function useUpdateChapter(seriesId, chapterId) {
         const isTantou = normalizedRole === "tantou";
 
         let newStatus;
-        if (isTantou && normalizedStatus === "processing") {
+        if (isTantou && normalizedStatus === "pending") {
             newStatus = "publishing";
         } else {
             showAlert("Chapter cannot be approved in its current state.", "error");
@@ -52,7 +52,7 @@ export function useUpdateChapter(seriesId, chapterId) {
         const isTantou = normalizedRole === "tantou";
 
         let newStatus;
-        if (isTantou && normalizedStatus === "processing") {
+        if (isTantou && normalizedStatus === "pending") {
             newStatus = "rejected";
         } else {
             showAlert("Chapter cannot be rejected in its current state.", "error");
