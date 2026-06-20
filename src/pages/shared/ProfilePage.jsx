@@ -8,9 +8,18 @@ import { useToast } from '../../shared/hooks/useToast';
 import * as yup from 'yup';
 
 const profileSchema = yup.object().shape({
-  firstName: yup.string().trim().required("First name is required"),
-  lastName: yup.string().trim().required("Last name is required"),
-  email: yup.string().email("Invalid email format"),
+  firstName: yup.string().trim()
+    .required("First name is required")
+    .min(2, "First name must be at least 2 characters")
+    .max(50, "First name cannot exceed 50 characters"),
+  lastName: yup.string().trim()
+    .required("Last name is required")
+    .min(2, "Last name must be at least 2 characters")
+    .max(50, "Last name cannot exceed 50 characters"),
+  email: yup.string()
+    .email("Invalid email format")
+    .min(5, "Email must be at least 5 characters")
+    .max(100, "Email cannot exceed 100 characters"),
   phone: yup.string()
     .nullable()
     .notRequired()
@@ -19,6 +28,14 @@ const profileSchema = yup.object().shape({
       return /^[0-9]{10,11}$/.test(value);
     }),
   bio: yup.string().max(500, "Bio cannot exceed 500 characters").nullable(),
+  authorName: yup.string().trim()
+    .nullable()
+    .notRequired()
+    .test("min-len", "Author name must be at least 2 characters", (value) => {
+      if (!value || value.trim() === "") return true;
+      return value.trim().length >= 2;
+    })
+    .max(50, "Author name cannot exceed 50 characters"),
 });
 
 
@@ -49,6 +66,7 @@ export function ProfilePage() {
       email: '',
       phone: '',
       bio: '',
+      authorName: '',
     }
   });
 
@@ -89,6 +107,7 @@ export function ProfilePage() {
           email: data.email || '',
           phone: data.phone || '',
           bio: data.bio || '',
+          authorName: data.authorName || '',
         });
         setAvatarUrl(data.avatarUrl || '');
         setAvatarFile(null);
@@ -138,8 +157,11 @@ export function ProfilePage() {
       const formData = new FormData();
       formData.append('FirstName', pendingData.firstName);
       formData.append('LastName', pendingData.lastName);
-      formData.append('Phone', pendingData.phone);
+      formData.append('Phone', pendingData.phone || '');
       formData.append('Bio', pendingData.bio || '');
+      if (role === 'mangaka') {
+        formData.append('AuthorName', pendingData.authorName || '');
+      }
 
       // Nếu có chọn ảnh mới thì mới thêm vào FormData
       if (avatarFile) {
@@ -309,6 +331,27 @@ export function ProfilePage() {
               <p className="text-xs text-destructive mt-1">{errors.phone.message}</p>
             )}
           </div>
+
+          {/* Input cho Author Name (Bút danh) */}
+          {role === 'mangaka' && (
+            <div className="space-y-2">
+              <label htmlFor="authorName" className="flex items-center gap-2 text-sm text-muted-foreground">
+                <User size={16} />
+                Author Name
+              </label>
+              <input
+                id="authorName"
+                type="text"
+                {...register("authorName")}
+                className={`w-full px-4 py-2 bg-input-background rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary ${
+                  errors.authorName ? 'border-destructive focus:ring-destructive' : 'border-border'
+                }`}
+              />
+              {errors.authorName && (
+                <p className="text-xs text-destructive mt-1">{errors.authorName.message}</p>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Input cho Bio (Tiểu sử) */}
