@@ -12,6 +12,11 @@ export function useTaskDetail(taskId, role) {
   const storyInputRef = useRef(null);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [reload, setReload] = useState(false);
+
+  const handleReload = () => {
+    setReload(!reload);
+  }
 
 
   const handleStoryChange = (e) => {
@@ -30,7 +35,7 @@ export function useTaskDetail(taskId, role) {
       }
     }
     fetchApi();
-  }, [])
+  }, [taskId, reload])
 
   const handleGetTask = async () => {
     if (!taskId) {
@@ -104,6 +109,7 @@ export function useTaskDetail(taskId, role) {
 
 
       showAlert("Nộp bài (Submit task) thành công!");
+      handleReload();
       // setStoryFile(null); // Reset lại file đã chọn sau khi nộp thành công
     } catch (error) {
       console.error("Lỗi khi submit task:", error);

@@ -25,6 +25,9 @@ export const chaptersService = {
   // Gửi số sao đánh giá (vote/rating) cho một chương truyện cụ thể
   async updateChapterRate(chapterId, rate) {
     return await api.post(`/Vote/voting-chapter`, { chapterId, rate });
+  },
+  async submitChapter(seriesId, chapterId, formData) {
+    return await api.patch(`/Chapter/${chapterId}?seriesId=${seriesId}`, formData);
   }
 
 
