@@ -8,25 +8,25 @@ export function usePublishingSchedule() {
   const { showAlert } = useToast();
   // Trạng thái hiển thị modal (popup) thêm/sửa lịch xuất bản
   const [showAddSchedule, setShowAddSchedule] = useState(false);
-  
+
   // Trạng thái lưu ID của bộ truyện đang được chọn để xếp lịch
   const [selectedSeries, setSelectedSeries] = useState('');
-  
-  // Trạng thái lưu chu kỳ xuất bản (mặc định là 'weekly' - hàng tuần)
-  const [frequency, setFrequency] = useState('weekly');
-  
+
+  // Trạng thái lưu chu kỳ xuất bản (mặc định là 'Weekly')
+  const [frequency, setFrequency] = useState('Weekly');
+
   // Trạng thái lưu ngày bắt đầu xuất bản
   const [startDate, setStartDate] = useState('');
-  
+
   // Trạng thái lưu danh sách các bộ truyện đã được duyệt (đủ điều kiện lên lịch)
   const [approvedSeries, setApprovedSeries] = useState([]);
-  
+
   // Trạng thái lưu danh sách toàn bộ các lịch xuất bản đang có
   const [schedules, setSchedules] = useState([]);
-  
+
   // Cờ (flag) xác định xem người dùng đang Tạo mới (false) hay Chỉnh sửa (true)
   const [isEditing, setIsEditing] = useState(false);
-  
+
   // Lưu ID của lịch đang được chỉnh sửa
   const [editingScheduleId, setEditingScheduleId] = useState(null);
 
@@ -37,7 +37,7 @@ export function usePublishingSchedule() {
       const allSeries = response.data || [];
       // Lọc ra những truyện có trạng thái là 'approved'
       const approved = allSeries.filter(s => s.status?.toLowerCase() === 'approved');
-      
+
       // Ánh xạ lại cấu trúc dữ liệu cho gọn gàng dễ dùng
       const mapped = approved.map(s => ({
         id: s.seriesId,
@@ -55,7 +55,7 @@ export function usePublishingSchedule() {
     try {
       const response = await publishingScheduleService.getAllSchedules();
       const dataList = response.data || [];
-      
+
       // Chuyển đổi định dạng dữ liệu, xử lý lại định dạng ngày (cắt bỏ phần giờ T...)
       const mapped = dataList.map(s => ({
         id: s.scheduleId,
@@ -84,7 +84,7 @@ export function usePublishingSchedule() {
   // Hàm xử lý khi người dùng nhấn nút Sửa (Edit) một lịch xuất bản có sẵn
   const handleEditClick = (schedule) => {
     setSelectedSeries(schedule.seriesId);
-    setFrequency(schedule.frequency || 'weekly');
+    setFrequency(schedule.frequency || 'Weekly');
     setStartDate(schedule.startDate);
     setEditingScheduleId(schedule.id);
     setIsEditing(true);         // Đánh dấu là đang sửa
@@ -96,7 +96,7 @@ export function usePublishingSchedule() {
     setShowAddSchedule(false);
     setIsEditing(false);
     setSelectedSeries('');
-    setFrequency('weekly');
+    setFrequency('Weekly');
     setStartDate('');
     setEditingScheduleId(null);
   };
@@ -112,7 +112,7 @@ export function usePublishingSchedule() {
     try {
       // Chuẩn hóa định dạng ngày sang ISO chuẩn để gửi cho backend
       const publishDate = new Date(startDate).toISOString();
-      
+
       if (isEditing) {
         // NẾU LÀ SỬA ĐỔI: Gọi API update
         await publishingScheduleService.updateSchedule(editingScheduleId, {

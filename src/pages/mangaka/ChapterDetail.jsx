@@ -42,7 +42,6 @@ export function ChapterDetail() {
   // Hook dùng để quay lại trang trước đó
   const navigate = useNavigate();
 
-  const role = useLocation().state?.role;
 
   // State lưu tổng số trang của file PDF
   const [numPages, setNumPages] = useState(null);
@@ -65,7 +64,11 @@ export function ChapterDetail() {
   const { chapterDetail,
     setChapterDetail,
     storyFile,
-    storyInputRef, handleStoryChange } = useChapterDetail(seriesId, chapterId);
+    storyInputRef, handleStoryChange,
+    handleSubmitChapter,
+    isLoading,
+    handleReload
+  } = useChapterDetail(seriesId, chapterId);
   const { handleApprove, handleReject, feedback, setFeedback } = useUpdateChapter(seriesId, chapterId);
 
 
@@ -147,111 +150,67 @@ export function ChapterDetail() {
               </div>
             </div>
 
-            <div className=" md:col-span-6 space-y-2">
-              <h3 className="font-medium text-sm text-muted-foreground uppercase">Original Manuscript</h3>
-              <div className="border  border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center space-y-2 h-[100px]">
-                <p className="text-xs text-muted-foreground">View the initial manuscript file here</p>
-                <a
-                  href={chapterDetail?.manuscriptFileUrl}
-                  download
-                  className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-8 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
-                >
-                  <Download size={16} />
-                  View Initial Manuscript
-                </a>
+            {currentRole.toLowerCase() === "mangaka" &&
+              <div className=" md:col-span-6 space-y-2">
+                <h3 className="font-medium text-sm text-muted-foreground uppercase">Original Manuscript</h3>
+                <div className="border  border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center space-y-2 h-[100px]">
+                  <p className="text-xs text-muted-foreground">View the initial manuscript file here</p>
+                  <a
+                    href={chapterDetail?.manuscriptFileUrl}
+                    download
+                    className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-8 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
+                  >
+                    <Download size={16} />
+                    View Initial Manuscript
+                  </a>
+                </div>
               </div>
-            </div>
+            }
+            {currentRole.toLowerCase() === "tantou" &&
+
+              <div className=" md:col-span-6 space-y-2">
+                <h3 className="font-medium text-sm text-muted-foreground uppercase">Submitted File By mangaka</h3>
+                <div className="border  border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center space-y-2 h-[100px]">
+                  {chapterDetail?.chapterFileUrl ? (
+                    <>
+                      <p className="text-xs text-muted-foreground">Download To Review</p>
+                      <a
+                        href={chapterDetail?.chapterFileUrl}
+                        download
+                        className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-8 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
+                      >
+                        <Download size={16} />
+                        Download File Here
+                      </a>
+                    </>
+                  ) : (
+                    <p className="text-xl font-semibold text-muted-foreground">No file to review</p>
+                  )
+                  }
+                </div>
+              </div>
+            }
           </div>
 
+
+
+
+          {/* PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ
+                        PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ
+                        PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ */}
           <div className="space-y-3">
-            {role === "mangaka" || "tantou" &&
+            {currentRole === "mangaka" &&
               <>
-                <h3 className="font-medium text-sm text-muted-foreground">Submit Official Chapter</h3>
-                {/* NHÃ THÊM CÁI KONVA VÀO ĐÂY NHAAA */}
-                {/* Cái này là thêm tool - màu vẽ */}
-                {role?.toLowerCase() === 'mangaka' && (
-                  <div className="flex gap-4 mb-4 bg-white p-2 rounded justify-center sticky top-0 z-20 shadow">
-                    <span className="text-lg font-bold flex items-center">Edit tool: </span>
-                    <input
-                      type="color"
-                      value={brushColor}
-                      onChange={(e) => setBrushColor(e.target.value)}
-                      className="cursor-pointer h-8 w-8 rounded border-none"
-                    />
-                  </div>
-                )}
+                <h3 className="font-medium text-sm text-muted-foreground">Submit Your Work</h3>
                 <div
-                  onClick={() => storyInputRef?.current.click()}
+                  onClick={() => storyInputRef.current.click()}
                   name="nameFile"
-                  className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center h-[300px] hover:border-primary transition-colors cursor-pointer"
+                  className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center h-[160px] hover:border-primary transition-colors cursor-pointer"
                 >
                   {storyFile ? (
-                    <>
-                      {/* Vùng hiển thị nội dung PDF đọc truyện. 
-              Sử dụng h-[350px] overflow-y-auto để có thể cuộn danh sách các trang PDF */}
-                      <div className="w-full h-[350px] overflow-y-auto border border-gray-300 bg-zinc-700 p-4 rounded-lg shadow-inner">
-
-                        {/* Component Document của react-pdf để tải file PDF từ URL trả về */}
-                        <Document
-                          file={chapterDetail?.manuscriptFileUrl}
-                          onLoadSuccess={onDocumentLoadSuccess}
-                          loading={ // Hiển thị khi file PDF đang được tải
-                            <div className="flex justify-center items-center h-full text-white font-medium">
-                              <span>Đang tải tài liệu...</span>
-                            </div>
-                          }
-                        >
-                          {/* Vòng lặp duyệt qua tất cả số trang của PDF để hiển thị lần lượt từ trên xuống */}
-                          {numPages && Array.from(new Array(numPages), (el, index) => (
-
-                            /* Khung bọc từng trang để tạo khoảng cách và căn giữa */
-                            <div
-                              key={`page_wrapper_${index + 1}`}
-                              className="mb-6 flex justify-center"
-                            >
-
-
-                              {/* Khung hiển thị từng trang PDF riêng lẻ. Thêm shadow và bo góc cho giống trang giấy thật */}
-                              <div className="shadow-2xl rounded-sm overflow-hidden bg-white">
-                                <Page
-                                  pageNumber={index + 1} // Render trang PDF thứ i+1
-                                  width={600}            // Kích thước chuẩn hiển thị
-                                  renderTextLayer={false} // Cho phép người dùng bôi đen text trên PDF - VẼ NÊN CHO FALSE
-                                  renderAnnotationLayer={true}
-                                />
-                              </div>
-
-                              <div className="absolute top-0 left-0 w-full h-full z-10">
-                                <KonvaDraw
-                                  width={600}
-                                  height={800}
-                                  color={brushColor}
-                                  isReadOnly={role?.toLowerCase() !== 'mangaka'} //chỉ cho tantou vẽ
-                                  lines={annotationData[pageNumber] || []}
-                                  setLines={(newLinesForThisPage) => {
-                                    setAnnotationData({
-                                      ...annotationData,
-                                      [pageNumber]: newLinesForThisPage,
-                                    });
-                                  }}
-                                />
-                              </div>
-
-                              {/* undo của từng trang */}
-                              {role?.toLowerCase() !== 'mangaka' && (
-                                <button
-                                  onClick={(e) => { e.preventDefault(); handleUndo(1); }} // Ví dụ undo trang 1
-                                  className="flex items-center gap-1 text-sm bg-gray-200 hover:bg-gray-300 px-2 rounded"
-                                >
-                                  <Undo size={16} />
-                                </button>
-                              )}
-                            </div>
-
-                          ))}
-                        </Document>
-                      </div>
-                    </>
+                    <div className="text-primary font-medium">
+                      Selected: {storyFile.name}
+                    </div>
                   ) : (
                     <>
                       <p className="text-muted-foreground">Click to upload file</p>
@@ -270,19 +229,29 @@ export function ChapterDetail() {
             }
           </div>
 
-
-          <>
-            <div className="flex justify-end gap-3 pt-4 border-t border-border ">
-              <button
-                disabled={!storyFile}
-                className="bg-secondary cursor-pointer text-secondary-foreground hover:bg-secondary/80 font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:bg-gray-500 disabled:cursor-not-allowed">
-                Submit Chapter
-              </button>
-            </div>
-          </>
+          {/* KẾT THÚC PHẦN CHÈN
+                    KẾT THÚC PHẦN CHÈN
+                    KẾT THÚC PHẦN CHÈN
+                    KẾT THÚC PHẦN CHÈN */}
 
 
-          {currentRole.toLowerCase() == 'tantou' && (
+          {currentRole.toLowerCase() === "mangaka" &&
+            <>
+              <div className="flex justify-end gap-3 pt-4 border-t border-border ">
+                <button
+                  onClick={handleSubmitChapter}
+                  disabled={!storyFile || isLoading}
+                  className="bg-secondary cursor-pointer text-secondary-foreground hover:bg-secondary/80 font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:bg-gray-500 disabled:cursor-not-allowed">
+                  {isLoading ? "Submitting..." : "Submit Chapter"}
+                </button>
+              </div>
+            </>
+          }
+
+
+
+
+          {(currentRole.toLowerCase() == 'tantou' && chapterDetail?.status === "Pending") && (
             <ApprovalPanel
               feedback={feedback}
               onFeedbackChange={(e) => setFeedback(e.target.value)}

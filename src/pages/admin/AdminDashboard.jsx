@@ -1,16 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Plus,
-  Search,
-  Users,
-  ShieldCheck,
-  UserX,
-  UserCheck,
-  X,
-  Eye,
-  EyeOff,
-  ChevronDown,
-} from "lucide-react";
+import { Plus, Search, Users, ShieldCheck, UserX, UserCheck, X, Eye, EyeOff } from "lucide-react";
 import { WelcomeLine } from "../shared/WelcomeLine.jsx";
 import { OverviewCard } from "../shared/OverviewCard.jsx";
 import { userService } from "../../services/userService.js";
@@ -67,17 +56,40 @@ const feRoleToApiRole = {
 
 // Validation Schema với Yup cho form Tạo Tài Khoản
 const schema = yup.object().shape({
-  firstName: yup.string().required("First name is required"),
-  lastName: yup.string().required("Last name is required"),
-  phone: yup.string().required("Phone number is required"),
-  email: yup.string().email("Invalid email format").required("Email is required"),
+  firstName: yup.string().trim()
+    .required("First name is required")
+    .min(2, "First name must be at least 2 characters")
+    .max(50, "First name cannot exceed 50 characters"),
+  lastName: yup.string().trim()
+    .required("Last name is required")
+    .min(2, "Last name must be at least 2 characters")
+    .max(50, "Last name cannot exceed 50 characters"),
+  phone: yup.string()
+    .nullable()
+    .notRequired()
+    .test("is-valid-phone", "Phone number must contain only numbers and be 10-11 digits", (value) => {
+      if (!value || value.trim() === "") return true;
+      return /^[0-9]{10,11}$/.test(value);
+    }),
+  email: yup.string().trim()
+    .email("Invalid email format")
+    .required("Email is required")
+    .min(5, "Email must be at least 5 characters")
+    .max(100, "Email cannot exceed 100 characters"),
   role: yup.string().required("Role is required"),
   authorName: yup.string().when("role", {
     is: "mangaka",
-    then: (schema) => schema.required("Author name is required"),
+    then: (schema) => schema.trim()
+      .required("Author name is required")
+      .min(2, "Author name must be at least 2 characters")
+      .max(50, "Author name cannot exceed 50 characters"),
     otherwise: (schema) => schema.notRequired(),
   }),
-  password: yup.string().required("Password is required").min(6, "Password must be at least 6 characters"),
+  supervisorId: yup.string().nullable().notRequired(),
+  password: yup.string()
+    .required("Password is required")
+    .min(6, "Password must be at least 6 characters")
+    .max(100, "Password cannot exceed 100 characters"),
 });
 
 export function AdminDashboard() {
@@ -90,6 +102,8 @@ export function AdminDashboard() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
+
+  const [tantouList, setTantouList] = useState([]);
 
   // Khởi tạo React Hook Form để thay thế quản lý state thủ công
   const {
@@ -109,6 +123,7 @@ export function AdminDashboard() {
       email: "",
       role: "editorial",
       authorName: "",
+      supervisorId: "",
       password: ""
     }
   });
@@ -130,6 +145,7 @@ export function AdminDashboard() {
         phone: user.phoneNumber || user.phone || '',
         role: mapApiRole(user.role),
         status: user.isActive === false || user.status?.toLowerCase() === 'suspended' || user.status?.toLowerCase() === 'inactive' ? 'inactive' : 'active',
+        supervisorId: user.supervisorId || user.SupervisorId || null,
       }));
 
       setUsers(mapped);
@@ -140,8 +156,46 @@ export function AdminDashboard() {
     }
   };
 
+  // Lấy danh sách Tantou Editor từ Backend
+  const fetchTantouList = async () => {
+    try {
+      const response = await userService.getTantouList();
+      const list = response.data || [];
+      setTantouList(list);
+    } catch (error) {
+      console.error("Failed to fetch tantou list:", error);
+    }
+  };
+
+  const handleSupervisorChange = (userId, supervisorId) => {
+    const val = supervisorId === "" ? null : supervisorId;
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === userId ? { ...u, supervisorId: val } : u
+      )
+    );
+    showAlert("Đã chọn Tantou Editor (Thay đổi cục bộ)", "success");
+  };
+
+  const getSupervisorOptions = (userSupervisorId) => {
+    const options = [...tantouList];
+    if (userSupervisorId && !options.some(t => (t.userId || t.id) === userSupervisorId)) {
+      const currentSupervisor = users.find(u => u.id === userSupervisorId);
+      if (currentSupervisor) {
+        options.push({
+          userId: currentSupervisor.id,
+          firstName: currentSupervisor.name.split(' ')[0] || '',
+          lastName: currentSupervisor.name.split(' ').slice(1).join(' ') || '',
+          email: currentSupervisor.email
+        });
+      }
+    }
+    return options;
+  };
+
   useEffect(() => {
     fetchUsers();
+    fetchTantouList();
   }, []);
 
   // ==================== THỐNG KÊ ====================
@@ -191,7 +245,7 @@ export function AdminDashboard() {
   // Hàm thực thi việc cập nhật trạng thái tài khoản sau khi người dùng xác nhận
   const confirmToggle = async () => {
     if (!confirmAction) return;
-    
+
     try {
       const apiStatus = confirmAction.action === "inactive" ? "Inactive" : "Active";
       await userService.updateUserStatus(confirmAction.user.id, apiStatus);
@@ -235,8 +289,9 @@ export function AdminDashboard() {
         lastName: data.lastName.trim(),
         email: data.email.trim(),
         password: data.password.trim(),
-        phone: data.phone.trim(),
+        phone: data.phone ? data.phone.trim() : null,
         authorName: data.role === 'mangaka' ? data.authorName.trim() : null,
+        supervisorId: data.role === 'mangaka' && data.supervisorId ? data.supervisorId : null,
         status: "Active",
       });
 
@@ -384,6 +439,9 @@ export function AdminDashboard() {
                     Role
                   </th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
+                    Supervisor
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
                     Status
                   </th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
@@ -395,7 +453,7 @@ export function AdminDashboard() {
                 {isLoading ? (
                   <tr>
                     <td
-                      colSpan={6}
+                      colSpan={7}
                       className="px-6 py-12 text-center text-muted-foreground"
                     >
                       Loading users...
@@ -404,7 +462,7 @@ export function AdminDashboard() {
                 ) : filtered.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={6}
+                      colSpan={7}
                       className="px-6 py-12 text-center text-muted-foreground"
                     >
                       No users match your search.
@@ -431,6 +489,24 @@ export function AdminDashboard() {
                         >
                           {roleLabels[user.role] || user.role}
                         </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-muted-foreground">
+                        {user.role === 'mangaka' ? (
+                          <CustomSelect
+                            value={user.supervisorId || ""}
+                            onChange={(val) => handleSupervisorChange(user.id, val)}
+                            className="w-full max-w-[180px]"
+                            options={[
+                              { value: "", label: "No Supervisor" },
+                              ...getSupervisorOptions(user.supervisorId).map((t) => ({
+                                value: t.userId || t.id,
+                                label: `${t.firstName || ''} ${t.lastName || ''}`.trim() || t.email
+                              }))
+                            ]}
+                          />
+                        ) : (
+                          <span className="text-muted-foreground/50">-</span>
+                        )}
                       </td>
                       <td className="px-6 py-4">
                         <span
@@ -579,6 +655,32 @@ export function AdminDashboard() {
                     </div>
                   )}
                 </div>
+
+                {selectedRole === 'mangaka' && (
+                  <div>
+                    <label className="text-sm text-muted-foreground mb-1.5 block">
+                      Tantou Editor
+                    </label>
+                    <Controller
+                      name="supervisorId"
+                      control={control}
+                      render={({ field }) => (
+                        <CustomSelect
+                          value={field.value}
+                          onChange={field.onChange}
+                          options={[
+                            { value: "", label: "Select Tantou Editor (Optional)" },
+                            ...tantouList.map((t) => ({
+                              value: t.userId || t.id,
+                              label: `${t.firstName || ''} ${t.lastName || ''}`.trim() || t.email
+                            }))
+                          ]}
+                        />
+                      )}
+                    />
+                    {errors.supervisorId && <p className="text-xs text-destructive mt-1">{errors.supervisorId.message}</p>}
+                  </div>
+                )}
 
                 <div>
                   <label className="text-sm text-muted-foreground mb-1.5 block">

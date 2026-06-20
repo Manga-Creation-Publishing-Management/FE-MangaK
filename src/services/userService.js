@@ -26,6 +26,11 @@ export const userService = {
     // Cập nhật trạng thái người dùng (Active / Inactive)
     async updateUserStatus(userId, status) {
         return api.put(`/UserProfile/update-user-status?userId=${userId}&status=${status}`);
+    },
+
+    // Lấy danh sách các Tantou Editor phục vụ cho việc chọn ở trang Admin
+    async getTantouList() {
+        return api.get('/UserProfile/get-tantou-list');
     }
 };
 

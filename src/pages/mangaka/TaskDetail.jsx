@@ -131,7 +131,9 @@ export function TaskDetail() {
                   </div>
                 </>
               }
-
+              {/* PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ
+                        PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ
+                        PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ */}
               {role === "mangaka" &&
                 <>
                 <h3 className="font-medium text-sm text-muted-foreground">Submited File by Assistant</h3>
@@ -156,6 +158,10 @@ export function TaskDetail() {
                 </div>
                 </>
               }
+              {/* KẾT THÚC PHẦN CHÈN
+                    KẾT THÚC PHẦN CHÈN
+                    KẾT THÚC PHẦN CHÈN
+                    KẾT THÚC PHẦN CHÈN */}
 
             </div>
 
