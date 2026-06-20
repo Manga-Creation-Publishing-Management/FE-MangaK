@@ -8,7 +8,11 @@ export function StatusBadge({ status }) {
     'approved': 'bg-success/10 text-success border-success/30', // Xanh lá nhạt
     'pending': 'bg-warning/10 text-warning border-warning/30', // Vàng cam nhạt
     'publishing': 'bg-green-500 text-white border-green-500/30', // Xanh lá đậm (đang xuất bản)
-    'cancelled': 'bg-red-500 text-white border-red-500/30' // Đỏ đậm (đã hủy)
+    'cancelled': 'bg-red-500 text-white border-red-500/30', // Đỏ đậm (đã hủy)
+    'created': 'bg-sky-500 text-white border-sky-500/30',
+    'available': 'bg-cyan-500 text-white border-cyan-500/30',
+    'revising': 'bg-orange-500 text-white border-orange-500/30',
+    'completed': 'bg-violet-500 text-white border-violet-500/30'
   };
 
   // Mapping (ánh xạ) giữa mã trạng thái và tên hiển thị ra màn hình
@@ -18,7 +22,11 @@ export function StatusBadge({ status }) {
     'approved': 'Approved', // Đã duyệt
     'pending': 'Pending', // Đang chờ
     'publishing': 'Publishing', // Đang xuất bản
-    'cancelled': 'Cancelled' // Đã hủy
+    'cancelled': 'Cancelled', // Đã hủy
+    'created': 'Created', // Mới tạo
+    'available': 'Available', // Có sẵn
+    'revising': 'Revising', // Đang sửa đổi
+    'completed': 'Completed' // Hoàn thành
   };
 
   // Lấy ra class màu tương ứng, nếu không có thì để chuỗi rỗng

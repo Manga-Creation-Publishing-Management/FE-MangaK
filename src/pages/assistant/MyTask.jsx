@@ -30,7 +30,7 @@ console.log(taskListByAssistant)
       }
       <div className="p-9">
         {taskListByAssistant?.map(item => (
-          <div className="space-y-4 mb-3">
+          <div className="space-y-4 mb-3" key={item.id}>
             {/* {tasks.map((task) => ( */}
             <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-shadow">
               <div className="flex items-start justify-between gap-2">

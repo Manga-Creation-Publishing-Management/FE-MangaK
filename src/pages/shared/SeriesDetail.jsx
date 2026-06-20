@@ -135,16 +135,16 @@ export function SeriesDetail() {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-12 gap-6 border-b border-gray-200 pb-6">
-              
+
               <div className="md:col-span-6 space-y-2">
                 <div className="bg-muted/30 p-3 rounded-lg border border-border text-foreground text-sm leading-relaxed">
                   <h3 className="font-normal text-sm text-muted-foreground  tracking-wider">Upcoming Chapter Release Date</h3>
                   {detailData?.publishDate ? (
                     <div className="text-sm my-2 font-semibold">{dayjs(detailData?.publishDate).utc(true).format('DD/MM/YYYY HH:mm')}</div>
                   ) : (
-                      <div className="text-sm ms-0.5">— — — —</div>
+                    <div className="text-sm ms-0.5">— — — —</div>
                   )}
-                  
+
                 </div>
               </div>
               <div className="md:col-span-6 space-y-2">
@@ -153,7 +153,7 @@ export function SeriesDetail() {
                   {detailData?.publishPeriod ? (
                     <div className="text-sm my-2 font-semibold capitalize">{detailData?.publishPeriod}</div>
                   ) : (
-                      <div className="text-sm ms-0.5"> — — — —</div>
+                    <div className="text-sm ms-0.5"> — — — —</div>
                   )}
                 </div>
               </div>
