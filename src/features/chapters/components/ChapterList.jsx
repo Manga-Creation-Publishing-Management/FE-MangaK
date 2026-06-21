@@ -105,7 +105,7 @@ export function ChapterList({ roleName, seriesData }) {
 
                             Rate chapter
                           </button>
-                          <p className="text-muted-foreground text-sm">You can only update rate of a chapter one (01) time</p>
+
                         </div>}
                     </div>
                   </div>
