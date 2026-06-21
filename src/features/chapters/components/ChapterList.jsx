@@ -9,6 +9,7 @@ import { RatePanel } from "../../../pages/reader/RatePanel";
 import { useUpdateRateChapter } from "../hooks/useUpdateRateChapter";
 import { CreateChapterModal } from "./CreateChapterModal";
 import { useChapterList } from "../hooks/useChapterList";
+import { useProgressing } from "../hooks/useProgressing";
 
 export function ChapterList({ roleName, seriesData }) {
 
@@ -31,6 +32,10 @@ export function ChapterList({ roleName, seriesData }) {
 
   // Hook thực hiện gửi số sao đánh giá (API submit)
   const { handleRateSubmit } = useUpdateRateChapter();
+
+
+  const {} = useProgressing()
+
   // console.log("length", chapterList.length)
   console.log(`view series info: ${seriesData?.seriesId}`);
 
@@ -77,9 +82,6 @@ export function ChapterList({ roleName, seriesData }) {
                       <h3 className="py-1 font-semibold text-xl break-words">
                         Chapter {chapter.chapterNumber}: {chapter.title}
                       </h3>
-                      <p className="text-sm text-muted-foreground py-2">
-                        Uploaded: {chapter.createdAt}
-                      </p>
                     </div>
                     <div className="flex items-center gap-4 shrink-0">
                       <StatusBadge status={chapter.status} />

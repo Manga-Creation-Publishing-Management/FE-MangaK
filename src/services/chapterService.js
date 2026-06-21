@@ -11,7 +11,7 @@ export const chaptersService = {
 
   // Lấy chi tiết thông tin của một chương cụ thể (để đọc hoặc sửa đổi)
   async getChapterDetailById(seriesId, chapterId) {
-    return await await api.get(`/Chapter/get-chapter-details?seriesId=${seriesId}&chapterId=${chapterId}`);
+    return await api.get(`/Chapter/get-chapter-details?seriesId=${seriesId}&chapterId=${chapterId}`);
   },
 
   async createChapter(seriesId, formData) {
@@ -28,7 +28,10 @@ export const chaptersService = {
   },
   async submitChapter(seriesId, chapterId, formData) {
     return await api.patch(`/Chapter/${chapterId}?seriesId=${seriesId}`, formData);
-  }
+  },
 
+  async getProgressingChapter(chapterId, status) {
+    return await  api.get(`/MangaTask/process-task?ChapterId=${chapterId}&Status=${status}`);
+  },
 
 };

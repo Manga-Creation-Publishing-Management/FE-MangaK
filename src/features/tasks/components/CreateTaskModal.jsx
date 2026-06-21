@@ -43,7 +43,7 @@ export default function CreateTaskModal({
             <div className="text-2xl font-semibold">Create New Task</div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-muted rounded-lg transition-colors"
+              className="p-2 hover:bg-muted rounded-lg transition-colors cursor-pointer"
               
             >
               <X/>
@@ -95,7 +95,7 @@ export default function CreateTaskModal({
                   <option
                     key={item.userId}
                     value={item.userId}
-                  >{item.firstName}</option>
+                  >{item.lastName} {item.firstName}</option>
                 ))}
               </select>
             </div>
@@ -180,9 +180,9 @@ export default function CreateTaskModal({
               <button
                 type="submit"
                 // disabled={isLoading}
-                className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
               >
-                create
+                Create
                 {/* {isLoading ? "Creating..." : "Create"} */}
               </button>
             </div>
