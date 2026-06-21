@@ -22,6 +22,7 @@ import { PublicRoute } from '../features/auth/components/PublicRoute';
 import { LeaderboardPage } from '../pages/shared/LeaderboardPage.jsx';
 import { ReaderLoginPage } from '../pages/reader/ReaderLoginPage.jsx';
 import { TaskDetail } from '../pages/mangaka/TaskDetail.jsx';
+import { Income } from '../pages/assistant/Income.jsx';
 
 const roleDisplayNames = {
   mangaka: "Mangaka",
@@ -65,6 +66,7 @@ export function AppRoutes() {
           <Route index element={<AssistantDashboard />} />
           <Route path="tasks" element={<MyTask />} />
           <Route path="tasks/:taskId" element={<TaskDetail />} />
+          <Route path="income" element={<Income />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Route>
