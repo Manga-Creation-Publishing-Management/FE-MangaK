@@ -1,0 +1,70 @@
+import { Camera } from "lucide-react";
+
+export function AvatarSection({
+  isLoading,
+  avatarPreview,
+  avatarUrl,
+  watchedFirstName,
+  watchedLastName,
+  fileInputRef,
+  handleFileChange,
+  triggerFileInput,
+  role,
+}) {
+  const roleLabels = {
+    mangaka: "Mangaka",
+    assistant: "Assistant",
+    tantou: "Tantou Editor",
+    editorial: "Editorial Board",
+    admin: "Admin",
+  };
+
+  return (
+    <div className="bg-card border border-border rounded-xl p-8 space-y-6">
+      {isLoading ? (
+        <div className="flex items-center justify-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      ) : (
+        <div className="flex items-start gap-6">
+          <div className="relative">
+            {avatarPreview || avatarUrl ? (
+              <img
+                src={avatarPreview || avatarUrl}
+                alt="Avatar"
+                className="w-24 h-24 rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-24 h-24 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-primary-foreground text-2xl">
+                {watchedFirstName?.charAt(0) || ""}
+              </div>
+            )}
+
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+
+            <button
+              onClick={triggerFileInput}
+              className="absolute bottom-0 right-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center hover:opacity-90 transition-opacity"
+            >
+              <Camera size={16} />
+            </button>
+          </div>
+
+          <div className="flex-1">
+            <h2>{`${watchedFirstName || ""} ${watchedLastName || ""}`}</h2>
+            <p className="text-muted-foreground mt-1">{roleLabels[role]}</p>
+            <span className="inline-block mt-2 px-3 py-1 bg-success/10 text-success border border-success/30 rounded-full text-sm">
+              Active
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
