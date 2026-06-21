@@ -11,6 +11,7 @@ import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter
 import { ApprovalPanel } from "../shared/ApprovalPanel";
 import { KonvaDraw } from "../shared/KonvaDraw";
 import { useChapterAnnotation } from "../../features/chapters/hooks/useChapterAnnotation";
+import { useProgressing } from "../../features/chapters/hooks/useProgressing";
 
 // Kích hoạt Web Worker để thư viện react-pdf xử lý PDF ở một luồng độc lập (tránh đơ UI)
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -58,6 +59,8 @@ export function ChapterDetail() {
 
   // const validChapterData = chapterList.find(item => String(item.id) == String(chapterId))
 
+  const { progress} = useProgressing(chapterId);
+
   const { chapterDetail,
     setChapterDetail,
     storyFile,
@@ -86,8 +89,18 @@ export function ChapterDetail() {
 
         {/* Khung (Card) chứa thông tin chính của Chapter */}
         <div className="bg-card border border-border rounded-xl p-8 space-y-4">
+          <div className="w-full bg-gray-200 rounded-full h-6 overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-all duration-300 ease-out flex items-center justify-start ps-2 text-xs font-bold text-white ${progress === 100 ? 'bg-green-500' : 'bg-blue-600'
+                }`}
+              style={{ width: `${progress}%` }}
+            >
+              {/* Chỉ hiển thị số khi tiến độ lớn hơn 10% để tránh chữ bị tràn ra ngoài khi thanh quá ngắn */}
+              {`${progress}%`}
+            </div>
+          </div>
+          
           <div className="flex justify-between items-start">
-
             {/* Cụm thông tin bên trái: Tiêu đề Chapter, Số thứ tự, Tóm tắt */}
             <div>
               <h1 className="font-semibold text-xl capitalize">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h1>
@@ -141,7 +154,7 @@ export function ChapterDetail() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
             <div className="md:col-span-6 space-y-2">
               <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">Summary</h3>
-              <div className="bg-muted/30 p-4 rounded-lg border border-border min-h-[160px] text-foreground text-sm leading-relaxed">
+              <div className="bg-muted/30 p-4 rounded-lg border border-border min-h-[100px] text-foreground text-sm leading-relaxed">
                 {chapterDetail?.summary}
               </div>
             </div>
