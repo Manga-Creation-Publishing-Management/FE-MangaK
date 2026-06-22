@@ -83,7 +83,7 @@ export function TaskDetail() {
                   className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80  py-2 px-4 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
                 >
                   <Download size={16} />
-                  Download 
+                  Download
                 </a>
               </div>
             </div>
@@ -101,9 +101,9 @@ export function TaskDetail() {
 
           <div className="grid grid-cols-1  md:grid-cols-1 gap-6 pt-4 border-t border-border">
 
-            
+
             <div className="space-y-3 w-full">
-              {role === "assistant" &&
+              {(role === "assistant" && taskDetail?.status != "Available") &&
                 <>
                   <h3 className="font-medium text-sm text-muted-foreground">Submit Your Work</h3>
                   <div
@@ -136,26 +136,26 @@ export function TaskDetail() {
                         PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ */}
               {role === "mangaka" &&
                 <>
-                <h3 className="font-medium text-sm text-muted-foreground">Submited File by Assistant</h3>
-                <div className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center space-y-3 h-[160px] ">
-                  {taskDetail?.submittedFileUrl ? (
-                    <>
-                      <p className="text-xs text-muted-foreground">Download the submitted file to review</p>
-                      <a
-                        href={taskDetail?.submittedFileUrl}
-                        download
-                        className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-10 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
-                      >
-                        <Download size={16} />
-                        Download File
-                      </a>
-                    </>
-                  ) : (
+                  <h3 className="font-medium text-sm text-muted-foreground">Submited File by Assistant</h3>
+                  <div className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center space-y-3 h-[160px] ">
+                    {taskDetail?.submittedFileUrl ? (
+                      <>
+                        <p className="text-xs text-muted-foreground">Download the submitted file to review</p>
+                        <a
+                          href={taskDetail?.submittedFileUrl}
+                          download
+                          className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-10 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
+                        >
+                          <Download size={16} />
+                          Download File
+                        </a>
+                      </>
+                    ) : (
                       <>
                         <p className="text-xl font-semibold text-muted-foreground">No file has been submitted by the assistant yet.</p>
                       </>
-                  )}
-                </div>
+                    )}
+                  </div>
                 </>
               }
               {/* KẾT THÚC PHẦN CHÈN
@@ -173,17 +173,19 @@ export function TaskDetail() {
               <>
                 {taskDetail?.status == "Available" &&
                   <button
-                  onClick={handleGetTask}
+                    onClick={handleGetTask}
                     className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
                     Get Task
                   </button>
                 }
-              <button
-                onClick={handleSubmitTask}
-                disabled={isLoading}
-                className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50 disabled:cursor-not-allowed">
-                {isLoading ? "Submitting..." : "Submit Task"}
+              { taskDetail?.status != ("Available" || "Completed") &&
+                <button
+                  onClick={handleSubmitTask}
+                  disabled={isLoading}
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50 disabled:cursor-not-allowed">
+                  {isLoading ? "Submitting..." : "Submit Task"}
                 </button>
+                }
               </>
             }
 
@@ -193,9 +195,9 @@ export function TaskDetail() {
 
                   Reject & Feedback
                 </button>
-              <button
-                onClick={handleApprovedTask}
-                className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                <button
+                  onClick={handleApprovedTask}
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
                   Approve Task
                 </button>
               </>

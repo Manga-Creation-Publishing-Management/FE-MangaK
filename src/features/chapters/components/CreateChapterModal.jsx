@@ -62,17 +62,7 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
               </div>
             </div>
 
-            <div className="mb-4">
-              <div className='mb-2 text-xl'>
-                <label htmlFor="deadline">Deadline</label>
-              </div>
-              <input
-                type="datetime-local"
-                name="deadline" // Tên thuộc tính sẽ gửi lên Backend
-                required
-                className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
+            
 
             <div className="space-y-2">
               <div className='mb-2 text-xl'>

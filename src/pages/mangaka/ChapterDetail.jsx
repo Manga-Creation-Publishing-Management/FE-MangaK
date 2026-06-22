@@ -17,7 +17,8 @@ import { useProgressing } from "../../features/chapters/hooks/useProgressing";
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 // Component hiển thị chi tiết của một Chapter cụ thể (để đọc truyện/xem nháp)
-export function ChapterDetail() {
+export function ChapterDetail() { 
+
   const {
     tool,
     setTool,
@@ -59,7 +60,7 @@ export function ChapterDetail() {
 
   // const validChapterData = chapterList.find(item => String(item.id) == String(chapterId))
 
-  const { progress} = useProgressing(chapterId);
+  const { progress } = useProgressing(chapterId);
 
   const { chapterDetail,
     setChapterDetail,
@@ -70,8 +71,14 @@ export function ChapterDetail() {
   } = useChapterDetail(seriesId, chapterId);
   const { handleApprove, handleReject, feedback, setFeedback } = useUpdateChapter(seriesId, chapterId);
 
+  const today = dayjs().utc(true);
+  const deadlineObj = dayjs(chapterDetail?.deadline).utc(true);
+  const foramttedDeadline =  dayjs(chapterDetail?.deadline).utc(true).format('DD/MM/YYYY HH:mm') 
+  console.log(foramttedDeadline);
 
-  console.log(chapterDetail);
+  const isOverdue = deadlineObj.isBefore(today)
+
+  console.log(isOverdue);
 
   return (
     <>
@@ -99,7 +106,7 @@ export function ChapterDetail() {
               {`${progress}%`}
             </div>
           </div>
-          
+
           <div className="flex justify-between items-start">
             {/* Cụm thông tin bên trái: Tiêu đề Chapter, Số thứ tự, Tóm tắt */}
             <div>
@@ -133,7 +140,7 @@ export function ChapterDetail() {
               <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
                 <h3 className="font-normal text-sm text-muted-foreground  tracking-wider">Deadline</h3>
                 {chapterDetail?.deadline ? (
-                  <div className="text-sm my-2 font-semibold capitalize">{chapterDetail?.deadline}</div>
+                  <div className="text-sm my-2 font-semibold capitalize">{foramttedDeadline}</div>
                 ) : (
                   <div className="text-sm ms-0.5"> — — — —</div>
                 )}
@@ -219,7 +226,9 @@ export function ChapterDetail() {
                         PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ
                         PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ */}
           <div className="space-y-3">
+
             {currentRole === "mangaka" &&
+              progress === 100 ? (
               <>
                 <h3 className="font-medium text-sm text-muted-foreground">Submit Your Work</h3>
                 <div
@@ -246,6 +255,12 @@ export function ChapterDetail() {
                   />
                 </div>
               </>
+            ) : (
+              <div className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center h-[160px] hover:border-primary transition-colors cursor-pointer">
+                  <p className="text-muted-foreground">The progress bar needs to be at 100% to submit the file.</p>
+                </div>
+            )
+
             }
           </div>
 
@@ -257,13 +272,22 @@ export function ChapterDetail() {
 
           {currentRole.toLowerCase() === "mangaka" &&
             <>
-              <div className="flex justify-end gap-3 pt-4 border-t border-border ">
+            <div className="flex justify-end gap-3 pt-4 border-t border-border ">
+              {!isOverdue ? (
                 <button
                   onClick={handleSubmitChapter}
                   disabled={!storyFile || isLoading}
                   className="bg-secondary cursor-pointer text-secondary-foreground hover:bg-secondary/80 font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:bg-gray-500 disabled:cursor-not-allowed">
+
                   {isLoading ? "Submitting..." : "Submit Chapter"}
                 </button>
+              ) : (
+                  <button className="bg-secondary text-secondary-foreground  font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:bg-gray-500 disabled:cursor-not-allowed readonly " >
+                    Overdue 
+                  </button>
+              )
+              }
+                
               </div>
             </>
           }
