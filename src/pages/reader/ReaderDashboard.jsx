@@ -1,9 +1,9 @@
-import { WelcomeLine } from '../shared/WelcomeLine'
-import { Search } from 'lucide-react'
-import { SeriesManagement } from '../shared/SeriesManagement'
-import { useSearch } from '../../features/series/hooks/useSearch'
-import { HeaderPage } from '../shared/HeaderPage';
-import avatarImgDemo from "../shared/avatarImgDemo.png";
+import { WelcomeLine } from '@/shared/components/WelcomeLine';
+import { Search } from 'lucide-react';
+import { SeriesManagement } from '../shared/SeriesManagement';
+import { useSearch } from '../../features/series/hooks/useSearch';
+import { HeaderPage } from '@/layout/HeaderPage';
+import avatarImgDemo from "@/layout/avatarImgDemo.png";
 import { Outlet } from 'react-router';
 
 // Component Trang chủ dành cho Reader (Độc giả)

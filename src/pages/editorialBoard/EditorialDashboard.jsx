@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { WelcomeLine } from "../shared/WelcomeLine";
+import { WelcomeLine } from "@/shared/components/WelcomeLine";
 import { seriesService } from "../../services/seriesService";
 import { updateSeries } from "../../services/updateSeriesService";
-import Notification from "../shared/Notification";
+import Notification from "@/shared/components/Notification";
 import { useSeriesManagement } from "../../features/series/hooks/useSeriesManagement";
-import { useToast } from "../../shared/hooks/useToast";
+import { useToast } from "@/shared/hooks/useToast";
 
 import { ApprovedSeriesCard } from "./components/ApprovedSeriesCard";
 import { CancelSeriesModal } from "./components/CancelSeriesModal";

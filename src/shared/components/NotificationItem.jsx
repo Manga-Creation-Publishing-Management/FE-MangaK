@@ -1,24 +1,18 @@
 import { AlertCircle } from 'lucide-react';
 
-/**
- * NotificationItem Component - Renders individual notification card
- */
 export function NotificationItem({ sender, subject, message, date, hasIcon, isNew }) {
     return (
         <div className={`group bg-card border border-border hover:border-primary/40 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 rounded-2xl p-5 flex gap-4 ${isNew ? 'ring-1 ring-primary/20' : ''}`}>
-            {/* Icon Area */}
             <div className="flex-shrink-0 flex items-start pt-0.5">
                 {hasIcon ? (
                     <div className="w-10 h-10 rounded-full bg-secondary text-primary flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
                         <AlertCircle size={20} className="stroke-[2.2]" />
                     </div>
                 ) : (
-                    /* Spacer to align notifications without icons horizontally */
                     <div className="w-10" />
                 )}
             </div>
 
-            {/* Main Content Info */}
             <div className="flex-grow">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-baseline gap-1 mb-2">
                     <h4 className="text-foreground font-semibold text-base md:text-lg group-hover:text-primary transition-colors duration-200">
@@ -33,5 +27,4 @@ export function NotificationItem({ sender, subject, message, date, hasIcon, isNe
             </div>
         </div>
     );
-};
-
+}

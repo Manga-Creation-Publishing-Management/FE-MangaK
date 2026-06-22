@@ -1,7 +1,7 @@
 import { ArrowLeft, Download } from "lucide-react";
 import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { useLocation, useNavigate, useParams } from "react-router";
-import { StatusBadge } from "./StatusBadge";
+import { StatusBadge } from "@/shared/components/StatusBadge";
 import { ChapterList } from "../../features/chapters/components/ChapterList";
 import { ApprovalPanel } from "./ApprovalPanel";
 import { useEffect, useState } from "react";

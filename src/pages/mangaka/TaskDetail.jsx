@@ -1,7 +1,7 @@
 import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, UploadCloud } from "lucide-react";
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { useTaskDetail } from "../../features/tasks/hooks/useTaskDetail";
-import { StatusBadge } from "../shared/StatusBadge";
+import { StatusBadge } from "@/shared/components/StatusBadge";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);

@@ -1,5 +1,5 @@
 import { ArrowUpRight, Calendar, CircleAlert, CircleCheckBig, CircleDashed, InfoIcon, JapaneseYen } from "lucide-react";
-import { OverviewCard } from "../shared/OverviewCard";
+import { OverviewCard } from "@/shared/components/OverviewCard";
 import { MyTask } from "./MyTask";
 import { useIncome } from "../../features/tasks/hooks/useIncome";
 import { useIncomeHistory } from "../../features/tasks/hooks/useIncomeHistory";

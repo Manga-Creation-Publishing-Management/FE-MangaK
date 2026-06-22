@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { FooterPage } from './FooterPage';
+import { FooterPage } from '@/layout/FooterPage';
 
 export function HomePage() {
   // Hook điều hướng của react-router, dùng để chuyển trang (ví dụ sang trang /login)

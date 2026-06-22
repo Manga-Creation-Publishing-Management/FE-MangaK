@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router";
-import { StatusBadge } from "../shared/StatusBadge";
+import { StatusBadge } from "@/shared/components/StatusBadge";
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';

@@ -1,14 +1,10 @@
 import { Mail } from 'lucide-react';
 import { NotificationItem } from './NotificationItem';
-import { useNotification } from '../../features/auth/hooks/useNotification';
+import { useNotification } from '@/features/auth/hooks/useNotification';
 
 export function Notification({ notifications }) {
   const { notifications: hookNotifications } = useNotification();
-
-  // Use passed notifications if present, otherwise fall back to hook notifications or empty array
   const displayNotifications = notifications ?? hookNotifications ?? [];
-
-  // Count unread/new notifications safely
   const newCount = displayNotifications.filter(notif => notif.isNew).length;
 
   return (
@@ -27,7 +23,6 @@ export function Notification({ notifications }) {
         )}
       </div>
 
-      {/* List items */}
       <div className="flex flex-col gap-4">
         {displayNotifications.length > 0 ? (
           displayNotifications.map((notif) => (
@@ -53,4 +48,3 @@ export function Notification({ notifications }) {
 }
 
 export default Notification;
-

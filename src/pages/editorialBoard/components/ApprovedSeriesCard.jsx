@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { StatusBadge } from "@/pages/shared/StatusBadge";
+import { StatusBadge } from "@/shared/components/StatusBadge";
 
 export function ApprovedSeriesCard({ item, onCancelClick, onNavigate }) {
   return (

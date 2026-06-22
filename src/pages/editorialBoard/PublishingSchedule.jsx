@@ -1,6 +1,6 @@
 import { usePublishingSchedule } from "../../features/schedule/PublishingSchedule";
 import { Calendar, Clock, Plus } from "lucide-react";
-import { OverviewCard } from "../shared/OverviewCard";
+import { OverviewCard } from "@/shared/components/OverviewCard";
 import { useState } from "react";
 
 import { ScheduleCard } from "./components/ScheduleCard";

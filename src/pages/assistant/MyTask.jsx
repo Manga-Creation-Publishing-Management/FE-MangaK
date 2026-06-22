@@ -1,6 +1,6 @@
 import { BadgeDollarSign, Banknote, Bitcoin, CalendarClock, DollarSign, JapaneseYen } from "lucide-react";
 import { useTaskListByAssistant } from "../../features/tasks/hooks/useTaskListByAssistant";
-import { StatusBadge } from "../shared/StatusBadge";
+import { StatusBadge } from "@/shared/components/StatusBadge";
 import dayjs from "dayjs";
 import { useTaskList } from "../../features/tasks/hooks/useTaskList";
 

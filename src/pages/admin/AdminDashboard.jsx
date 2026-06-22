@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Plus, Users, ShieldCheck, UserX, UserCheck } from "lucide-react";
-import { WelcomeLine } from "../shared/WelcomeLine.jsx";
-import { OverviewCard } from "../shared/OverviewCard.jsx";
+import { WelcomeLine } from "@/shared/components/WelcomeLine";
+import { OverviewCard } from "@/shared/components/OverviewCard";
 import { userService } from "../../services/userService.js";
-import { useToast } from "../../shared/hooks/useToast";
+import { useToast } from "@/shared/hooks/useToast";
 
 import { mapApiRole } from "./constants/adminConstants.js";
 import { UserFilters } from "./components/UserFilters.jsx";

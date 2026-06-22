@@ -1,8 +1,8 @@
-import { OverviewCard } from '../shared/OverviewCard'
-import { WelcomeLine } from '../shared/WelcomeLine'
-import { BookOpen } from 'lucide-react'
-import { SeriesManagement } from '../shared/SeriesManagement'
-import Notification from '../shared/Notification'
+import { OverviewCard } from '@/shared/components/OverviewCard';
+import { WelcomeLine } from '@/shared/components/WelcomeLine';
+import { BookOpen } from 'lucide-react';
+import { SeriesManagement } from '../shared/SeriesManagement';
+import Notification from '@/shared/components/Notification';
 
 // Component Trang chủ (Dashboard) dành riêng cho role Mangaka (Tác giả)
 export function MangakaDashboard() {

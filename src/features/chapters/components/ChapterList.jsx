@@ -1,5 +1,5 @@
 import { Outlet, useParams } from "react-router"
-import { StatusBadge } from "../../../pages/shared/StatusBadge";
+import { StatusBadge } from "@/shared/components/StatusBadge";
 import { Outdent, Plus } from "lucide-react";
 import { useCreateChapter } from "../hooks/useCreateChapter";
 import { useSeriesManagement } from "../../series/hooks/useSeriesManagement";
