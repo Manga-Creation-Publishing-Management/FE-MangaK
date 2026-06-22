@@ -41,7 +41,7 @@ export function useCreateTask() {
         const seriesApproved = await seriesService.getSeriesByStatus("Approved");
         resultApproved = seriesApproved?.data ? seriesApproved.data : [];
       } catch (error) {
-        console.warn("Không tìm thấy series Approved hoặc có lỗi xảy ra:", error);
+        console.warn("Approved series not found or an error occurred:", error);
       }
 
       // Gọi API Publishing bằng try-catch riêng biệt
@@ -49,7 +49,7 @@ export function useCreateTask() {
         const seriesPublishing = await seriesService.getSeriesByStatus("Publishing");
         resultPublishing = seriesPublishing?.data ? seriesPublishing.data : [];
       } catch (error) {
-        console.warn("Không tìm thấy series Publishing hoặc có lỗi xảy ra:", error);
+        console.warn("Publishing series not found or an error occurred:", error);
       }
 
       // Gộp 2 mảng lại thành một mảng duy nhất và cập nhật vào State
@@ -99,7 +99,7 @@ export function useCreateTask() {
 
     // Kiểm tra nhanh các trường ID cốt lõi tránh gửi chuỗi rỗng lên DB
     if (!taskData.seriesId || !taskData.chapterId || !taskData.assignedToId || !taskData.deadline) {
-      showAlert("Please choose all fields Series, Chapter, Assistant và Deadline!", "warning");
+      showAlert("Please choose all fields: Series, Chapter, Assistant, and Deadline!", "warning");
       return;
     }
 

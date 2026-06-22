@@ -11,7 +11,7 @@ export function ConfirmUpdateModal({ show, onClose, onConfirm }) {
             <div className="p-2 bg-amber-500/10 text-amber-500 rounded-full">
               <AlertTriangle size={24} />
             </div>
-            <h3 className="text-lg font-semibold">Xác nhận cập nhật</h3>
+            <h3 className="text-lg font-semibold">Confirm Update</h3>
           </div>
           <button
             onClick={onClose}
@@ -21,20 +21,20 @@ export function ConfirmUpdateModal({ show, onClose, onConfirm }) {
           </button>
         </div>
         <p className="mt-4 text-muted-foreground">
-          Bạn có chắc chắn muốn cập nhật thông tin hồ sơ không?
+          Are you sure you want to update your profile information?
         </p>
         <div className="mt-6 flex justify-end gap-3">
           <button
             onClick={onClose}
             className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition-colors"
           >
-            Hủy
+            Cancel
           </button>
           <button
             onClick={onConfirm}
             className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
           >
-            Xác nhận
+            Confirm
           </button>
         </div>
       </div>

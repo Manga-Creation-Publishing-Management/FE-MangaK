@@ -60,7 +60,7 @@ export function Sidebar({ userRole }) {
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="p-1.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent border border-sidebar-border transition-colors shrink-0"
-          title={isOpen ? "Đóng sidebar" : "Mở sidebar"}
+          title={isOpen ? "Close sidebar" : "Open sidebar"}
         >
           <Menu size={20} />
         </button>

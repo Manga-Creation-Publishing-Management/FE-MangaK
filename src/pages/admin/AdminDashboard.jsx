@@ -71,11 +71,11 @@ export function AdminDashboard() {
           u.id === userId ? { ...u, supervisorId: val } : u
         )
       );
-      showAlert("Cập nhật Tantou Editor thành công", "success");
+      showAlert("Tantou Editor updated successfully", "success");
       fetchTantouList();
     } catch (error) {
       console.error("Failed to update supervisor:", error);
-      showAlert("Đã xảy ra lỗi khi cập nhật Tantou Editor. Vui lòng thử lại!", "error");
+      showAlert("An error occurred while updating Tantou Editor. Please try again!", "error");
     }
   };
 
@@ -159,9 +159,17 @@ export function AdminDashboard() {
             : u,
         ),
       );
+      showAlert(
+        confirmAction.action === "inactive"
+          ? "Account deactivated successfully"
+          : "Account activated successfully",
+        "success"
+      );
+      fetchTantouList();
+      fetchUsers();
     } catch (error) {
       console.error("Failed to toggle user status:", error);
-      showAlert("Đã xảy ra lỗi khi cập nhật trạng thái tài khoản. Vui lòng thử lại!", "error");
+      showAlert("An error occurred while updating account status. Please try again!", "error");
     } finally {
       setConfirmAction(null);
     }
@@ -235,7 +243,10 @@ export function AdminDashboard() {
         <CreateAccountModal
           show={showCreateModal}
           onClose={() => setShowCreateModal(false)}
-          onCreated={fetchUsers}
+          onCreated={() => {
+            fetchUsers();
+            fetchTantouList();
+          }}
           tantouList={tantouList}
         />
 

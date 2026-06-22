@@ -1,4 +1,5 @@
 import { Edit, Trash2 } from "lucide-react";
+import dayjs from "dayjs";
 
 export function ScheduleCard({ schedule, onEditClick, onDeleteClick }) {
   return (
@@ -16,7 +17,9 @@ export function ScheduleCard({ schedule, onEditClick, onDeleteClick }) {
             </div>
             <div>
               <p className="text-lg font-semibold">Publishing Date</p>
-              <p className="text-sm text-muted-foreground mt-1">{schedule.startDate}</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {schedule.startDate ? dayjs(schedule.startDate).format("DD/MM/YYYY") : ""}
+              </p>
             </div>
           </div>
         </div>

@@ -25,7 +25,6 @@ export const createAccountSchema = yup.object().shape({
   authorName: yup.string().when("role", {
     is: "mangaka",
     then: (schema) => schema.trim()
-      .required("Author name is required")
       .min(2, "Author name must be at least 2 characters")
       .max(50, "Author name cannot exceed 50 characters"),
     otherwise: (schema) => schema.notRequired(),

@@ -39,7 +39,7 @@ export function useTaskDetail(taskId, role) {
 
   const handleGetTask = async () => {
     if (!taskId) {
-      showAlert("TaskId không tồn tại", "error");
+      showAlert("Task ID does not exist", "error");
       return;
     }
 
@@ -54,10 +54,10 @@ export function useTaskDetail(taskId, role) {
         status: "Processing"
       });
 
-      showAlert("Bạn đã nhận task này!");
+      showAlert("You have claimed this task!");
     } catch (error) {
       console.error("Lỗi khi cập nhật status:", error);
-      showAlert("Cập nhật thất bại: " + error.message, "error");
+      showAlert("Update failed: " + error.message, "error");
     } finally {
       setIsLoading(false);
     }
@@ -65,7 +65,7 @@ export function useTaskDetail(taskId, role) {
 
   const handleApprovedTask = async () => {
     if (!taskId) {
-      showAlert("TaskId không tồn tại");
+      showAlert("Task ID does not exist");
       return;
     }
 
@@ -81,7 +81,7 @@ export function useTaskDetail(taskId, role) {
 
     } catch (error) {
       console.error("Lỗi khi cập nhật status:", error);
-      showAlert("Cập nhật thất bại: " + error.message);
+      showAlert("Update failed: " + error.message);
     } finally {
       setIsLoading(false);
     }
@@ -89,11 +89,11 @@ export function useTaskDetail(taskId, role) {
 
   const handleSubmitTask = async () => {
     if (!taskId) {
-      showAlert("TaskId không tồn tại");
+      showAlert("Task ID does not exist");
       return;
     }
     if (!storyFile) {
-      showAlert("Vui lòng chọn file trước khi nộp bài!");
+      showAlert("Please select a file before submitting!");
       return;
     }
 
@@ -108,12 +108,12 @@ export function useTaskDetail(taskId, role) {
       // Cập nhật lại status hiển thị thành "Submitted" (hoặc trạng thái tương ứng phía Backend)
 
 
-      showAlert("Nộp bài (Submit task) thành công!");
+      showAlert("Submitted task successfully!");
       handleReload();
       // setStoryFile(null); // Reset lại file đã chọn sau khi nộp thành công
     } catch (error) {
       console.error("Lỗi khi submit task:", error);
-      showAlert("Nộp bài thất bại: " + error.message);
+      showAlert("Failed to submit task: " + error.message);
     } finally {
       setIsLoading(false);
     }

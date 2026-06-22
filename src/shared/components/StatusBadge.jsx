@@ -9,7 +9,8 @@ export function StatusBadge({ status }) {
     'created': 'bg-sky-500 text-white border-sky-500/30',
     'available': 'bg-cyan-500 text-white border-cyan-500/30',
     'revising': 'bg-orange-500 text-white border-orange-500/30',
-    'completed': 'bg-violet-500 text-white border-violet-500/30'
+    'completed': 'bg-violet-500 text-white border-violet-500/30',
+    'scheduled': 'bg-orange-500 text-white border-orange-500/30',
   };
 
   const labels = {
@@ -22,7 +23,8 @@ export function StatusBadge({ status }) {
     'created': 'Created',
     'available': 'Available',
     'revising': 'Revising',
-    'completed': 'Completed'
+    'completed': 'Completed',
+    'scheduled': 'Scheduled'
   };
 
   const currentStyle = styles[status] || '';
