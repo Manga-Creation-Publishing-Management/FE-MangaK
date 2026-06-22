@@ -10,7 +10,7 @@ import { HomePage } from '../pages/shared/HomePage.jsx';
 import { LoginPage } from '../pages/auth/LoginPage.jsx';
 import { ChapterDetail } from '../pages/mangaka/ChapterDetail.jsx';
 import { ProfilePage } from '../pages/shared/ProfilePage.jsx';
-import { Layout } from '../pages/shared/Layout.jsx';
+import { Layout } from '@/layout/Layout.jsx';
 import { AdminDashboard } from '../pages/admin/AdminDashboard.jsx';
 import { MangakaDashboard } from '../pages/mangaka/MangakaDashboard.jsx';
 import { AssistantDashboard } from '../pages/assistant/AssistantDashboard.jsx';

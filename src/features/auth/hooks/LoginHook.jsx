@@ -83,6 +83,7 @@ export function LoginHook() {
             const rolePath = rolePathMap[role] || role;
 
             // Chuyển hướng người dùng sang trang dashboard tương ứng
+            showAlert("Login successfully!");
             navigate(`/${rolePath}`);
 
         } catch (err) {

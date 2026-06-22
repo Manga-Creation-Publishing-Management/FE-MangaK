@@ -2,7 +2,7 @@ import { CalendarClock, Plus } from "lucide-react";
 import { useCreateTask } from "../../features/tasks/hooks/useCreateTask";
 import CreateTaskModal from "../../features/tasks/components/CreateTaskModal";
 import { useTaskList } from "../../features/tasks/hooks/useTaskList";
-import { StatusBadge } from "../shared/StatusBadge";
+import { StatusBadge } from "@/shared/components/StatusBadge";
 import dayjs from 'dayjs';
 import { useParams } from "react-router";
 // import { useSeriesManagement } from "../../series/hooks/useSeriesManagement";

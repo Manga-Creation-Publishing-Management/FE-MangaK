@@ -1,0 +1,38 @@
+export function StatusBadge({ status }) {
+  const styles = {
+    'processing': 'bg-info/10 text-info border-info/30',
+    'rejected': 'bg-destructive/10 text-destructive border-destructive/30',
+    'approved': 'bg-success/10 text-success border-success/30',
+    'pending': 'bg-warning/10 text-warning border-warning/30',
+    'publishing': 'bg-green-500 text-white border-green-500/30',
+    'cancelled': 'bg-red-500 text-white border-red-500/30',
+    'created': 'bg-sky-500 text-white border-sky-500/30',
+    'available': 'bg-cyan-500 text-white border-cyan-500/30',
+    'revising': 'bg-orange-500 text-white border-orange-500/30',
+    'completed': 'bg-violet-500 text-white border-violet-500/30',
+    'scheduled': 'bg-orange-500 text-white border-orange-500/30',
+  };
+
+  const labels = {
+    'processing': 'Processing',
+    'rejected': 'Rejected',
+    'approved': 'Approved',
+    'pending': 'Pending',
+    'publishing': 'Publishing',
+    'cancelled': 'Cancelled',
+    'created': 'Created',
+    'available': 'Available',
+    'revising': 'Revising',
+    'completed': 'Completed',
+    'scheduled': 'Scheduled'
+  };
+
+  const currentStyle = styles[status] || '';
+  const currentLabel = labels[status] || status;
+
+  return (
+    <span className={`px-3 py-1 rounded-full border text-sm ${currentStyle}`}>
+      {currentLabel}
+    </span>
+  );
+}

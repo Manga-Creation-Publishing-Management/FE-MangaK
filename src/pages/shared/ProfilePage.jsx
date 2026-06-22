@@ -1,452 +1,177 @@
-import { useState, useEffect, useRef } from 'react';
-import { User, Mail, Phone, Camera, Save, CheckCircle, AlertTriangle, X } from 'lucide-react';
-import { useLocation } from 'react-router';
-import { userService } from '../../services/userService';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useToast } from '../../shared/hooks/useToast';
-import * as yup from 'yup';
+import { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router";
+import { userService } from "../../services/userService";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useToast } from "../../shared/hooks/useToast";
 
-const profileSchema = yup.object().shape({
-  firstName: yup.string().trim()
-    .required("First name is required")
-    .min(2, "First name must be at least 2 characters")
-    .max(50, "First name cannot exceed 50 characters"),
-  lastName: yup.string().trim()
-    .required("Last name is required")
-    .min(2, "Last name must be at least 2 characters")
-    .max(50, "Last name cannot exceed 50 characters"),
-  email: yup.string()
-    .email("Invalid email format")
-    .min(5, "Email must be at least 5 characters")
-    .max(100, "Email cannot exceed 100 characters"),
-  phone: yup.string()
-    .nullable()
-    .notRequired()
-    .test("is-valid-phone", "Phone number must contain only numbers and be 10-11 digits", (value) => {
-      if (!value || value.trim() === "") return true;
-      return /^[0-9]{10,11}$/.test(value);
-    }),
-  bio: yup.string().max(500, "Bio cannot exceed 500 characters").nullable(),
-  authorName: yup.string().trim()
-    .nullable()
-    .notRequired()
-    .test("min-len", "Author name must be at least 2 characters", (value) => {
-      if (!value || value.trim() === "") return true;
-      return value.trim().length >= 2;
-    })
-    .max(50, "Author name cannot exceed 50 characters"),
-});
-
+import { profileSchema } from "./schemas/profileSchema";
+import { AvatarSection } from "./components/AvatarSection";
+import { PersonalInfoForm } from "./components/PersonalInfoForm";
+import { ConfirmUpdateModal } from "./components/ConfirmUpdateModal";
+import { SuccessModal } from "./components/SuccessModal";
 
 export function ProfilePage() {
   const { showAlert } = useToast();
-  // Lấy thông tin đường dẫn hiện tại từ react-router để xác định vai trò (role) của người dùng
   const location = useLocation();
-  
-  // Dựa vào đường dẫn (URL) để xác định vai trò của người dùng hiện tại
-  // Ví dụ: nếu URL có chứa 'mangaka' thì role là 'mangaka'
-  const role = location.pathname.includes('mangaka') ? 'mangaka' :
-    location.pathname.includes('assistant') ? 'assistant' :
-      location.pathname.includes('tantou') ? 'tantou' :
-        location.pathname.includes('admin') ? 'admin' : 'editorial';
 
-  // React Hook Form
+  const role = location.pathname.includes("mangaka")
+    ? "mangaka"
+    : location.pathname.includes("assistant")
+    ? "assistant"
+    : location.pathname.includes("tantou")
+    ? "tantou"
+    : location.pathname.includes("admin")
+    ? "admin"
+    : "editorial";
+
   const {
     register,
     handleSubmit,
     reset,
     watch,
-    formState: { errors }
+    formState: { errors },
   } = useForm({
     resolver: yupResolver(profileSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      bio: '',
-      authorName: '',
-    }
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      bio: "",
+      authorName: "",
+    },
   });
 
   const watchedFirstName = watch("firstName");
   const watchedLastName = watch("lastName");
 
-  // Khởi tạo state để lưu trữ dữ liệu avatar người dùng và dữ liệu submit tạm thời
-  const [avatarUrl, setAvatarUrl] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState("");
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [pendingData, setPendingData] = useState(null);
-  
-  // State để quản lý trạng thái đang tải dữ liệu (loading)
   const [isLoading, setIsLoading] = useState(true);
-  
-  // State để quản lý trạng thái đang lưu dữ liệu
   const [isSaving, setIsSaving] = useState(false);
-  
-  // State quản lý hiển thị các modal
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  
-  // Dùng useRef để tạo tham chiếu đến thẻ <input type="file"> ẩn
-  // Giúp kích hoạt việc chọn file khi click vào nút hoặc ảnh đại diện
   const fileInputRef = useRef(null);
 
-  // Hàm bất đồng bộ để gọi API lấy thông tin profile từ server
   const fetchProfile = async () => {
     try {
       const res = await userService.getProfile();
       if (res) {
-        // Dữ liệu profile nằm trong object 'data' trả về từ API
         const data = res.data;
-        // Cập nhật các giá trị của form
         reset({
-          firstName: data.firstName || '',
-          lastName: data.lastName || '',
-          email: data.email || '',
-          phone: data.phone || '',
-          bio: data.bio || '',
-          authorName: data.authorName || '',
+          firstName: data.firstName || "",
+          lastName: data.lastName || "",
+          email: data.email || "",
+          phone: data.phone || "",
+          bio: data.bio || "",
+          authorName: data.authorName || "",
         });
-        setAvatarUrl(data.avatarUrl || '');
+        setAvatarUrl(data.avatarUrl || "");
         setAvatarFile(null);
         setAvatarPreview(null);
       }
     } catch (error) {
       console.error("Failed to fetch profile:", error);
     } finally {
-      // Tắt trạng thái loading bất kể thành công hay thất bại
       setIsLoading(false);
     }
   };
 
-  // useEffect này chạy một lần duy nhất khi component được render lần đầu (do dependency array là [])
   useEffect(() => {
     fetchProfile();
   }, []);
 
-  // Hàm xử lý sự kiện khi người dùng chọn một file ảnh mới
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setAvatarFile(file); // Lưu file để sau này gửi lên server
-      setAvatarPreview(URL.createObjectURL(file)); // Tạo URL tạm thời để xem trước ảnh
+      setAvatarFile(file);
+      setAvatarPreview(URL.createObjectURL(file));
     }
   };
 
-  // Hàm dùng để mô phỏng thao tác click vào thẻ input file bị ẩn
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
 
-  // Hàm xử lý khi form được validate thành công
   const onFormSubmit = (data) => {
     setPendingData(data);
     setShowConfirmModal(true);
   };
 
-  // Hàm xử lý khi người dùng nhấn nút "Save Profile" sau khi xác nhận
   const handleSaveProfile = async () => {
     if (!pendingData) return;
     try {
-      setIsSaving(true); // Bật trạng thái đang lưu
-      setShowConfirmModal(false); // Ẩn modal xác nhận
-      
-      // Sử dụng FormData để có thể gửi cả dữ liệu text và file (ảnh)
+      setIsSaving(true);
+      setShowConfirmModal(false);
+
       const formData = new FormData();
-      formData.append('FirstName', pendingData.firstName);
-      formData.append('LastName', pendingData.lastName);
-      formData.append('Phone', pendingData.phone || '');
-      formData.append('Bio', pendingData.bio || '');
-      if (role === 'mangaka') {
-        formData.append('AuthorName', pendingData.authorName || '');
+      formData.append("FirstName", pendingData.firstName);
+      formData.append("LastName", pendingData.lastName);
+      formData.append("Phone", pendingData.phone || "");
+      formData.append("Bio", pendingData.bio || "");
+      if (role === "mangaka") {
+        formData.append("AuthorName", pendingData.authorName || "");
       }
 
-      // Nếu có chọn ảnh mới thì mới thêm vào FormData
       if (avatarFile) {
-        formData.append('AvatarFile', avatarFile);
+        formData.append("AvatarFile", avatarFile);
       }
 
-      // Gọi API để cập nhật profile
       await userService.updateProfile(formData);
-      // Làm mới dữ liệu từ server và xóa các preview file
       await fetchProfile();
-      // Hiện modal thông báo thành công thay vì alert
       setShowSuccessModal(true);
     } catch (error) {
-      console.error('Failed to update profile:', error);
-      showAlert('Failed to update profile: ' + error.message, 'error');
+      console.error("Failed to update profile:", error);
+      showAlert("Failed to update profile: " + error.message, "error");
     } finally {
-      setIsSaving(false); // Tắt trạng thái đang lưu
+      setIsSaving(false);
     }
-  };
-
-  // Object dùng để map từ mã role sang tên hiển thị thân thiện với người dùng
-  const roleLabels = {
-    mangaka: 'Mangaka',
-    assistant: 'Assistant',
-    tantou: 'Tantou Editor',
-    editorial: 'Editorial Board',
-    admin: 'Admin',
   };
 
   return (
     <div className="p-9 space-y-8">
-      {/* Tiêu đề trang */}
       <div>
-        <h1 className='text-sidebar-foreground font-medium text-2xl'>Profile Settings</h1>
-        <p className="text-muted-foreground mt-1">Manage your account information and preferences</p>
+        <h1 className="text-sidebar-foreground font-medium text-2xl">
+          Profile Settings
+        </h1>
+        <p className="text-muted-foreground mt-1">
+          Manage your account information and preferences
+        </p>
       </div>
 
-      {/* Phần hiển thị và thay đổi Ảnh đại diện (Avatar) */}
-      <div className="bg-card border border-border rounded-xl p-8 space-y-6">
-        {isLoading ? (
-          // Hiển thị vòng tròn loading khi đang lấy dữ liệu
-          <div className="flex items-center justify-center p-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          </div>
-        ) : (
-          <>
-            <div className="flex items-start gap-6">
-              <div className="relative">
-                {/* Ưu tiên hiển thị ảnh preview (nếu vừa chọn file mới), nếu không thì hiển thị ảnh từ URL */}
-                {avatarPreview || avatarUrl ? (
-                  <img
-                    src={avatarPreview || avatarUrl}
-                    alt="Avatar"
-                    className="w-24 h-24 rounded-full object-cover"
-                  />
-                ) : (
-                  // Hiển thị avatar mặc định (chữ cái đầu của tên) nếu không có ảnh
-                  <div className="w-24 h-24 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-primary-foreground text-2xl">
-                    {watchedFirstName?.charAt(0) || ''}
-                  </div>
-                )}
-                
-                {/* Input file bị ẩn, được dùng để mở hộp thoại chọn file */}
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                />
-                
-                {/* Nút bấm để kích hoạt chọn ảnh (gọi hàm triggerFileInput) */}
-                <button
-                  onClick={triggerFileInput}
-                  className="absolute bottom-0 right-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center hover:opacity-90 transition-opacity"
-                >
-                  <Camera size={16} />
-                </button>
-              </div>
+      <AvatarSection
+        isLoading={isLoading}
+        avatarPreview={avatarPreview}
+        avatarUrl={avatarUrl}
+        watchedFirstName={watchedFirstName}
+        watchedLastName={watchedLastName}
+        fileInputRef={fileInputRef}
+        handleFileChange={handleFileChange}
+        triggerFileInput={triggerFileInput}
+        role={role}
+      />
 
-              {/* Thông tin hiển thị tóm tắt: Tên, Vai trò và Trạng thái */}
-              <div className="flex-1">
-                <h2>{`${watchedFirstName || ''} ${watchedLastName || ''}`}</h2>
-                <p className="text-muted-foreground mt-1">{roleLabels[role]}</p>
-                <span className="inline-block mt-2 px-3 py-1 bg-success/10 text-success border border-success/30 rounded-full text-sm">
-                  Active
-                </span>
-              </div>
-            </div>
-          </>
-        )}
-      </div>
+      <PersonalInfoForm
+        register={register}
+        errors={errors}
+        role={role}
+        isSaving={isSaving}
+        onSubmit={handleSubmit(onFormSubmit)}
+      />
 
-      {/* Phần form để chỉnh sửa Thông tin cá nhân (Personal Information) */}
-      <form onSubmit={handleSubmit(onFormSubmit)} className="bg-card border border-border rounded-xl p-8 space-y-6">
-        <h2>Personal Information</h2>
+      <ConfirmUpdateModal
+        show={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={handleSaveProfile}
+      />
 
-        <div className="grid grid-cols-2 gap-6">
-          {/* Input cho First Name */}
-          <div className="space-y-2">
-            <label htmlFor="firstName" className="flex items-center gap-2 text-sm text-muted-foreground">
-              <User size={16} />
-              First Name
-            </label>
-            <input
-              id="firstName"
-              type="text"
-              {...register("firstName")}
-              className={`w-full px-4 py-2 bg-input-background rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary ${
-                errors.firstName ? 'border-destructive focus:ring-destructive' : 'border-border'
-              }`}
-            />
-            {errors.firstName && (
-              <p className="text-xs text-destructive mt-1">{errors.firstName.message}</p>
-            )}
-          </div>
-
-          {/* Input cho Last Name */}
-          <div className="space-y-2">
-            <label htmlFor="lastName" className="flex items-center gap-2 text-sm text-muted-foreground">
-              <User size={16} />
-              Last Name
-            </label>
-            <input
-              id="lastName"
-              type="text"
-              {...register("lastName")}
-              className={`w-full px-4 py-2 bg-input-background rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary ${
-                errors.lastName ? 'border-destructive focus:ring-destructive' : 'border-border'
-              }`}
-            />
-            {errors.lastName && (
-              <p className="text-xs text-destructive mt-1">{errors.lastName.message}</p>
-            )}
-          </div>
-
-          {/* Input cho Email Address */}
-          <div className="space-y-2">
-            <label htmlFor="email" className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Mail size={16} />
-              Email Address
-            </label>
-            <input
-              id="email"
-              type="email"
-              {...register("email")}
-              disabled
-              className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none opacity-60 cursor-not-allowed"
-            />
-          </div>
-
-          {/* Input cho Phone Number */}
-          <div className="space-y-2">
-            <label htmlFor="phone" className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Phone size={16} />
-              Phone Number
-            </label>
-            <input
-              id="phone"
-              type="text"
-              {...register("phone")}
-              className={`w-full px-4 py-2 bg-input-background rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary ${
-                errors.phone ? 'border-destructive focus:ring-destructive' : 'border-border'
-              }`}
-            />
-            {errors.phone && (
-              <p className="text-xs text-destructive mt-1">{errors.phone.message}</p>
-            )}
-          </div>
-
-          {/* Input cho Author Name (Bút danh) */}
-          {role === 'mangaka' && (
-            <div className="space-y-2">
-              <label htmlFor="authorName" className="flex items-center gap-2 text-sm text-muted-foreground">
-                <User size={16} />
-                Author Name
-              </label>
-              <input
-                id="authorName"
-                type="text"
-                {...register("authorName")}
-                className={`w-full px-4 py-2 bg-input-background rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary ${
-                  errors.authorName ? 'border-destructive focus:ring-destructive' : 'border-border'
-                }`}
-              />
-              {errors.authorName && (
-                <p className="text-xs text-destructive mt-1">{errors.authorName.message}</p>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Input cho Bio (Tiểu sử) */}
-        <div className="space-y-2">
-          <label htmlFor="bio" className="text-sm text-muted-foreground">Bio</label>
-          <textarea
-            id="bio"
-            {...register("bio")}
-            className={`w-full px-4 py-2 bg-input-background rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary min-h-24 resize-none ${
-              errors.bio ? 'border-destructive focus:ring-destructive' : 'border-border'
-            }`}
-          />
-          {errors.bio && (
-            <p className="text-xs text-destructive mt-1">{errors.bio.message}</p>
-          )}
-        </div>
-
-        {/* Nút lưu profile */}
-        <div className="flex justify-end pt-4">
-          <button
-            type="submit"
-            disabled={isSaving} // Vô hiệu hóa nút khi đang lưu để tránh click nhiều lần
-            className="flex items-center gap-2 px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
-          >
-            {isSaving ? (
-              // Icon loading hiển thị khi đang lưu
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-            ) : (
-              // Icon save hiển thị bình thường
-              <Save size={18} />
-            )}
-            {isSaving ? 'Saving...' : 'Save Profile'}
-          </button>
-        </div>
-      </form>
-
-      {/* Confirm Modal */}
-      {showConfirmModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-card w-full max-w-md p-6 rounded-xl border border-border shadow-lg">
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-amber-500/10 text-amber-500 rounded-full">
-                  <AlertTriangle size={24} />
-                </div>
-                <h3 className="text-lg font-semibold">Xác nhận cập nhật</h3>
-              </div>
-              <button 
-                onClick={() => setShowConfirmModal(false)}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            <p className="mt-4 text-muted-foreground">
-              Bạn có chắc chắn muốn cập nhật thông tin hồ sơ không?
-            </p>
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                onClick={() => setShowConfirmModal(false)}
-                className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition-colors"
-              >
-                Hủy
-              </button>
-              <button
-                onClick={handleSaveProfile}
-                className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-              >
-                Xác nhận
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Success Modal */}
-      {showSuccessModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-card w-full max-w-sm p-6 rounded-xl border border-border shadow-lg flex flex-col items-center text-center">
-            <div className="w-16 h-16 bg-success/10 text-success rounded-full flex items-center justify-center mb-4">
-              <CheckCircle size={32} />
-            </div>
-            <h3 className="text-xl font-semibold mb-2">Cập nhật thành công!</h3>
-            <p className="text-muted-foreground mb-6">
-              Thông tin hồ sơ của bạn đã được cập nhật thành công.
-            </p>
-            <button
-              onClick={() => setShowSuccessModal(false)}
-              className="w-full py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-            >
-              Đóng
-            </button>
-          </div>
-        </div>
-      )}
+      <SuccessModal
+        show={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+      />
     </div>
   );
 }

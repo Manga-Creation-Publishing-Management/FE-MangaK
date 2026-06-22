@@ -1,7 +1,7 @@
-import { OverviewCard } from '../shared/OverviewCard'
-import { WelcomeLine } from '../shared/WelcomeLine'
-import { CircleCheckBig, CircleDashed, CircleAlert } from 'lucide-react'
-import Notification from '../shared/Notification';
+import { OverviewCard } from '@/shared/components/OverviewCard';
+import { WelcomeLine } from '@/shared/components/WelcomeLine';
+import { CircleCheckBig, CircleDashed, CircleAlert } from 'lucide-react';
+import Notification from '@/shared/components/Notification';
 import { MyTask } from './MyTask';
 
 // Component Trang chủ (Dashboard) dành riêng cho role Assistant (Trợ lý)

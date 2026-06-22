@@ -52,11 +52,11 @@ export function useChapterDetail(seriesId, chapterId) {
 
   const handleSubmitChapter = async () => {
     if (!chapterId) {
-      showAlert("TaskId không tồn tại");
+      showAlert("TaskId does not exist");
       return;
     }
     if (!storyFile) {
-      showAlert("Vui lòng chọn file trước khi nộp bài!");
+      showAlert("Please select a file before submitting!");
       return;
     }
 
@@ -71,12 +71,12 @@ export function useChapterDetail(seriesId, chapterId) {
       // Cập nhật lại status hiển thị thành "Submitted" (hoặc trạng thái tương ứng phía Backend)
 
 
-      showAlert("Submit chapter thành công!");
+      showAlert("Chapter submitted successfully!");
       handleReload();
       // setStoryFile(null); // Reset lại file đã chọn sau khi nộp thành công
     } catch (error) {
       console.error("Lỗi khi submit chapter:", error);
-      showAlert("Nộp Chapter thất bại: " + error.message);
+      showAlert("Submitting chapter failed: " + error.message);
     } finally {
       setIsLoading(false);
     }

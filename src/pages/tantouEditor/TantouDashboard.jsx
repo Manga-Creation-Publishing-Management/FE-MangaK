@@ -1,8 +1,8 @@
-import { OverviewCard } from '../shared/OverviewCard'
-import { SeriesManagement } from '../shared/SeriesManagement'
-import { WelcomeLine } from '../shared/WelcomeLine'
-import { CircleCheckBig, CircleEllipsis, CircleX } from 'lucide-react'
-import { Notification } from '../shared/Notification'
+import { OverviewCard } from '@/shared/components/OverviewCard';
+import { SeriesManagement } from '../shared/SeriesManagement';
+import { WelcomeLine } from '@/shared/components/WelcomeLine';
+import { CircleCheckBig, CircleEllipsis, CircleX } from 'lucide-react';
+import { Notification } from '@/shared/components/Notification';
 
 // Component Trang chủ (Dashboard) dành riêng cho role Tantou Editor (Biên tập viên phụ trách)
 export function TantouDashboard() {

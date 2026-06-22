@@ -2,7 +2,7 @@ import CreateSeriesModal from "../../features/series/components/CreateSeriesModa
 // import { Link } from "react-router";
 import { useSeriesManagement } from "../../features/series/hooks/useSeriesManagement";
 import useCreateSeries from "../../features/series/hooks/useCreateSeries";
-import { StatusBadge } from "./StatusBadge";
+import { StatusBadge } from "@/shared/components/StatusBadge";
 
 // Component SeriesManagement: Màn hình quản lý danh sách các bộ truyện
 export function SeriesManagement({ role, statusFilter, seriesFiltered }) {

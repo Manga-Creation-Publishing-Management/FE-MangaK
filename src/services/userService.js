@@ -23,9 +23,13 @@ export const userService = {
         return api.post(`/Auth/register?role=${role}`, userData);
     },
 
-    // Cập nhật trạng thái người dùng (Active / Inactive)
-    async updateUserStatus(userId, status) {
-        return api.put(`/UserProfile/update-user-status?userId=${userId}&status=${status}`);
+    // Cập nhật trạng thái người dùng (Active / Inactive) và/hoặc SupervisorId
+    async updateUserStatus(userId, status, supervisorId = null) {
+        let url = `/UserProfile/update-user-status?userId=${userId}&status=${status}`;
+        if (supervisorId !== null && supervisorId !== undefined) {
+            url += `&supervisorId=${supervisorId}`;
+        }
+        return api.put(url);
     },
 
     // Lấy danh sách các Tantou Editor phục vụ cho việc chọn ở trang Admin
