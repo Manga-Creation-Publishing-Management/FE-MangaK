@@ -52,11 +52,11 @@ export function useCreateChapter(seriesId, onClose, onReload) {
     formDataToSend.append("Summary", formElement.elements["Summary"].value);
 
     // 3. Xử lý định dạng Deadline và append vào FormData
-    const rawDeadline = formElement.elements["deadline"].value;
-    if (rawDeadline) {
-      const formattedDeadline = dayjs(rawDeadline).toISOString();
-      formDataToSend.append("Deadline", formattedDeadline);
-    }
+    // const rawDeadline = formElement.elements["deadline"].value;
+    // if (rawDeadline) {
+    //   const formattedDeadline = dayjs(rawDeadline).toISOString();
+    //   formDataToSend.append("Deadline", formattedDeadline);
+    // }
 
     // 4. Append FILE NHỊ PHÂN thực tế (Lấy từ state storyFile đã chọn)
     if (storyFile) {
