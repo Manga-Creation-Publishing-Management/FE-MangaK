@@ -17,7 +17,7 @@ import { useProgressing } from "../../features/chapters/hooks/useProgressing";
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 // Component hiển thị chi tiết của một Chapter cụ thể (để đọc truyện/xem nháp)
-export function ChapterDetail() { 
+export function ChapterDetail() {
 
   const {
     tool,
@@ -73,7 +73,7 @@ export function ChapterDetail() {
 
   const today = dayjs().utc(true);
   const deadlineObj = dayjs(chapterDetail?.deadline).utc(true);
-  const foramttedDeadline =  dayjs(chapterDetail?.deadline).utc(true).format('DD/MM/YYYY HH:mm') 
+  const foramttedDeadline = dayjs(chapterDetail?.deadline).utc(true).format('DD/MM/YYYY HH:mm')
   console.log(foramttedDeadline);
 
   const isOverdue = deadlineObj.isBefore(today)
@@ -150,11 +150,11 @@ export function ChapterDetail() {
             <div className="md:col-span-4 space-y-2">
               <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
                 <h3 className="font-normal text-sm text-muted-foreground  tracking-wider">Rating</h3>
-                {chapterDetail?.totalVotes != 0 ? (
-                  <div className="text-l gap-2 my-2 font-light capitalize flex items-center justify-content-center"><Star size={15} className="text-yellow-400 fill-yellow-400"/>  {chapterDetail?.totalVotes}</div>
-                 ) : (
-                 <div className="text-sm ms-0.5"> — — — —</div>
-                )}  
+                {chapterDetail?.averageRate != 0 ? (
+                  <div className="text-l gap-2 my-2 font-light capitalize flex items-center justify-content-center"><Star size={15} className="text-yellow-400 fill-yellow-400" />  {chapterDetail?.averageRate}</div>
+                ) : (
+                  <div className="text-sm ms-0.5"> — — — —</div>
+                )}
               </div>
             </div>
           </div>
@@ -230,40 +230,40 @@ export function ChapterDetail() {
 
             {currentRole === "mangaka" ? (
               progress === 100 ? (
-              <>
-                <h3 className="font-medium text-sm text-muted-foreground">Submit Your Work</h3>
-                <div
-                  onClick={() => storyInputRef.current.click()}
-                  name="nameFile"
-                  className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center h-[160px] hover:border-primary transition-colors cursor-pointer"
-                >
-                  {storyFile ? (
-                    <div className="text-primary font-medium">
-                      Selected: {storyFile.name}
-                    </div>
-                  ) : (
-                    <>
-                      <p className="text-muted-foreground">Click to upload file</p>
-                      <p className="text-sm text-muted-foreground mt-1">PNG, JPG up to 10MB</p>
-                    </>
-                  )}
-                  <input
-                    type="file"
-                    accept=".pdf,.zip"
-                    className="hidden"
-                    ref={storyInputRef}
-                    onChange={handleStoryChange}
-                  />
-                </div>
-              </>
-            ) : (
-              <div className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center h-[160px] hover:border-primary transition-colors cursor-pointer">
+                <>
+                  <h3 className="font-medium text-sm text-muted-foreground">Submit Your Work</h3>
+                  <div
+                    onClick={() => storyInputRef.current.click()}
+                    name="nameFile"
+                    className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center h-[160px] hover:border-primary transition-colors cursor-pointer"
+                  >
+                    {storyFile ? (
+                      <div className="text-primary font-medium">
+                        Selected: {storyFile.name}
+                      </div>
+                    ) : (
+                      <>
+                        <p className="text-muted-foreground">Click to upload file</p>
+                        <p className="text-sm text-muted-foreground mt-1">PNG, JPG up to 10MB</p>
+                      </>
+                    )}
+                    <input
+                      type="file"
+                      accept=".pdf,.zip"
+                      className="hidden"
+                      ref={storyInputRef}
+                      onChange={handleStoryChange}
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center h-[160px] hover:border-primary transition-colors cursor-pointer">
                   <p className="text-muted-foreground">The progress bar needs to be at 100% to submit the file.</p>
                 </div>
-            )
+              )
 
             ) : (
-                <></>
+              <></>
             )}
           </div>
 
@@ -275,22 +275,22 @@ export function ChapterDetail() {
 
           {currentRole.toLowerCase() === "mangaka" &&
             <>
-            <div className="flex justify-end gap-3 pt-4 border-t border-border ">
-              {!isOverdue ? (
-                <button
-                  onClick={handleSubmitChapter}
-                  disabled={!storyFile || isLoading}
-                  className="bg-secondary cursor-pointer text-secondary-foreground hover:bg-secondary/80 font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:bg-gray-500 disabled:cursor-not-allowed">
+              <div className="flex justify-end gap-3 pt-4 border-t border-border ">
+                {!isOverdue ? (
+                  <button
+                    onClick={handleSubmitChapter}
+                    disabled={!storyFile || isLoading}
+                    className="bg-secondary cursor-pointer text-secondary-foreground hover:bg-secondary/80 font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:bg-gray-500 disabled:cursor-not-allowed">
 
-                  {isLoading ? "Submitting..." : "Submit Chapter"}
-                </button>
-              ) : (
-                  <button className="bg-secondary text-secondary-foreground  font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:bg-gray-500 disabled:cursor-not-allowed readonly " >
-                    Overdue 
+                    {isLoading ? "Submitting..." : "Submit Chapter"}
                   </button>
-              )
-              }
-                
+                ) : (
+                  <button className="bg-secondary text-secondary-foreground  font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:bg-gray-500 disabled:cursor-not-allowed readonly " >
+                    Overdue
+                  </button>
+                )
+                }
+
               </div>
             </>
           }

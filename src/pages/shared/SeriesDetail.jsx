@@ -181,20 +181,22 @@ export function SeriesDetail() {
                 </div>
               </div>
 
-              <div className="space-y-3 text-right">
-                <h3 className="font-medium text-sm text-muted-foreground uppercase">Original Manuscript</h3>
-                <div className="flex flex-col items-end justify-center text-center">
-                  {/* <p className="text-xs text-muted-foreground">Download the initial manuscript file to start working</p> */}
-                  <a
-                    href={detailData?.nameFile}
-                    download
-                    className="inline-flex items-center gap-2 bg-secondary/50 text-secondary-foreground hover:bg-secondary/80  p-4 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
-                  >
-                    <Download size={16} />
-                    Download Manuscript
-                  </a>
+              {normalizedRole != 'reader' &&
+                <div className="space-y-3 text-right">
+                  <h3 className="font-medium text-sm text-muted-foreground uppercase">Original Manuscript</h3>
+                  <div className="flex flex-col items-end justify-center text-center">
+                    {/* <p className="text-xs text-muted-foreground">Download the initial manuscript file to start working</p> */}
+                    <a
+                      href={detailData?.nameFile}
+                      download
+                      className="inline-flex items-center gap-2 bg-secondary/50 text-secondary-foreground hover:bg-secondary/80  p-4 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
+                    >
+                      <Download size={16} />
+                      Download Manuscript
+                    </a>
+                  </div>
                 </div>
-              </div>
+              }
             </div>
 
             {/* Mô tả bộ truyện */}
