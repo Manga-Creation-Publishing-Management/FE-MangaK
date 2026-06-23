@@ -77,6 +77,7 @@ export function useTaskDetail(taskId, role) {
       // Cập nhật state taskDetail với status mới
 
       showAlert("Approved Task!")
+      handleReload();
 
 
     } catch (error) {
