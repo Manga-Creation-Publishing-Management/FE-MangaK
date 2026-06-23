@@ -2,7 +2,7 @@ import { OverviewCard } from '@/shared/components/OverviewCard';
 import { WelcomeLine } from '@/shared/components/WelcomeLine';
 import { BookOpen } from 'lucide-react';
 import { SeriesManagement } from '../shared/SeriesManagement';
-import Notification from '@/shared/components/Notification';
+import Feedback from '@/shared/components/Feedback';
 
 // Component Trang chủ (Dashboard) dành riêng cho role Mangaka (Tác giả)
 export function MangakaDashboard() {
@@ -21,8 +21,8 @@ export function MangakaDashboard() {
 
       <SeriesManagement role="mangaka" />
 
-      <div className='px-9 mb-10'>
-        <Notification />
+      <div className='mt-5 px-9 pb-10'>
+        <Feedback />
       </div>
     </div >
   )

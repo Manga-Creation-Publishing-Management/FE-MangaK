@@ -1,6 +1,6 @@
 import { AlertCircle } from 'lucide-react';
 
-export function NotificationItem({ sender, subject, message, date, hasIcon, isNew }) {
+export function FeedbackItem({ sender, subject, message, date, hasIcon, isNew }) {
     return (
         <div className={`group bg-card border border-border hover:border-primary/40 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 rounded-2xl p-5 flex gap-4 ${isNew ? 'ring-1 ring-primary/20' : ''}`}>
             <div className="flex-shrink-0 flex items-start pt-0.5">
