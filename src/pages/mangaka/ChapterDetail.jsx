@@ -5,7 +5,7 @@ import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import dayjs from 'dayjs';
 
-import { ArrowLeft, Download, Undo, Brush, Type } from "lucide-react";
+import { ArrowLeft, Download, Undo, Brush, Type, Star } from "lucide-react";
 import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
 import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter";
 import { ApprovalPanel } from "../shared/ApprovalPanel";
@@ -79,6 +79,7 @@ export function ChapterDetail() {
   const isOverdue = deadlineObj.isBefore(today)
 
   console.log(isOverdue);
+  console.log(chapterDetail);
 
   return (
     <>
@@ -149,11 +150,11 @@ export function ChapterDetail() {
             <div className="md:col-span-4 space-y-2">
               <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
                 <h3 className="font-normal text-sm text-muted-foreground  tracking-wider">Rating</h3>
-                {chapterDetail?.deadline ? (
-                  <div className="text-sm my-2 font-semibold capitalize">{chapterDetail?.deadline}</div>
-                ) : (
-                  <div className="text-sm ms-0.5"> — — — —</div>
-                )}
+                {chapterDetail?.totalVotes != 0 ? (
+                  <div className="text-l gap-2 my-2 font-light capitalize flex items-center justify-content-center"><Star size={15} className="text-yellow-400 fill-yellow-400"/>  {chapterDetail?.totalVotes}</div>
+                 ) : (
+                 <div className="text-sm ms-0.5"> — — — —</div>
+                )}  
               </div>
             </div>
           </div>
@@ -227,7 +228,7 @@ export function ChapterDetail() {
                         PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ */}
           <div className="space-y-3">
 
-            {currentRole === "mangaka" &&
+            {currentRole === "mangaka" ? (
               progress === 100 ? (
               <>
                 <h3 className="font-medium text-sm text-muted-foreground">Submit Your Work</h3>
@@ -261,7 +262,9 @@ export function ChapterDetail() {
                 </div>
             )
 
-            }
+            ) : (
+                <></>
+            )}
           </div>
 
           {/* KẾT THÚC PHẦN CHÈN

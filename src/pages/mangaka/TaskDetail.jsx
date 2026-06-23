@@ -189,7 +189,7 @@ export function TaskDetail() {
               </>
             }
 
-            {role === "mangaka" &&
+            {(role === "mangaka" && taskDetail?.status != "Completed") &&
               <>
                 <button className="bg-destructive hover:bg-destructive/70 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
 
