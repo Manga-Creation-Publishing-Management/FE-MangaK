@@ -8,7 +8,5 @@ export function WelcomeLine({ roleName }) {
                 </div>
             </div>
         </>
-
     );
-
 }

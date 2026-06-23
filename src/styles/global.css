@@ -19,6 +19,67 @@ input::-ms-clear {
   }
 }
 
+/* Hiệu ứng động ở ảnh bên homepage */
 .animate-smallbounce {
   animation: smallbounce 3s infinite;
+}
+
+
+/* Container định vị toast ở góc trên bên phải màn hình */
+#toast-container {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* Kiểu dáng chung của Toast */
+.toast {
+  min-width: 280px;
+  max-width: 400px;
+  padding: 1rem 1.25rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-card);
+  color: var(--color-card-foreground);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--color-border);
+  transform: translateY(-20px);
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  pointer-events: auto;
+}
+
+/* Khi kích hoạt hiệu ứng hiển thị */
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+  background-color: #eaf5ff;
+}
+
+/* Tùy biến màu viền trái theo từng loại Alert */
+.toast.success {
+  border-left: 4px solid var(--color-success);
+}
+
+.toast.error {
+  border-left: 4px solid var(--color-destructive);
+}
+
+.toast.warning {
+  border-left: 4px solid var(--color-warning);
+}
+
+.toast.info {
+  border-left: 4px solid var(--color-info);
+}
+
+.toast-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: 1a1525;
 }

@@ -1,50 +1,19 @@
 import { useEffect, useState } from "react";
-import {
-  Plus,
-  Search,
-  Users,
-  ShieldCheck,
-  UserX,
-  UserCheck,
-  X,
-  Eye,
-  EyeOff,
-  ChevronDown,
-} from "lucide-react";
-import { WelcomeLine } from "../shared/WelcomeLine.jsx";
-import { OverviewCard } from "../shared/OverviewCard.jsx";
+import { Plus, Users, ShieldCheck, UserX, UserCheck } from "lucide-react";
+import { WelcomeLine } from "@/shared/components/WelcomeLine";
+import { OverviewCard } from "@/shared/components/OverviewCard";
 import { userService } from "../../services/userService.js";
-import { CustomSelect } from "../../shared/components/CustomSelect.jsx";
+import { useToast } from "@/shared/hooks/useToast";
 
-const roleLabels = {
-  mangaka: "Mangaka",
-  assistant: "Assistant",
-  tantou: "Tantou Editor",
-  editorial: "Editorial Board",
-};
-
-const roleColors = {
-  mangaka: "bg-primary/10 text-primary border-primary/30",
-  assistant: "bg-accent/10 text-accent border-accent/30",
-  tantou: "bg-info/10 text-info border-info/30",
-  editorial: "bg-success/10 text-success border-success/30",
-};
-
-// Map role từ API về key nội bộ dùng trong FE
-const mapApiRole = (role) => {
-  const roleMap = {
-    mangaka: "mangaka",
-    assistant: "assistant",
-    tantou: "tantou",
-    tantoureditor: "tantou",
-    editorial: "editorial",
-    editorialboard: "editorial",
-    admin: "admin",
-  };
-  return roleMap[role?.toLowerCase()] || role?.toLowerCase() || "mangaka";
-};
+import { mapApiRole } from "./constants/adminConstants.js";
+import { UserFilters } from "./components/UserFilters.jsx";
+import { UserTable } from "./components/UserTable.jsx";
+import { CreateAccountModal } from "./components/CreateAccountModal.jsx";
+import { ConfirmStatusModal } from "./components/ConfirmStatusModal.jsx";
+import { RolePermissionsModal } from "./components/RolePermissionsModal.jsx";
 
 export function AdminDashboard() {
+  const { showAlert } = useToast();
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -53,24 +22,11 @@ export function AdminDashboard() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
-
-  // Create account form state (Uses First Name & Last Name instead of Full Name)
-  const [newFirstName, setNewFirstName] = useState("");
-  const [newLastName, setNewLastName] = useState("");
-  const [newEmail, setNewEmail] = useState("");
-  const [newPhone, setNewPhone] = useState("");
-  const [newAuthorName, setNewAuthorName] = useState("");
-  const [newRole, setNewRole] = useState("editorial");
-  const [newPassword, setNewPassword] = useState("");
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [createError, setCreateError] = useState("");
-
-  // ==================== GỌI API LẤY DANH SÁCH USER ====================
+  const [tantouList, setTantouList] = useState([]);
 
   const fetchUsers = async () => {
     try {
       const response = await userService.getUserList();
-      // response có thể là mảng trực tiếp hoặc nằm trong response.data
       const userList = Array.isArray(response) ? response : (response.data || []);
 
       const mapped = userList.map((user) => ({
@@ -79,7 +35,8 @@ export function AdminDashboard() {
         email: user.email || '',
         phone: user.phoneNumber || user.phone || '',
         role: mapApiRole(user.role),
-        status: user.isActive === false || user.status?.toLowerCase() === 'suspended' ? 'suspended' : 'active',
+        status: user.isActive === false || user.status?.toLowerCase() === 'suspended' || user.status?.toLowerCase() === 'inactive' ? 'inactive' : 'active',
+        supervisorId: user.supervisorId || user.SupervisorId || null,
       }));
 
       setUsers(mapped);
@@ -90,11 +47,58 @@ export function AdminDashboard() {
     }
   };
 
+  const fetchTantouList = async () => {
+    try {
+      const response = await userService.getTantouList();
+      const list = response.data || [];
+      setTantouList(list);
+    } catch (error) {
+      console.error("Failed to fetch tantou list:", error);
+    }
+  };
+
+  const handleSupervisorChange = async (userId, supervisorId) => {
+    const val = supervisorId === "" ? null : supervisorId;
+    try {
+      const targetUser = users.find(u => u.id === userId);
+      if (!targetUser) return;
+
+      const apiStatus = targetUser.status === "active" ? "Active" : "Inactive";
+      await userService.updateUserStatus(userId, apiStatus, val);
+
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.id === userId ? { ...u, supervisorId: val } : u
+        )
+      );
+      showAlert("Tantou Editor updated successfully", "success");
+      fetchTantouList();
+    } catch (error) {
+      console.error("Failed to update supervisor:", error);
+      showAlert("An error occurred while updating Tantou Editor. Please try again!", "error");
+    }
+  };
+
+  const getSupervisorOptions = (userSupervisorId) => {
+    const options = [...tantouList];
+    if (userSupervisorId && !options.some(t => (t.userId || t.id) === userSupervisorId)) {
+      const currentSupervisor = users.find(u => u.id === userSupervisorId);
+      if (currentSupervisor) {
+        options.push({
+          userId: currentSupervisor.id,
+          firstName: currentSupervisor.name.split(' ')[0] || '',
+          lastName: currentSupervisor.name.split(' ').slice(1).join(' ') || '',
+          email: currentSupervisor.email
+        });
+      }
+    }
+    return options;
+  };
+
   useEffect(() => {
     fetchUsers();
+    fetchTantouList();
   }, []);
-
-  // ==================== THỐNG KÊ ====================
 
   const stats = [
     {
@@ -110,8 +114,8 @@ export function AdminDashboard() {
       color: "bg-success/10 text-success",
     },
     {
-      label: "Suspended",
-      value: users.filter((u) => u.status === "suspended").length,
+      label: "Inactive",
+      value: users.filter((u) => u.status === "inactive").length,
       icon: UserX,
       color: "bg-destructive/10 text-destructive",
     },
@@ -134,127 +138,45 @@ export function AdminDashboard() {
   });
 
   const handleToggleStatus = (user) => {
-    const action = user.status === "active" ? "suspend" : "activate";
+    const action = user.status === "active" ? "inactive" : "activate";
     setConfirmAction({ user, action });
   };
 
-  const confirmToggle = () => {
+  const confirmToggle = async () => {
     if (!confirmAction) return;
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.id === confirmAction.user.id
-          ? {
-            ...u,
-            status:
-              confirmAction.action === "suspend" ? "suspended" : "active",
-          }
-          : u,
-      ),
-    );
-    setConfirmAction(null);
-  };
-
-  const generatePassword = () => {
-    const chars = "ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$";
-    setNewPassword(
-      Array.from(
-        { length: 12 },
-        () => chars[Math.floor(Math.random() * chars.length)],
-      ).join(""),
-    );
-  };
-
-  // Map role key nội bộ FE sang giá trị API yêu cầu
-  const feRoleToApiRole = {
-    mangaka: "Mangaka",
-    assistant: "Assistant",
-    tantou: "Tantou",
-    editorial: "Editorial",
-  };
-
-  const [isCreating, setIsCreating] = useState(false);
-
-  const handleCreate = async (e) => {
-    e.preventDefault();
-    if (
-      !newFirstName.trim() ||
-      !newLastName.trim() ||
-      !newEmail.trim() ||
-      !newPhone.trim() ||
-      !newPassword.trim()
-    ) {
-      setCreateError("All fields are required.");
-      return;
-    }
-
-    setIsCreating(true);
-    setCreateError("");
 
     try {
-      const apiRole = feRoleToApiRole[newRole] || "Mangaka";
-      await userService.createUser(apiRole, {
-        firstName: newFirstName.trim(),
-        lastName: newLastName.trim(),
-        email: newEmail.trim(),
-        password: newPassword.trim(),
-        phone: newPhone.trim(),
-        authorName: newRole === 'mangaka' ? newAuthorName.trim() : null,
-        status: "Active",
-      });
+      const apiStatus = confirmAction.action === "inactive" ? "Inactive" : "Active";
+      await userService.updateUserStatus(confirmAction.user.id, apiStatus, confirmAction.user.supervisorId);
 
-      setShowCreateModal(false);
-      setNewFirstName("");
-      setNewLastName("");
-      setNewEmail("");
-      setNewPhone("");
-      setNewAuthorName("");
-      setNewRole("mangaka");
-      setNewPassword("");
-      setCreateError("");
-      // Refresh danh sách user từ API
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.id === confirmAction.user.id
+            ? {
+              ...u,
+              status: confirmAction.action === "inactive" ? "inactive" : "active",
+            }
+            : u,
+        ),
+      );
+      showAlert(
+        confirmAction.action === "inactive"
+          ? "Account deactivated successfully"
+          : "Account activated successfully",
+        "success"
+      );
+      fetchTantouList();
       fetchUsers();
     } catch (error) {
-      console.error("Failed to create user:", error);
-      setCreateError(error.message || "Failed to create account. Please try again.");
+      console.error("Failed to toggle user status:", error);
+      showAlert("An error occurred while updating account status. Please try again!", "error");
     } finally {
-      setIsCreating(false);
+      setConfirmAction(null);
     }
-  };
-
-
-
-  const permissionMatrix = {
-    mangaka: [
-      "Create series",
-      "Manage own chapters",
-      "Assign tasks to assistants",
-      "View own feedback",
-      "View leaderboard",
-    ],
-    assistant: [
-      "View assigned tasks",
-      "Update task progress",
-      "View own income",
-    ],
-    tantou: [
-      "Review assigned series",
-      "Review chapters",
-      "Send feedback to Mangaka",
-      "Submit to Editorial Board",
-      "View leaderboard",
-    ],
-    editorial: [
-      "Approve/reject series",
-      "Approve/reject chapters",
-      "Manage publishing schedule",
-      "Import rating data",
-      "Cancel series",
-      "View leaderboard",
-    ],
   };
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-6 space-y-8">
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between top-align">
           <div>
@@ -278,7 +200,6 @@ export function AdminDashboard() {
           </div>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-4 gap-6">
           {stats.map((stat) => {
             const Icon = stat.icon;
@@ -286,7 +207,15 @@ export function AdminDashboard() {
               <OverviewCard
                 key={stat.label}
                 iconName={<Icon size={24} />}
-                iconColor={stat.color.includes("text-primary") ? "#3b82f6" : stat.color.includes("text-success") ? "#10b981" : stat.color.includes("text-destructive") ? "#ef4444" : "#06b6d4"}
+                iconColor={
+                  stat.color.includes("text-primary")
+                    ? "#3b82f6"
+                    : stat.color.includes("text-success")
+                    ? "#10b981"
+                    : stat.color.includes("text-destructive")
+                    ? "#ef4444"
+                    : "#06b6d4"
+                }
                 contentText={stat.label}
                 valueNum={stat.value}
               />
@@ -294,410 +223,43 @@ export function AdminDashboard() {
           })}
         </div>
 
+        <UserFilters
+          searchQuery={searchQuery}
+          onSearchQueryChange={setSearchQuery}
+          filterRole={filterRole}
+          onFilterRoleChange={setFilterRole}
+          filterStatus={filterStatus}
+          onFilterStatusChange={setFilterStatus}
+        />
 
-        {/* Filters */}
-        <div className="flex gap-4 items-center">
-          <div className="relative flex-1 max-w-sm">
-            <Search
-              size={18}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-            />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by name, email or phone…"
-              className="w-full pl-10 pr-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-          <div className="w-48">
-            <CustomSelect
-              value={filterRole}
-              onChange={setFilterRole}
-              options={[
-                { value: "all", label: "All Roles" },
-                { value: "mangaka", label: "Mangaka" },
-                { value: "assistant", label: "Assistant" },
-                { value: "tantou", label: "Tantou Editor" },
-                { value: "editorial", label: "Editorial Board" }
-              ]}
-            />
-          </div>
-          <div className="w-40">
-            <CustomSelect
-              value={filterStatus}
-              onChange={setFilterStatus}
-              options={[
-                { value: "all", label: "All Status" },
-                { value: "active", label: "Active" },
-                { value: "suspended", label: "Suspended" }
-              ]}
-            />
-          </div>
-        </div>
+        <UserTable
+          isLoading={isLoading}
+          filteredUsers={filtered}
+          onSupervisorChange={handleSupervisorChange}
+          getSupervisorOptions={getSupervisorOptions}
+          onToggleStatus={handleToggleStatus}
+        />
 
-        {/* User Table */}
-        <div className="bg-card border border-border rounded-xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-muted/50 border-b border-border">
-                <tr>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
-                    Name
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
-                    Email
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
-                    Phone
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
-                    Role
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
-                    Status
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {isLoading ? (
-                  <tr>
-                    <td
-                      colSpan={6}
-                      className="px-6 py-12 text-center text-muted-foreground"
-                    >
-                      Loading users...
-                    </td>
-                  </tr>
-                ) : filtered.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan={6}
-                      className="px-6 py-12 text-center text-muted-foreground"
-                    >
-                      No users match your search.
-                    </td>
-                  </tr>
-                ) : (
-                  filtered.map((user) => (
-                    <tr
-                      key={user.id}
-                      className={`hover:bg-muted/30 transition-colors ${user.status === "suspended" ? "opacity-60" : ""}`}
-                    >
-                      <td className="px-6 py-4 font-semibold text-foreground">
-                        {user.name}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-muted-foreground">
-                        {user.email}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-muted-foreground font-mono">
-                        {user.phone}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`inline-block px-3 py-1 rounded-full border text-sm font-medium ${roleColors[user.role] || ''}`}
-                        >
-                          {roleLabels[user.role] || user.role}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`px-3 py-1 rounded-full border text-sm ${user.status === "active"
-                            ? "bg-success/10 text-success border-success/30"
-                            : "bg-destructive/10 text-destructive border-destructive/30"
-                            }`}
-                        >
-                          {user.status === "active" ? "Active" : "Suspended"}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <button
-                          onClick={() => handleToggleStatus(user)}
-                          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${user.status === "active"
-                            ? "text-destructive hover:bg-destructive/10 border border-destructive/30"
-                            : "text-success hover:bg-success/10 border border-success/30"
-                            }`}
-                        >
-                          {user.status === "active" ? (
-                            <UserX size={15} />
-                          ) : (
-                            <UserCheck size={15} />
-                          )}
-                          {user.status === "active" ? "Suspend" : "Activate"}
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <CreateAccountModal
+          show={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          onCreated={() => {
+            fetchUsers();
+            fetchTantouList();
+          }}
+          tantouList={tantouList}
+        />
 
-        {/* Create Account Modal */}
-        {showCreateModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-card rounded-xl p-8 w-full max-w-lg">
-              <div className="flex justify-between items-center mb-6">
-                <h2>Create Account</h2>
-                <button
-                  onClick={() => {
-                    setShowCreateModal(false);
-                    setCreateError("");
-                  }}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <X size={20} />
-                </button>
-              </div>
+        <ConfirmStatusModal
+          confirmAction={confirmAction}
+          onConfirm={confirmToggle}
+          onCancel={() => setConfirmAction(null)}
+        />
 
-              <form onSubmit={handleCreate} className="space-y-4">
-                {/* Row 1: First Name & Last Name */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm text-muted-foreground mb-1.5 block">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      value={newFirstName}
-                      onChange={(e) => setNewFirstName(e.target.value)}
-                      placeholder="First name"
-                      className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm text-muted-foreground mb-1.5 block">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      value={newLastName}
-                      onChange={(e) => setNewLastName(e.target.value)}
-                      placeholder="Last name"
-                      className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                  </div>
-                </div>
-
-                {/* Row 2: Phone Number & Email */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm text-muted-foreground mb-1.5 block">
-                      Phone Number
-                    </label>
-                    <input
-                      type="text"
-                      value={newPhone}
-                      onChange={(e) => setNewPhone(e.target.value)}
-                      placeholder="e.g. +84 987 654 321"
-                      className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm text-muted-foreground mb-1.5 block">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      value={newEmail}
-                      onChange={(e) => setNewEmail(e.target.value)}
-                      placeholder="email@comicmanager.com"
-                      className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                  </div>
-                </div>
-
-                <div className={`grid ${newRole === 'mangaka' ? 'grid-cols-2 gap-4' : 'grid-cols-1'}`}>
-                  <div>
-                    <label className="text-sm text-muted-foreground mb-1.5 block">
-                      Role
-                    </label>
-                    <CustomSelect
-                      value={newRole}
-                      onChange={setNewRole}
-                      options={[
-                        { value: "mangaka", label: "Mangaka" },
-                        { value: "assistant", label: "Assistant" },
-                        { value: "tantou", label: "Tantou Editor" },
-                        { value: "editorial", label: "Editorial Board" }
-                      ]}
-                    />
-                  </div>
-                  {newRole === 'mangaka' && (
-                    <div>
-                      <label className="text-sm text-muted-foreground mb-1.5 block">
-                        Author Name
-                      </label>
-                      <input
-                        type="text"
-                        value={newAuthorName}
-                        onChange={(e) => setNewAuthorName(e.target.value)}
-                        placeholder="Pen Name"
-                        className="w-full px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <div>
-                  <label className="text-sm text-muted-foreground mb-1.5 block">
-                    System Password
-                  </label>
-                  <div className="flex gap-2">
-                    <div className="relative flex-1">
-                      <input
-                        type={showNewPassword ? "text" : "password"}
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        placeholder="Set a password"
-                        className="w-full px-4 py-2.5 pr-10 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary font-mono"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowNewPassword(!showNewPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                      >
-                        {showNewPassword ? (
-                          <EyeOff size={16} />
-                        ) : (
-                          <Eye size={16} />
-                        )}
-                      </button>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={generatePassword}
-                      className="px-4 py-2.5 border border-border rounded-lg hover:bg-muted transition-colors text-sm whitespace-nowrap"
-                    >
-                      Generate
-                    </button>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1.5">
-                    This password will be shared with the user at account
-                    creation.
-                  </p>
-                </div>
-
-                {createError && (
-                  <p className="text-sm text-destructive">{createError}</p>
-                )}
-
-                <div className="flex gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowCreateModal(false);
-                      setCreateError("");
-                    }}
-                    className="flex-1 px-4 py-2.5 border border-border rounded-lg hover:bg-muted transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isCreating}
-                    className="flex-1 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isCreating ? "Creating..." : "Create Account"}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {/* Confirm Suspend/Activate Modal */}
-        {confirmAction && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-card rounded-xl p-8 w-full max-w-sm">
-              <h2 className="mb-4">
-                {confirmAction.action === "suspend"
-                  ? "Suspend Account"
-                  : "Activate Account"}
-              </h2>
-              <p className="text-sm text-muted-foreground mb-6">
-                {confirmAction.action === "suspend"
-                  ? `Are you sure you want to suspend ${confirmAction.user.name}'s account? They will lose access immediately.`
-                  : `Restore access for ${confirmAction.user.name}? They will be able to log in again.`}
-              </p>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setConfirmAction(null)}
-                  className="flex-1 px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={confirmToggle}
-                  className={`flex-1 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity ${confirmAction.action === "suspend"
-                    ? "bg-destructive text-destructive-foreground"
-                    : "bg-success text-success-foreground"
-                    }`}
-                >
-                  {confirmAction.action === "suspend" ? "Suspend" : "Activate"}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Role Permissions Modal */}
-        {showPermissionsModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-card rounded-xl p-8 w-full max-w-2xl max-h-[80vh] overflow-y-auto">
-              <div className="flex justify-between items-center mb-6">
-                <h2>Role Permissions</h2>
-                <button
-                  onClick={() => setShowPermissionsModal(false)}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <X size={20} />
-                </button>
-              </div>
-
-              <div className="space-y-6">
-                {Object.entries(permissionMatrix).map(([role, perms]) => (
-                  <div
-                    key={role}
-                    className="border border-border rounded-xl p-5"
-                  >
-                    <div className="flex items-center gap-3 mb-4">
-                      <span
-                        className={`px-3 py-1 rounded-full border text-sm font-medium ${roleColors[role]}`}
-                      >
-                        {roleLabels[role]}
-                      </span>
-                    </div>
-                    <ul className="space-y-2">
-                      {perms.map((perm) => (
-                        <li
-                          key={perm}
-                          className="flex items-center gap-2 text-sm"
-                        >
-                          <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                          {perm}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-6">
-                <button
-                  onClick={() => setShowPermissionsModal(false)}
-                  className="w-full px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <RolePermissionsModal
+          show={showPermissionsModal}
+          onClose={() => setShowPermissionsModal(false)}
+        />
       </div>
     </div>
   );

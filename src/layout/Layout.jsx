@@ -1,8 +1,8 @@
 import { Outlet } from 'react-router';
 import { Sidebar } from './Sidebar';
 import { HeaderPage } from './HeaderPage';
-import avatarImgDemo from './avatarImgDemo.png';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useToast } from '@/shared/hooks/useToast';
 
 const roleDisplayNames = {
   mangaka: "Mangaka",
@@ -16,12 +16,17 @@ const roleDisplayNames = {
 export function Layout({ roleName }) {
   const [pageHeader, setPageHeader] = useState(null);
   const displayRole = roleDisplayNames[roleName] || roleName;
+  const { showAlert } = useToast();
+
+  // useEffect(() => {
+  //   showAlert("Login successfully! Welcome back");
+  // }, []);
 
   return (
     <div className="flex h-screen w-full overflow-hidden">
       <Sidebar userRole={roleName} />
       <main className="flex-1 flex flex-col h-full overflow-hidden bg-background">
-        <HeaderPage roleName={displayRole} avatarUrl={avatarImgDemo} />
+        <HeaderPage roleName={displayRole} avatarUrl="/avatarImgDemo.png" />
         {pageHeader && (
           <div className="p-6 m-4 bg-card border border-border rounded-2xl">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">

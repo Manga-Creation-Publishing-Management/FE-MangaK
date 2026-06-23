@@ -1,23 +1,33 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Download } from "lucide-react";
 import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { useLocation, useNavigate, useParams } from "react-router";
-import { StatusBadge } from "./StatusBadge";
+import { StatusBadge } from "@/shared/components/StatusBadge";
 import { ChapterList } from "../../features/chapters/components/ChapterList";
 import { ApprovalPanel } from "./ApprovalPanel";
 import { useEffect, useState } from "react";
 import { seriesService } from "../../services/seriesService";
 import { useUpdateSeries } from "../../features/series/hooks/useUpdateSeries";
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
+// Component hiển thị trang chi tiết của một bộ truyện (Series)
 export function SeriesDetail() {
-
+  // useParams lấy ID của bộ truyện từ URL (vd: /series/:id)
   const { id } = useParams();
+  // useNavigate dùng để quay lại trang trước đó khi nhấn nút "Back"
   const navigate = useNavigate();
 
+  // useLocation dùng để lấy đường dẫn hiện tại hoặc state truyền qua URL
   const location = useLocation();
   const pathname = location.pathname.toLowerCase();
 
-  // Fallback to path checking if state was lost (e.g. page refresh)
+  // Thử lấy 'role' (vai trò) từ location.state. 
+  // Việc này quan trọng để hiển thị giao diện tuỳ chỉnh theo role
   let roleFromState = location.state?.role;
+
+  // Dự phòng (Fallback): Nếu state bị mất (ví dụ do người dùng f5/refresh trang),
+  // Cố gắng tự nội suy role bằng cách nhìn vào đường dẫn URL (pathname)
   if (!roleFromState) {
     if (pathname.includes("tantou")) {
       roleFromState = "tantou";
@@ -28,13 +38,16 @@ export function SeriesDetail() {
 
   console.log("roleFromState", roleFromState);
 
-  const {
-    genreList
-  } = useCreateSeries();
+  // Hook dùng để lấy danh sách thể loại (genre)
+  const { genreList } = useCreateSeries();
 
+  // State lưu trữ dữ liệu chi tiết của bộ truyện lấy từ server
   const [detailData, setDetailData] = useState(null);
+
+  // State lưu trữ trạng thái hiện tại (cục bộ) của bộ truyện để không phải gọi API lại ngay lập tức khi vừa approve/reject
   const [localStatus, setLocalStatus] = useState(null);
 
+  // Hook hỗ trợ xử lý duyệt / từ chối series (Approval Flow)
   const {
     isLoading,
     feedback,
@@ -43,6 +56,7 @@ export function SeriesDetail() {
     handleReject
   } = useUpdateSeries();
 
+  // Effect chạy mỗi khi ID thay đổi để lấy dữ liệu từ API
   useEffect(() => {
     const fetchSeriesDetail = async () => {
       if (!id) return;
@@ -56,16 +70,18 @@ export function SeriesDetail() {
     fetchSeriesDetail();
   }, [id]);
 
-  // Use localStatus if it's been updated, otherwise use data from API
+  // Ưu tiên sử dụng trạng thái local (nếu vừa có thay đổi), nếu không thì lấy trạng thái từ dữ liệu API
   const currentStatus = localStatus || detailData?.status;
   const normalizedStatus = currentStatus?.toLowerCase();
   const normalizedRole = roleFromState?.toLowerCase();
 
+  // Kiểm tra xem user hiện tại có phải là Tantou hay Editorial không (liên quan đến tính năng phê duyệt)
   const isTantou = normalizedRole === "tantou";
   const isEditorial = normalizedRole === "editorial";
 
   console.log(`Is tantou? ${isTantou}`);
 
+  // Log debug để kiểm tra quá trình render
   console.log("SeriesDetail render debug:", {
     detailData,
     currentStatus,
@@ -78,7 +94,7 @@ export function SeriesDetail() {
       || ((isEditorial) && (normalizedStatus === 'pending')))
   });
 
-  // Determine button text based on role
+  // Tùy chỉnh dòng chữ trên nút Phê duyệt / Từ chối dựa trên role
   const approveText = isTantou
     ? "Approve & Submit to Editorial Board"
     : "Approve Series";
@@ -89,6 +105,8 @@ export function SeriesDetail() {
   return (
     <>
       <div className="p-8 space-y-8">
+
+        {/* Nút quay lại trang trước */}
         <button
           onClick={() => navigate(-1)}
           className="flex cursor-pointer items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -96,45 +114,102 @@ export function SeriesDetail() {
           <ArrowLeft size={20} />
           Back
         </button>
-        <div className="bg-card border-border  rounded-xl overflow-hidden">
+
+        {/* Khung chứa ảnh bìa và thông tin cơ bản của bộ truyện */}
+        <div className="bg-card border-border rounded-xl overflow-hidden">
+
+          {/* Vùng hiển thị Ảnh bìa */}
           <div className="h-100 w-full relative" >
             <img className="w-full h-full object-cover" src={detailData?.coverFile} alt="" />
           </div>
+
           <div className="p-8 space-y-6">
             <div className="flex justify-between items-start">
               <div className="flex-1">
+                {/* Tiêu đề truyện và Tên tác giả */}
                 <h1 className="text-2xl font-semibold">{detailData?.title}</h1>
                 <p className="text-muted-foreground mt-1">{detailData?.mangakaName}</p>
               </div>
+              {/* Huy hiệu hiển thị trạng thái (Processing, Pending, Approved...) */}
               <StatusBadge status={currentStatus?.toLowerCase()} />
             </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-12 gap-6 border-b border-gray-200 pb-6">
+
+              <div className="md:col-span-6 space-y-2">
+                <div className="bg-muted/30 p-3 rounded-lg border border-border text-foreground text-sm leading-relaxed">
+                  <h3 className="font-normal text-sm text-muted-foreground  tracking-wider">Upcoming Chapter Release Date</h3>
+                  {detailData?.publishDate ? (
+                    <div className="text-sm my-2 font-semibold">{dayjs(detailData?.publishDate).utc(true).format('DD/MM/YYYY HH:mm')}</div>
+                  ) : (
+                    <div className="text-sm ms-0.5">— — — —</div>
+                  )}
+
+                </div>
+              </div>
+              <div className="md:col-span-6 space-y-2">
+                <div className="bg-muted/30 p-3 rounded-lg border border-border  text-foreground text-sm leading-relaxed">
+                  <h3 className="font-normal text-sm text-muted-foreground  tracking-wider">Publish Period</h3>
+                  {detailData?.publishPeriod ? (
+                    <div className="text-sm my-2 font-semibold capitalize">{detailData?.publishPeriod}</div>
+                  ) : (
+                    <div className="text-sm ms-0.5"> — — — —</div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+
             <div className="grid grid-cols-2 gap-6">
-              <div>
-                <p className="text-sm text-muted-foreground">Genres</p>
-                <div className="flex flex-wrap gap-2 mt-2">
+              <div className=" space-y-3">
+                <h3 className="text-sm text-muted-foreground uppercase font-semibold">Genres</h3>
+                {/* Danh sách các thể loại */}
+                <div className="flex flex-wrap gap-2 ">
                   {detailData?.categories?.map((item, index) => {
+                    // Ánh xạ từ ID của genre sang Tên thể loại dựa vào genreList
                     const nameGenre = genreList?.find(itemGenre => String(itemGenre.categoryId) === String(item))
                     return (
                       <span
                         key={index}
-                        className="px-3 py-1 text-xs font-medium rounded-full bg-secondary text-secondary-foreground border border-border"
+                        className="px-3 py-1 text-xs font-medium rounded-full bg-secondary/50 text-secondary-foreground border border-border"
                       >
+                        {/* Nếu tìm thấy tên thì in ra, không thì in id (dự phòng) */}
                         {nameGenre ? nameGenre.name : item}
                       </span>
                     )
                   })}
                 </div>
               </div>
+
+              {normalizedRole != 'reader' &&
+                <div className="space-y-3 text-right">
+                  <h3 className="font-medium text-sm text-muted-foreground uppercase">Original Manuscript</h3>
+                  <div className="flex flex-col items-end justify-center text-center">
+                    {/* <p className="text-xs text-muted-foreground">Download the initial manuscript file to start working</p> */}
+                    <a
+                      href={detailData?.nameFile}
+                      download
+                      className="inline-flex items-center gap-2 bg-secondary/50 text-secondary-foreground hover:bg-secondary/80  p-4 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
+                    >
+                      <Download size={16} />
+                      Download Manuscript
+                    </a>
+                  </div>
+                </div>
+              }
             </div>
 
+            {/* Mô tả bộ truyện */}
             <div>
-              <p className="text-sm text-muted-foreground">Description</p>
-              <p className="mt-1 text-foreground">{detailData?.description}</p>
+              <p className="text-sm text-muted-foreground uppercase font-semibold">Description</p>
+              <p className="mt-2 text-foreground text-justify">{detailData?.description}</p>
             </div>
           </div>
-
         </div>
+
+        {/* Component hiển thị Danh sách các Chapter thuộc bộ truyện này */}
         <ChapterList roleName={roleFromState} seriesData={detailData} />
+        {console.log("Checkrolehientai:", roleFromState)}
 
         {/* feedback box for roles tantou and editorial, only when status is processing or pending */}
         {(isTantou || isEditorial) &&
