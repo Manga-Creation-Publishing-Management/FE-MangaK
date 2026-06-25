@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
 
 /**
- * useNotification Hook - Manages notification state.
+ * useFeedback Hook - Manages Feedback state.
  * Currently returns an empty array to render an empty state as requested.
  */
-export function useNotification() {
-  const [notifications, setNotifications] = useState([]);
+export function useFeedback() {
+  const [Feedbacks, setFeedbacks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchNotifications = async () => {
+    const fetchFeedbacks = async () => {
       setIsLoading(true);
       try {
         // Emulating api fetch, returning empty array for now
-        setNotifications([]);
+        setFeedbacks([]);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -22,13 +22,13 @@ export function useNotification() {
       }
     };
 
-    fetchNotifications();
+    fetchFeedbacks();
   }, []);
 
   return {
-    notifications,
+    Feedbacks,
     isLoading,
     error,
-    setNotifications,
+    setFeedbacks,
   };
 }
