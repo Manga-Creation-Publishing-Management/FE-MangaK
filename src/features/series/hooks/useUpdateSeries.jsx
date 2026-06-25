@@ -50,7 +50,7 @@ export function useUpdateSeries() {
       // Cập nhật lại trạng thái local trên giao diện (tránh phải reload toàn trang)
       setLocalStatus(newStatus);
       showAlert(`Series has been approved! New status: ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}`);
-      
+
       // Chuyển hướng quay lại trang trước đó
       navigate(-1);
     } catch (error) {
@@ -78,6 +78,7 @@ export function useUpdateSeries() {
         isApproved: false, // Flag đánh dấu từ chối
         note: feedback
       };
+      // console.log("----------!Feedback text debug: ", feedback);
 
       // Cả 2 role khi từ chối đều đẩy truyện về trạng thái "rejected", 
       // tùy từng backend config nhưng hàm gọi API tương tự như bước approve.
@@ -90,7 +91,7 @@ export function useUpdateSeries() {
       // Ghi đè trạng thái local thành "rejected"
       setLocalStatus("rejected");
       showAlert("Series has been rejected.");
-      
+
       navigate(-1);
     } catch (error) {
       console.error("Error rejecting series:", error);

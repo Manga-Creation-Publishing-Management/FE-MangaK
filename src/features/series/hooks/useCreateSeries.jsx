@@ -5,11 +5,11 @@ import { seriesService } from "../../../services/seriesService";
 import { useToast } from "../../../shared/hooks/useToast";
 
 // Custom hook quản lý trạng thái và logic cho form tạo mới bộ truyện (Create Series)
-export default function useCreateSeries(onClose, onReload, reloadState ) {
+export default function useCreateSeries(onClose, onReload, reloadState) {
   const { showAlert } = useToast();
 
   // State lưu danh sách thể loại lấy từ API
-  const [genreList, setGenreList] = useState([]); 
+  const [genreList, setGenreList] = useState([]);
   // State mảng chứa ID của các thể loại người dùng đã chọn
   const [selectGenres, setSelectGenres] = useState([]);
   // State lưu trữ dữ liệu các ô text trong form (như title, description)
@@ -35,7 +35,7 @@ export default function useCreateSeries(onClose, onReload, reloadState ) {
       // Chờ gọi 2 API lấy thể loại và series
       const resultsGenre = await seriesService.getAllCategory();
       const resultsSeries = await seriesService.getAllSeries();
-      
+
       // Cập nhật state
       setGenreList(resultsGenre.data);
       // Đảo ngược mảng series (toReversed) để hiển thị truyện mới nhất lên đầu
@@ -43,7 +43,7 @@ export default function useCreateSeries(onClose, onReload, reloadState ) {
     };
     fetchApi();
   }, [reloadState])
-  
+
   // Hàm xử lý khi người dùng chọn/bỏ chọn một thể loại (tag)
   const handleActive = (genreId) => {
     if (selectGenres.includes(genreId)) {
@@ -113,7 +113,7 @@ export default function useCreateSeries(onClose, onReload, reloadState ) {
         setTimeout(() => {
           onClose();
           onReload();
-        },0);
+        }, 0);
       }
     } catch (error) {
       // Ghi log nếu xảy ra lỗi trong quá trình tạo
