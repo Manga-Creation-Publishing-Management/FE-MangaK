@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { WelcomeLine } from "@/shared/components/WelcomeLine";
 import { seriesService } from "../../services/seriesService";
 import { updateSeries } from "../../services/updateSeriesService";
+<<<<<<< HEAD
 import Feedback from "@/shared/components/Feedback";
+=======
+import { Feedback } from "@/shared/components/Feedback";
+>>>>>>> 66e51d545b446c0a37b0266e73c22c1c5d46291d
 import { useSeriesManagement } from "../../features/series/hooks/useSeriesManagement";
 import { useToast } from "@/shared/hooks/useToast";
 
@@ -124,7 +128,11 @@ export function EditorialDashboard() {
         onClose={() => setShowSuccessModal(false)}
       />
 
+<<<<<<< HEAD
       <div className="pb-10">
+=======
+      <div className="mb-10">
+>>>>>>> 66e51d545b446c0a37b0266e73c22c1c5d46291d
         <Feedback />
       </div>
     </div>

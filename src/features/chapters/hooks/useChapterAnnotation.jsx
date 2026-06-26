@@ -4,7 +4,7 @@ import { useToast } from "../../../shared/hooks/useToast";
 /**
  * Custom hook quản lý các state và logic xử lý liên quan đến chức năng PDF Annotation (chú thích/vẽ).
  */
-export function useChapterAnnotation() {
+export function useChapterAnnotation(onClose) {
   const { showAlert } = useToast();
 
   // Chế độ chọn công cụ: 'brush' (cọ vẽ) hoặc 'text' (gõ chữ)
@@ -21,9 +21,6 @@ export function useChapterAnnotation() {
 
   // Màu sắc hiện tại của nét vẽ/chữ viết (mặc định là màu đỏ)
   const [brushColor, setBrushColor] = useState("#ef4444");
-
-  // Trạng thái đóng/mở modal xem PDF và vẽ annotation
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Trang hiện tại của file PDF đang được hiển thị
   const [pageNumber, setPageNumber] = useState(1);
@@ -111,10 +108,10 @@ export function useChapterAnnotation() {
    * Đóng modal vẽ annotation, reset số trang hiển thị về trang 1 và xóa ô nhập chữ tạm thời
    */
   const closeModal = () => {
-    setIsModalOpen(false);
     setPageNumber(1);
     setIsPageLoaded(false);
     setTextInput('');
+    if (onClose) onClose();
   };
 
   /**
@@ -180,8 +177,6 @@ export function useChapterAnnotation() {
     setTextInput,
     brushColor,
     setBrushColor,
-    isModalOpen,
-    setIsModalOpen,
     pageNumber,
     setPageNumber,
     pageWidth,

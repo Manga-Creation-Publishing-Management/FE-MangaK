@@ -2,8 +2,10 @@ import { useEffect, useState, useRef } from "react"
 import { taskService } from "../../../services/taskService";
 import { useToast } from "../../../shared/hooks/useToast";
 
+
 export function useTaskDetail(taskId, role) {
   const { showAlert } = useToast();
+  const [feedback, setFeedback] = useState("");
 
   const [taskDetail, setTaskDetail] = useState(null);
 
@@ -77,6 +79,32 @@ export function useTaskDetail(taskId, role) {
       // Cập nhật state taskDetail với status mới
 
       showAlert("Approved Task!")
+      handleReload();
+
+
+    } catch (error) {
+      console.error("Lỗi khi cập nhật status:", error);
+      showAlert("Update failed: " + error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRejectTask = async () => {
+    if (!taskId) {
+      showAlert("Task ID does not exist");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await taskService.rejectTask(taskId, feedback);
+      console.log("Update status thành công:", response);
+
+      // Cập nhật state taskDetail với status mới
+
+      showAlert("Reject Task!")
+      handleReload();
 
 
     } catch (error) {
@@ -127,7 +155,10 @@ export function useTaskDetail(taskId, role) {
     handleStoryChange,
     handleGetTask,      // ← Thêm hàm này
     isLoading,
+    feedback,
+    setFeedback,
     handleSubmitTask,
-    handleApprovedTask
+    handleApprovedTask,
+    handleRejectTask
   }
 }

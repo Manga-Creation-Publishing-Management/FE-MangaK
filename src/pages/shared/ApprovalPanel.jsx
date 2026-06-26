@@ -8,8 +8,8 @@ export function ApprovalPanel({
   onApprove,
   onReject,
   isLoading = false,
-  approveText = "Approve Series/ Chapter",
-  rejectText = "Reject & Send Feedback",
+  approveText = "Approve",
+  rejectText = "Reject",
 }) {
   return (
     // Vỏ ngoài của bảng điều khiển, cách điệu với viền trên và shadow khi hover

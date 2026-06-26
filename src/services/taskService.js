@@ -32,6 +32,16 @@ export const taskService = {
     });
   },
 
+  async rejectTask(taskId, feedbackContent) {
+    return await api.put('/MangaTask/review-task', 
+    {
+      taskId: taskId,
+      isApproved: false,
+      feedbackContent: feedbackContent
+    }
+);
+  },
+
   async submitTask(formData) {
     return await api.put('/MangaTask/submit-task', formData);
   }
