@@ -16,7 +16,7 @@ export function KonvaDraw({
     texts = [],              // Danh sách các chữ chú thích của trang hiện tại
     setTexts,                // Setter cập nhật danh sách chữ chú thích
     color,                   // Màu vẽ/viết chữ hiện tại đang chọn
-    isReadOnly = false       // Chế độ chỉ đọc (ví dụ: Mangaka chỉ được xem phản hồi của biên tập viên)
+    isReadOnly = false       // Chế độ chỉ đọc
 }) {
     // Trạng thái giữ chuột khi đang vẽ
     const isDrawing = useRef(false);

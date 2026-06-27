@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useToast } from "../../../shared/hooks/useToast";
+import { feedbackService } from '../../../services/feedbackService';
 
 /**
  * Custom hook quản lý các state và logic xử lý liên quan đến chức năng PDF Annotation (chú thích/vẽ).
@@ -25,7 +26,7 @@ export function useChapterAnnotation(onClose) {
   // Trang hiện tại của file PDF đang được hiển thị
   const [pageNumber, setPageNumber] = useState(1);
 
-  // Chiều rộng hiển thị mặc định của trang PDF (đơn vị pixel)
+  // Chiều rộng hiển thị mặc định của trang PDF (đơn vị pixel), sẽ được cập nhật lại theo container
   const [pageWidth, setPageWidth] = useState(600);
 
   // Chiều cao hiển thị của trang PDF (sẽ được cập nhật động theo tỉ lệ trang gốc)
@@ -125,11 +126,10 @@ export function useChapterAnnotation(onClose) {
 
   /**
    * Callback được gọi khi một trang PDF tải xong thành công.
-   * Tính toán chiều cao hiển thị tương ứng theo tỉ lệ của trang gốc dựa trên chiều rộng cố định (600px).
+   * Tính toán chiều cao hiển thị tương ứng theo tỉ lệ của trang gốc dựa trên chiều rộng hiện tại.
    */
   const onPageLoadSuccess = (page) => {
-    const scaledHeight = page.height * (600 / page.width);
-    setPageWidth(600);
+    const scaledHeight = page.height * (pageWidth / page.width);
     setPageHeight(scaledHeight);
     setIsPageLoaded(true);
   };
@@ -144,7 +144,7 @@ export function useChapterAnnotation(onClose) {
   /**
    * Gộp chung cả nét vẽ (lines) và chữ (texts) của từng trang vào một file JSON duy nhất để gửi qua API
    */
-  const handleSubmitAnnotation = () => {
+  const handleSubmitAnnotation = async (seriesId, chapterId, taskId, role) => {
     const combinedAnnotations = {};
 
     // Gom tất cả các trang có chỉnh sửa nét vẽ hoặc chữ
@@ -160,9 +160,15 @@ export function useChapterAnnotation(onClose) {
       };
     });
 
-    console.log("Combined Annotations JSON:", JSON.stringify(combinedAnnotations));
+    console.log("TEST Combined Annotations JSON:", JSON.stringify(combinedAnnotations));
     // CHÈN GỌI API Ở ĐÂY: Có thể chuyển JSON.stringify(combinedAnnotations) trong body gửi về Back-end
-    showAlert("Annotation submitted successfully (API integration pending)!");
+    try {
+      await feedbackService.sendAnnotation(seriesId || null, chapterId || null, taskId || null, JSON.stringify(combinedAnnotations), "EditPDF");
+      showAlert("Annotation submitted successfully!");
+    } catch (err) {
+      console.log("TEST error:", err)
+      showAlert("Annotation submission failed!");
+    }
     closeModal();
   };
 

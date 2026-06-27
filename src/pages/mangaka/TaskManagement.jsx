@@ -6,7 +6,7 @@ import { StatusBadge } from "@/shared/components/StatusBadge";
 import dayjs from 'dayjs';
 import { useParams } from "react-router";
 // import { useSeriesManagement } from "../../series/hooks/useSeriesManagement";
-import utc from 'dayjs/plugin/utc'; 
+import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 export function TaskManagement() {
 
@@ -23,13 +23,15 @@ export function TaskManagement() {
     chapters,
     selectedSeriesId,
     setSelectedSeriesId,
-    handleSubmitCreateTask
+    handleSubmitCreateTask,
+    handleReload,
+    reload
   } = useCreateTask();
 
   const {
     taskList,
     handleNavigateToTask
-  } = useTaskList();
+  } = useTaskList(reload);
 
   console.log("chapet", taskList);
 
@@ -50,13 +52,14 @@ export function TaskManagement() {
           </button>
         </div>
         {taskList?.map(item => (
+
           <div className="space-y-4 mb-5">
             {/* {tasks.map((task) => ( */}
             <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-shadow">
               {/* Phần trên: Tiêu đề bên trái, Trạng thái & Nút bấm bên phải */}
               <div className="flex items-center justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-card-foreground truncate text-xl font-semibold">Chapter {item.chapterNumber} - { item.seriesTitle}</h3>
+                  <h3 className="font-semibold text-card-foreground truncate text-xl font-semibold">Chapter {item.chapterNumber} - {item.seriesTitle}</h3>
                   <p className="text-sm text-muted-foreground mt-1">Page Range: {item.taskDescription}</p>
                 </div>
 
@@ -104,6 +107,7 @@ export function TaskManagement() {
           selectedSeriesId={selectedSeriesId}
           onSeriesChange={setSelectedSeriesId}
           onSubmitCreateTask={handleSubmitCreateTask}
+          onReload={handleReload}
         />
       }
       {/* {showCreateSeriesModal && (<CreateSeriesModal onClose={handleClick} onReload={handleReload} />)} */}

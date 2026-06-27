@@ -281,10 +281,13 @@ export function ChapterDetail() {
         </div>
       </div>
 
-      <AnnotationModal 
-        isOpen={isAnnotationOpen} 
-        onClose={() => setIsAnnotationOpen(false)} 
-        chapterFileUrl={chapterDetail?.chapterFileUrl} 
+      <AnnotationModal
+        isOpen={isAnnotationOpen}
+        onClose={() => setIsAnnotationOpen(false)}
+        fileUrl={chapterDetail?.chapterFileUrl}
+        chapterId={chapterId}
+        seriesId={seriesId}
+        role={currentRole.toLowerCase()}
       />
     </>
   )
