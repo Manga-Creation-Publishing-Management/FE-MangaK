@@ -24,11 +24,7 @@ export function TantouDashboard() {
             <div className='px-9 mt-5 text-2xl font-medium text-primary'>Assigned Series</div>
             <SeriesManagement role="tantou" statusFilter={["Processing", "PendingBoard", "Rejected", "Approved", "Publishing"]} />
 
-<<<<<<< HEAD
-            <div className='mt-5 px-9 pb-10'>
-=======
             <div className='px-9 mb-10'>
->>>>>>> 66e51d545b446c0a37b0266e73c22c1c5d46291d
                 <Feedback />
             </div>
         </div >

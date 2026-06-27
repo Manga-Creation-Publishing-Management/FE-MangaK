@@ -1,11 +1,7 @@
 import { OverviewCard } from '@/shared/components/OverviewCard';
 import { WelcomeLine } from '@/shared/components/WelcomeLine';
 import { CircleCheckBig, CircleDashed, CircleAlert } from 'lucide-react';
-<<<<<<< HEAD
-import Feedback from '@/shared/components/Feedback';
-=======
 import { Feedback } from '@/shared/components/Feedback';
->>>>>>> 66e51d545b446c0a37b0266e73c22c1c5d46291d
 import { MyTask } from './MyTask';
 
 // Component Trang chủ (Dashboard) dành riêng cho role Assistant (Trợ lý)
@@ -27,11 +23,7 @@ export function AssistantDashboard() {
 
 
       </div>
-<<<<<<< HEAD
-      <div className='mt-5 px-9 pb-10'>
-=======
       <div className='mt-5 px-9 mb-10'>
->>>>>>> 66e51d545b446c0a37b0266e73c22c1c5d46291d
         <Feedback />
       </div>
     </div >
