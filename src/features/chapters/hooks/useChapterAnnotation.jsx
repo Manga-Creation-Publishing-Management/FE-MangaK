@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useToast } from "../../../shared/hooks/useToast";
+import { feedbackService } from '../../../services/feedbackService';
 
 /**
  * Custom hook quản lý các state và logic xử lý liên quan đến chức năng PDF Annotation (chú thích/vẽ).
@@ -143,7 +144,7 @@ export function useChapterAnnotation(onClose) {
   /**
    * Gộp chung cả nét vẽ (lines) và chữ (texts) của từng trang vào một file JSON duy nhất để gửi qua API
    */
-  const handleSubmitAnnotation = () => {
+  const handleSubmitAnnotation = async (seriesId, chapterId, taskId) => {
     const combinedAnnotations = {};
 
     // Gom tất cả các trang có chỉnh sửa nét vẽ hoặc chữ
@@ -159,9 +160,15 @@ export function useChapterAnnotation(onClose) {
       };
     });
 
-    console.log("Combined Annotations JSON:", JSON.stringify(combinedAnnotations));
+    console.log("TEST Combined Annotations JSON:", JSON.stringify(combinedAnnotations));
     // CHÈN GỌI API Ở ĐÂY: Có thể chuyển JSON.stringify(combinedAnnotations) trong body gửi về Back-end
-    showAlert("Annotation submitted successfully (API integration pending)!");
+    try {
+      await feedbackService.sendAnnotation(seriesId, chapterId, taskId, JSON.stringify(combinedAnnotations), "EditPDF");
+      showAlert("Annotation submitted successfully!");
+    } catch (err) {
+      console.log("TEST error:", err)
+      showAlert("Annotation submission failed!");
+    }
     closeModal();
   };
 
