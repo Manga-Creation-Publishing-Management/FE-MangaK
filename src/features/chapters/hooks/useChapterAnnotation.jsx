@@ -25,7 +25,7 @@ export function useChapterAnnotation(onClose) {
   // Trang hiện tại của file PDF đang được hiển thị
   const [pageNumber, setPageNumber] = useState(1);
 
-  // Chiều rộng hiển thị mặc định của trang PDF (đơn vị pixel)
+  // Chiều rộng hiển thị mặc định của trang PDF (đơn vị pixel), sẽ được cập nhật lại theo container
   const [pageWidth, setPageWidth] = useState(600);
 
   // Chiều cao hiển thị của trang PDF (sẽ được cập nhật động theo tỉ lệ trang gốc)
@@ -125,11 +125,10 @@ export function useChapterAnnotation(onClose) {
 
   /**
    * Callback được gọi khi một trang PDF tải xong thành công.
-   * Tính toán chiều cao hiển thị tương ứng theo tỉ lệ của trang gốc dựa trên chiều rộng cố định (600px).
+   * Tính toán chiều cao hiển thị tương ứng theo tỉ lệ của trang gốc dựa trên chiều rộng hiện tại.
    */
   const onPageLoadSuccess = (page) => {
-    const scaledHeight = page.height * (600 / page.width);
-    setPageWidth(600);
+    const scaledHeight = page.height * (pageWidth / page.width);
     setPageHeight(scaledHeight);
     setIsPageLoaded(true);
   };

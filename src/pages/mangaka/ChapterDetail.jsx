@@ -281,10 +281,10 @@ export function ChapterDetail() {
         </div>
       </div>
 
-      <AnnotationModal 
-        isOpen={isAnnotationOpen} 
-        onClose={() => setIsAnnotationOpen(false)} 
-        chapterFileUrl={chapterDetail?.chapterFileUrl} 
+      <AnnotationModal
+        isOpen={isAnnotationOpen}
+        onClose={() => setIsAnnotationOpen(false)}
+        fileUrl={chapterDetail?.chapterFileUrl}
       />
     </>
   )
