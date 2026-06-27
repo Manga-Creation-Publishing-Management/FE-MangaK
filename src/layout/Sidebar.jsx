@@ -52,7 +52,7 @@ export function Sidebar({ userRole }) {
 
   return (
     <div
-      className={`bg-sidebar border-r border-sidebar-border h-screen p-4 transition-all duration-300 relative flex flex-col ${isOpen ? 'w-64' : 'w-20'
+      className={`bg-sidebar border-r border-sidebar-border h-screen p-4 transition-all duration-300 relative flex flex-col ${isOpen ? 'w-60' : 'w-20'
         }`}
     >
       <div className={`flex items-center mb-6 ${isOpen ? 'justify-between' : 'justify-center flex-col gap-4'}`}>

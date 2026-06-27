@@ -24,7 +24,7 @@ export function Layout({ roleName }) {
 
   return (
     <div className="flex h-screen w-full overflow-hidden">
-      <Sidebar userRole={roleName} />
+      <Sidebar userRole={roleName} className="" />
       <main className="flex-1 flex flex-col h-full overflow-hidden bg-background">
         <HeaderPage roleName={displayRole} avatarUrl="/avatarImgDemo.png" />
         {pageHeader && (

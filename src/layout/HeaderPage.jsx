@@ -23,7 +23,7 @@ export function HeaderPage({ roleName, avatarUrl }) {
                     <span className="text-sidebar-foreground text-lg font-medium">Welcome back!</span><br />
                     <span className="text-muted-foreground">{roleName}</span>
                 </div>
-                
+
                 {roleName === 'reader' &&
                     <div className="col-span-4 content-center justify-center">
                         <Logo />

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { WelcomeLine } from "@/shared/components/WelcomeLine";
 import { seriesService } from "../../services/seriesService";
 import { updateSeries } from "../../services/updateSeriesService";
-import Notification from "@/shared/components/Notification";
+import { Feedback } from "@/shared/components/Feedback";
 import { useSeriesManagement } from "../../features/series/hooks/useSeriesManagement";
 import { useToast } from "@/shared/hooks/useToast";
 
@@ -125,7 +125,7 @@ export function EditorialDashboard() {
       />
 
       <div className="mb-10">
-        <Notification />
+        <Feedback />
       </div>
     </div>
   );

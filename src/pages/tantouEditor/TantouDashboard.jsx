@@ -2,7 +2,7 @@ import { OverviewCard } from '@/shared/components/OverviewCard';
 import { SeriesManagement } from '../shared/SeriesManagement';
 import { WelcomeLine } from '@/shared/components/WelcomeLine';
 import { CircleCheckBig, CircleEllipsis, CircleX } from 'lucide-react';
-import { Notification } from '@/shared/components/Notification';
+import { Feedback } from '@/shared/components/Feedback';
 
 // Component Trang chủ (Dashboard) dành riêng cho role Tantou Editor (Biên tập viên phụ trách)
 export function TantouDashboard() {
@@ -25,7 +25,7 @@ export function TantouDashboard() {
             <SeriesManagement role="tantou" statusFilter={["Processing", "PendingBoard", "Rejected", "Approved", "Publishing"]} />
 
             <div className='px-9 mb-10'>
-                <Notification />
+                <Feedback />
             </div>
         </div >
     )
