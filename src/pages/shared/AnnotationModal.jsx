@@ -1,14 +1,15 @@
+import React, { useRef, useEffect } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
-import { Undo, Brush, Type } from "lucide-react";
+import { Undo, Brush, Type, X } from "lucide-react";
 import { KonvaDraw } from "./KonvaDraw";
 import { useChapterAnnotation } from "../../features/chapters/hooks/useChapterAnnotation";
 
 // Kích hoạt Web Worker để thư viện react-pdf xử lý PDF ở một luồng độc lập
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-export function AnnotationModal({ isOpen, onClose, chapterFileUrl }) {
+export function AnnotationModal({ isOpen, onClose, fileUrl }) {
   const {
     tool,
     setTool,
@@ -21,6 +22,7 @@ export function AnnotationModal({ isOpen, onClose, chapterFileUrl }) {
     pageNumber,
     setPageNumber,
     pageWidth,
+    setPageWidth,
     pageHeight,
     isPageLoaded,
     setIsPageLoaded,
@@ -36,6 +38,15 @@ export function AnnotationModal({ isOpen, onClose, chapterFileUrl }) {
     handleSubmitAnnotation,
   } = useChapterAnnotation(onClose);
 
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen && containerRef.current) {
+      // 32px cho phần padding 2 bên (p-4 = 16px * 2)
+      setPageWidth(containerRef.current.clientWidth - 32);
+    }
+  }, [isOpen, setPageWidth]);
+
   if (!isOpen) return null;
 
   return (
@@ -43,7 +54,7 @@ export function AnnotationModal({ isOpen, onClose, chapterFileUrl }) {
       onClick={handleBackdropClick}
       className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
     >
-      <div className="bg-card border border-border rounded-2xl shadow-2xl p-6 max-w-[95vw] max-h-[95vh] overflow-y-auto flex flex-col items-center gap-4 relative">
+      <div className="bg-card border border-border rounded-2xl shadow-2xl p-6 w-[95vw] md:w-[85vw] lg:w-[1000px] max-w-[100vw] max-h-[95vh] overflow-y-auto flex flex-col items-center gap-4 relative">
 
         {/* Tiêu đề & Nút Close */}
         <div className="flex justify-between items-center w-full pb-4 border-b border-border">
@@ -52,7 +63,7 @@ export function AnnotationModal({ isOpen, onClose, chapterFileUrl }) {
             onClick={closeModal}
             className="text-muted-foreground hover:text-foreground p-1.5 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
           >
-            ✕
+            <X />
           </button>
         </div>
 
@@ -78,13 +89,15 @@ export function AnnotationModal({ isOpen, onClose, chapterFileUrl }) {
             </button>
           </div>
 
-          <input
-            type="text"
-            value={textInput}
-            onChange={(e) => setTextInput(e.target.value)}
-            placeholder="Enter text..."
-            className="px-3 py-1.5 border border-border rounded-lg bg-background text-foreground text-sm outline-none focus:ring-1 focus:ring-primary"
-          />
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              value={textInput}
+              onChange={(e) => setTextInput(e.target.value)}
+              placeholder="Enter text..."
+              className="px-3 py-1.5 border border-border rounded-lg bg-background text-foreground text-sm outline-none focus:ring-1 focus:ring-primary w-48"
+            />
+          </div>
         </div>
 
         {/* Thanh công cụ vẽ: Brush color, Undo, Clear */}
@@ -121,9 +134,9 @@ export function AnnotationModal({ isOpen, onClose, chapterFileUrl }) {
         </div>
 
         {/* Vùng hiển thị PDF và lớp vẽ KonvaDraw */}
-        <div className="relative overflow-hidden border border-border rounded-xl shadow-inner bg-white min-h-[400px] flex items-center justify-center">
+        <div ref={containerRef} className="relative overflow-auto border border-border rounded-xl shadow-inner bg-slate-100 min-h-[400px] max-h-[65vh] w-full flex justify-center items-start p-4">
           <Document
-            file={chapterFileUrl}
+            file={fileUrl}
             onLoadSuccess={onDocumentLoadSuccess}
             loading={
               <div className="flex flex-col items-center gap-2 py-20 px-32 text-muted-foreground">

@@ -5,13 +5,15 @@ import { StatusBadge } from "@/shared/components/StatusBadge";
 import { ApprovalPanel } from "@/pages/shared/ApprovalPanel";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { AnnotationModal } from "../shared/AnnotationModal";
+import { useState } from "react";
 dayjs.extend(utc);
 export function TaskDetail() {
-
 
   const navigate = useNavigate();
   const taskId = useLocation().state?.taskId;
   const role = useLocation().state?.role;
+  const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
 
   console.log("ss", taskId);
 
@@ -159,7 +161,21 @@ export function TaskDetail() {
                         <p className="text-xl font-semibold text-muted-foreground">No file has been submitted by the assistant yet.</p>
                       </>
                     )}
+
+                    {/* NHÃ THÊM CÁI NÚT ANNOTATE CHO MANGAKA NÀY */}
+                    <button
+                      onClick={() => setIsAnnotationOpen(true)}
+                      className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm w-[240px]"
+                    >
+                      View and Annotate
+                    </button>
+                    <AnnotationModal
+                      isOpen={isAnnotationOpen}
+                      onClose={() => setIsAnnotationOpen(false)}
+                      fileUrl={taskDetail?.submittedFileUrl}
+                    />
                   </div>
+
                 </>
               }
               {/* KẾT THÚC PHẦN CHÈN
@@ -190,6 +206,8 @@ export function TaskDetail() {
                     {isLoading ? "Submitting..." : "Submit Task"}
                   </button>
                 }
+
+
               </>
             }
 
@@ -227,4 +245,5 @@ export function TaskDetail() {
       </div>
     </>
   )
+
 }
