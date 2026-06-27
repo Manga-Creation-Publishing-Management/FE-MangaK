@@ -5,6 +5,11 @@ import { useNavigate } from "react-router";
 export function useSeriesManagement() {
   // State kiểm soát việc đóng/mở popup Tạo truyện mới (CreateSeriesModal)
   const [showCreateSeriesModal, setShowCreateSeriesModal] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(8);
+
+  const lastPostIndex = currentPage * postsPerPage;
   
   // Biến cờ (flag) dùng để trigger (kích hoạt) useEffect fetch lại dữ liệu khi cần
   const [reload, setReload] = useState(false);

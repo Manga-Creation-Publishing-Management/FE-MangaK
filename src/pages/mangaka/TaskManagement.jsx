@@ -23,13 +23,15 @@ export function TaskManagement() {
     chapters,
     selectedSeriesId,
     setSelectedSeriesId,
-    handleSubmitCreateTask
+    handleSubmitCreateTask,
+    handleReload,
+    reload
   } = useCreateTask();
 
   const {
     taskList,
     handleNavigateToTask
-  } = useTaskList();
+  } = useTaskList(reload);
 
   console.log("chapet", taskList);
 
@@ -104,6 +106,7 @@ export function TaskManagement() {
           selectedSeriesId={selectedSeriesId}
           onSeriesChange={setSelectedSeriesId}
           onSubmitCreateTask={handleSubmitCreateTask}
+          onReload={handleReload}
         />
       }
       {/* {showCreateSeriesModal && (<CreateSeriesModal onClose={handleClick} onReload={handleReload} />)} */}
