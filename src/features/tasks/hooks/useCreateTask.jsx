@@ -15,6 +15,14 @@ export function useCreateTask() {
 
   const [chapters, setChapters] = useState([]);
   const [selectedSeriesId, setSelectedSeriesId] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [reload, setReload] = useState(false);
+
+  const handleReload = () => {
+    setReload(!reload);
+  }
+
+  
 
   const handleShowCreateTaskModal = () => {
     setShowCreateTaskModal(!showCreateTaskModal);
@@ -87,7 +95,8 @@ export function useCreateTask() {
     const taskData = {
       seriesId: allFields.seriesId || null,
       taskTitle: allFields.taskTitle || null,
-      page_range: allFields.page_range || "",
+      from: allFields.fromPage ? Number(allFields.fromPage) : 0,
+      to: allFields.toPage ? Number(allFields.toPage) : 0,
       deadline: formattedDeadline,
       chapterId: allFields.chapterId || null,
       assignedToId: allFields.assignedToId || null, // Nhận từ select name="assignedToId"
@@ -106,14 +115,14 @@ export function useCreateTask() {
     try {
       const response = await taskService.createTask(taskData);
       showAlert("Created task successfully!");
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
+      handleReload();
+      setShowCreateTaskModal(false);
     } catch (error) {
       console.error("Chi tiết lỗi:", error);
       showAlert("Create task failed, " + error.message, "error");
     }
   }
+
 
 
 
@@ -125,6 +134,8 @@ export function useCreateTask() {
     chapters,
     selectedSeriesId,
     setSelectedSeriesId,
-    handleSubmitCreateTask
+    handleSubmitCreateTask,
+    handleReload,
+    reload
   }
 }
