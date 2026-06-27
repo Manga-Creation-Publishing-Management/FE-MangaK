@@ -163,16 +163,19 @@ export function TaskDetail() {
                     )}
 
                     {/* NHÃ THÊM CÁI NÚT ANNOTATE CHO MANGAKA NÀY */}
-                    <button
-                      onClick={() => setIsAnnotationOpen(true)}
-                      className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm w-[240px]"
-                    >
-                      View and Annotate
-                    </button>
+                    {taskDetail?.status === "Pending" &&
+                      <button
+                        onClick={() => setIsAnnotationOpen(true)}
+                        className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm w-[240px]"
+                      >
+                        View and Annotate
+                      </button>}
                     <AnnotationModal
                       isOpen={isAnnotationOpen}
                       onClose={() => setIsAnnotationOpen(false)}
                       fileUrl={taskDetail?.submittedFileUrl}
+                      taskId={taskId}
+                      role={role}
                     />
                   </div>
 

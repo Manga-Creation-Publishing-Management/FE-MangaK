@@ -285,6 +285,9 @@ export function ChapterDetail() {
         isOpen={isAnnotationOpen}
         onClose={() => setIsAnnotationOpen(false)}
         fileUrl={chapterDetail?.chapterFileUrl}
+        chapterId={chapterId}
+        seriesId={seriesId}
+        role={currentRole.toLowerCase()}
       />
     </>
   )
