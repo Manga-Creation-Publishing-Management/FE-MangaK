@@ -144,7 +144,7 @@ export function useChapterAnnotation(onClose) {
   /**
    * Gộp chung cả nét vẽ (lines) và chữ (texts) của từng trang vào một file JSON duy nhất để gửi qua API
    */
-  const handleSubmitAnnotation = async (seriesId, chapterId, taskId) => {
+  const handleSubmitAnnotation = async (seriesId, chapterId, taskId, role) => {
     const combinedAnnotations = {};
 
     // Gom tất cả các trang có chỉnh sửa nét vẽ hoặc chữ
@@ -163,7 +163,7 @@ export function useChapterAnnotation(onClose) {
     console.log("TEST Combined Annotations JSON:", JSON.stringify(combinedAnnotations));
     // CHÈN GỌI API Ở ĐÂY: Có thể chuyển JSON.stringify(combinedAnnotations) trong body gửi về Back-end
     try {
-      await feedbackService.sendAnnotation(seriesId, chapterId, taskId, JSON.stringify(combinedAnnotations), "EditPDF");
+      await feedbackService.sendAnnotation(seriesId || null, chapterId || null, taskId || null, JSON.stringify(combinedAnnotations), "EditPDF");
       showAlert("Annotation submitted successfully!");
     } catch (err) {
       console.log("TEST error:", err)

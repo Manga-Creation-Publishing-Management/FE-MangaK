@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useLocation } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
@@ -9,7 +9,7 @@ import { useChapterAnnotation } from "../../features/chapters/hooks/useChapterAn
 // Kích hoạt Web Worker để thư viện react-pdf xử lý PDF ở một luồng độc lập
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-export function AnnotationModal({ isOpen, onClose, fileUrl }) {
+export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, chapterId = null, taskId = null, role }) {
   const {
     tool,
     setTool,
@@ -39,10 +39,6 @@ export function AnnotationModal({ isOpen, onClose, fileUrl }) {
   } = useChapterAnnotation(onClose);
 
   const containerRef = useRef(null);
-
-  const seriesId = useLocation().state.seriesId;
-  const chapterId = useLocation().state.chapterId;
-  const taskId = useLocation().state.taskId;
 
   useEffect(() => {
     if (isOpen && containerRef.current) {
@@ -209,7 +205,7 @@ export function AnnotationModal({ isOpen, onClose, fileUrl }) {
         {/* Nút Submit Annotation */}
         <div className="w-full border-t border-border pt-4 mt-2">
           <button
-            onClick={() => handleSubmitAnnotation(seriesId, chapterId, taskId)}
+            onClick={() => handleSubmitAnnotation(seriesId, chapterId, taskId, role)}
             className="w-full py-3 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-all shadow-md cursor-pointer hover:shadow-lg text-sm"
           >
             Submit Annotation
