@@ -56,7 +56,7 @@ export function LeaderboardPage() {
   };
 
   return (
-    <div className="p-9 space-y-8">
+    <div className="p-6 space-y-8">
       {/* Tiêu đề trang và Nhóm nút (Toggle) chuyển đổi Tuần/Tháng */}
       <div className="flex justify-between items-center">
         <div>

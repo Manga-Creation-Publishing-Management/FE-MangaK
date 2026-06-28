@@ -79,8 +79,8 @@ export function EditorialDashboard() {
   };
 
   return (
-    <div className="p-9 space-y-8">
-      <WelcomeLine roleName="Editorial Board" />
+    <div className="p-6 space-y-8">
+      {/* <WelcomeLine roleName="Editorial Board" /> */}
 
       <div>
         <h2 className="text-xl font-semibold ml-3">Approved Series</h2>

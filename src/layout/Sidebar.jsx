@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {
   Home, FolderKanban, DollarSign, TrendingUp, Settings,
   CalendarClock, CheckSquare, ClipboardList, FileSearch, BookMarked,
-  Menu, Upload
+  Menu, Upload, Users
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router';
 import { Logo } from '@/shared/components/Logo';
@@ -18,6 +18,7 @@ export function Sidebar({ userRole }) {
     ],
     admin: [
       { icon: Home, label: 'Dashboard', path: '/admin', key: 'dashboard' },
+      { icon: Users, label: 'Account Management', path: '/admin/accounts', key: 'accounts' },
       { icon: Settings, label: 'Profile & Settings', path: '/admin/profile', key: 'profile' },
     ],
     mangaka: [
