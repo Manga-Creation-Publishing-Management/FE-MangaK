@@ -1,108 +1,86 @@
-import { useEffect, useState } from "react";
-import { WelcomeLine } from "@/shared/components/WelcomeLine";
-import { seriesService } from "../../services/seriesService";
-import { updateSeries } from "../../services/updateSeriesService";
 import { Feedback } from "@/shared/components/Feedback";
-import { useSeriesManagement } from "../../features/series/hooks/useSeriesManagement";
-import { useToast } from "@/shared/hooks/useToast";
-
+import { OverviewCard } from "@/shared/components/OverviewCard";
+import { CheckCircle, Calendar, BookOpen } from "lucide-react";
 import { ApprovedSeriesCard } from "./components/ApprovedSeriesCard";
 import { CancelSeriesModal } from "./components/CancelSeriesModal";
 import { CancelSuccessModal } from "./components/CancelSuccessModal";
+import { useEditorialDashboard } from "./hooks/useEditorialDashboard";
+import { UpcomingReleases } from "./components/UpcomingReleases";
+import { StatusDistribution } from "./components/StatusDistribution";
 
 export function EditorialDashboard() {
-  const { handleNavigate } = useSeriesManagement();
-  const { showAlert } = useToast();
-
-  const [showCancelModal, setShowCancelModal] = useState(false);
-  const [selectedSeries, setSelectedSeries] = useState(null);
-  const [cancelFeedback, setCancelFeedback] = useState("");
-  const [approvedSeries, setApprovedSeries] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [cancelledSeriesName, setCancelledSeriesName] = useState("");
-
-  const fetchApprovedSeries = async () => {
-    try {
-      const response = await seriesService.getAllSeries();
-      const allSeries = response.data || [];
-
-      const filtered = allSeries.filter(
-        (serie) =>
-          serie.status?.toLowerCase() === "approved" ||
-          serie.status?.toLowerCase() === "publishing"
-      );
-
-      const mapped = filtered.map((serie) => ({
-        id: serie.seriesId || serie.id,
-        name: serie.title,
-        author: serie.mangakaName,
-        chapters: serie.totalChapters || 0,
-        status: serie.status?.toLowerCase(),
-      }));
-
-      setApprovedSeries(mapped);
-    } catch (error) {
-      console.error("Failed to fetch approved series:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchApprovedSeries();
-  }, []);
-
-  const handleCancelClick = (item) => {
-    setSelectedSeries(item);
-    setShowCancelModal(true);
-  };
-
-  const handleCancelConfirm = async () => {
-    if (!cancelFeedback.trim()) {
-      showAlert("Please provide feedback for cancellation", "warning");
-      return;
-    }
-
-    try {
-      await updateSeries.cancelSeries(selectedSeries.id, cancelFeedback);
-      setCancelledSeriesName(selectedSeries.name);
-      setShowCancelModal(false);
-      setCancelFeedback("");
-      setSelectedSeries(null);
-      setShowSuccessModal(true);
-      fetchApprovedSeries();
-    } catch (error) {
-      console.error("Failed to cancel series:", error);
-      showAlert("Failed to cancel series. Please try again.", "error");
-    }
-  };
+  const {
+    showCancelModal,
+    setShowCancelModal,
+    selectedSeries,
+    setSelectedSeries,
+    cancelFeedback,
+    setCancelFeedback,
+    approvedSeries,
+    isLoading,
+    showSuccessModal,
+    setShowSuccessModal,
+    cancelledSeriesName,
+    seriesStats,
+    upcomingReleases,
+    handleCancelClick,
+    handleCancelConfirm,
+    handleNavigate,
+  } = useEditorialDashboard();
 
   return (
     <div className="p-6 space-y-8">
-      {/* <WelcomeLine roleName="Editorial Board" /> */}
-
-      <div>
-        <h2 className="text-xl font-semibold ml-3">Approved Series</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <OverviewCard
+          iconName={<CheckCircle size={24} />}
+          iconColor="#10b981"
+          contentText="Active Series"
+          valueNum={seriesStats.active}
+        />
+        <OverviewCard
+          iconName={<Calendar size={24} />}
+          iconColor="#06b6d4"
+          contentText="This Month Releases"
+          valueNum={seriesStats.thisMonthReleases}
+        />
+        <OverviewCard
+          iconName={<BookOpen size={24} />}
+          iconColor="#6366f1"
+          contentText="Total Series"
+          valueNum={seriesStats.total}
+        />
       </div>
 
-      <div className="space-y-4">
-        {isLoading ? (
-          <p className="text-muted-foreground">Loading approved series...</p>
-        ) : approvedSeries.length === 0 ? (
-          <p className="text-muted-foreground">
-            No approved series currently in publication.
-          </p>
-        ) : (
-          approvedSeries.map((item) => (
-            <ApprovedSeriesCard
-              key={item.id}
-              item={item}
-              onCancelClick={handleCancelClick}
-              onNavigate={handleNavigate}
-            />
-          ))
-        )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <UpcomingReleases upcomingReleases={upcomingReleases} />
+        <StatusDistribution statusDistribution={seriesStats.statusDistribution} />
+      </div>
+
+      <div className="bg-card border border-border rounded-xl p-6">
+        <div className="flex items-center gap-2 mb-5">
+          <CheckCircle size={20} className="text-primary" />
+          <h2 className="text-lg font-semibold">Approved Series</h2>
+        </div>
+
+        <div className="space-y-4 max-h-[480px] overflow-y-auto pr-2 custom-scrollbar">
+          {isLoading ? (
+            <p className="text-muted-foreground">Loading approved series...</p>
+          ) : approvedSeries.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              <CheckCircle size={40} className="mx-auto mb-3 opacity-30" />
+              <p className="text-sm">No approved series currently in publication.</p>
+            </div>
+          ) : (
+            approvedSeries.map((item) => (
+              <ApprovedSeriesCard
+                key={item.id}
+                item={item}
+                onCancelClick={handleCancelClick}
+                onNavigate={handleNavigate}
+              />
+            ))
+          )}
+        </div>
       </div>
 
       <CancelSeriesModal

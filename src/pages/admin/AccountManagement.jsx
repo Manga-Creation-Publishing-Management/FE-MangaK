@@ -3,7 +3,7 @@ import { Plus, ShieldCheck } from "lucide-react";
 import { userService } from "../../services/userService.js";
 import { useToast } from "@/shared/hooks/useToast";
 
-import { mapApiRole } from "./constants/adminConstants.js";
+import { apiRoleMap } from "./constants/adminConstants.js";
 import { UserFilters } from "./components/UserFilters.jsx";
 import { UserTable } from "./components/UserTable.jsx";
 import { CreateAccountModal } from "./components/CreateAccountModal.jsx";
@@ -36,7 +36,7 @@ export function AccountManagement() {
         name: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.userName || 'N/A',
         email: user.email || '',
         phone: user.phoneNumber || user.phone || user.phone || '',
-        role: accountType === "readers" ? "reader" : mapApiRole(user.role),
+        role: accountType === "readers" ? "reader" : apiRoleMap[user.role?.toLowerCase()] || user.role?.toLowerCase() || "mangaka",
         status: user.isActive === false || user.status?.toLowerCase() === 'suspended' || user.status?.toLowerCase() === 'inactive' ? 'inactive' : 'active',
         supervisorId: user.supervisorId || user.SupervisorId || null,
       }));

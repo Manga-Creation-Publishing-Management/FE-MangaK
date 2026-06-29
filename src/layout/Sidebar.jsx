@@ -74,7 +74,9 @@ export function Sidebar({ userRole }) {
           const cleanItemPath = item.path.replace(/\/$/, "");
           const isActive = item.key === 'dashboard'
             ? cleanPath === cleanItemPath
-            : cleanPath.startsWith(cleanItemPath);
+            : (item.key === 'series' && location.pathname.includes('/chapter/'))
+              ? true
+              : cleanPath.startsWith(cleanItemPath);
 
           return (
             <Link

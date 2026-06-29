@@ -20,13 +20,14 @@ export function TantouDashboard() {
                     <OverviewCard contentText="Rejected Series" iconName={<CircleX size={30} />}
                         iconColor="#fbbf24" valueNum={3} />
                 </div>
-            </div>
-            <div className='px-9 mt-5 text-2xl font-medium text-primary'>Assigned Series</div>
-            <SeriesManagement role="tantou" statusFilter={["Processing", "PendingBoard", "Rejected", "Approved", "Publishing"]} />
+                <div className='px-9 mt-5 text-2xl font-medium text-primary'>Assigned Series</div>
+                <SeriesManagement role="tantou" statusFilter={["Processing", "PendingBoard", "Rejected", "Approved", "Publishing"]} />
 
-            <div className='px-9 mb-10'>
-                <Feedback />
+                <div className='px-9 mb-10'>
+                    <Feedback />
+                </div>
             </div>
+
         </div >
     )
 }
