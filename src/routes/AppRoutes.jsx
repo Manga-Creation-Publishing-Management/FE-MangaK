@@ -12,6 +12,7 @@ import { ChapterDetail } from '../pages/mangaka/ChapterDetail.jsx';
 import { ProfilePage } from '../pages/shared/ProfilePage.jsx';
 import { Layout } from '@/layout/Layout.jsx';
 import { AdminDashboard } from '../pages/admin/AdminDashboard.jsx';
+import { AccountManagement } from '../pages/admin/AccountManagement.jsx';
 import { MangakaDashboard } from '../pages/mangaka/MangakaDashboard.jsx';
 import { AssistantDashboard } from '../pages/assistant/AssistantDashboard.jsx';
 import { TantouDashboard } from '../pages/tantouEditor/TantouDashboard.jsx';
@@ -100,6 +101,7 @@ export function AppRoutes() {
       <Route element={<ProtectedRoute allowedRole="admin" />}>
         <Route path="/admin" element={<Layout roleName="admin" />}>
           <Route index element={<AdminDashboard />} />
+          <Route path="accounts" element={<AccountManagement />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Route>

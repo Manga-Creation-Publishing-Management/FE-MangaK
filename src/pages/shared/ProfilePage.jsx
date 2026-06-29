@@ -18,12 +18,12 @@ export function ProfilePage() {
   const role = location.pathname.includes("mangaka")
     ? "mangaka"
     : location.pathname.includes("assistant")
-    ? "assistant"
-    : location.pathname.includes("tantou")
-    ? "tantou"
-    : location.pathname.includes("admin")
-    ? "admin"
-    : "editorial";
+      ? "assistant"
+      : location.pathname.includes("tantou")
+        ? "tantou"
+        : location.pathname.includes("admin")
+          ? "admin"
+          : "editorial";
 
   const {
     register,
@@ -132,15 +132,15 @@ export function ProfilePage() {
   };
 
   return (
-    <div className="p-9 space-y-8">
-      <div>
+    <div className="p-6 space-y-8">
+      {/* <div>
         <h1 className="text-sidebar-foreground font-medium text-2xl">
           Profile Settings
         </h1>
         <p className="text-muted-foreground mt-1">
           Manage your account information and preferences
         </p>
-      </div>
+      </div> */}
 
       <AvatarSection
         isLoading={isLoading}
