@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { ThemeContext } from '../../features/theme/ThemeContext.jsx'
+import { ThemeContext } from '@/features/theme/ThemeContext.jsx'
 import { Sun, Moon } from 'lucide-react'
 
 // Component Nút Chuyển Đổi Giao Diện Sáng/Tối (Light/Dark Mode)

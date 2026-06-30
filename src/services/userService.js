@@ -35,6 +35,11 @@ export const userService = {
     // Lấy danh sách các Tantou Editor phục vụ cho việc chọn ở trang Admin
     async getTantouList() {
         return api.get('/UserProfile/get-tantou-list');
+    },
+
+    // Lấy danh sách độc giả (Readers) đăng nhập bằng Google
+    async getReaderList() {
+        return api.get('/UserProfile/get-reader-list');
     }
 };
 
