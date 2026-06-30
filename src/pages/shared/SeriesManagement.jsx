@@ -3,6 +3,10 @@ import CreateSeriesModal from "../../features/series/components/CreateSeriesModa
 import { useSeriesManagement } from "../../features/series/hooks/useSeriesManagement";
 import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { StatusBadge } from "@/shared/components/StatusBadge";
+import { ArrowBigLeft, ArrowDownLeft, ArrowLeft, ArrowRight } from "lucide-react";
+import { getPaginationRange } from "../../features/Pagination/hooks/getPaginationRange";
+import { getTotalPage } from "../../features/Pagination/hooks/getTotalPage";
+import { PaginationCustom } from "../../features/Pagination/components/PaginationCustom";
 
 // Component SeriesManagement: Màn hình quản lý danh sách các bộ truyện
 export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
@@ -15,6 +19,8 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
     handleClick,
     handleNavigate
   } = useSeriesManagement();
+
+
 
   // Gọi hook useCreateSeries để lấy danh sách series data hiện có
   // Cần truyền biến reload để hook biết khi nào cần fetch lại data (ví dụ sau khi tạo mới thành công)
@@ -35,6 +41,14 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
       ? seriesData.filter(item => statusFilter.includes(item.status))
       : seriesData; // Nếu không có bộ lọc nào thì lấy toàn bộ
   }
+
+  const {
+    currentPage,
+    postsPerPage,
+    setCurrentPage,
+    currentDataListDisplay,
+    totalPages
+  } = getTotalPage(1, 4, filteredSeriesData);
 
   console.log(role);
   // console.log("Filtered Data for Tantou:", filteredSeriesData);
@@ -61,7 +75,7 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
 
         {/* Lưới (Grid) hiển thị danh sách các bộ truyện (3 cột) */}
         <div className="grid grid-cols-3 gap-6">
-          {filteredSeriesData?.map(item => (
+          {currentDataListDisplay?.map(item => (
             // Mỗi bộ truyện hiển thị dưới dạng một Card
             <div key={item.seriesId} className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
 
@@ -90,6 +104,13 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
           ))}
 
         </div>
+        <PaginationCustom
+          currentPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
+        />
+        
+
       </div>
 
       {/* Component Modal (Popup) để tạo bộ truyện mới.

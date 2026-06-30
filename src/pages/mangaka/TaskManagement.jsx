@@ -7,6 +7,8 @@ import dayjs from 'dayjs';
 import { useParams } from "react-router";
 // import { useSeriesManagement } from "../../series/hooks/useSeriesManagement";
 import utc from 'dayjs/plugin/utc';
+import { getTotalPage } from "../../features/Pagination/hooks/getTotalPage";
+import { PaginationCustom } from "../../features/Pagination/components/PaginationCustom";
 dayjs.extend(utc);
 export function TaskManagement() {
 
@@ -35,6 +37,14 @@ export function TaskManagement() {
 
   console.log("chapet", taskList);
 
+  const {
+      currentPage,
+      postsPerPage,
+      setCurrentPage,
+      currentDataListDisplay,
+      totalPages
+  } = getTotalPage(1, 4, taskList);
+
   return (
     <>
       <div className="p-9">
@@ -51,7 +61,7 @@ export function TaskManagement() {
             Create New Task
           </button>
         </div>
-        {taskList?.map(item => (
+        {currentDataListDisplay?.map(item => (
 
           <div className="space-y-4 mb-5">
             {/* {tasks.map((task) => ( */}
@@ -95,6 +105,12 @@ export function TaskManagement() {
             {/* ))} */}
           </div>
         ))}
+
+        <PaginationCustom
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  setCurrentPage={setCurrentPage}
+                />
 
       </div>
       {
