@@ -59,7 +59,7 @@ export function TaskDetail() {
 
             <div className="flex flex-col items-end space-y-2">
               <span className="mb-6" >
-                <StatusBadge status={taskDetail?.status} />
+                <StatusBadge status={taskDetail?.status?.toLowerCase()} />
               </span>
 
               <div className="flex items-center gap-1.5 text-sm text-muted-foreground bg-muted/50 px-3 py-1 rounded-md border border-border">

@@ -34,6 +34,9 @@
   --color-warning: #f59e0b;
   --color-success: #10b981;
   --color-info: #3b82f6;
+  --color-sky: #0D0B61;
+  --color-gold: #ffda62;
+  --color-schedule: #81bb4d;
 
   --color-border: rgba(155, 126, 184, 0.2);
 }
@@ -66,4 +69,7 @@
   --color-success: #34d399;
   --color-info: #60a5fa;
   --color-border: rgba(185, 155, 209, 0.2);
+  --color-sky: #7170b5;
+  --color-gold: #f1c557;
+  --color-schedule: #81bb4b;
 }

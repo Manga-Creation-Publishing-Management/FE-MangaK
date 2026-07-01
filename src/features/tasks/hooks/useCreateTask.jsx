@@ -43,6 +43,7 @@ export function useCreateTask() {
 
       let resultApproved = [];
       let resultPublishing = [];
+      let resultScheduled = [];
 
       // Gọi API Approved bằng try-catch riêng biệt
       try {
@@ -60,8 +61,17 @@ export function useCreateTask() {
         console.warn("Publishing series not found or an error occurred:", error);
       }
 
+      // Gọi API Scheduled bằng try-catch riêng biệt
+      try {
+        const seriesScheduled = await seriesService.getSeriesByStatus("Scheduled");
+        resultScheduled = seriesScheduled?.data ? seriesScheduled.data : [];
+      } catch (error) {
+        console.warn("Scheduled series not found or an error occurred:", error);
+      }
+
+
       // Gộp 2 mảng lại thành một mảng duy nhất và cập nhật vào State
-      setShowSeriesApproval([...resultApproved, ...resultPublishing]);
+      setShowSeriesApproval([...resultApproved, ...resultPublishing, ...resultScheduled]);
     }
     fetchApi();
   }, [])

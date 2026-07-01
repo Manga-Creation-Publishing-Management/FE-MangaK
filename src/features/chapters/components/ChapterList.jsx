@@ -51,7 +51,7 @@ export function ChapterList({ roleName, seriesData }) {
 
   return (
     <>
-      {(seriesData?.status === "Approved" || seriesData?.status === "Publishing") && (
+      {(seriesData?.status === "Approved" || seriesData?.status === "Scheduled" || seriesData?.status === "Publishing") && (
         <>
           {/* Header của phần danh sách Chapter */}
           <div className="flex justify-between items-center">
@@ -94,7 +94,7 @@ export function ChapterList({ roleName, seriesData }) {
                       </h3>
                     </div>
                     <div className="flex items-center gap-4 shrink-0">
-                      <StatusBadge status={chapter.status} />
+                      <StatusBadge status={chapter.status.toLowerCase()} />
 
                       {console.log(`${roleName?.toLowerCase()} ChapterId: ${chapter.chapterId}`)}
                       {roleName !== 'reader' ?

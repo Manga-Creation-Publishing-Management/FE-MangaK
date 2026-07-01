@@ -52,18 +52,13 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
 
   console.log(role);
   // console.log("Filtered Data for Tantou:", filteredSeriesData);
-  console.log("Filtered Data for Editorial", filteredSeriesData);
+  // console.log("Filtered Data for Editorial", filteredSeriesData);
 
   return (
     <>
       <div className="bg-card border border-border rounded-xl p-2">
 
-        {/* Lưới (Grid) hiển thị danh sách các bộ truyện (3 cột) */}
-        <div className="grid grid-cols-3 gap-6">
-          {currentDataListDisplay?.map(item => (
-            // Mỗi bộ truyện hiển thị dưới dạng một Card
-            <div key={item.seriesId} className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
-
+  
               <div className="p-4 mb-5">
                 {role === "mangaka" &&
                   <div className="flex justify-between items-center mb-5">
@@ -83,7 +78,7 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
 
                 {/* Lưới (Grid) hiển thị danh sách các bộ truyện (3 cột) */}
                 <div className="grid grid-cols-3 gap-6">
-                  {filteredSeriesData?.map(item => (
+                  {currentDataListDisplay?.map(item => (
                     // Mỗi bộ truyện hiển thị dưới dạng một Card
                     <div key={item.seriesId} className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
 
@@ -119,13 +114,11 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
                 setCurrentPage={setCurrentPage}
               />
             </div>
-          ))};
-        </div>
 
         {/* Component Modal (Popup) để tạo bộ truyện mới.
           Chỉ render khi state showCreateSeriesModal là true */}
         {showCreateSeriesModal && (<CreateSeriesModal onClose={handleClick} onReload={handleReload} />)}
-      </div>
+   
     </>
   )
 }

@@ -76,8 +76,8 @@ export function TaskManagement() {
                 {/* Cụm Status và Button bên phải (Đồng bộ từ bên Chapter qua) */}
                 <div className="flex items-center gap-4 shrink-0">
                   {/* <StatusBadge status={task.status} /> */}
-                  <span className="text-sm font-medium text-muted-foreground">
-                    <StatusBadge status={item.status} />
+                  <span>
+                    <StatusBadge status={item.status?.toLowerCase()} />
                   </span>
 
                   <button
