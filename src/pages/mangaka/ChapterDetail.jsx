@@ -88,7 +88,7 @@ export function ChapterDetail() {
 
             {/* Cụm thông tin bên phải: Badge trạng thái (Status) và Ngày tải lên */}
             <div className="flex flex-col items-end space-y-2">
-              <StatusBadge status={chapterDetail?.status} />
+              <StatusBadge status={chapterDetail?.status.toLowerCase()} />
             </div>
 
           </div>

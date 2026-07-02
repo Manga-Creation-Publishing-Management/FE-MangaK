@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { api } from "../../../services/api";
 import { seriesService } from "../../../services/seriesService";
 import { useToast } from "../../../shared/hooks/useToast";
+import ReactCropper from "react-cropper";
+
 
 // Custom hook quản lý trạng thái và logic cho form tạo mới bộ truyện (Create Series)
 export default function useCreateSeries(onClose, onReload, reloadState) {
@@ -27,6 +29,10 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
   // Reference trỏ tới thẻ <input type="file"> để kích hoạt click bằng code
   const coverInputRef = useRef(null);
   const storyInputRef = useRef(null);
+
+  const [image, setImage] = useState("");
+  const [croppedFile, setCroppedFile] = useState(null);
+  const cropperRef = useRef(null);
 
   // useEffect gọi API để lấy danh mục thể loại và danh sách truyện 
   // Mỗi khi reloadState thay đổi (ví dụ có sự kiện thêm mới), nó sẽ fetch lại data
@@ -67,9 +73,10 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
 
   // Hàm xử lý lưu file ảnh bìa sau khi người dùng chọn
   const handleCoverChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setCoverFile(e.target.files[0]);
-    }
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => setImage(reader.result);
+    reader.readAsDataURL(file);
   };
 
   // Hàm xử lý lưu file nội dung truyện (bản draft) sau khi người dùng chọn
@@ -77,6 +84,23 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
     if (e.target.files && e.target.files[0]) {
       setStoryFile(e.target.files[0]);
     }
+  };
+  const getCroppedImage = () => {
+    const cropper = cropperRef.current?.cropper;
+    if (!cropper) return;
+
+    cropper.getCroppedCanvas({
+      width: 900,
+      height: 1200,
+      fillColor: "#fff",
+    }).toBlob((blob) => {
+      const file = new File([blob], "cover-cropped.jpg", {
+        type: "image/jpeg",
+      });
+      setCroppedFile(file);
+      setCoverFile(file);
+      // setImage("");
+    }, "image/jpeg");
   };
 
   // Hàm xử lý khi form được submit
@@ -100,7 +124,7 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
     }
 
     // Nếu có chọn file thì mới đưa vào formData
-    if (coverFile) formData.append("coverFile", coverFile); // File ảnh thật
+    if (croppedFile) formData.append("coverFile", croppedFile); // File ảnh thật
     if (storyFile) formData.append("nameFile", storyFile);  // File truyện thật
 
     try {
@@ -139,5 +163,8 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
     handleCoverChange,
     handleStoryChange,
     handleSubmit,
+    getCroppedImage,
+    cropperRef,
+    image
   };
 }
