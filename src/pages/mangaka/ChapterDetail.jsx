@@ -15,7 +15,6 @@ import { useProgressing } from "../../features/chapters/hooks/useProgressing";
 // Component hiển thị chi tiết của một Chapter cụ thể (để đọc truyện/xem nháp)
 export function ChapterDetail() {
 
-  const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
 
   // Hook dùng để quay lại trang trước đó
   const navigate = useNavigate();
@@ -49,6 +48,15 @@ export function ChapterDetail() {
 
   console.log(isOverdue);
   console.log(chapterDetail);
+
+  //các state quản lí hiển thị pop-up
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
+
+  const handleInitialRejectClick = () => {
+    setConfirmModalOpen(true);
+  }
 
   return (
     <>
@@ -272,7 +280,7 @@ export function ChapterDetail() {
               feedback={feedback}
               onFeedbackChange={(e) => setFeedback(e.target.value)}
               onApprove={() => handleApprove(currentRole, chapterDetail?.status, setChapterDetail)}
-              onReject={() => handleReject(currentRole, chapterDetail?.status, setChapterDetail)}
+              onReject={() => handleInitialRejectClick()}
             />
           )}
 
@@ -281,6 +289,20 @@ export function ChapterDetail() {
         </div>
       </div>
 
+      <ConfirmRejectModal
+        isOpen={confirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onYes={() => {
+          setConfirmModalOpen(false);
+          setIsAnnotationOpen(true);
+        }}
+        onNo={() => {
+          setConfirmModalOpen(false);
+          handleReject(currentRole, chapterDetail?.status, setChapterDetail);
+        }}
+      />
+
+
       <AnnotationModal
         isOpen={isAnnotationOpen}
         onClose={() => setIsAnnotationOpen(false)}
@@ -288,6 +310,10 @@ export function ChapterDetail() {
         chapterId={chapterId}
         seriesId={seriesId}
         role={currentRole.toLowerCase()}
+        onRejectTrigger={() => {
+          handleReject(currentRole, chapterDetail?.status, setChapterDetail, "Annotation feedback added to the submission")
+          setIsAnnotationOpen(false);
+        }}
       />
     </>
   )

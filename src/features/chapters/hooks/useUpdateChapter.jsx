@@ -41,8 +41,11 @@ export function useUpdateChapter(seriesId, chapterId) {
         }
     };
 
-    const handleReject = async (roleFromState, currentStatus, setLocalStatus) => {
-        if (!feedback.trim()) {
+    const handleReject = async (roleFromState, currentStatus, setLocalStatus, overrideFeedback = null) => {
+        //ưu tiên lấy feedback truyền vào
+        const finalFeedback = overrideFeedback != null ? overrideFeedback : feedback;
+
+        if (!finalFeedback.trim()) {
             showAlert("Please provide feedback before rejecting.", "warning");
             return;
         }
@@ -61,7 +64,7 @@ export function useUpdateChapter(seriesId, chapterId) {
 
         const formData = new FormData();
         formData.append("Status", newStatus);
-        formData.append("Feedback", feedback);
+        formData.append("Feedback", finalFeedback);
 
         setIsLoading(true);
         try {

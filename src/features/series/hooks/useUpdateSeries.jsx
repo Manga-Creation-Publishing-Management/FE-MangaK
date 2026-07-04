@@ -62,9 +62,13 @@ export function useUpdateSeries() {
   };
 
   // --- Hàm Từ Chối Truyện (Reject) ---
-  const handleReject = async (id, roleFromState, setLocalStatus) => {
+  const handleReject = async (id, roleFromState, setLocalStatus, overrideFeedback = null) => {
+    //Ưu tiên lấy chữ truyền vào (để khi annotate không bị check nữa)
+    const finalFeedback = overrideFeedback != null ? overrideFeedback : feedback;
+
+
     // Ràng buộc bắt buộc phải nhập lý do (feedback) khi từ chối
-    if (!feedback.trim()) {
+    if (!finalFeedback.trim()) {
       showAlert("Please provide feedback before rejecting.", "warning");
       return;
     }
@@ -76,7 +80,7 @@ export function useUpdateSeries() {
     try {
       const reviewPayload = {
         isApproved: false, // Flag đánh dấu từ chối
-        note: feedback
+        note: finalFeedback
       };
       // console.log("----------!Feedback text debug: ", feedback);
 
