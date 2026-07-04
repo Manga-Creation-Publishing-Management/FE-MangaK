@@ -21,7 +21,7 @@ export function TantouDashboard() {
                         iconColor="#fbbf24" valueNum={3} />
                 </div>
                 <div className='px-9 mt-5 text-2xl font-medium text-primary'>Assigned Series</div>
-                <SeriesManagement role="tantou" statusFilter={["Processing", "PendingBoard", "Rejected", "Approved", "Publishing"]} />
+                <SeriesManagement role="tantou" statusFilter={["Processing", "PendingBoard", "Rejected", "Approved", "Scheduled", "Publishing"]} />
 
                 <div className='px-9 mb-10'>
                     <Feedback />

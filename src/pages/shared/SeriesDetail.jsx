@@ -249,7 +249,10 @@ export function SeriesDetail() {
             feedback={feedback}
             onFeedbackChange={(e) => setFeedback(e.target.value)}
             onApprove={() => handleApprove(id, roleFromState, currentStatus, setLocalStatus)}
-            onReject={() => handleInitialRejectClick()}
+            onReject={() => normalizedRole === 'tantou'
+              ? handleInitialRejectClick()
+              : handleReject(id, normalizedRole, setLocalStatus)
+            }
             isLoading={isLoading}
             approveText={approveText}
             rejectText={rejectText}

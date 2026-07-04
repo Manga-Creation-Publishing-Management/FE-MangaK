@@ -65,7 +65,7 @@ export function MyTask() {
                 </div>
 
                 <div className="flex items-center gap-4 text-sm shrink-0">
-                  <StatusBadge status={item.status} />
+                  <StatusBadge status={item.status?.toLowerCase()} />
                   <button
                     className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
                     onClick={() => handleNavigateToTask(role.toLowerCase(), item.id)}
