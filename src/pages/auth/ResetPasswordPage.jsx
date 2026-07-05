@@ -36,7 +36,8 @@ export function ResetPasswordPage() {
 
         } else {
             console.log("Change password failed!");
-            showAlert("Your password has been reset failed!", "error");
+            showAlert("The M-CODE is incorrect, please try again! ", "error");
+            navigate('/forgot-password');
         }
         setIsSending(false);
     };

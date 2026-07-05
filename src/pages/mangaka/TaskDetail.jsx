@@ -201,7 +201,7 @@ export function TaskDetail() {
                     Get Task
                   </button>
                 }
-                {taskDetail?.status != ("Available" || "Completed") &&
+                {taskDetail?.status != ("Available" || "Pending" || "Completed") &&
                   <button
                     onClick={handleSubmitTask}
                     disabled={isLoading}

@@ -16,7 +16,7 @@ export function useUpdateChapter(seriesId, chapterId) {
 
         let newStatus;
         if (isTantou && normalizedStatus === "pending") {
-            newStatus = "publishing";
+            newStatus = "scheduled";
         } else {
             showAlert("Chapter cannot be approved in its current state.", "error");
             return;
