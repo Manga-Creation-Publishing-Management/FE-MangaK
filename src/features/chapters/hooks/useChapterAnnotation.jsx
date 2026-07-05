@@ -161,13 +161,14 @@ export function useChapterAnnotation(onClose) {
     });
 
     console.log("TEST Combined Annotations JSON:", JSON.stringify(combinedAnnotations));
-    // CHÈN GỌI API Ở ĐÂY: Có thể chuyển JSON.stringify(combinedAnnotations) trong body gửi về Back-end
     try {
       await feedbackService.sendAnnotation(seriesId || null, chapterId || null, taskId || null, JSON.stringify(combinedAnnotations), "EditPDF");
       showAlert("Annotation submitted successfully!");
+      return true;
     } catch (err) {
       console.log("TEST error:", err)
       showAlert("Annotation submission failed!");
+      return false;
     }
     closeModal();
   };

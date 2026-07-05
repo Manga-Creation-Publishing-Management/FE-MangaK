@@ -3,19 +3,20 @@ import { StatusBadge } from "@/shared/components/StatusBadge";
 import { useState } from 'react';
 import dayjs from 'dayjs';
 
+
 import { ArrowLeft, Download, Star } from "lucide-react";
 import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
 import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter";
-import { ApprovalPanel } from "../shared/ApprovalPanel";
-import { AnnotationModal } from "../shared/AnnotationModal";
 import { useProgressing } from "../../features/chapters/hooks/useProgressing";
+import { ApprovalPanel } from "../shared/ApprovalPanel";
+import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
+import { AnnotationModal } from "../shared/AnnotationModal";
 
 // (Worker setup moved to AnnotationModal)
 
 // Component hiển thị chi tiết của một Chapter cụ thể (để đọc truyện/xem nháp)
 export function ChapterDetail() {
 
-  const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
 
   // Hook dùng để quay lại trang trước đó
   const navigate = useNavigate();
@@ -49,6 +50,15 @@ export function ChapterDetail() {
 
   console.log(isOverdue);
   console.log(chapterDetail);
+
+  //các state quản lí hiển thị pop-up
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
+
+  const handleInitialRejectClick = () => {
+    setConfirmModalOpen(true);
+  }
 
   return (
     <>
@@ -170,14 +180,6 @@ export function ChapterDetail() {
                           <Download size={16} />
                           Download File Here
                         </a>
-
-                        {/* THÊM MỚI: Nút View and Annotate */}
-                        <button
-                          onClick={() => setIsAnnotationOpen(true)}
-                          className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm w-[240px]"
-                        >
-                          View and Annotate
-                        </button>
                       </div>
                     </>
                   ) : (
@@ -272,7 +274,9 @@ export function ChapterDetail() {
               feedback={feedback}
               onFeedbackChange={(e) => setFeedback(e.target.value)}
               onApprove={() => handleApprove(currentRole, chapterDetail?.status, setChapterDetail)}
-              onReject={() => handleReject(currentRole, chapterDetail?.status, setChapterDetail)}
+              onReject={() => currentRole === 'tantou'
+                ? handleInitialRejectClick()
+                : handleReject(currentRole, chapterDetail?.status, setChapterDetail, "Rejected by tantou, view annotation for details")}
             />
           )}
 
@@ -281,6 +285,20 @@ export function ChapterDetail() {
         </div>
       </div>
 
+      <ConfirmRejectModal
+        isOpen={confirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onYes={() => {
+          setConfirmModalOpen(false);
+          setIsAnnotationOpen(true);
+        }}
+        onNo={() => {
+          setConfirmModalOpen(false);
+          handleReject(currentRole, chapterDetail?.status, setChapterDetail);
+        }}
+      />
+
+
       <AnnotationModal
         isOpen={isAnnotationOpen}
         onClose={() => setIsAnnotationOpen(false)}
@@ -288,6 +306,10 @@ export function ChapterDetail() {
         chapterId={chapterId}
         seriesId={seriesId}
         role={currentRole.toLowerCase()}
+        onRejectTrigger={() => {
+          handleReject(currentRole, chapterDetail?.status, setChapterDetail, "Annotation feedback added to the submission")
+          setIsAnnotationOpen(false);
+        }}
       />
     </>
   )

@@ -36,22 +36,22 @@ export function ChapterList({ roleName, seriesData }) {
   const { handleRateSubmit } = useUpdateRateChapter();
 
 
-  const {} = useProgressing()
+  const { } = useProgressing()
 
   // console.log("length", chapterList.length)
   console.log(`view series info: ${seriesData?.seriesId}`);
 
   const {
-      currentPage,
-      postsPerPage,
-      setCurrentPage,
-      currentDataListDisplay,
-      totalPages
-    } = getTotalPage(1, 5, chapterList);
+    currentPage,
+    postsPerPage,
+    setCurrentPage,
+    currentDataListDisplay,
+    totalPages
+  } = getTotalPage(1, 5, chapterList);
 
   return (
     <>
-      {(seriesData?.status === "Approved" || seriesData?.status === "Scheduled" || seriesData?.status === "Publishing") && (
+      {(seriesData?.status === "Scheduled" || seriesData?.status === "Publishing") && (
         <>
           {/* Header của phần danh sách Chapter */}
           <div className="flex justify-between items-center">
@@ -127,10 +127,10 @@ export function ChapterList({ roleName, seriesData }) {
             })}
           </div>
           <PaginationCustom
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    setCurrentPage={setCurrentPage}
-                  />
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+          />
           {/* Nếu activeChapterId không null (tức đang chọn đánh giá cho một chapter nào đó), hiển thị RatePanel Popup */}
           {activeChapterId &&
             <RatePanel

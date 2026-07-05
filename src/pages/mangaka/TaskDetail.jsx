@@ -6,6 +6,8 @@ import { ApprovalPanel } from "@/pages/shared/ApprovalPanel";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { AnnotationModal } from "../shared/AnnotationModal";
+import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
+import { PreviewModal } from "../shared/PreviewModal";
 import { useState } from "react";
 dayjs.extend(utc);
 export function TaskDetail() {
@@ -13,7 +15,6 @@ export function TaskDetail() {
   const navigate = useNavigate();
   const taskId = useLocation().state?.taskId;
   const role = useLocation().state?.role;
-  const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
 
   console.log("ss", taskId);
 
@@ -32,6 +33,17 @@ export function TaskDetail() {
   } = useTaskDetail(taskId, role);
 
   console.log("sss", taskDetail);
+
+  //các state quản lí hiển thị pop-up
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
+
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
+  const handleInitialRejectClick = () => {
+    setConfirmModalOpen(true);
+  }
 
   return (
     <>
@@ -60,7 +72,7 @@ export function TaskDetail() {
             <div className="flex flex-col items-end space-y-2">
               <span className="mb-6" >
                 <StatusBadge status={taskDetail?.status?.toLowerCase()} />
-            </span>
+              </span>
 
               <div className="flex items-center gap-1.5 text-sm text-muted-foreground bg-muted/50 px-3 py-1 rounded-md border border-border">
                 <Calendar size={14} className="text-destructive" />
@@ -137,9 +149,7 @@ export function TaskDetail() {
                   </div>
                 </>
               }
-              {/* PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ
-                        PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ
-                        PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ */}
+
               {role === "mangaka" &&
                 <>
                   <h3 className="font-medium text-sm text-muted-foreground">Submited File by Assistant</h3>
@@ -165,26 +175,16 @@ export function TaskDetail() {
                     {/* NHÃ THÊM CÁI NÚT ANNOTATE CHO MANGAKA NÀY */}
                     {taskDetail?.status === "Pending" &&
                       <button
-                        onClick={() => setIsAnnotationOpen(true)}
-                        className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm w-[240px]"
+                        onClick={() => setIsPreviewOpen(true)}
+                        className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
                       >
-                        View and Annotate
+                        Preview Submission
                       </button>}
-                    <AnnotationModal
-                      isOpen={isAnnotationOpen}
-                      onClose={() => setIsAnnotationOpen(false)}
-                      fileUrl={taskDetail?.submittedFileUrl}
-                      taskId={taskId}
-                      role={role}
-                    />
+
                   </div>
 
                 </>
               }
-              {/* KẾT THÚC PHẦN CHÈN
-                    KẾT THÚC PHẦN CHÈN
-                    KẾT THÚC PHẦN CHÈN
-                    KẾT THÚC PHẦN CHÈN */}
 
             </div>
 
@@ -201,7 +201,7 @@ export function TaskDetail() {
                     Get Task
                   </button>
                 }
-                {taskDetail?.status != ("Available" || "Completed") &&
+                {taskDetail?.status != ("Available" || "Pending" || "Completed") &&
                   <button
                     onClick={handleSubmitTask}
                     disabled={isLoading}
@@ -216,17 +216,50 @@ export function TaskDetail() {
 
 
           </div>
-          {(role === "mangaka" && taskDetail?.status != "Completed") &&
+          {(role === "mangaka" && taskDetail?.status == "Pending") &&
             <>
               {/* NHÃ SỬA CÁI APPROVAL */}
               <ApprovalPanel
                 feedback={feedback}
                 onFeedbackChange={(e) => setFeedback(e.target.value)}
                 onApprove={() => handleApprovedTask(taskId)}
-                onReject={() => handleRejectTask(taskId, role)}
+                onReject={() => handleInitialRejectClick()}
                 isLoading={isLoading}
                 approveText="Approve Task"
                 rejectText="Reject Task with Feedback"
+              />
+
+              <AnnotationModal
+                isOpen={isAnnotationOpen}
+                onClose={() => setIsAnnotationOpen(false)}
+                fileUrl={taskDetail?.submittedFileUrl}
+                taskId={taskId}
+                role={role}
+                onRejectTrigger={() => { //cho chữ mặc định khi annotation vì reject nó vẫn check á
+                  handleRejectTask(taskId, role);
+                  setIsAnnotationOpen(false);
+                }}
+              />
+
+
+              <ConfirmRejectModal
+                isOpen={confirmModalOpen}
+                onClose={() => setConfirmModalOpen(false)}
+                onYes={() => {
+                  setConfirmModalOpen(false);
+                  setIsAnnotationOpen(true);
+                }}
+                onNo={() => {
+                  setConfirmModalOpen(false);
+                  handleRejectTask(taskId, role);
+                }}
+              />
+
+              <PreviewModal
+                isOpen={isPreviewOpen}
+                onClose={() => setIsPreviewOpen(false)}
+                fileUrl={taskDetail?.submittedFileUrl}
+                role={role}
               />
 
 

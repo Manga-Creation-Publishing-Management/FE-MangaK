@@ -1,4 +1,4 @@
-import { ArrowLeft, Download } from "lucide-react";
+import { ArrowLeft, Download, Eye } from "lucide-react";
 import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { StatusBadge } from "@/shared/components/StatusBadge";
@@ -7,6 +7,9 @@ import { ApprovalPanel } from "./ApprovalPanel";
 import { useEffect, useState } from "react";
 import { seriesService } from "../../services/seriesService";
 import { useUpdateSeries } from "../../features/series/hooks/useUpdateSeries";
+import { PreviewModal } from "./PreviewModal";
+import { ConfirmRejectModal } from "./ConfirmRejectModal";
+import { AnnotationModal } from "./AnnotationModal";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
@@ -46,6 +49,17 @@ export function SeriesDetail() {
 
   // State lưu trữ trạng thái hiện tại (cục bộ) của bộ truyện để không phải gọi API lại ngay lập tức khi vừa approve/reject
   const [localStatus, setLocalStatus] = useState(null);
+
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
+  //các state quản lí hiển thị pop-up
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
+
+  const handleInitialRejectClick = () => {
+    setConfirmModalOpen(true);
+  }
 
   // Hook hỗ trợ xử lý duyệt / từ chối series (Approval Flow)
   const {
@@ -196,6 +210,16 @@ export function SeriesDetail() {
                           Download Name
                         </a>
                       </div>
+
+                      <div className="flex flex-col items-end justify-center text-center">
+                        <button
+                          onClick={() => setIsPreviewOpen(true)}
+                          className="inline-flex items-center gap-2 bg-secondary/50 text-secondary-foreground hover:bg-secondary/80  p-4 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
+                        >
+                          <Eye size={16} />
+                          Preview Name
+                        </button>
+                      </div>
                     </div>
                   }
                 </div>
@@ -225,13 +249,48 @@ export function SeriesDetail() {
             feedback={feedback}
             onFeedbackChange={(e) => setFeedback(e.target.value)}
             onApprove={() => handleApprove(id, roleFromState, currentStatus, setLocalStatus)}
-            onReject={() => handleReject(id, roleFromState, setLocalStatus)}
+            onReject={() => normalizedRole === 'tantou'
+              ? handleInitialRejectClick()
+              : handleReject(id, normalizedRole, setLocalStatus)
+            }
             isLoading={isLoading}
             approveText={approveText}
             rejectText={rejectText}
           />
         }
+
+        <PreviewModal
+          isOpen={isPreviewOpen}
+          onClose={() => setIsPreviewOpen(false)}
+          fileUrl={detailData?.nameFile}
+          role={normalizedRole}
+        />
       </div >
+
+      <ConfirmRejectModal
+        isOpen={confirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onYes={() => {
+          setConfirmModalOpen(false);
+          setIsAnnotationOpen(true);
+        }}
+        onNo={() => {
+          setConfirmModalOpen(false);
+          handleReject(id, normalizedRole, setLocalStatus);
+        }}
+      />
+
+      <AnnotationModal
+        isOpen={isAnnotationOpen}
+        onClose={() => setIsAnnotationOpen(false)}
+        fileUrl={detailData?.nameFile}
+        seriesId={id}
+        role={normalizedRole}
+        onRejectTrigger={() => { //cho chữ mặc định khi annotation vì reject nó vẫn check á
+          handleReject(id, normalizedRole, setLocalStatus, "Annotation feedback added to the submission");
+          setIsAnnotationOpen(false);
+        }}
+      />
 
     </>
   )
