@@ -47,7 +47,7 @@ export function TaskDetail() {
 
   return (
     <>
-      <div className="p-8 space-y-8">
+      <div className="p-6 space-y-8">
         <button
           onClick={() => navigate(-1)}
           className="flex cursor-pointer items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"

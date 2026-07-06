@@ -118,7 +118,7 @@ export function SeriesDetail() {
 
   return (
     <>
-      <div className="p-8 space-y-8">
+      <div className="p-6 space-y-8">
 
         {/* Nút quay lại trang trước */}
         <button

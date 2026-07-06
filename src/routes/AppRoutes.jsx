@@ -55,7 +55,7 @@ export function AppRoutes() {
       <Route element={<ProtectedRoute allowedRole="mangaka" />}>
         <Route path="/mangaka" element={<Layout roleName="mangaka" />}>
           <Route index element={<MangakaDashboard />} />
-          <Route path="series" element={<SeriesManagement role="mangaka" />} />
+          <Route path="series" element={<div className="p-6 space-y-8"><SeriesManagement role="mangaka" /></div>} />
           <Route path="series/:id" element={<SeriesDetail />} />
           <Route path="chapter/:chapterId" element={<ChapterDetail />} />
           <Route path="tasks" element={<TaskManagement />} />

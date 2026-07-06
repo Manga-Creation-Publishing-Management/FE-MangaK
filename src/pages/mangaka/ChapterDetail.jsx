@@ -63,7 +63,7 @@ export function ChapterDetail() {
   return (
     <>
       {/* Vùng chứa toàn bộ nội dung của trang chi tiết */}
-      <div className="p-8 space-y-8">
+      <div className="p-6 space-y-8">
 
         {/* Nút Back quay lại trang trước */}
         <button

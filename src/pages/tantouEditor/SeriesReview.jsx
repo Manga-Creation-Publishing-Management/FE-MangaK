@@ -1,20 +1,56 @@
+import { useState } from "react";
 import { SeriesManagement } from "../shared/SeriesManagement";
+import { useSeriesManagement } from "../../features/series/hooks/useSeriesManagement";
+import useCreateSeries from "../../features/series/hooks/useCreateSeries";
+import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
 
 // Component SeriesReview: Dành cho màn hình Đánh giá Truyện của Tantou Editor
 export function SeriesReview() {
-  return (
-    <>
-      <div className="p-3">
-        <div className="p-3 flex justify-start">
-          {/* Phần tiêu đề giải thích mục đích của trang */}
-          <div className="p-3 mb-5">
-            <p className="text-sidebar-foreground font-medium text-2xl pb-1">Series Management</p>
-            <p className="text-muted-foreground">Review and approve series for Editorial Board</p>
-          </div>
-        </div>
-        <SeriesManagement role="tantou" statusFilter={["Processing", "Rejected", "PendingBoard", "Approved", "Scheduled", "Publishing"]} />
+  const { reload, handleReload } = useSeriesManagement();
+  const { seriesData } = useCreateSeries(null, handleReload, reload);
 
-      </div >
-    </>
-  )
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+
+  const filtered = seriesData.filter((item) => {
+    // Các trạng thái truyện mà Tantou được phép xem/đánh giá
+    const allowedStatuses = ["processing", "rejected", "pending", "approved", "publishing"];
+    const itemStatus = item.status?.toLowerCase();
+    if (!allowedStatuses.includes(itemStatus)) return false;
+
+    const matchesSearch =
+      (item.title || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (item.mangakaName || "").toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesStatus =
+      filterStatus === "all" || itemStatus === filterStatus.toLowerCase();
+
+    return matchesSearch && matchesStatus;
+  });
+
+  return (
+    <div className="p-6 space-y-8 bg-background min-h-full">
+      <SearchFilterBar
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search by title or author…"
+        filters={[
+          {
+            value: filterStatus,
+            onChange: setFilterStatus,
+            options: [
+              { value: "all", label: "All Status" },
+              { value: "Processing", label: "Processing" },
+              { value: "Rejected", label: "Rejected" },
+              { value: "Pending", label: "Pending" },
+              { value: "Approved", label: "Approved" },
+              { value: "Publishing", label: "Publishing" },
+            ]
+          }
+        ]}
+      />
+
+      <SeriesManagement role="tantou" seriesFiltered={filtered} />
+    </div>
+  );
 }
