@@ -6,6 +6,7 @@ import { ThemeToggle } from '@/shared/components/ThemeToggle';
 import { useGetFeedback } from '@/features/series/hooks/useGetFeedback';
 import { FeedbackItem } from '@/shared/components/FeedbackItem';
 import { useState, useEffect } from 'react';
+import { userService } from '@/services/userService';
 
 export function HeaderPage({ roleName, avatarUrl }) {
     const { navigate } = LoginHook();
@@ -27,6 +28,39 @@ export function HeaderPage({ roleName, avatarUrl }) {
         return () => document.removeEventListener('mousedown', handleOutsideClick);
     }, [isDropdownOpen]);
 
+    const [currentUserAvatar, setCurrentUserAvatar] = useState(avatarUrl || "/avatarImgDemo.png");
+
+    useEffect(() => {
+        const fetchHeaderProfile = async () => {
+            try {
+                // 1. Kiểm tra localStorage trước để lấy avatar nhanh nếu có
+                const cachedUser = localStorage.getItem('user');
+                if (cachedUser) {
+                    const parsed = JSON.parse(cachedUser);
+                    if (parsed.avatarUrl) {
+                        setCurrentUserAvatar(parsed.avatarUrl);
+                    }
+                }
+                
+                // 2. Gọi API để lấy avatar mới nhất từ Database
+                const res = await userService.getProfile();
+                if (res?.data?.avatarUrl) {
+                    setCurrentUserAvatar(res.data.avatarUrl);
+                    // Cập nhật lại cache localStorage để các lần sau tải nhanh hơn
+                    if (cachedUser) {
+                        const parsed = JSON.parse(cachedUser);
+                        parsed.avatarUrl = res.data.avatarUrl;
+                        localStorage.setItem('user', JSON.stringify(parsed));
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to load header profile avatar:", error);
+            }
+        };
+
+        fetchHeaderProfile();
+    }, [avatarUrl]);
+
     const handleLogout = async () => {
         await authService.logout();
         navigate('/');
@@ -36,8 +70,8 @@ export function HeaderPage({ roleName, avatarUrl }) {
         <>
             <div className="grid grid-cols-12 shadow p-2 px-8 bg-card relative">
                 <div className="hidden md:block col-span-1 px-2 content-center">
-                    <img className="rounded-full w-10"
-                        src={avatarUrl} alt="Avatar Image" />
+                    <img className="rounded-full w-10 h-10 object-cover border border-border"
+                        src={currentUserAvatar || "/avatarImgDemo.png"} alt="Avatar Image" />
                 </div>
 
                 <div className={`${roleName === 'reader' ? 'col-span-3' : 'col-span-5'} content-center`}>
@@ -63,9 +97,6 @@ export function HeaderPage({ roleName, avatarUrl }) {
                                     <div className="content-center">
                                         <Bell size={20} />
                                     </div>
-                                    {feedbackData?.data?.length > 0 && (
-                                        <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border border-card animate-pulse" />
-                                    )}
                                 </button>
 
                                 {isDropdownOpen && (

@@ -5,7 +5,7 @@ export function StatusBadge({ status }) {
     'approved': 'bg-success/10 text-success border-success/30',
     'pending': 'bg-warning/10 text-warning border-warning/30',
     'publishing': 'bg-success/10 text-success border-success/30',
-    'cancelled': 'bg-destructive/10 text-destructive border-destructive/30' ,
+    'cancelled': 'bg-destructive/10 text-destructive border-destructive/30',
     'created': 'bg-sidebar-primary/10 text-sidebar-primary border-sidebar-primary/30',
     'available': 'bg-sky/10 text-sky border-sky/30',
     'revising': 'bg-gold/10 text-gold border-gold/30',
