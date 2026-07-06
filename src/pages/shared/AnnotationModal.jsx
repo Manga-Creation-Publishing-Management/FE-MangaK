@@ -9,7 +9,7 @@ import { useChapterAnnotation } from "../../features/chapters/hooks/useChapterAn
 // Kích hoạt Web Worker để thư viện react-pdf xử lý PDF ở một luồng độc lập
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, chapterId = null, taskId = null, role }) {
+export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, chapterId = null, taskId = null, role, onRejectTrigger }) {
   const {
     tool,
     setTool,
@@ -38,6 +38,15 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
     handleSubmitAnnotation,
   } = useChapterAnnotation(onClose);
 
+  const handleCombineSubmit = async () => {
+    // 1. Gọi API lưu JSON từ hook cũ
+    const isSuccess = await handleSubmitAnnotation(seriesId, chapterId, taskId, role);
+
+    // 2. Nếu lưu JSON thành công VÀ có truyền hàm onRejectTrigger từ cha xuống -> Gọi Reject
+    if (isSuccess && onRejectTrigger) {
+      onRejectTrigger();
+    }
+  };
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -202,10 +211,13 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
           </div>
         )}
 
+
         {/* Nút Submit Annotation */}
         <div className="w-full border-t border-border pt-4 mt-2">
           <button
-            onClick={() => handleSubmitAnnotation(seriesId, chapterId, taskId, role)}
+            onClick={handleCombineSubmit}
+            // Dùng hàm mới gộp 2 action này
+
             className="w-full py-3 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-all shadow-md cursor-pointer hover:shadow-lg text-sm"
           >
             Submit Annotation
@@ -213,6 +225,6 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
         </div>
 
       </div>
-    </div>
+    </div >
   );
 }

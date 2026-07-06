@@ -76,11 +76,15 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
             </div>
           }
 
+          {currentDataListDisplay?.length === 0 &&
+            <p className="text-warning p-2 italic text-lg flex justify-center">No series found</p>}
+
           {/* Lưới (Grid) hiển thị danh sách các bộ truyện (3 cột) */}
           <div className="grid grid-cols-4 gap-6">
             {currentDataListDisplay?.map(item => (
               // Mỗi bộ truyện hiển thị dưới dạng một Card
-              <div key={item.seriesId} className="col-span-1 md:col-span-1 w-full relative  bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
+              <div key={item.seriesId} className="col-span-1 md:col-span-1 w-full relative  bg-card border 
+                                border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
 
                 {/* Phần Ảnh Bìa (Cover) */}
                 <div className=' aspect-[3/4] w-full relative'>
@@ -88,7 +92,7 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
                 </div>
 
                 {/* Phần Thông Tin Bộ Truyện */}
-                <div className="p-2 space-y-4">
+                <div className="p-2 px-4 space-y-4">
                   <div>
                     <h3 className="font-semibold text-lg">{item.title}</h3>
                     <p className="text-sm text-muted-foreground mt-1">{item.totalChapters || 0} Chapters</p>

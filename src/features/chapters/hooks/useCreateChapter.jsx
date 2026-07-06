@@ -77,9 +77,10 @@ export function useCreateChapter(seriesId, onClose, onReload) {
           onClose();
           onReload();
         }, 0);
-      } else {
-        showAlert(results?.Message || "Failed to create chapter", "error");
       }
+      // } else {
+      //   showAlert(results?.Message || "Failed to create chapter", "error");
+      // }
     } catch (error) {
       showAlert(error.response?.data?.Message || "Error creating chapter", "error");
       console.error("Error:", error);
