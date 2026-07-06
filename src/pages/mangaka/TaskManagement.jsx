@@ -47,8 +47,8 @@ export function TaskManagement() {
 
   return (
     <>
-      <div className="p-9">
-        <div className="flex justify-between items-center mb-6">
+      <div className="p-6 space-y-8">
+        <div className="flex justify-between items-center">
           <div>
             <h1 className="text-sidebar-foreground font-medium text-2xl pb-1">Task Management</h1>
             <p className="text-muted-foreground">Assign tasks to assistants </p>

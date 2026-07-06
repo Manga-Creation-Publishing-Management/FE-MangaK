@@ -2,13 +2,15 @@ import { feedbackService } from "../../../services/feedbackService";
 import { useToast } from "../../../shared/hooks/useToast";
 import { useState, useEffect } from 'react';
 
-export function useGetFeedback() {
+export function useGetFeedback(enabled = true) {
 
     // State quản lý trạng thái loading (khi đang gọi API submit)
     const [feedbackData, setFeedbackData] = useState(null);
     const { showAlert } = useToast();
 
     useEffect(() => {
+        if (!enabled) return;
+        
         async function getFeedback() {
             try {
                 const result = await feedbackService.getAllFeedback();
@@ -22,7 +24,7 @@ export function useGetFeedback() {
             }
         }
         getFeedback();
-    }, []);
+    }, [enabled]);
 
     return {
         feedbackData
