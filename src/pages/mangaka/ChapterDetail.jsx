@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router";
 import { StatusBadge } from "@/shared/components/StatusBadge";
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import dayjs from 'dayjs';
 
 
@@ -11,6 +11,9 @@ import { useProgressing } from "../../features/chapters/hooks/useProgressing";
 import { ApprovalPanel } from "../shared/ApprovalPanel";
 import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
 import { AnnotationModal } from "../shared/AnnotationModal";
+import { TextFeedbackModal } from "../shared/TextFeedbackModal";
+import { FeedbackViewer } from "../shared/FeedbackViewer";
+import { useToast } from "@/shared/hooks/useToast";
 
 // (Worker setup moved to AnnotationModal)
 
@@ -20,6 +23,7 @@ export function ChapterDetail() {
 
   // Hook dùng để quay lại trang trước đó
   const navigate = useNavigate();
+  const { showAlert } = useToast();
 
   // Lấy seriesId và chapterId được truyền ngầm qua state khi gọi hàm navigate từ component cha (VD: ChapterList)
   const seriesId = useLocation().state?.seriesId;
@@ -55,6 +59,12 @@ export function ChapterDetail() {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
+
+  const feedbackViewerRef = useRef(null);
+
+  const handleViewFeedbackClick = () => {
+    feedbackViewerRef.current?.viewFeedback();
+  };
 
   const handleInitialRejectClick = () => {
     setConfirmModalOpen(true);
@@ -262,6 +272,14 @@ export function ChapterDetail() {
                 )
                 }
 
+                {((chapterDetail?.feedback) || (currentRole?.toLowerCase() === 'mangaka' && ['pending', 'reject', 'rejected', 'approved', 'scheduled', 'publishing'].includes(chapterDetail?.status?.toLowerCase()))) && (
+                  <button
+                    onClick={handleViewFeedbackClick}
+                    className="bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50">
+                    View Feedback
+                  </button>
+                )}
+
               </div>
             </>
           }
@@ -310,6 +328,15 @@ export function ChapterDetail() {
           handleReject(currentRole, chapterDetail?.status, setChapterDetail, "Annotation feedback added to the submission")
           setIsAnnotationOpen(false);
         }}
+      />
+
+      <FeedbackViewer
+        ref={feedbackViewerRef}
+        chapterId={chapterId}
+        fallbackFeedback={chapterDetail?.feedback}
+        fallbackFeedbackType={chapterDetail?.feedbackType}
+        fileUrl={chapterDetail?.chapterFileUrl}
+        role={currentRole.toLowerCase()}
       />
     </>
   )
