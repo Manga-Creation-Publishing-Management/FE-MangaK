@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from "../../../shared/hooks/useToast";
 import { feedbackService } from '../../../services/feedbackService';
 
 /**
  * Custom hook quản lý các state và logic xử lý liên quan đến chức năng PDF Annotation (chú thích/vẽ).
  */
-export function useChapterAnnotation(onClose) {
+export function useChapterAnnotation(onClose, initialFeedbackJson = null) {
   const { showAlert } = useToast();
 
   // Chế độ chọn công cụ: 'brush' (cọ vẽ) hoặc 'text' (gõ chữ)
@@ -16,6 +16,26 @@ export function useChapterAnnotation(onClose) {
 
   // State lưu trữ dữ liệu chữ của từng trang PDF (dạng key-value với key là số trang)
   const [annotationText, setAnnotationText] = useState({});
+
+  useEffect(() => {
+    if (initialFeedbackJson) {
+      try {
+        const parsed = JSON.parse(initialFeedbackJson);
+        const parsedLines = {};
+        const parsedTexts = {};
+        
+        Object.keys(parsed).forEach(page => {
+          if (parsed[page].lines) parsedLines[page] = parsed[page].lines;
+          if (parsed[page].texts) parsedTexts[page] = parsed[page].texts;
+        });
+        
+        setAnnotationData(parsedLines);
+        setAnnotationText(parsedTexts);
+      } catch (err) {
+        console.error("Failed to parse initialFeedbackJson:", err);
+      }
+    }
+  }, [initialFeedbackJson]);
 
   // Nội dung chữ đang nhập trên thanh công cụ của modal
   const [textInput, setTextInput] = useState('');

@@ -4,12 +4,15 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import { StatusBadge } from "@/shared/components/StatusBadge";
 import { ChapterList } from "../../features/chapters/components/ChapterList";
 import { ApprovalPanel } from "./ApprovalPanel";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { seriesService } from "../../services/seriesService";
 import { useUpdateSeries } from "../../features/series/hooks/useUpdateSeries";
 import { PreviewModal } from "./PreviewModal";
 import { ConfirmRejectModal } from "./ConfirmRejectModal";
 import { AnnotationModal } from "./AnnotationModal";
+import { TextFeedbackModal } from "./TextFeedbackModal";
+import { FeedbackViewer } from "./FeedbackViewer";
+import { useToast } from "@/shared/hooks/useToast";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
@@ -20,6 +23,7 @@ export function SeriesDetail() {
   const { id } = useParams();
   // useNavigate dùng để quay lại trang trước đó khi nhấn nút "Back"
   const navigate = useNavigate();
+  const { showAlert } = useToast();
 
   // useLocation dùng để lấy đường dẫn hiện tại hoặc state truyền qua URL
   const location = useLocation();
@@ -56,6 +60,12 @@ export function SeriesDetail() {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
+
+  const feedbackViewerRef = useRef(null);
+
+  const handleViewFeedbackClick = () => {
+    feedbackViewerRef.current?.viewFeedback();
+  };
 
   const handleInitialRejectClick = () => {
     setConfirmModalOpen(true);
@@ -211,7 +221,7 @@ export function SeriesDetail() {
                         </a>
                       </div>
 
-                      <div className="flex flex-col items-end justify-center text-center">
+                      {/* <div className="flex flex-col items-end justify-center text-center">
                         <button
                           onClick={() => setIsPreviewOpen(true)}
                           className="inline-flex items-center gap-2 bg-secondary/50 text-secondary-foreground hover:bg-secondary/80  p-4 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
@@ -219,21 +229,34 @@ export function SeriesDetail() {
                           <Eye size={16} />
                           Preview Name
                         </button>
-                      </div>
+                      </div> */}
+                      {(detailData?.feedback || (normalizedRole === 'mangaka' && ['pending', 'rejected', 'approved'].includes(normalizedStatus))) && (
+                        <div className="flex flex-col items-end justify-center text-center mt-3">
+                          <button
+                            onClick={handleViewFeedbackClick}
+                            className="inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90  p-4 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
+                          >
+                            <Eye size={16} />
+                            Preview/View Feedback
+                          </button>
+                        </div>
+                      )}
+
+
                     </div>
                   }
                 </div>
 
-                <div className="flex flex-col flex-1 min-h-0 pt-2">
+                <div className="flex flex-col flex-1 h-full pt-2">
                   <p className="text-sm text-muted-foreground uppercase font-semibold mb-2">Description</p>
                   <p className="text-foreground text-justify w-full px-4 py-2 bg-input-background rounded-lg border border-border flex-1 overflow-y-auto text-xs leading-relaxed pr-2">
                     {detailData?.description}
                   </p>
                 </div>
+
               </div>
             </div>
           </div>
-
 
 
         </div>
@@ -290,6 +313,15 @@ export function SeriesDetail() {
           handleReject(id, normalizedRole, setLocalStatus, "Annotation feedback added to the submission");
           setIsAnnotationOpen(false);
         }}
+      />
+
+      <FeedbackViewer
+        ref={feedbackViewerRef}
+        seriesId={id}
+        fallbackFeedback={detailData?.feedback}
+        fallbackFeedbackType={detailData?.feedbackType}
+        fileUrl={detailData?.nameFile}
+        role={normalizedRole}
       />
 
     </>
