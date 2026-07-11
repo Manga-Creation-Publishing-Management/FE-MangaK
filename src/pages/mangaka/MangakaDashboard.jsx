@@ -1,29 +1,43 @@
-import { OverviewCard } from '@/shared/components/OverviewCard';
-import { WelcomeLine } from '@/shared/components/WelcomeLine';
-import { BookOpen } from 'lucide-react';
-import { SeriesManagement } from '../shared/SeriesManagement';
-import Notification from '@/shared/components/Notification';
+import { useMangakaDashboard } from './hooks/useMangakaDashboard';
+import { OverviewPanel } from './components/OverviewPanel';
+import { ActiveAssistantsTable } from './components/ActiveAssistantsTable';
+import { TasksToApproveTable } from './components/TasksToApproveTable';
 
 // Component Trang chủ (Dashboard) dành riêng cho role Mangaka (Tác giả)
 export function MangakaDashboard() {
+  const {
+    totalSeries,
+    pendingChaptersCount,
+    pendingTasks,
+    activeAssistants,
+    isLoading,
+    handleNavigateToTask,
+  } = useMangakaDashboard();
+
   return (
-    <div className='h-full bg-background'>
-      <div className='p-9 bg-background'>
-        <WelcomeLine roleName="Mangaka" />
+    <div className='p-6 space-y-8 bg-background min-h-full'>
+      {/* Khung chia 2 cột phía trên */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Cột trái: Overview bọc 2 Overview Card chiều dọc */}
+        <OverviewPanel 
+          isLoading={isLoading} 
+          totalSeries={totalSeries} 
+          pendingChaptersCount={pendingChaptersCount} 
+        />
 
-        {/* Khung chứa các thẻ thống kê tổng quan. 
-            Responsive: Ở màn hình nhỏ (xs) sẽ tự động xếp dọc (flex-col) */}
-        <div className='flex gap-10 xs:flex-col'>
-          <OverviewCard contentText="Total series" iconName={<BookOpen size={30} />} iconColor="#60a5fa" valueNum={3} />
-          <OverviewCard contentText="Total chapter" iconName={<BookOpen size={30} />} iconColor="#fbbf24" valueNum={3} />
-        </div>
+        {/* Cột phải: Active Assistants */}
+        <ActiveAssistantsTable 
+          isLoading={isLoading} 
+          activeAssistants={activeAssistants} 
+        />
       </div>
 
-      <SeriesManagement role="mangaka" />
-
-      <div className='px-9 mb-10'>
-        <Notification />
-      </div>
-    </div >
-  )
+      {/* Phần Tasks to Approve nằm hoàn toàn ở hàng riêng phía dưới */}
+      <TasksToApproveTable 
+        isLoading={isLoading} 
+        pendingTasks={pendingTasks} 
+        onNavigateToTask={handleNavigateToTask} 
+      />
+    </div>
+  );
 }

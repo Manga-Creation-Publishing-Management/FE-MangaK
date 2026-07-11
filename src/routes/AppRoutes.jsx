@@ -12,6 +12,7 @@ import { ChapterDetail } from '../pages/mangaka/ChapterDetail.jsx';
 import { ProfilePage } from '../pages/shared/ProfilePage.jsx';
 import { Layout } from '@/layout/Layout.jsx';
 import { AdminDashboard } from '../pages/admin/AdminDashboard.jsx';
+import { AccountManagement } from '../pages/admin/AccountManagement.jsx';
 import { MangakaDashboard } from '../pages/mangaka/MangakaDashboard.jsx';
 import { AssistantDashboard } from '../pages/assistant/AssistantDashboard.jsx';
 import { TantouDashboard } from '../pages/tantouEditor/TantouDashboard.jsx';
@@ -23,6 +24,8 @@ import { LeaderboardPage } from '../pages/shared/LeaderboardPage.jsx';
 import { ReaderLoginPage } from '../pages/reader/ReaderLoginPage.jsx';
 import { TaskDetail } from '../pages/mangaka/TaskDetail.jsx';
 import { Income } from '../pages/assistant/Income.jsx';
+import { ForgotPasswordPage } from '../pages/auth/ForgotPasswordPage.jsx';
+import { ResetPasswordPage } from '../pages/auth/ResetPasswordPage.jsx';
 
 const roleDisplayNames = {
   mangaka: "Mangaka",
@@ -43,6 +46,8 @@ export function AppRoutes() {
       <Route element={<PublicRoute />}>
         <Route path="/login" element={<LoginPage />} />
         <Route path="loginReader" element={<ReaderLoginPage />} />
+        <Route path="forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="reset-password" element={<ResetPasswordPage />} />
       </Route>
 
 
@@ -50,7 +55,7 @@ export function AppRoutes() {
       <Route element={<ProtectedRoute allowedRole="mangaka" />}>
         <Route path="/mangaka" element={<Layout roleName="mangaka" />}>
           <Route index element={<MangakaDashboard />} />
-          <Route path="series" element={<SeriesManagement role="mangaka" />} />
+          <Route path="series" element={<div className="p-6 space-y-8"><SeriesManagement role="mangaka" /></div>} />
           <Route path="series/:id" element={<SeriesDetail />} />
           <Route path="chapter/:chapterId" element={<ChapterDetail />} />
           <Route path="tasks" element={<TaskManagement />} />
@@ -100,6 +105,7 @@ export function AppRoutes() {
       <Route element={<ProtectedRoute allowedRole="admin" />}>
         <Route path="/admin" element={<Layout roleName="admin" />}>
           <Route index element={<AdminDashboard />} />
+          <Route path="accounts" element={<AccountManagement />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Route>

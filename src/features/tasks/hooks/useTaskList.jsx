@@ -2,13 +2,15 @@ import { useEffect, useState } from "react"
 import { taskService } from "../../../services/taskService";
 import { useNavigate } from "react-router";
 
-export function useTaskList() {
+export function useTaskList(reload) {
 
 
 
   const [taskList, setTaskList] = useState([]);
 
   const navigate = useNavigate();
+
+  
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -20,7 +22,7 @@ export function useTaskList() {
       }
     }
     fetchApi();
-  }, [])
+  }, [reload])
 
   const handleNavigateToTask = (role, taskId) => {
     navigate(`/${role}/tasks/${taskId}`, { state: { role, taskId } });

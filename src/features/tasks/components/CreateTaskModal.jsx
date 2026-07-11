@@ -10,7 +10,8 @@ export default function CreateTaskModal({
   chapters,
   selectedSeriesId,
   onSeriesChange,
-  onSubmitCreateTask
+  onSubmitCreateTask,
+  onReload
 }) {
   const [pageRangeError, setPageRangeError] = useState("");
 
@@ -44,9 +45,9 @@ export default function CreateTaskModal({
             <button
               onClick={onClose}
               className="p-2 hover:bg-muted rounded-lg transition-colors cursor-pointer"
-              
+
             >
-              <X/>
+              <X />
             </button>
           </div>
 
@@ -54,21 +55,21 @@ export default function CreateTaskModal({
 
             <div className="mb-4">
               <div className='mb-2 text-xl'>
-              <label htmlFor="seriesName">Series</label>
+                <label htmlFor="seriesName">Series</label>
               </div>
               <select
                 name="seriesId"
                 onChange={(e) => onSeriesChange(e.target.value)}
                 value={selectedSeriesId}
                 className='w-full px-4 py-3 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary'>
-                <option  value="">Choose a series...</option>
+                <option value="">Choose a series...</option>
                 {showSeriesApproval?.map((item) => (
                   <option
                     key={item.seriesId}
                     value={item.seriesId}
                   >{item.title}</option>
                 ))}
-                </select>
+              </select>
             </div>
             <div className="mb-4">
               <div className='mb-2 text-xl'>
@@ -101,7 +102,7 @@ export default function CreateTaskModal({
             </div>
             <div>
               <div className='mb-2 text-xl'>
-                <label htmlFor="page_range">Description</label>
+                <label htmlFor="">Description</label>
               </div>
               <textarea
                 id="page_range"
@@ -113,31 +114,37 @@ export default function CreateTaskModal({
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-3 gap-4 mb-4">
               {/* Bên trái: Page Range */}
+              
               <div>
                 <div className='mb-2 text-xl'>
-                  <label htmlFor="page_range">Page Range</label>
+                  <label htmlFor="">From Page</label>
                 </div>
                 <input
-                  id="page_range"
-                  name="page_range"
-                  className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                  placeholder="e.g. 1-20"
+                  min={0}
+                  type="number"
+                  id="fromPage"
+                  name="fromPage"
+                  className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Enter From Page"
                   required
-                  type="text"
-                  onBlur={handlePageRangeBlur}
-                  onChange={() => setPageRangeError("")}
                 />
-                {/* 3. Hiển thị dòng chữ báo lỗi màu đỏ ngay dưới ô nhập nếu có lỗi */}
-                {pageRangeError && (
-                  <span className="text-red-500 text-sm mt-1 block">
-                    {pageRangeError}
-                  </span>
-                )}
               </div>
-
-              {/* Bên phải: Income */}
+              <div>
+                <div className='mb-2 text-xl'>
+                  <label htmlFor="">To Page</label>
+                </div>
+                <input
+                  min={0}
+                  type="number"
+                  id="toPage"
+                  name="toPage"
+                  className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Enter To Page"
+                  required
+                />
+              </div>
               <div>
                 <div className='mb-2 text-xl'>
                   <label htmlFor="income">Income</label>
@@ -152,6 +159,29 @@ export default function CreateTaskModal({
                   required
                 />
               </div>
+
+
+
+              {/* <input
+                  id="page_range"
+                  name="page_range"
+                  className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                  placeholder="e.g. 1-20"
+                  required
+                  type="text"
+                  onBlur={handlePageRangeBlur}
+                  onChange={() => setPageRangeError("")}
+                /> */}
+              {/* 3. Hiển thị dòng chữ báo lỗi màu đỏ ngay dưới ô nhập nếu có lỗi */}
+              {/* {pageRangeError && (
+                  <span className="text-red-500 text-sm mt-1 block">
+                    {pageRangeError}
+                  </span>
+                )} */}
+
+
+              {/* Bên phải: Income */}
+
             </div>
             <div className="mb-4">
               <div className='mb-2 text-xl'>
@@ -165,10 +195,10 @@ export default function CreateTaskModal({
               />
             </div>
 
-            
-            
 
-            
+
+
+
             <div className="flex justify-end gap-3 pt-4">
               <button
                 onClick={onClose}
@@ -187,8 +217,8 @@ export default function CreateTaskModal({
               </button>
             </div>
           </form>
-        </div>
-      </div>
+        </div >
+      </div >
     </>
   );
 }

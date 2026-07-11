@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { X } from "lucide-react";
 import useCreateSeries from "../hooks/useCreateSeries";
-
+import ReactCropper from "react-cropper";
+import "cropperjs/dist/cropper.css";
 // Component Modal (Popup) dùng để tạo một bộ truyện mới
 // Nhận vào 2 props: onClose (hàm đóng popup) và onReload (hàm load lại danh sách sau khi tạo)
 export default function CreateSeriesModal({ onClose, onReload }) {
@@ -19,29 +20,32 @@ export default function CreateSeriesModal({ onClose, onReload }) {
     handleChange,      // Hàm xử lý khi nhập nội dung vào ô text (tiêu đề, mô tả)
     handleCoverChange, // Hàm xử lý khi người dùng chọn xong file ảnh bìa
     handleStoryChange, // Hàm xử lý khi người dùng chọn xong file bản nháp
-    handleSubmit,      // Hàm xử lý khi ấn nút Submit Form
+    handleSubmit,
+    getCroppedImage,
+    cropperRef,
+    image// Hàm xử lý khi ấn nút Submit Form
   } = useCreateSeries(onClose, onReload); // Truyền hàm đóng và hàm reload vào hook
 
   return (
     // Lớp overlay (nền mờ) phủ toàn màn hình, dùng inset-0 để căn chỉnh
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      
+
       {/* Khung nội dung chính của Modal */}
       <div className="bg-card rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        
+
         {/* Phần Header của Modal, dính cố định trên cùng khi cuộn (sticky) */}
         <div className="sticky top-0 bg-card border-b border-border p-6 flex justify-between items-center">
           <div className="text-2xl font-semibold">Create New Series</div>
           <button onClick={onClose}
             className="p-2 hover:bg-muted rounded-lg transition-colors cursor-pointer"
             disabled={isLoading}>
-              <X/>
+            <X />
           </button>
         </div>
 
         {/* Form nhập liệu */}
         <form className="p-6 space-y-6" onSubmit={handleSubmit}>
-          
+
           {/* Input Tiêu đề truyện */}
           <div className="space-y-2">
             <label htmlFor="title">Title</label>
@@ -95,33 +99,63 @@ export default function CreateSeriesModal({ onClose, onReload }) {
           </div>
 
           {/* Khu vực Upload Ảnh bìa (Cover) */}
-          <div className="space-y-2">
-            <label>Upload Cover Page</label>
-            <div
-              onClick={() => coverInputRef.current.click()} // Kích hoạt sự kiện click lên thẻ input bị ẩn
-              name="coverFile"
-              className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer"
-            >
-              {/* Hiển thị tên file nếu đã chọn, nếu chưa thì hiển thị hướng dẫn */}
-              {coverFile ? (
+          <div className="space-y-4">
+            <label className="block font-medium">Upload Cover Page</label>
+
+            {/* 1. KHÚC TRÊN: Bộ cắt ảnh và nút Crop (Chỉ hiện khi ĐÃ CHỌN ảnh vào bộ nhớ tạm) */}
+            {image && (
+              <div className="space-y-2 border border-border p-2 rounded-lg bg-muted/20">
+                <ReactCropper
+                  ref={cropperRef}
+                  src={image}
+                  style={{ height: 400, width: "100%" }}
+                  aspectRatio={3 / 4}
+                  guides={true}
+                  viewMode={1}
+                  dragMode="move"
+                  scalable={true}
+                  cropBoxMovable={true}
+                  cropBoxResizable={true}
+                />
+                <button
+                  type="button"
+                  onClick={getCroppedImage}
+                  className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg w-full font-medium hover:opacity-90 transition-opacity"
+                >
+                  Crop cover
+                </button>
+              </div>
+            )}
+
+            {/* 2. KHÚC DƯỚI: Component trạng thái hiển thị file (Thay đổi linh hoạt độc lập) */}
+            {coverFile ? (
+              /* Khi ĐÃ CẮT ảnh thành công -> Hiện component Selected theo đúng ý bạn */
+              <div
+                onClick={() => coverInputRef.current.click()}
+                className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer"
+              >
                 <div className="text-primary font-medium">
                   Selected: {coverFile.name}
-                </div>
-              ) : (
-                <>
-                  <p className="text-muted-foreground">Click to upload or drag and drop</p>
-                  <p className="text-sm text-muted-foreground mt-1">PNG, JPG up to 10MB</p>
-                </>
-              )}
-              {/* Thẻ input file bị ẩn (hidden), nhận ref để được điều khiển bởi khung chứa div ở trên */}
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                ref={coverInputRef}
-                onChange={handleCoverChange}
-              />
-            </div>
+                </div> </div>
+            ) : (
+              /* Khi CHƯA CHỌN ảnh nào hết -> Hiện khung nét đứt mặc định */
+              <div
+                onClick={() => coverInputRef.current.click()}
+                className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer"
+              >
+                <p className="text-muted-foreground">Click to upload or drag and drop</p>
+                <p className="text-sm text-muted-foreground mt-1">PNG, JPG up to 10MB</p>
+              </div>
+            )}
+
+            {/* Input ẩn để kích hoạt trình chọn file của hệ thống */}
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              ref={coverInputRef}
+              onChange={handleCoverChange}
+            />
           </div>
 
           {/* Khu vực Upload Bản nháp truyện (Story Name / NameFile) */}
@@ -153,7 +187,7 @@ export default function CreateSeriesModal({ onClose, onReload }) {
               />
             </div>
           </div>
-          
+
           {/* Vùng chứa các nút điều khiển form (Hủy / Tạo mới) */}
           <div className="flex justify-end gap-3 pt-4">
             <button

@@ -1,24 +1,53 @@
+import { useState } from "react";
 import { SeriesManagement } from "../shared/SeriesManagement";
+import { useSeriesManagement } from "../../features/series/hooks/useSeriesManagement";
+import useCreateSeries from "../../features/series/hooks/useCreateSeries";
+import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
 
-// Component SeriesApproval: Dành cho màn hình phê duyệt của Editorial Board
 export function SeriesApproval() {
-  return (
-    <>
-      <div className="p-3">
-        {/* Header chào mừng và mô tả trang */}
-        <div className="p-3 flex justify-start">
-          <div className="p-3 mb-5">
-            <p className="text-sidebar-foreground font-medium text-2xl pb-1">Series Approval</p>
-            <p className="text-muted-foreground">Review and approve series submitted by Tantou Editors</p>
-          </div>
-        </div>
+  const { reload, handleReload } = useSeriesManagement();
+  const { seriesData } = useCreateSeries(null, handleReload, reload);
 
-        {/* Nhúng component SeriesManagement:
-            - Truyền role="editorial" để điều chỉnh hiển thị/logic phù hợp.
-            - statusFilter: Giới hạn chỉ hiển thị các truyện có trạng thái nằm trong mảng này (Pending, Approved, v.v.)
-        */}
-        <SeriesManagement role="editorial" statusFilter={["Pending", "Approved", "Publishing", "Cancelled"]} />
-      </div>
-    </>
-  )
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+
+  const filtered = seriesData.filter((item) => {
+    const allowedStatuses = ["pending", "approved", "publishing", "cancelled"];
+    const itemStatus = item.status?.toLowerCase();
+    if (!allowedStatuses.includes(itemStatus)) return false;
+
+    const matchesSearch =
+      (item.title || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (item.mangakaName || "").toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesStatus =
+      filterStatus === "all" || itemStatus === filterStatus.toLowerCase();
+
+    return matchesSearch && matchesStatus;
+  });
+
+  return (
+    <div className="p-6 space-y-6">
+      <SearchFilterBar
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search by title or author…"
+        filters={[
+          {
+            value: filterStatus,
+            onChange: setFilterStatus,
+            options: [
+              { value: "all", label: "All Status" },
+              { value: "Pending", label: "Pending" },
+              { value: "Approved", label: "Approved" },
+              { value: "Publishing", label: "Publishing" },
+              { value: "Cancelled", label: "Cancelled" },
+            ]
+          }
+        ]}
+      />
+
+      <SeriesManagement role="editorial" seriesFiltered={filtered} />
+    </div>
+  );
 }

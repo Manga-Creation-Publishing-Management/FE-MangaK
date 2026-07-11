@@ -50,7 +50,7 @@ export function useUpdateSeries() {
       // Cập nhật lại trạng thái local trên giao diện (tránh phải reload toàn trang)
       setLocalStatus(newStatus);
       showAlert(`Series has been approved! New status: ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}`);
-      
+
       // Chuyển hướng quay lại trang trước đó
       navigate(-1);
     } catch (error) {
@@ -62,9 +62,13 @@ export function useUpdateSeries() {
   };
 
   // --- Hàm Từ Chối Truyện (Reject) ---
-  const handleReject = async (id, roleFromState, setLocalStatus) => {
+  const handleReject = async (id, roleFromState, setLocalStatus, overrideFeedback = null) => {
+    //Ưu tiên lấy chữ truyền vào (để khi annotate không bị check nữa)
+    const finalFeedback = overrideFeedback != null ? overrideFeedback : feedback;
+
+
     // Ràng buộc bắt buộc phải nhập lý do (feedback) khi từ chối
-    if (!feedback.trim()) {
+    if (!finalFeedback.trim()) {
       showAlert("Please provide feedback before rejecting.", "warning");
       return;
     }
@@ -76,8 +80,9 @@ export function useUpdateSeries() {
     try {
       const reviewPayload = {
         isApproved: false, // Flag đánh dấu từ chối
-        note: feedback
+        note: finalFeedback
       };
+      // console.log("----------!Feedback text debug: ", feedback);
 
       // Cả 2 role khi từ chối đều đẩy truyện về trạng thái "rejected", 
       // tùy từng backend config nhưng hàm gọi API tương tự như bước approve.
@@ -90,7 +95,7 @@ export function useUpdateSeries() {
       // Ghi đè trạng thái local thành "rejected"
       setLocalStatus("rejected");
       showAlert("Series has been rejected.");
-      
+
       navigate(-1);
     } catch (error) {
       console.error("Error rejecting series:", error);

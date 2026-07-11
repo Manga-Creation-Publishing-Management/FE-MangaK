@@ -16,16 +16,13 @@ export const roleColors = {
   admin: "bg-rose-500/10 text-rose-500 border-rose-500/30",
 };
 
-export const mapApiRole = (role) => {
-  const roleMap = {
-    mangaka: "mangaka",
-    assistant: "assistant",
-    tantou: "tantou",
-    editorial: "editorial",
-    admin: "admin",
-    reader: "reader",
-  };
-  return roleMap[role?.toLowerCase()] || role?.toLowerCase() || "mangaka";
+export const apiRoleMap = {
+  mangaka: "mangaka",
+  assistant: "assistant",
+  tantou: "tantou",
+  editorial: "editorial",
+  admin: "admin",
+  reader: "reader",
 };
 
 export const feRoleToApiRole = {

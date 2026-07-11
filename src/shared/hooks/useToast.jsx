@@ -49,7 +49,7 @@ export function ToastProvider({ children }) {
                 <div id="toast-container">
                     <div className={`toast ${toast.isVisible ? 'show' : ''}`}>
                         <span className="toast-message">
-                            <Info color="#1a1525" size={25} strokeWidth={1} className="mr-2" />
+                            <Info color="var(--color-info)" size={25} strokeWidth={1.5} className="mr-2" />
                             {/* NHÃ NOTE: tui làm xong đang chưa biết sao lỗi nên cmt lại =)) */}
                             {/* {type == "warning" && <FileWarning />} */}
                             {/* {type == "sucess" && <Check />} */}

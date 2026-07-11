@@ -1,55 +1,29 @@
 import { useLocation, useNavigate } from "react-router";
 import { StatusBadge } from "@/shared/components/StatusBadge";
-import { Document, Page, pdfjs } from 'react-pdf';
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
+import { useState, useRef } from 'react';
 import dayjs from 'dayjs';
 
-import { ArrowLeft, Download, Undo, Brush, Type, Star } from "lucide-react";
+
+import { ArrowLeft, Download, Star } from "lucide-react";
 import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
 import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter";
-import { ApprovalPanel } from "../shared/ApprovalPanel";
-import { KonvaDraw } from "../shared/KonvaDraw";
-import { useChapterAnnotation } from "../../features/chapters/hooks/useChapterAnnotation";
 import { useProgressing } from "../../features/chapters/hooks/useProgressing";
+import { ApprovalPanel } from "../shared/ApprovalPanel";
+import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
+import { AnnotationModal } from "../shared/AnnotationModal";
+import { TextFeedbackModal } from "../shared/TextFeedbackModal";
+import { FeedbackViewer } from "../shared/FeedbackViewer";
+import { useToast } from "@/shared/hooks/useToast";
 
-// Kích hoạt Web Worker để thư viện react-pdf xử lý PDF ở một luồng độc lập (tránh đơ UI)
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+// (Worker setup moved to AnnotationModal)
 
 // Component hiển thị chi tiết của một Chapter cụ thể (để đọc truyện/xem nháp)
 export function ChapterDetail() {
 
-  const {
-    tool,
-    setTool,
-    annotationData,
-    annotationText,
-    textInput,
-    setTextInput,
-    brushColor,
-    setBrushColor,
-    isModalOpen,
-    setIsModalOpen,
-    pageNumber,
-    setPageNumber,
-    pageWidth,
-    pageHeight,
-    isPageLoaded,
-    setIsPageLoaded,
-    numPages,
-    handleUndo,
-    handleClearPage,
-    setPageLines,
-    setPageTexts,
-    closeModal,
-    handleBackdropClick,
-    onPageLoadSuccess,
-    onDocumentLoadSuccess,
-    handleSubmitAnnotation,
-  } = useChapterAnnotation();
 
   // Hook dùng để quay lại trang trước đó
   const navigate = useNavigate();
+  const { showAlert } = useToast();
 
   // Lấy seriesId và chapterId được truyền ngầm qua state khi gọi hàm navigate từ component cha (VD: ChapterList)
   const seriesId = useLocation().state?.seriesId;
@@ -81,10 +55,25 @@ export function ChapterDetail() {
   console.log(isOverdue);
   console.log(chapterDetail);
 
+  //các state quản lí hiển thị pop-up
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
+
+  const feedbackViewerRef = useRef(null);
+
+  const handleViewFeedbackClick = () => {
+    feedbackViewerRef.current?.viewFeedback();
+  };
+
+  const handleInitialRejectClick = () => {
+    setConfirmModalOpen(true);
+  }
+
   return (
     <>
       {/* Vùng chứa toàn bộ nội dung của trang chi tiết */}
-      <div className="p-8 space-y-8">
+      <div className="p-6 space-y-8">
 
         {/* Nút Back quay lại trang trước */}
         <button
@@ -119,7 +108,7 @@ export function ChapterDetail() {
 
             {/* Cụm thông tin bên phải: Badge trạng thái (Status) và Ngày tải lên */}
             <div className="flex flex-col items-end space-y-2">
-              <StatusBadge status={chapterDetail?.status} />
+              <StatusBadge status={chapterDetail?.status.toLowerCase()} />
             </div>
 
           </div>
@@ -201,14 +190,6 @@ export function ChapterDetail() {
                           <Download size={16} />
                           Download File Here
                         </a>
-
-                        {/* THÊM MỚI: Nút View and Annotate */}
-                        <button
-                          onClick={() => setIsModalOpen(true)}
-                          className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm w-[240px]"
-                        >
-                          View and Annotate
-                        </button>
                       </div>
                     </>
                   ) : (
@@ -291,6 +272,14 @@ export function ChapterDetail() {
                 )
                 }
 
+                {((chapterDetail?.feedback) || (currentRole?.toLowerCase() === 'mangaka' && ['pending', 'reject', 'rejected', 'approved', 'scheduled', 'publishing'].includes(chapterDetail?.status?.toLowerCase()))) && (
+                  <button
+                    onClick={handleViewFeedbackClick}
+                    className="bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50">
+                    View Feedback
+                  </button>
+                )}
+
               </div>
             </>
           }
@@ -303,7 +292,9 @@ export function ChapterDetail() {
               feedback={feedback}
               onFeedbackChange={(e) => setFeedback(e.target.value)}
               onApprove={() => handleApprove(currentRole, chapterDetail?.status, setChapterDetail)}
-              onReject={() => handleReject(currentRole, chapterDetail?.status, setChapterDetail)}
+              onReject={() => currentRole === 'tantou'
+                ? handleInitialRejectClick()
+                : handleReject(currentRole, chapterDetail?.status, setChapterDetail, "Rejected by tantou, view annotation for details")}
             />
           )}
 
@@ -312,171 +303,41 @@ export function ChapterDetail() {
         </div>
       </div>
 
-      {/* THÊM: POP-UP CHO PDF ANNOTATION */}
-      {isModalOpen && (
-        <div
-          onClick={handleBackdropClick}
-          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
-        >
-          <div className="bg-card border border-border rounded-2xl shadow-2xl p-6 max-w-[95vw] max-h-[95vh] overflow-y-auto flex flex-col items-center gap-4 relative">
+      <ConfirmRejectModal
+        isOpen={confirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onYes={() => {
+          setConfirmModalOpen(false);
+          setIsAnnotationOpen(true);
+        }}
+        onNo={() => {
+          setConfirmModalOpen(false);
+          handleReject(currentRole, chapterDetail?.status, setChapterDetail);
+        }}
+      />
 
-            {/* Tiêu đề & Nút Close */}
-            <div className="flex justify-between items-center w-full pb-4 border-b border-border">
-              <h2 className="text-lg font-semibold text-foreground">View and Annotate</h2>
-              <button
-                onClick={closeModal}
-                className="text-muted-foreground hover:text-foreground p-1.5 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
 
-            {/* MỚI NỮA NÈ: Thanh công cụ: Vẽ và Text */}
-            <div className="flex flex-wrap items-center justify-between gap-4 w-full bg-muted/40 p-3 rounded-xl border border-border">
-              <div className="flex items-center gap-2">
-                {/* Các nút chọn công cụ vẽ/text */}
-                <button
-                  onClick={() => setTool('brush')}
-                  className={`p-2 rounded-lg transition-all ${tool === 'brush' ? 'bg-primary text-primary-foreground shadow-sm' : 'hover:bg-muted/50 text-muted-foreground'
-                    }`}
-                  title="Brush"
-                >
-                  <Brush />
-                </button>
-                <button
-                  onClick={() => setTool('text')}
-                  className={`p-2 rounded-lg transition-all ${tool === 'text' ? 'bg-primary text-primary-foreground shadow-sm' : 'hover:bg-muted/50 text-muted-foreground'
-                    }`}
-                  title="Text"
-                >
-                  <Type />
-                </button>
-              </div>
+      <AnnotationModal
+        isOpen={isAnnotationOpen}
+        onClose={() => setIsAnnotationOpen(false)}
+        fileUrl={chapterDetail?.chapterFileUrl}
+        chapterId={chapterId}
+        seriesId={seriesId}
+        role={currentRole.toLowerCase()}
+        onRejectTrigger={() => {
+          handleReject(currentRole, chapterDetail?.status, setChapterDetail, "Annotation feedback added to the submission")
+          setIsAnnotationOpen(false);
+        }}
+      />
 
-              <input
-                type="text"
-                value={textInput}
-                onChange={(e) => setTextInput(e.target.value)}
-                placeholder="Enter text..."
-                className="px-3 py-1.5 border border-border rounded-lg bg-background text-foreground text-sm outline-none focus:ring-1 focus:ring-primary"
-              />
-            </div>
-
-            {/* Thanh công cụ vẽ: Brush color, Undo, Clear */}
-            <div className="flex flex-wrap items-center justify-between gap-4 w-full bg-muted/40 p-3 rounded-xl border border-border">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Color:</span>
-                <div className="flex gap-1.5">
-                  {["#ef4444", "#3b82f6", "#10b981", "#f59e0b", "#000000"].map((color) => (
-                    <button
-                      key={color}
-                      onClick={() => setBrushColor(color)}
-                      className={`w-6 h-6 rounded-full border-2 transition-transform cursor-pointer hover:scale-110 ${brushColor === color ? 'border-primary scale-110 shadow-sm' : 'border-transparent'}`}
-                      style={{ backgroundColor: color }}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => handleUndo(pageNumber)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 text-xs font-semibold transition-colors cursor-pointer border border-border shadow-sm"
-                >
-                  <Undo size={14} />
-                  Undo
-                </button>
-                <button
-                  onClick={() => handleClearPage(pageNumber)}
-                  className="px-3 py-1.5 bg-destructive/10 text-destructive rounded-lg hover:bg-destructive/20 text-xs font-semibold transition-colors cursor-pointer border border-transparent"
-                >
-                  Clear Page
-                </button>
-              </div>
-            </div>
-
-            {/* Vùng hiển thị PDF và lớp vẽ KonvaDraw */}
-            <div className="relative overflow-hidden border border-border rounded-xl shadow-inner bg-white min-h-[400px] flex items-center justify-center">
-              <Document
-                file={chapterDetail?.chapterFileUrl}
-                onLoadSuccess={onDocumentLoadSuccess}
-                loading={
-                  <div className="flex flex-col items-center gap-2 py-20 px-32 text-muted-foreground">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                    <p className="text-sm font-medium animate-pulse">Loading PDF document...</p>
-                  </div>
-                }
-              >
-                <div className="relative" style={{ width: pageWidth, height: pageHeight }}>
-                  <Page
-                    pageNumber={pageNumber}
-                    width={pageWidth}
-                    onLoadSuccess={onPageLoadSuccess}
-                    loading={
-                      <div className="flex flex-col items-center justify-center absolute inset-0 text-muted-foreground">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                        <p className="text-sm font-medium mt-2">Loading page {pageNumber}...</p>
-                      </div>
-                    }
-                    renderTextLayer={false}
-                    renderAnnotationLayer={false}
-                  />
-                  {isPageLoaded && (
-                    <div className="absolute inset-0 z-20">
-                      <KonvaDraw
-                        width={pageWidth}
-                        height={pageHeight}
-                        tool={tool}
-                        textInput={textInput}
-                        onTextPlaced={() => setTextInput('')}
-                        lines={annotationData[pageNumber] || []}
-                        setLines={(newLines) => setPageLines(pageNumber, newLines)}
-                        texts={annotationText[pageNumber] || []}
-                        setTexts={(newTexts) => setPageTexts(pageNumber, newTexts)}
-                        color={brushColor}
-                      />
-                    </div>
-                  )}
-                </div>
-              </Document>
-            </div>
-
-            {/* Phân trang PDF */}
-            {numPages && (
-              <div className="flex items-center justify-between w-full px-2">
-                <button
-                  disabled={pageNumber <= 1}
-                  onClick={() => { setPageNumber(prev => prev - 1); setIsPageLoaded(false); }}
-                  className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 disabled:opacity-40 disabled:cursor-not-allowed text-sm font-medium transition-colors cursor-pointer border border-border"
-                >
-                  Previous Page
-                </button>
-                <span className="text-sm font-semibold text-muted-foreground">
-                  Page {pageNumber} of {numPages}
-                </span>
-                <button
-                  disabled={pageNumber >= numPages}
-                  onClick={() => { setPageNumber(prev => prev + 1); setIsPageLoaded(false); }}
-                  className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 disabled:opacity-40 disabled:cursor-not-allowed text-sm font-medium transition-colors cursor-pointer border border-border"
-                >
-                  Next Page
-                </button>
-              </div>
-            )}
-
-            {/* Nút Submit Annotation */}
-            <div className="w-full border-t border-border pt-4 mt-2">
-              <button
-                onClick={handleSubmitAnnotation}
-                className="w-full py-3 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-all shadow-md cursor-pointer hover:shadow-lg text-sm"
-              >
-                Submit Annotation
-              </button>
-            </div>
-
-          </div>
-        </div>
-      )}
+      <FeedbackViewer
+        ref={feedbackViewerRef}
+        chapterId={chapterId}
+        fallbackFeedback={chapterDetail?.feedback}
+        fallbackFeedbackType={chapterDetail?.feedbackType}
+        fileUrl={chapterDetail?.chapterFileUrl}
+        role={currentRole.toLowerCase()}
+      />
     </>
   )
 }

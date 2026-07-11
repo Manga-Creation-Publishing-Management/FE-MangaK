@@ -1,4 +1,3 @@
-import { WelcomeLine } from '@/shared/components/WelcomeLine';
 import { Search } from 'lucide-react';
 import { SeriesManagement } from '../shared/SeriesManagement';
 import { useSearch } from '../../features/series/hooks/useSearch';
@@ -16,8 +15,7 @@ export function ReaderDashboard() {
             <HeaderPage roleName="Reader" avatarUrl="/avatarImgDemo.png" />
 
             <div className='p-5 bg-background'>
-                {/* Lời chào */}
-                <WelcomeLine roleName="Reader" />
+
 
                 {/* Vùng Tìm Kiếm (Search Box) */}
                 <div className='p-3 mx-3 bg-card rounded-lg border border-border hover:shadow'>

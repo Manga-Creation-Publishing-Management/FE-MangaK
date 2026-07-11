@@ -2,13 +2,21 @@ import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, Uploa
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { useTaskDetail } from "../../features/tasks/hooks/useTaskDetail";
 import { StatusBadge } from "@/shared/components/StatusBadge";
+import { ApprovalPanel } from "@/pages/shared/ApprovalPanel";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { AnnotationModal } from "../shared/AnnotationModal";
+import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
+import { PreviewModal } from "../shared/PreviewModal";
+
+import { useState, useRef } from "react";
+import { FeedbackViewer } from "../shared/FeedbackViewer";
+import { useToast } from "@/shared/hooks/useToast";
 dayjs.extend(utc);
 export function TaskDetail() {
 
-
   const navigate = useNavigate();
+  const { showAlert } = useToast();
   const taskId = useLocation().state?.taskId;
   const role = useLocation().state?.role;
 
@@ -21,15 +29,35 @@ export function TaskDetail() {
     handleStoryChange,
     handleGetTask,
     isLoading,
+    feedback,
+    setFeedback,
     handleSubmitTask,
+    handleRejectTask,
     handleApprovedTask
   } = useTaskDetail(taskId, role);
 
   console.log("sss", taskDetail);
 
+  //các state quản lí hiển thị pop-up
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
+
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
+  const feedbackViewerRef = useRef(null);
+
+  const handleViewFeedbackClick = () => {
+    feedbackViewerRef.current?.viewFeedback();
+  };
+
+  const handleInitialRejectClick = () => {
+    setConfirmModalOpen(true);
+  }
+
   return (
     <>
-      <div className="p-8 space-y-8">
+      <div className="p-6 space-y-8">
         <button
           onClick={() => navigate(-1)}
           className="flex cursor-pointer items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -53,7 +81,7 @@ export function TaskDetail() {
 
             <div className="flex flex-col items-end space-y-2">
               <span className="mb-6" >
-                <StatusBadge status={taskDetail?.status} />
+                <StatusBadge status={taskDetail?.status?.toLowerCase()} />
               </span>
 
               <div className="flex items-center gap-1.5 text-sm text-muted-foreground bg-muted/50 px-3 py-1 rounded-md border border-border">
@@ -131,9 +159,7 @@ export function TaskDetail() {
                   </div>
                 </>
               }
-              {/* PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ
-                        PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ
-                        PHẦN DƯỚI NÀY ĐỂ CHÈN PDF NÈ */}
+
               {role === "mangaka" &&
                 <>
                   <h3 className="font-medium text-sm text-muted-foreground">Submited File by Assistant</h3>
@@ -155,13 +181,20 @@ export function TaskDetail() {
                         <p className="text-xl font-semibold text-muted-foreground">No file has been submitted by the assistant yet.</p>
                       </>
                     )}
+
+                    {/* NHÃ THÊM CÁI NÚT ANNOTATE CHO MANGAKA NÀY */}
+                    {taskDetail?.status === "Pending" &&
+                      <button
+                        onClick={() => setIsPreviewOpen(true)}
+                        className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
+                      >
+                        Preview Submission
+                      </button>}
+
                   </div>
+
                 </>
               }
-              {/* KẾT THÚC PHẦN CHÈN
-                    KẾT THÚC PHẦN CHÈN
-                    KẾT THÚC PHẦN CHÈN
-                    KẾT THÚC PHẦN CHÈN */}
 
             </div>
 
@@ -178,34 +211,111 @@ export function TaskDetail() {
                     Get Task
                   </button>
                 }
-              { taskDetail?.status != ("Available" || "Completed") &&
-                <button
-                  onClick={handleSubmitTask}
-                  disabled={isLoading}
-                  className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50 disabled:cursor-not-allowed">
-                  {isLoading ? "Submitting..." : "Submit Task"}
-                </button>
+                {taskDetail?.status != ("Available" || "Pending" || "Completed") &&
+                  <button
+                    onClick={handleSubmitTask}
+                    disabled={isLoading}
+                    className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50 disabled:cursor-not-allowed">
+                    {isLoading ? "Submitting..." : "Submit Task"}
+                  </button>
                 }
+
+                {(taskDetail?.status === "Revising" || taskDetail?.status === "Unsatisfied") && (
+                  <button
+                    onClick={handleViewFeedbackClick}
+                    className="bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                    View Feedback
+                  </button>
+                )}
+
+
               </>
             }
 
-            {(role === "mangaka" && taskDetail?.status != "Completed") &&
-              <>
-                <button className="bg-destructive hover:bg-destructive/70 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+            {role === "mangaka" && (taskDetail?.status === "Revising" || taskDetail?.status === "Unsatisfied" || taskDetail?.status === "Completed") && (
+              <button
+                onClick={handleViewFeedbackClick}
+                className="bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                View Feedback
+              </button>
+            )}
 
+
+          </div>
+          {(role === "mangaka" && taskDetail?.status == "Pending") &&
+            <>
+              {/* NHÃ SỬA CÁI APPROVAL */}
+              <ApprovalPanel
+                feedback={feedback}
+                onFeedbackChange={(e) => setFeedback(e.target.value)}
+                onApprove={() => handleApprovedTask(taskId)}
+                onReject={() => handleInitialRejectClick()}
+                isLoading={isLoading}
+                approveText="Approve Task"
+                rejectText="Reject Task with Feedback"
+              />
+
+              <AnnotationModal
+                isOpen={isAnnotationOpen}
+                onClose={() => setIsAnnotationOpen(false)}
+                fileUrl={taskDetail?.submittedFileUrl}
+                taskId={taskId}
+                role={role}
+                onRejectTrigger={() => { //cho chữ mặc định khi annotation vì reject nó vẫn check á
+                  handleRejectTask(taskId, role);
+                  setIsAnnotationOpen(false);
+                }}
+              />
+
+
+              <ConfirmRejectModal
+                isOpen={confirmModalOpen}
+                onClose={() => setConfirmModalOpen(false)}
+                onYes={() => {
+                  setConfirmModalOpen(false);
+                  setIsAnnotationOpen(true);
+                }}
+                onNo={() => {
+                  setConfirmModalOpen(false);
+                  handleRejectTask(taskId, role);
+                }}
+              />
+
+              <PreviewModal
+                isOpen={isPreviewOpen}
+                onClose={() => setIsPreviewOpen(false)}
+                fileUrl={taskDetail?.submittedFileUrl}
+                role={role}
+              />
+
+
+              {/* PHẦN CŨ CỦA CHƯN */}
+              {/* <button
+                  onClick={handleRejectTask}
+                  className="bg-destructive hover:bg-destructive/70 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
                   Reject & Feedback
                 </button>
                 <button
                   onClick={handleApprovedTask}
                   className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
                   Approve Task
-                </button>
-              </>
-            }
-          </div>
+                </button> */}
+            </>
+          }
 
+          {/* Feedback Modals */}
+          <FeedbackViewer
+            ref={feedbackViewerRef}
+            taskId={taskId}
+            fallbackFeedback={taskDetail?.feedback}
+            fallbackFeedbackType={taskDetail?.feedbackType}
+            fileUrl={taskDetail?.submittedFileUrl}
+            role={role}
+          />
         </div>
+
       </div>
     </>
   )
+
 }

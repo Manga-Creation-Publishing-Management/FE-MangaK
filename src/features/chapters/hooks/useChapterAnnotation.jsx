@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from "../../../shared/hooks/useToast";
+import { feedbackService } from '../../../services/feedbackService';
 
 /**
  * Custom hook quản lý các state và logic xử lý liên quan đến chức năng PDF Annotation (chú thích/vẽ).
  */
-export function useChapterAnnotation() {
+export function useChapterAnnotation(onClose, initialFeedbackJson = null) {
   const { showAlert } = useToast();
 
   // Chế độ chọn công cụ: 'brush' (cọ vẽ) hoặc 'text' (gõ chữ)
@@ -16,19 +17,36 @@ export function useChapterAnnotation() {
   // State lưu trữ dữ liệu chữ của từng trang PDF (dạng key-value với key là số trang)
   const [annotationText, setAnnotationText] = useState({});
 
+  useEffect(() => {
+    if (initialFeedbackJson) {
+      try {
+        const parsed = JSON.parse(initialFeedbackJson);
+        const parsedLines = {};
+        const parsedTexts = {};
+        
+        Object.keys(parsed).forEach(page => {
+          if (parsed[page].lines) parsedLines[page] = parsed[page].lines;
+          if (parsed[page].texts) parsedTexts[page] = parsed[page].texts;
+        });
+        
+        setAnnotationData(parsedLines);
+        setAnnotationText(parsedTexts);
+      } catch (err) {
+        console.error("Failed to parse initialFeedbackJson:", err);
+      }
+    }
+  }, [initialFeedbackJson]);
+
   // Nội dung chữ đang nhập trên thanh công cụ của modal
   const [textInput, setTextInput] = useState('');
 
   // Màu sắc hiện tại của nét vẽ/chữ viết (mặc định là màu đỏ)
   const [brushColor, setBrushColor] = useState("#ef4444");
 
-  // Trạng thái đóng/mở modal xem PDF và vẽ annotation
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   // Trang hiện tại của file PDF đang được hiển thị
   const [pageNumber, setPageNumber] = useState(1);
 
-  // Chiều rộng hiển thị mặc định của trang PDF (đơn vị pixel)
+  // Chiều rộng hiển thị mặc định của trang PDF (đơn vị pixel), sẽ được cập nhật lại theo container
   const [pageWidth, setPageWidth] = useState(600);
 
   // Chiều cao hiển thị của trang PDF (sẽ được cập nhật động theo tỉ lệ trang gốc)
@@ -111,10 +129,10 @@ export function useChapterAnnotation() {
    * Đóng modal vẽ annotation, reset số trang hiển thị về trang 1 và xóa ô nhập chữ tạm thời
    */
   const closeModal = () => {
-    setIsModalOpen(false);
     setPageNumber(1);
     setIsPageLoaded(false);
     setTextInput('');
+    if (onClose) onClose();
   };
 
   /**
@@ -128,11 +146,10 @@ export function useChapterAnnotation() {
 
   /**
    * Callback được gọi khi một trang PDF tải xong thành công.
-   * Tính toán chiều cao hiển thị tương ứng theo tỉ lệ của trang gốc dựa trên chiều rộng cố định (600px).
+   * Tính toán chiều cao hiển thị tương ứng theo tỉ lệ của trang gốc dựa trên chiều rộng hiện tại.
    */
   const onPageLoadSuccess = (page) => {
-    const scaledHeight = page.height * (600 / page.width);
-    setPageWidth(600);
+    const scaledHeight = page.height * (pageWidth / page.width);
     setPageHeight(scaledHeight);
     setIsPageLoaded(true);
   };
@@ -147,7 +164,7 @@ export function useChapterAnnotation() {
   /**
    * Gộp chung cả nét vẽ (lines) và chữ (texts) của từng trang vào một file JSON duy nhất để gửi qua API
    */
-  const handleSubmitAnnotation = () => {
+  const handleSubmitAnnotation = async (seriesId, chapterId, taskId, role) => {
     const combinedAnnotations = {};
 
     // Gom tất cả các trang có chỉnh sửa nét vẽ hoặc chữ
@@ -163,9 +180,16 @@ export function useChapterAnnotation() {
       };
     });
 
-    console.log("Combined Annotations JSON:", JSON.stringify(combinedAnnotations));
-    // CHÈN GỌI API Ở ĐÂY: Có thể chuyển JSON.stringify(combinedAnnotations) trong body gửi về Back-end
-    showAlert("Annotation submitted successfully (API integration pending)!");
+    console.log("TEST Combined Annotations JSON:", JSON.stringify(combinedAnnotations));
+    try {
+      await feedbackService.sendAnnotation(seriesId || null, chapterId || null, taskId || null, JSON.stringify(combinedAnnotations), "EditPDF");
+      showAlert("Annotation submitted successfully!");
+      return true;
+    } catch (err) {
+      console.log("TEST error:", err)
+      showAlert("Annotation submission failed!");
+      return false;
+    }
     closeModal();
   };
 
@@ -180,8 +204,6 @@ export function useChapterAnnotation() {
     setTextInput,
     brushColor,
     setBrushColor,
-    isModalOpen,
-    setIsModalOpen,
     pageNumber,
     setPageNumber,
     pageWidth,
