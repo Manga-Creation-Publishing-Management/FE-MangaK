@@ -38,7 +38,7 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
                   id="title"
                   type="text"
                   className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Enter series name"
+                  placeholder="Enter chapter's title"
                   required
                   onChange={handleChange}
                   name="Title"
@@ -54,7 +54,7 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
                   id="summary"
                   type="text"
                   className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Enter series name"
+                  placeholder="Enter summary"
                   required
                   onChange={handleChange}
                   name="Summary"
@@ -62,7 +62,7 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
               </div>
             </div>
 
-            
+
 
             <div className="space-y-2">
               <div className='mb-2 text-xl'>
