@@ -122,7 +122,7 @@ export default function CreateSeriesModal({ onClose, onReload }) {
                   onClick={getCroppedImage}
                   className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg w-full font-medium hover:opacity-90 transition-opacity"
                 >
-                  Cắt ảnh
+                  Crop cover
                 </button>
               </div>
             )}
