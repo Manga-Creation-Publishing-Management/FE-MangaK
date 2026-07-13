@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { chaptersService } from "../../../services/chapterService";
 import { useToast } from "../../../shared/hooks/useToast";
 import dayjs from "dayjs";
-
+import { pdfjs } from 'react-pdf';
+// Đảm bảo Web Worker được kích hoạt để tránh block UI Thread khi đếm trang PDF
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 export function useCreateChapter(seriesId, onClose, onReload) {
   const { showAlert } = useToast();
   const [chapterListForm, setChapterListForm] = useState({});
@@ -14,9 +16,39 @@ export function useCreateChapter(seriesId, onClose, onReload) {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  // Thêm state lưu số trang và trạng thái loading khi đang đọc file
+  const [pageCount, setPageCount] = useState(null);
+  const [isReadingPdf, setIsReadingPdf] = useState(false);
+
   const handleStoryChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setStoryFile(e.target.files[0]);
+      const file = e.target.files[0];
+      setStoryFile(file);
+      setPageCount(null); // Reset lại số trang mỗi khi chọn file mới
+
+      // Kiểm tra xem file upload có phải là định dạng PDF không
+      if (file.type === "application/pdf" || file.name.endsWith('.pdf')) {
+        setIsReadingPdf(true);
+
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+          try {
+            const typedarray = new Uint8Array(event.target.result);
+            // Load tài liệu ngầm bằng pdfjs
+            const pdf = await pdfjs.getDocument(typedarray).promise;
+
+            // Cập nhật số trang vào state
+            setPageCount(pdf.numPages);
+          } catch (error) {
+            console.error("Error parsing PDF pages:", error);
+            showAlert("Cannot read PDF page count", "error");
+          } finally {
+            setIsReadingPdf(false);
+          }
+        };
+
+        reader.readAsArrayBuffer(file);
+      }
     }
   };
 
@@ -37,15 +69,20 @@ export function useCreateChapter(seriesId, onClose, onReload) {
 
     if (!chapterListForm.Title?.trim()) {
       showAlert("Title is required", "warning");
+      setIsLoading(false);
       return;
     }
     if (!storyFile) {
       showAlert("Manuscript file is required", "warning");
+      setIsLoading(false);
       return;
     }
     const formElement = e.target;
     // 1. Khởi tạo một đối tượng FormData trống hoàn toàn
     const formDataToSend = new FormData();
+    if (pageCount !== null) {
+      formDataToSend.append("TotalPage", pageCount);
+    }
 
     // 2. Append các chuỗi text thông thường (Lưu ý: Viết hoa chữ cái đầu y hệt Swagger)
     formDataToSend.append("Title", formElement.elements["Title"].value);
@@ -97,6 +134,8 @@ export function useCreateChapter(seriesId, onClose, onReload) {
     handleChange,
     storyInputRef,
     storyFile,
-    isLoading
+    isLoading,
+    pageCount,
+    isReadingPdf
   }
 }
