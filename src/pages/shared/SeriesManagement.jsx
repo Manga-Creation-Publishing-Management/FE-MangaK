@@ -1,3 +1,4 @@
+import { useState } from "react";
 import CreateSeriesModal from "../../features/series/components/CreateSeriesModal";
 // import { Link } from "react-router";
 import { useSeriesManagement } from "../../features/series/hooks/useSeriesManagement";
@@ -7,6 +8,7 @@ import { ArrowBigLeft, ArrowDownLeft, ArrowLeft, ArrowRight, Plus } from "lucide
 import { getPaginationRange } from "../../features/Pagination/hooks/getPaginationRange";
 import { getTotalPage } from "../../features/Pagination/hooks/getTotalPage";
 import { PaginationCustom } from "../../features/Pagination/components/PaginationCustom";
+import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
 
 // Component SeriesManagement: Màn hình quản lý danh sách các bộ truyện
 export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
@@ -21,12 +23,13 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
     getCroppedImage
   } = useSeriesManagement();
 
-
-
   // Gọi hook useCreateSeries để lấy danh sách series data hiện có
   // Cần truyền biến reload để hook biết khi nào cần fetch lại data (ví dụ sau khi tạo mới thành công)
   const { seriesData } = useCreateSeries(null, handleReload, reload);
   console.log(seriesData);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
 
   // Biến dùng để chứa dữ liệu các bộ truyện đã được lọc ra để render
   let filteredSeriesData;
@@ -36,11 +39,22 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
     filteredSeriesData = seriesFiltered;
   }
   else {
-    // Nếu không, thực hiện lọc theo 'statusFilter' (nếu có). 
-    // Ví dụ statusFilter = ['pending', 'processing'] sẽ giữ lại các truyện có status nằm trong mảng đó
-    filteredSeriesData = statusFilter
-      ? seriesData.filter(item => statusFilter.includes(item.status))
-      : seriesData; // Nếu không có bộ lọc nào thì lấy toàn bộ
+    // Nếu không, thực hiện lọc theo 'statusFilter' và các bộ lọc nội bộ (search/status)
+    filteredSeriesData = seriesData.filter(item => {
+      const matchesStatusProp = statusFilter
+        ? (Array.isArray(statusFilter) ? statusFilter.includes(item.status) : item.status === statusFilter)
+        : true;
+
+      const matchesSearch =
+        (item.title || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (item.mangakaName || "").toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesStatus =
+        filterStatus === "all" ||
+        item.status?.toLowerCase() === filterStatus.toLowerCase();
+
+      return matchesStatusProp && matchesSearch && matchesStatus;
+    });
   }
 
   const {
@@ -60,21 +74,77 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
       <div className="bg-card border border-border rounded-xl p-2">
 
         <div className="p-4 mb-5">
-          {role === "mangaka" &&
-            <div className="flex justify-between items-center mb-5">
-              <div>
-                <h1 className="text-sidebar-foreground font-medium text-2xl pb-1">Series Management</h1>
-                <p className="text-muted-foreground">Manage your series and chapters</p>
+          {role === "mangaka" && (
+            <div className="flex justify-between items-center mb-5 gap-4">
+
+
+              <div className="flex items-center gap-4 flex-1 justify-end max-w-3xl">
+                {!seriesFiltered && role !== "reader" && (
+                  <div className="flex-1 max-w-md">
+                    <SearchFilterBar
+                      searchQuery={searchQuery}
+                      onSearchChange={setSearchQuery}
+                      searchPlaceholder="Search by title..."
+                      useCardWrapper={false}
+                      filters={[
+                        {
+                          value: filterStatus,
+                          onChange: setFilterStatus,
+                          options: [
+                            { value: "all", label: "All Status" },
+                            { value: "created", label: "Created" },
+                            { value: "processing", label: "Processing" },
+                            { value: "pending", label: "Pending" },
+                            { value: "approved", label: "Approved" },
+                            { value: "publishing", label: "Publishing" },
+                            { value: "scheduled", label: "Scheduled" },
+                            { value: "rejected", label: "Rejected" },
+                            { value: "cancelled", label: "Cancelled" }
+                          ]
+                        }
+                      ]}
+                    />
+                  </div>
+                )}
+
+                {/* Nút để mở popup tạo bộ truyện mới */}
+                <button
+                  onClick={handleClick}
+                  className="cursor-pointer border-2 flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity shrink-0"
+                >
+                  <Plus />Create New Series
+                </button>
               </div>
-              {/* Nút để mở popup tạo bộ truyện mới */}
-              <button
-                onClick={handleClick}
-                className="cursor-pointer border-2 flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-              >
-                <Plus />Create New Series
-              </button>
             </div>
-          }
+          )}
+
+          {role !== "mangaka" && !seriesFiltered && role !== "reader" && (
+            <div className="mb-6">
+              <SearchFilterBar
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                searchPlaceholder="Search by title..."
+                useCardWrapper={false}
+                filters={[
+                  {
+                    value: filterStatus,
+                    onChange: setFilterStatus,
+                    options: [
+                      { value: "all", label: "All Status" },
+                      { value: "created", label: "Created" },
+                      { value: "processing", label: "Processing" },
+                      { value: "pending", label: "Pending" },
+                      { value: "approved", label: "Approved" },
+                      { value: "publishing", label: "Publishing" },
+                      { value: "scheduled", label: "Scheduled" },
+                      { value: "rejected", label: "Rejected" },
+                      { value: "cancelled", label: "Cancelled" }
+                    ]
+                  }
+                ]}
+              />
+            </div>
+          )}
 
           {currentDataListDisplay?.length === 0 &&
             <p className="text-warning p-2 italic text-lg flex justify-center">No series found</p>}

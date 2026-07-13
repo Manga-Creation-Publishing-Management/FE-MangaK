@@ -1,16 +1,19 @@
 import { useLocation, useNavigate } from "react-router";
 import { StatusBadge } from "@/shared/components/StatusBadge";
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import dayjs from 'dayjs';
 
 
-import { ArrowLeft, Download, Star } from "lucide-react";
+import { Download, Star } from "lucide-react";
 import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
 import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter";
 import { useProgressing } from "../../features/chapters/hooks/useProgressing";
 import { ApprovalPanel } from "../shared/ApprovalPanel";
 import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
 import { AnnotationModal } from "../shared/AnnotationModal";
+import { TextFeedbackModal } from "../shared/TextFeedbackModal";
+import { FeedbackViewer } from "../shared/FeedbackViewer";
+import { useToast } from "@/shared/hooks/useToast";
 
 // (Worker setup moved to AnnotationModal)
 
@@ -20,6 +23,7 @@ export function ChapterDetail() {
 
   // Hook dùng để quay lại trang trước đó
   const navigate = useNavigate();
+  const { showAlert } = useToast();
 
   // Lấy seriesId và chapterId được truyền ngầm qua state khi gọi hàm navigate từ component cha (VD: ChapterList)
   const seriesId = useLocation().state?.seriesId;
@@ -56,6 +60,12 @@ export function ChapterDetail() {
 
   const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
 
+  const feedbackViewerRef = useRef(null);
+
+  const handleViewFeedbackClick = () => {
+    feedbackViewerRef.current?.viewFeedback();
+  };
+
   const handleInitialRejectClick = () => {
     setConfirmModalOpen(true);
   }
@@ -65,14 +75,6 @@ export function ChapterDetail() {
       {/* Vùng chứa toàn bộ nội dung của trang chi tiết */}
       <div className="p-6 space-y-8">
 
-        {/* Nút Back quay lại trang trước */}
-        <button
-          onClick={() => navigate(-1)} // navigate(-1) tương đương với bấm nút Back trên trình duyệt
-          className="flex cursor-pointer items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft size={20} />
-          Back
-        </button>
 
         {/* Khung (Card) chứa thông tin chính của Chapter */}
         <div className="bg-card border border-border rounded-xl p-8 space-y-4">
@@ -262,6 +264,14 @@ export function ChapterDetail() {
                 )
                 }
 
+                {((chapterDetail?.feedback) || (currentRole?.toLowerCase() === 'mangaka' && ['pending', 'reject', 'rejected', 'approved', 'scheduled', 'publishing'].includes(chapterDetail?.status?.toLowerCase()))) && (
+                  <button
+                    onClick={handleViewFeedbackClick}
+                    className="bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50">
+                    View Feedback
+                  </button>
+                )}
+
               </div>
             </>
           }
@@ -310,6 +320,15 @@ export function ChapterDetail() {
           handleReject(currentRole, chapterDetail?.status, setChapterDetail, "Annotation feedback added to the submission")
           setIsAnnotationOpen(false);
         }}
+      />
+
+      <FeedbackViewer
+        ref={feedbackViewerRef}
+        chapterId={chapterId}
+        fallbackFeedback={chapterDetail?.feedback}
+        fallbackFeedbackType={chapterDetail?.feedbackType}
+        fileUrl={chapterDetail?.chapterFileUrl}
+        role={currentRole.toLowerCase()}
       />
     </>
   )

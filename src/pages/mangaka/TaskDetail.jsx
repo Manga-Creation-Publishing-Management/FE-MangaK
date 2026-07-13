@@ -1,4 +1,4 @@
-import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, UploadCloud } from "lucide-react";
+import { Calendar, DollarSign, Download, FileText, JapaneseYen, UploadCloud } from "lucide-react";
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { useTaskDetail } from "../../features/tasks/hooks/useTaskDetail";
 import { StatusBadge } from "@/shared/components/StatusBadge";
@@ -8,11 +8,15 @@ import utc from 'dayjs/plugin/utc';
 import { AnnotationModal } from "../shared/AnnotationModal";
 import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
 import { PreviewModal } from "../shared/PreviewModal";
-import { useState } from "react";
+
+import { useState, useRef } from "react";
+import { FeedbackViewer } from "../shared/FeedbackViewer";
+import { useToast } from "@/shared/hooks/useToast";
 dayjs.extend(utc);
 export function TaskDetail() {
 
   const navigate = useNavigate();
+  const { showAlert } = useToast();
   const taskId = useLocation().state?.taskId;
   const role = useLocation().state?.role;
 
@@ -41,6 +45,12 @@ export function TaskDetail() {
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
+  const feedbackViewerRef = useRef(null);
+
+  const handleViewFeedbackClick = () => {
+    feedbackViewerRef.current?.viewFeedback();
+  };
+
   const handleInitialRejectClick = () => {
     setConfirmModalOpen(true);
   }
@@ -48,13 +58,6 @@ export function TaskDetail() {
   return (
     <>
       <div className="p-6 space-y-8">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex cursor-pointer items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft size={20} />
-          Back
-        </button>
 
         <div className="bg-card border border-border rounded-xl p-8 space-y-6">
 
@@ -210,9 +213,25 @@ export function TaskDetail() {
                   </button>
                 }
 
+                {(taskDetail?.status === "Revising" || taskDetail?.status === "Unsatisfied") && (
+                  <button
+                    onClick={handleViewFeedbackClick}
+                    className="bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                    View Feedback
+                  </button>
+                )}
+
 
               </>
             }
+
+            {role === "mangaka" && (taskDetail?.status === "Revising" || taskDetail?.status === "Unsatisfied" || taskDetail?.status === "Completed") && (
+              <button
+                onClick={handleViewFeedbackClick}
+                className="bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                View Feedback
+              </button>
+            )}
 
 
           </div>
@@ -276,6 +295,16 @@ export function TaskDetail() {
                 </button> */}
             </>
           }
+
+          {/* Feedback Modals */}
+          <FeedbackViewer
+            ref={feedbackViewerRef}
+            taskId={taskId}
+            fallbackFeedback={taskDetail?.feedback}
+            fallbackFeedbackType={taskDetail?.feedbackType}
+            fileUrl={taskDetail?.submittedFileUrl}
+            role={role}
+          />
         </div>
 
       </div>
