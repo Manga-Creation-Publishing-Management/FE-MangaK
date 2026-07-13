@@ -24,6 +24,12 @@ export const taskService = {
       status: status
     });
   },
+  async updateTaskDealine(taskId, deadline) {
+    return await api.put('/MangaTask/update-manga-task', {
+      taskId: taskId,
+      deadline: deadline
+    });
+  },
   async approvedTask(taskId) {
     return await api.put('/MangaTask/review-task', {
       taskId: taskId,

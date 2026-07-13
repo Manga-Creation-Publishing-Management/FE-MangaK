@@ -1,4 +1,4 @@
-import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, UploadCloud } from "lucide-react";
+import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, SquarePen, UploadCloud } from "lucide-react";
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { useTaskDetail } from "../../features/tasks/hooks/useTaskDetail";
 import { StatusBadge } from "@/shared/components/StatusBadge";
@@ -70,63 +70,135 @@ export function TaskDetail() {
 
           <div className="flex justify-between items-start border-b border-border pb-6">
             <div className="space-y-1">
-              <div className="flex items-center gap-2 text-2xl font-semibold mb-3">
+              <div className="flex items-center  text-2xl font-semibold mb-1">
                 Chapter {taskDetail?.chapterNumber}: {taskDetail?.chapterTitle}
               </div>
+              <p className="text-muted-foreground text-l flex items-center gap-1 mt-2">
+                <span>{taskDetail?.seriesTitle}</span>
+              </p>
               <p className="text-muted-foreground text-l flex items-center gap-1 mt-2">
                 <FileText size={16} />
                 Page Range: <span className="text-foreground font-medium">{taskDetail?.taskDescription}</span>
               </p>
             </div>
 
-            <div className="flex flex-col items-end space-y-2">
-              <span className="mb-6" >
-                <StatusBadge status={taskDetail?.status?.toLowerCase()} />
+            <div className="flex flex-col items-end space-y-1">
+              <span className="flex items-center mb-6" >
+                <span>
+                  <StatusBadge status={taskDetail?.status?.toLowerCase()} />
+                </span>
+                
               </span>
 
-              <div className="flex items-center gap-1.5 text-sm text-muted-foreground bg-muted/50 px-3 py-1 rounded-md border border-border">
+              {/* <div className="flex items-center gap-1.5 text-sm text-muted-foreground bg-muted/50 px-3 py-1 rounded-md border border-border">
                 <Calendar size={14} className="text-destructive" />
                 <span>Deadline: <strong className="text-foreground">
                   {dayjs(taskDetail?.deadline).utc(true).format('DD/MM/YYYY HH:mm')}
                 </strong></span>
+                <span className="cursor-pointer hover:bg-secondary/50 rounded-xl p-2">
+
+                  <SquarePen
+                    size={20}
+                  />
+                </span>
+              </div> */}
+              <div className="flex flex-col justify-center space-y-2 items-end">
+                {/* <p className="text-xs text-muted-foreground">Download the initial manuscript file to start working</p> */}
+                <h3 className="font-medium text-sm text-muted-foreground uppercase">Original Manuscript</h3>
+
+                <span className="items-center">
+                  <a
+                    href={taskDetail?.manuscriptFileUrl}
+                    download
+                    className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80  py-2 px-4 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
+                  >
+                    <Download size={16} />
+                    Download
+                  </a>
+                </span>
+
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-            <div className="md:col-span-6 space-y-2">
-              <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">Task Description</h3>
-              <div className="bg-muted/30 p-4 rounded-lg border border-border min-h-[100px] text-foreground text-sm leading-relaxed max-h-20 overflow-y-auto">
-                {taskDetail?.taskTitle}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+            {/* 1. Task Description */}
+            <div className="md:col-span-6">
+              <div className="bg-muted/30 p-4 rounded-lg border border-border min-h-[200px] text-foreground text-sm leading-relaxed max-h-20 overflow-y-auto">
+                <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-2">
+                  Task Description
+                </h3>
+                <div>{taskDetail?.taskTitle}</div>
               </div>
             </div>
 
-            <div className=" md:col-span-3 space-y-2">
-              <h3 className="font-medium text-sm text-muted-foreground uppercase">Original Manuscript</h3>
-              <div className="border  border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center space-y-2 h-[100px]">
-                {/* <p className="text-xs text-muted-foreground">Download the initial manuscript file to start working</p> */}
-                <a
-                  href={taskDetail?.manuscriptFileUrl}
-                  download
-                  className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80  py-2 px-4 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
-                >
-                  <Download size={16} />
-                  Download
-                </a>
-              </div>
-            </div>
+            {/* 2. Cột giữa */}
+            <div className="md:col-span-3 flex flex-col gap-2 h-[200px]">
+              {/* Ô 2: Assistant in Charge */}
+              <div className="bg-muted/30 p-4 rounded-xl border border-border flex flex-col justify-start h-[96px]">
+                <div className="flex flex-row justify-between items-center">
+                  <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3 ">
+                    Assistant in charge
+                  </h3>
+                  <span className="cursor-pointer hover:bg-secondary/50 rounded-xl p-2 inline-flex items-center justify-center -mt-[10px] -mr-2">
 
-            <div className="md:col-span-3 space-y-2">
-              <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">Income Amount</h3>
-              <div className="bg-muted/30 p-4 rounded-lg border border-border p-4 rounded-lg flex items-center gap-3 h-[100px] justify-center ">
-                <span className="text-4xl font-semibold text-success flex items-center gap-0.5">
-                  <JapaneseYen size={28} strokeWidth={2.5} className="shrink-0 translate-y-[2px]" />
+                    <SquarePen
+                      size={13}
+                    />
+                  </span>
+                </div>
+                
+                <span className="text-xl font-semibold text-muted-foreground flex items-center">
+                  {taskDetail?.assistantName}
+                </span>
+              </div>
+              {/* Ô 1: Income Amount */}
+              <div className="bg-muted/30 p-4 rounded-lg border border-border h-[96px] flex flex-col justify-start">
+                <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
+                  Income Amount
+                </h3>
+                <span className="text-2xl font-semibold text-success flex items-center gap-0.5 mt-1">
+                  <JapaneseYen size={22} strokeWidth={2.5} className="shrink-0 translate-y-[2px]" />
                   <span>{taskDetail?.incomeAmount}</span>
                 </span>
               </div>
+
+              
+            </div>
+
+            {/* 3. Cột phải */}
+            <div className="md:col-span-3 flex flex-col gap-2 h-[200px]">
+              {/* Ô 3: Deadline */}
+              <div className="border border-border rounded-xl p-4 bg-muted/20 flex flex-col justify-start h-[96px]">
+                <div className="flex flex-row justify-between items-center">
+                  <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3 ">
+                    deadline
+                  </h3>
+                  <span className="cursor-pointer hover:bg-secondary/50 rounded-xl p-2 inline-flex items-center justify-center -mt-[10px] -mr-2">
+
+                    <SquarePen
+                      size={13}
+                    />
+                  </span>
+                </div>
+                <span className="text-xl text-muted-foreground flex items-center font-semibold">
+                  {dayjs(taskDetail?.deadline).utc(true).format('DD/MM/YYYY HH:mm')}
+                </span>
+              </div>
+
+              {/* Ô 4: Submitted At */}
+              <div className="bg-muted/30 p-4 rounded-xl border border-border flex flex-col justify-start h-[96px]">
+                <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-1">
+                  Submitted At
+                </h3>
+                {taskDetail?.submittedAt ? (
+                  <div className="text-xl text-muted-foreground flex items-center font-semibold">{taskDetail?.submittedAt}</div>
+                ) : (
+                  <div className="text-xl text-muted-foreground flex items-center">— — — —</div>
+                )}
+              </div>
             </div>
           </div>
-
           <div className="grid grid-cols-1  md:grid-cols-1 gap-6 pt-4 border-t border-border">
 
 
