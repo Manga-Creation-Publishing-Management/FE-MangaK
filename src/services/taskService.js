@@ -24,7 +24,7 @@ export const taskService = {
       status: status
     });
   },
-  async updateTaskDealine(taskId, deadline) {
+  async updateTaskDeadline(taskId, deadline) {
     return await api.put('/MangaTask/update-manga-task', {
       taskId: taskId,
       deadline: deadline
