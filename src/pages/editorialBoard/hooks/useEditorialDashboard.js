@@ -6,9 +6,11 @@ import { useSeriesManagement } from "@/features/series/hooks/useSeriesManagement
 import { useToast } from "@/shared/hooks/useToast";
 
 const STATUS_COLORS = {
+  processing: "#60a5fa",
   pending: "#f59e0b",
   approved: "#10b981",
   publishing: "#3b82f6",
+  rejected: "#ef4444",
   cancelled: "#ef4444",
 };
 

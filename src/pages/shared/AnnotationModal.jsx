@@ -2,14 +2,16 @@ import React, { useRef, useEffect } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
-import { Undo, Brush, Type, X } from "lucide-react";
+import { Undo, Brush, Type, X, Eye, EyeOff } from "lucide-react";
 import { KonvaDraw } from "./KonvaDraw";
 import { useChapterAnnotation } from "../../features/chapters/hooks/useChapterAnnotation";
+import { useState } from "react";
 
 // Kích hoạt Web Worker để thư viện react-pdf xử lý PDF ở một luồng độc lập
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, chapterId = null, taskId = null, role }) {
+export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, chapterId = null, taskId = null, role, onRejectTrigger, isReadOnly = false, initialFeedbackJson = null }) {
+  const [showAnnotations, setShowAnnotations] = useState(true);
   const {
     tool,
     setTool,
@@ -36,8 +38,17 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
     onPageLoadSuccess,
     onDocumentLoadSuccess,
     handleSubmitAnnotation,
-  } = useChapterAnnotation(onClose);
+  } = useChapterAnnotation(onClose, initialFeedbackJson);
 
+  const handleCombineSubmit = async () => {
+    // 1. Gọi API lưu JSON từ hook cũ
+    const isSuccess = await handleSubmitAnnotation(seriesId, chapterId, taskId, role);
+
+    // 2. Nếu lưu JSON thành công VÀ có truyền hàm onRejectTrigger từ cha xuống -> Gọi Reject
+    if (isSuccess && onRejectTrigger) {
+      onRejectTrigger();
+    }
+  };
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -58,17 +69,32 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
 
         {/* Tiêu đề & Nút Close */}
         <div className="flex justify-between items-center w-full pb-4 border-b border-border">
-          <h2 className="text-lg font-semibold text-foreground">View and Annotate</h2>
-          <button
-            onClick={closeModal}
-            className="text-muted-foreground hover:text-foreground p-1.5 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-          >
-            <X />
-          </button>
+          <h2 className="text-lg font-semibold text-foreground">
+            {isReadOnly ? "View Feedback (Read-only)" : "View and Annotate"}
+          </h2>
+          <div className="flex items-center gap-3">
+            {isReadOnly && (
+              <button
+                onClick={() => setShowAnnotations(!showAnnotations)}
+                className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {showAnnotations ? <EyeOff size={18} /> : <Eye size={18} />}
+                {showAnnotations ? "Hide Annotations" : "Show Annotations"}
+              </button>
+            )}
+            <button
+              onClick={closeModal}
+              className="text-muted-foreground hover:text-foreground p-1.5 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+            >
+              <X />
+            </button>
+          </div>
         </div>
 
-        {/* MỚI NỮA NÈ: Thanh công cụ: Vẽ và Text */}
-        <div className="flex flex-wrap items-center justify-between gap-4 w-full bg-muted/40 p-3 rounded-xl border border-border">
+        {!isReadOnly && (
+          <>
+            {/* MỚI NỮA NÈ: Thanh công cụ: Vẽ và Text */}
+            <div className="flex flex-wrap items-center justify-between gap-4 w-full bg-muted/40 p-3 rounded-xl border border-border">
           <div className="flex items-center gap-2">
             {/* Các nút chọn công cụ vẽ/text */}
             <button
@@ -132,6 +158,8 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
             </button>
           </div>
         </div>
+          </>
+        )}
 
         {/* Vùng hiển thị PDF và lớp vẽ KonvaDraw */}
         <div ref={containerRef} className="relative overflow-auto border border-border rounded-xl shadow-inner bg-slate-100 min-h-[400px] max-h-[65vh] w-full flex justify-center items-start p-4">
@@ -159,7 +187,7 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
                 renderTextLayer={false}
                 renderAnnotationLayer={false}
               />
-              {isPageLoaded && (
+              {isPageLoaded && showAnnotations && (
                 <div className="absolute inset-0 z-20">
                   <KonvaDraw
                     width={pageWidth}
@@ -172,6 +200,7 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
                     texts={annotationText[pageNumber] || []}
                     setTexts={(newTexts) => setPageTexts(pageNumber, newTexts)}
                     color={brushColor}
+                    isReadOnly={isReadOnly}
                   />
                 </div>
               )}
@@ -203,16 +232,20 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
         )}
 
         {/* Nút Submit Annotation */}
-        <div className="w-full border-t border-border pt-4 mt-2">
-          <button
-            onClick={() => handleSubmitAnnotation(seriesId, chapterId, taskId, role)}
-            className="w-full py-3 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-all shadow-md cursor-pointer hover:shadow-lg text-sm"
-          >
-            Submit Annotation
-          </button>
-        </div>
+        {!isReadOnly && (
+          <div className="w-full border-t border-border pt-4 mt-2">
+            <button
+              onClick={handleCombineSubmit}
+              // Dùng hàm mới gộp 2 action này
+
+              className="w-full py-3 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-all shadow-md cursor-pointer hover:shadow-lg text-sm"
+            >
+              Submit Annotation
+            </button>
+          </div>
+        )}
 
       </div>
-    </div>
+    </div >
   );
 }

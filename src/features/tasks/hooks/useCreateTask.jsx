@@ -17,6 +17,7 @@ export function useCreateTask() {
   const [selectedSeriesId, setSelectedSeriesId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [reload, setReload] = useState(false);
+  const [selectedChapterId, setSelectedChapterId] = useState('');
 
   const handleReload = () => {
     setReload(!reload);
@@ -26,6 +27,11 @@ export function useCreateTask() {
 
   const handleShowCreateTaskModal = () => {
     setShowCreateTaskModal(!showCreateTaskModal);
+    if (showCreateTaskModal) {
+      setSelectedSeriesId('');
+      setSelectedChapterId('');
+      setChapters([]);
+    }
   }
 
   useEffect(() => {
@@ -43,6 +49,7 @@ export function useCreateTask() {
 
       let resultApproved = [];
       let resultPublishing = [];
+      let resultScheduled = [];
 
       // Gọi API Approved bằng try-catch riêng biệt
       try {
@@ -60,8 +67,17 @@ export function useCreateTask() {
         console.warn("Publishing series not found or an error occurred:", error);
       }
 
+      // Gọi API Scheduled bằng try-catch riêng biệt
+      try {
+        const seriesScheduled = await seriesService.getSeriesByStatus("Scheduled");
+        resultScheduled = seriesScheduled?.data ? seriesScheduled.data : [];
+      } catch (error) {
+        console.warn("Scheduled series not found or an error occurred:", error);
+      }
+
+
       // Gộp 2 mảng lại thành một mảng duy nhất và cập nhật vào State
-      setShowSeriesApproval([...resultApproved, ...resultPublishing]);
+      setShowSeriesApproval([...resultApproved, ...resultPublishing, ...resultScheduled]);
     }
     fetchApi();
   }, [])
@@ -80,6 +96,9 @@ export function useCreateTask() {
       fetchChapters();
     }
   }, [selectedSeriesId]);
+
+  const currentSelectedChapter = chapters.find(c => c.chapterId === selectedChapterId);
+  const maxPagesAllowed = currentSelectedChapter ? currentSelectedChapter.totalPage : null;
 
 
   const handleSubmitCreateTask = async (e) => {
@@ -112,6 +131,26 @@ export function useCreateTask() {
       return;
     }
 
+    if (taskData.from < 1 || taskData.to < 1) {
+      showAlert("Page numbers must be greater than 0!", "warning");
+      setIsLoading(false);
+      return;
+    }
+
+    if (taskData.from > taskData.to) {
+      showAlert("'From Page' cannot be greater than 'To Page'!", "warning");
+      setIsLoading(false);
+      return;
+    }
+
+    if (maxPagesAllowed !== null && maxPagesAllowed !== undefined) {
+      if (taskData.from > maxPagesAllowed || taskData.to > maxPagesAllowed) {
+        showAlert(`Page numbers cannot exceed this chapter's limit (${maxPagesAllowed} pages)!`, "warning");
+        setIsLoading(false);
+        return;
+      }
+    }
+
     try {
       const response = await taskService.createTask(taskData);
       showAlert("Created task successfully!");
@@ -120,6 +159,8 @@ export function useCreateTask() {
     } catch (error) {
       console.error("Chi tiết lỗi:", error);
       showAlert("Create task failed, " + error.message, "error");
+    } finally {
+      setIsLoading(false); 
     }
   }
 
@@ -134,8 +175,12 @@ export function useCreateTask() {
     chapters,
     selectedSeriesId,
     setSelectedSeriesId,
+    selectedChapterId,    
+    setSelectedChapterId, 
+    maxPagesAllowed,     
     handleSubmitCreateTask,
     handleReload,
+    isLoading,            
     reload
   }
 }

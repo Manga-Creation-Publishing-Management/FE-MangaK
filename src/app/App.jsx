@@ -2,7 +2,6 @@ import '../styles/global.css';
 import { BrowserRouter } from 'react-router';
 import { AppRoutes } from '../routes/AppRoutes';
 import { ThemeProvider } from '../features/theme/ThemeContext.jsx'
-import { ThemeToggle } from '../shared/components/ThemeToggle.jsx'
 import { ToastProvider } from '../shared/hooks/useToast.jsx';
 
 // Component App: Lớp vỏ ngoài cùng, thiết lập các Provider toàn cục (Global Context)
@@ -17,9 +16,6 @@ export default function App() {
           {/* AppRoutes: Nơi định nghĩa và chứa toàn bộ logic chuyển trang (các <Route>) */}
           <AppRoutes />
         </BrowserRouter>
-
-        {/* Nút chuyển đổi Light/Dark mode luôn hiển thị ở góc màn hình */}
-        <ThemeToggle />
       </ToastProvider>
     </ThemeProvider >
   )

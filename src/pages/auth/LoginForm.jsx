@@ -1,6 +1,6 @@
 import { User, Lock, Eye, EyeOff } from 'lucide-react';
 import { LoginHook } from '../../features/auth/hooks/LoginHook';
-
+import { ForgotPasswordPage } from './ForgotPasswordPage';
 // Component biểu mẫu Đăng nhập (Login Form)
 export function LoginForm() {
 
@@ -16,7 +16,7 @@ export function LoginForm() {
         // Vỏ ngoài của Form đăng nhập, thiết kế dạng thẻ Card đổ bóng
         <div className="w-full bg-background border border-border rounded-xl p-8
         shadow-xl transition-colors duration-300 relative">
-            
+
             {/* --- Phần Header Của Form --- */}
             <div className="space-y-2 mb-8">
                 <h1 className="text-2xl font-extrabold tracking-tight text-foreground">
@@ -57,10 +57,10 @@ export function LoginForm() {
                             Password
                         </label>
                     </div>
-                    
+
                     <div className="w-full bg-muted/40 border border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 rounded-xl px-4 py-3 flex items-center gap-3 transition-all">
                         <Lock size={18} className="text-muted-foreground/80 shrink-0" />
-                        
+
                         {/* Ẩn/Hiện mật khẩu phụ thuộc vào giá trị state showPassword */}
                         <input
                             required
@@ -70,7 +70,7 @@ export function LoginForm() {
                             onChange={(e) => setPassword(e.target.value)}
                             className="bg-transparent text-foreground placeholder-muted-foreground/70 outline-none w-full text-sm font-medium"
                         />
-                        
+
                         {/* Nút bấm con mắt để thay đổi cờ showPassword */}
                         <button
                             type="button"
@@ -80,10 +80,10 @@ export function LoginForm() {
                             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>
                     </div>
-                    
+
                     {/* Link quên mật khẩu (hiện tại chưa có chức năng) */}
                     <div className='flex w-full justify-end'>
-                        <a href="#" className="text-xs font-semibold text-primary hover:underline">
+                        <a href="/forgot-password" className="text-xs font-semibold text-primary hover:underline">
                             Forgot password?
                         </a>
                     </div>
@@ -103,13 +103,6 @@ export function LoginForm() {
                 </button>
             </form>
 
-            {/* --- Liên Kết Đăng Ký --- */}
-            <div className="mt-8 text-center text-xs md:text-sm">
-                <span className="text-muted-foreground">Don't have an account? </span>
-                <a href="#" className="font-bold text-primary hover:underline ml-0.5">
-                    Register now
-                </a>
-            </div>
         </div >
     )
 }

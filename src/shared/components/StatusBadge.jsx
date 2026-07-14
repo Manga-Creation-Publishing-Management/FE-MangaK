@@ -4,13 +4,13 @@ export function StatusBadge({ status }) {
     'rejected': 'bg-destructive/10 text-destructive border-destructive/30',
     'approved': 'bg-success/10 text-success border-success/30',
     'pending': 'bg-warning/10 text-warning border-warning/30',
-    'publishing': 'bg-green-500 text-white border-green-500/30',
-    'cancelled': 'bg-red-500 text-white border-red-500/30',
-    'created': 'bg-sky-500 text-white border-sky-500/30',
-    'available': 'bg-cyan-500 text-white border-cyan-500/30',
-    'revising': 'bg-orange-500 text-white border-orange-500/30',
-    'completed': 'bg-violet-500 text-white border-violet-500/30',
-    'scheduled': 'bg-orange-500 text-white border-orange-500/30',
+    'publishing': 'bg-success/10 text-success border-success/30',
+    'cancelled': 'bg-destructive/10 text-destructive border-destructive/30',
+    'created': 'bg-sidebar-primary/10 text-sidebar-primary border-sidebar-primary/30',
+    'available': 'bg-sky/10 text-sky border-sky/30',
+    'revising': 'bg-gold/10 text-gold border-gold/30',
+    'completed': 'bg-success/10 text-success border-success/30',
+    'scheduled': 'bg-schedule/10 text-schedule border-schedule/30',
   };
 
   const labels = {

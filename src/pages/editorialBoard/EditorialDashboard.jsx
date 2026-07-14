@@ -1,4 +1,3 @@
-import { Feedback } from "@/shared/components/Feedback";
 import { OverviewCard } from "@/shared/components/OverviewCard";
 import { CheckCircle, Calendar, BookOpen } from "lucide-react";
 import { ApprovedSeriesCard } from "./components/ApprovedSeriesCard";
@@ -102,9 +101,6 @@ export function EditorialDashboard() {
         onClose={() => setShowSuccessModal(false)}
       />
 
-      <div className="mb-10">
-        <Feedback />
-      </div>
     </div>
   );
 }

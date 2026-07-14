@@ -1,24 +1,29 @@
 import { useLocation, useNavigate } from "react-router";
 import { StatusBadge } from "@/shared/components/StatusBadge";
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import dayjs from 'dayjs';
+
 
 import { ArrowLeft, Download, Star } from "lucide-react";
 import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
 import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter";
-import { ApprovalPanel } from "../shared/ApprovalPanel";
-import { AnnotationModal } from "../shared/AnnotationModal";
 import { useProgressing } from "../../features/chapters/hooks/useProgressing";
+import { ApprovalPanel } from "../shared/ApprovalPanel";
+import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
+import { AnnotationModal } from "../shared/AnnotationModal";
+import { TextFeedbackModal } from "../shared/TextFeedbackModal";
+import { FeedbackViewer } from "../shared/FeedbackViewer";
+import { useToast } from "@/shared/hooks/useToast";
 
 // (Worker setup moved to AnnotationModal)
 
 // Component hiển thị chi tiết của một Chapter cụ thể (để đọc truyện/xem nháp)
 export function ChapterDetail() {
 
-  const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
 
   // Hook dùng để quay lại trang trước đó
   const navigate = useNavigate();
+  const { showAlert } = useToast();
 
   // Lấy seriesId và chapterId được truyền ngầm qua state khi gọi hàm navigate từ component cha (VD: ChapterList)
   const seriesId = useLocation().state?.seriesId;
@@ -50,10 +55,25 @@ export function ChapterDetail() {
   console.log(isOverdue);
   console.log(chapterDetail);
 
+  //các state quản lí hiển thị pop-up
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
+
+  const feedbackViewerRef = useRef(null);
+
+  const handleViewFeedbackClick = () => {
+    feedbackViewerRef.current?.viewFeedback();
+  };
+
+  const handleInitialRejectClick = () => {
+    setConfirmModalOpen(true);
+  }
+
   return (
     <>
       {/* Vùng chứa toàn bộ nội dung của trang chi tiết */}
-      <div className="p-8 space-y-8">
+      <div className="p-6 space-y-8">
 
         {/* Nút Back quay lại trang trước */}
         <button
@@ -88,7 +108,7 @@ export function ChapterDetail() {
 
             {/* Cụm thông tin bên phải: Badge trạng thái (Status) và Ngày tải lên */}
             <div className="flex flex-col items-end space-y-2">
-              <StatusBadge status={chapterDetail?.status} />
+              <StatusBadge status={chapterDetail?.status.toLowerCase()} />
             </div>
 
           </div>
@@ -170,14 +190,6 @@ export function ChapterDetail() {
                           <Download size={16} />
                           Download File Here
                         </a>
-
-                        {/* THÊM MỚI: Nút View and Annotate */}
-                        <button
-                          onClick={() => setIsAnnotationOpen(true)}
-                          className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm w-[240px]"
-                        >
-                          View and Annotate
-                        </button>
                       </div>
                     </>
                   ) : (
@@ -260,6 +272,14 @@ export function ChapterDetail() {
                 )
                 }
 
+                {((chapterDetail?.feedback) || (currentRole?.toLowerCase() === 'mangaka' && ['pending', 'reject', 'rejected', 'approved', 'scheduled', 'publishing'].includes(chapterDetail?.status?.toLowerCase()))) && (
+                  <button
+                    onClick={handleViewFeedbackClick}
+                    className="bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50">
+                    View Feedback
+                  </button>
+                )}
+
               </div>
             </>
           }
@@ -272,7 +292,9 @@ export function ChapterDetail() {
               feedback={feedback}
               onFeedbackChange={(e) => setFeedback(e.target.value)}
               onApprove={() => handleApprove(currentRole, chapterDetail?.status, setChapterDetail)}
-              onReject={() => handleReject(currentRole, chapterDetail?.status, setChapterDetail)}
+              onReject={() => currentRole === 'tantou'
+                ? handleInitialRejectClick()
+                : handleReject(currentRole, chapterDetail?.status, setChapterDetail, "Rejected by tantou, view annotation for details")}
             />
           )}
 
@@ -281,12 +303,39 @@ export function ChapterDetail() {
         </div>
       </div>
 
+      <ConfirmRejectModal
+        isOpen={confirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onYes={() => {
+          setConfirmModalOpen(false);
+          setIsAnnotationOpen(true);
+        }}
+        onNo={() => {
+          setConfirmModalOpen(false);
+          handleReject(currentRole, chapterDetail?.status, setChapterDetail);
+        }}
+      />
+
+
       <AnnotationModal
         isOpen={isAnnotationOpen}
         onClose={() => setIsAnnotationOpen(false)}
         fileUrl={chapterDetail?.chapterFileUrl}
         chapterId={chapterId}
         seriesId={seriesId}
+        role={currentRole.toLowerCase()}
+        onRejectTrigger={() => {
+          handleReject(currentRole, chapterDetail?.status, setChapterDetail, "Annotation feedback added to the submission")
+          setIsAnnotationOpen(false);
+        }}
+      />
+
+      <FeedbackViewer
+        ref={feedbackViewerRef}
+        chapterId={chapterId}
+        fallbackFeedback={chapterDetail?.feedback}
+        fallbackFeedbackType={chapterDetail?.feedbackType}
+        fileUrl={chapterDetail?.chapterFileUrl}
         role={currentRole.toLowerCase()}
       />
     </>

@@ -9,7 +9,9 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
     storyInputRef,
     storyFile,
     handleStoryChange,
-    isLoading
+    isLoading,
+    pageCount,
+    isReadingPdf
   } = useCreateChapter(seriesId, onClose, onReload);
 
   return (
@@ -38,7 +40,7 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
                   id="title"
                   type="text"
                   className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Enter series name"
+                  placeholder="Enter chapter's title"
                   required
                   onChange={handleChange}
                   name="Title"
@@ -54,7 +56,7 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
                   id="summary"
                   type="text"
                   className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Enter series name"
+                  placeholder="Enter summary"
                   required
                   onChange={handleChange}
                   name="Summary"
@@ -62,7 +64,7 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
               </div>
             </div>
 
-            
+
 
             <div className="space-y-2">
               <div className='mb-2 text-xl'>
@@ -74,8 +76,22 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
                 className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer"
               >
                 {storyFile ? (
-                  <div className="text-primary font-medium">
-                    Selected: {storyFile.name}
+                  <div className="space-y-1">
+                    <div className="text-primary font-medium">
+                      Selected: {storyFile.name}
+                    </div>
+
+                    {/* Hiển thị số trang khi đã quét xong hoặc đang quét */}
+                    {isReadingPdf && (
+                      <p className="text-xs text-muted-foreground animate-pulse">
+                        Analyzing PDF pages...
+                      </p>
+                    )}
+                    {pageCount !== null && (
+                      <div className="inline-block bg-primary/10 text-primary text-xs font-semibold px-2.5 py-1 rounded-full mt-1">
+                        Total: {pageCount} pages
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <>

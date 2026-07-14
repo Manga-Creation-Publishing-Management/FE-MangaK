@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 
 /**
- * useFeedback Hook - Manages Feedback state.
- * Currently returns an empty array to render an empty state as requested.
+ * useFeedback Hook - Quản lý state của Feedback.
+ * Hiện tại trả về một mảng rỗng để render trạng thái trống theo yêu cầu.
  */
 export function useFeedback() {
   const [Feedbacks, setFeedbacks] = useState([]);
@@ -13,7 +13,7 @@ export function useFeedback() {
     const fetchFeedbacks = async () => {
       setIsLoading(true);
       try {
-        // Emulating api fetch, returning empty array for now
+        // Mô phỏng gọi API, tạm thời trả về mảng rỗng
         setFeedbacks([]);
       } catch (err) {
         setError(err.message);

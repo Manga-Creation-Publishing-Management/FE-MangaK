@@ -24,6 +24,8 @@ import { LeaderboardPage } from '../pages/shared/LeaderboardPage.jsx';
 import { ReaderLoginPage } from '../pages/reader/ReaderLoginPage.jsx';
 import { TaskDetail } from '../pages/mangaka/TaskDetail.jsx';
 import { Income } from '../pages/assistant/Income.jsx';
+import { ForgotPasswordPage } from '../pages/auth/ForgotPasswordPage.jsx';
+import { ResetPasswordPage } from '../pages/auth/ResetPasswordPage.jsx';
 
 const roleDisplayNames = {
   mangaka: "Mangaka",
@@ -44,6 +46,8 @@ export function AppRoutes() {
       <Route element={<PublicRoute />}>
         <Route path="/login" element={<LoginPage />} />
         <Route path="loginReader" element={<ReaderLoginPage />} />
+        <Route path="forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="reset-password" element={<ResetPasswordPage />} />
       </Route>
 
 
@@ -51,7 +55,7 @@ export function AppRoutes() {
       <Route element={<ProtectedRoute allowedRole="mangaka" />}>
         <Route path="/mangaka" element={<Layout roleName="mangaka" />}>
           <Route index element={<MangakaDashboard />} />
-          <Route path="series" element={<SeriesManagement role="mangaka" />} />
+          <Route path="series" element={<div className="p-6 space-y-8"><SeriesManagement role="mangaka" /></div>} />
           <Route path="series/:id" element={<SeriesDetail />} />
           <Route path="chapter/:chapterId" element={<ChapterDetail />} />
           <Route path="tasks" element={<TaskManagement />} />

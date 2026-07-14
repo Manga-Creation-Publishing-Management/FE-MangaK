@@ -10,6 +10,8 @@ import { useUpdateRateChapter } from "../hooks/useUpdateRateChapter";
 import { CreateChapterModal } from "./CreateChapterModal";
 import { useChapterList } from "../hooks/useChapterList";
 import { useProgressing } from "../hooks/useProgressing";
+import { getTotalPage } from "../../Pagination/hooks/getTotalPage";
+import { PaginationCustom } from "../../Pagination/components/PaginationCustom";
 
 export function ChapterList({ roleName, seriesData }) {
 
@@ -34,14 +36,22 @@ export function ChapterList({ roleName, seriesData }) {
   const { handleRateSubmit } = useUpdateRateChapter();
 
 
-  const {} = useProgressing()
+  const { } = useProgressing()
 
   // console.log("length", chapterList.length)
   console.log(`view series info: ${seriesData?.seriesId}`);
 
+  const {
+    currentPage,
+    postsPerPage,
+    setCurrentPage,
+    currentDataListDisplay,
+    totalPages
+  } = getTotalPage(1, 5, chapterList);
+
   return (
     <>
-      {(seriesData?.status === "Approved" || seriesData?.status === "Publishing") && (
+      {(seriesData?.status === "Scheduled" || seriesData?.status === "Publishing") && (
         <>
           {/* Header của phần danh sách Chapter */}
           <div className="flex justify-between items-center">
@@ -67,7 +77,7 @@ export function ChapterList({ roleName, seriesData }) {
 
           {/* Danh sách các card hiển thị thông tin từng chapter */}
           <div className="space-y-4">
-            {chapterList?.map((chapter) => {
+            {currentDataListDisplay?.map((chapter) => {
               const showChapter = roleName === 'reader'
                 ? chapter.status?.toLowerCase() === 'publishing'
                 : true; // nếu là reader, chapter k pub thì false, nếu không là reader thì true, 
@@ -84,7 +94,7 @@ export function ChapterList({ roleName, seriesData }) {
                       </h3>
                     </div>
                     <div className="flex items-center gap-4 shrink-0">
-                      <StatusBadge status={chapter.status} />
+                      <StatusBadge status={chapter.status.toLowerCase()} />
 
                       {console.log(`${roleName?.toLowerCase()} ChapterId: ${chapter.chapterId}`)}
                       {roleName !== 'reader' ?
@@ -116,6 +126,11 @@ export function ChapterList({ roleName, seriesData }) {
               );
             })}
           </div>
+          <PaginationCustom
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+          />
           {/* Nếu activeChapterId không null (tức đang chọn đánh giá cho một chapter nào đó), hiển thị RatePanel Popup */}
           {activeChapterId &&
             <RatePanel
