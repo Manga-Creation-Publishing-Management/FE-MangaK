@@ -65,10 +65,6 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
     totalPages
   } = getTotalPage(1, 8, filteredSeriesData);
 
-  console.log(role);
-  // console.log("Filtered Data for Tantou:", filteredSeriesData);
-  // console.log("Filtered Data for Editorial", filteredSeriesData);
-
   return (
     <>
       <div className="bg-card border border-border rounded-xl p-2">
@@ -76,45 +72,40 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
         <div className="p-4 mb-5">
           {role === "mangaka" && (
             <div className="flex justify-between items-center mb-5 gap-4">
-
-
-              <div className="flex items-center gap-4 flex-1 justify-end max-w-3xl">
+              <div className="flex-1 max-w-xl">
                 {!seriesFiltered && role !== "reader" && (
-                  <div className="flex-1 max-w-md">
-                    <SearchFilterBar
-                      searchQuery={searchQuery}
-                      onSearchChange={setSearchQuery}
-                      searchPlaceholder="Search by title..."
-                      useCardWrapper={false}
-                      filters={[
-                        {
-                          value: filterStatus,
-                          onChange: setFilterStatus,
-                          options: [
-                            { value: "all", label: "All Status" },
-                            { value: "created", label: "Created" },
-                            { value: "processing", label: "Processing" },
-                            { value: "pending", label: "Pending" },
-                            { value: "approved", label: "Approved" },
-                            { value: "publishing", label: "Publishing" },
-                            { value: "scheduled", label: "Scheduled" },
-                            { value: "rejected", label: "Rejected" },
-                            { value: "cancelled", label: "Cancelled" }
-                          ]
-                        }
-                      ]}
-                    />
-                  </div>
+                  <SearchFilterBar
+                    searchQuery={searchQuery}
+                    onSearchChange={setSearchQuery}
+                    searchPlaceholder="Search by title..."
+                    useCardWrapper={false}
+                    filters={[
+                      {
+                        value: filterStatus,
+                        onChange: setFilterStatus,
+                        options: [
+                          { value: "all", label: "All Status" },
+                          { value: "created", label: "Created" },
+                          { value: "processing", label: "Processing" },
+                          { value: "pending", label: "Pending" },
+                          { value: "approved", label: "Approved" },
+                          { value: "publishing", label: "Publishing" },
+                          { value: "scheduled", label: "Scheduled" },
+                          { value: "rejected", label: "Rejected" },
+                          { value: "cancelled", label: "Cancelled" }
+                        ]
+                      }
+                    ]}
+                  />
                 )}
-
-                {/* Nút để mở popup tạo bộ truyện mới */}
-                <button
-                  onClick={handleClick}
-                  className="cursor-pointer border-2 flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity shrink-0"
-                >
-                  <Plus />Create New Series
-                </button>
               </div>
+
+              <button
+                onClick={handleClick}
+                className="cursor-pointer border-2 flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity shrink-0"
+              >
+                <Plus />Create New Series
+              </button>
             </div>
           )}
 

@@ -5,7 +5,7 @@ export function SearchFilterBar({
   searchQuery,
   onSearchChange,
   searchPlaceholder = "Search...",
-  filters = [], // Mảng chứa thông tin: { value, onChange, options, className }
+  filters = [],
   useCardWrapper = true,
   showSearch = true
 }) {
@@ -32,7 +32,6 @@ export function SearchFilterBar({
         </div>
       )}
 
-      {/* Lặp qua các bộ lọc dropdown nếu có */}
       {filters.map((filter, index) => (
         <div key={index} className={filter.className || "w-full sm:w-48"}>
           <CustomSelect

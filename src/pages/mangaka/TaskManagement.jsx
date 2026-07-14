@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { CalendarClock, Plus } from "lucide-react";
 import { useCreateTask } from "../../features/tasks/hooks/useCreateTask";
 import CreateTaskModal from "../../features/tasks/components/CreateTaskModal";
@@ -9,6 +10,7 @@ import { useParams } from "react-router";
 import utc from 'dayjs/plugin/utc';
 import { getTotalPage } from "../../features/Pagination/hooks/getTotalPage";
 import { PaginationCustom } from "../../features/Pagination/components/PaginationCustom";
+import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
 dayjs.extend(utc);
 export function TaskManagement() {
 
@@ -37,32 +39,69 @@ export function TaskManagement() {
 
   console.log("chapet", taskList);
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+
+  const filteredTasks = (taskList || []).filter(item => {
+    const matchesSearch =
+      (item.seriesTitle || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (item.assistantName || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(item.chapterNumber || "").includes(searchQuery);
+
+    const matchesStatus =
+      filterStatus === "all" ||
+      item.status?.toLowerCase() === filterStatus.toLowerCase();
+
+    return matchesSearch && matchesStatus;
+  });
+
   const {
-      currentPage,
-      postsPerPage,
-      setCurrentPage,
-      currentDataListDisplay,
-      totalPages
-  } = getTotalPage(1, 4, taskList);
+    currentPage,
+    postsPerPage,
+    setCurrentPage,
+    currentDataListDisplay,
+    totalPages
+  } = getTotalPage(1, 4, filteredTasks);
 
   return (
     <>
       <div className="p-6 space-y-8">
         <div className="bg-card border border-border rounded-xl p-6 space-y-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-sidebar-foreground font-medium text-2xl pb-1">Task Management</h1>
-              <p className="text-muted-foreground">Assign tasks to assistants </p>
+          <div className="flex justify-between items-center gap-4">
+            <div className="flex-1 max-w-xl">
+              <SearchFilterBar
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                searchPlaceholder="Search by series, assistant, chapter..."
+                useCardWrapper={false}
+                filters={[
+                  {
+                    value: filterStatus,
+                    onChange: setFilterStatus,
+                    options: [
+                      { value: "all", label: "All Status" },
+                      { value: "available", label: "Available" },
+                      { value: "pending", label: "Pending" },
+                      { value: "completed", label: "Completed" },
+                      { value: "revising", label: "Revising" },
+                      { value: "unsatisfied", label: "Unsatisfied" },
+                      {
+
+                      }
+                    ]
+                  }
+                ]}
+              />
             </div>
             <button
               onClick={handleShowCreateTaskModal}
-              className="cursor-pointer border-2 flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+              className="cursor-pointer border-2 flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity shrink-0"
             >
               <Plus size={20} />
               Create New Task
             </button>
           </div>
-          
+
           <div className="space-y-6">
             {currentDataListDisplay?.map(item => (
               <div key={item.id} className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-shadow">
