@@ -11,7 +11,11 @@ export default function CreateTaskModal({
   selectedSeriesId,
   onSeriesChange,
   onSubmitCreateTask,
-  onReload
+  onReload,
+  selectedChapterId,
+  onChapterChange,  
+  maxPagesAllowed,   
+  isLoading
 }) {
   const [pageRangeError, setPageRangeError] = useState("");
 
@@ -122,7 +126,8 @@ export default function CreateTaskModal({
                   <label htmlFor="">From Page</label>
                 </div>
                 <input
-                  min={0}
+                  min={1}
+                  max={maxPagesAllowed || undefined}
                   type="number"
                   id="fromPage"
                   name="fromPage"
@@ -136,7 +141,8 @@ export default function CreateTaskModal({
                   <label htmlFor="">To Page</label>
                 </div>
                 <input
-                  min={0}
+                  min={1}
+                  max={maxPagesAllowed || undefined}
                   type="number"
                   id="toPage"
                   name="toPage"
