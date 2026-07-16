@@ -27,8 +27,12 @@ export function TaskManagement() {
     chapters,
     selectedSeriesId,
     setSelectedSeriesId,
+    selectedChapterId,
+    setSelectedChapterId,
+    maxPagesAllowed,
     handleSubmitCreateTask,
     handleReload,
+    isLoading,
     reload
   } = useCreateTask();
 
@@ -159,6 +163,10 @@ export function TaskManagement() {
           chapters={chapters}
           selectedSeriesId={selectedSeriesId}
           onSeriesChange={setSelectedSeriesId}
+          selectedChapterId={selectedChapterId}
+          onChapterChange={setSelectedChapterId}
+          maxPagesAllowed={maxPagesAllowed}
+          isLoading={isLoading}
           onSubmitCreateTask={handleSubmitCreateTask}
           onReload={handleReload}
         />

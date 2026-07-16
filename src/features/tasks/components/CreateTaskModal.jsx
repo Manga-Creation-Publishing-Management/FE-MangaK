@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { X, Upload, FileImage } from 'lucide-react';
 import { useCreateTask } from '../hooks/useCreateTask';
+import { CustomSelect } from '@/shared/components/CustomSelect';
 
 
 export default function CreateTaskModal({
@@ -18,6 +19,7 @@ export default function CreateTaskModal({
   isLoading
 }) {
   const [pageRangeError, setPageRangeError] = useState("");
+  const [localAssignedToId, setLocalAssignedToId] = useState("");
 
   // 2. Hàm kiểm tra định dạng khi người dùng click ra ngoài (Blur)
   const handlePageRangeBlur = (e) => {
@@ -61,48 +63,53 @@ export default function CreateTaskModal({
               <div className='mb-2 text-xl'>
                 <label htmlFor="seriesName">Series</label>
               </div>
-              <select
+              <CustomSelect
                 name="seriesId"
-                onChange={(e) => onSeriesChange(e.target.value)}
                 value={selectedSeriesId}
-                className='w-full px-4 py-3 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary'>
-                <option value="">Choose a series...</option>
-                {showSeriesApproval?.map((item) => (
-                  <option
-                    key={item.seriesId}
-                    value={item.seriesId}
-                  >{item.title}</option>
-                ))}
-              </select>
+                onChange={onSeriesChange}
+                options={[
+                  { value: "", label: "Choose a series..." },
+                  ...(showSeriesApproval || []).map((item) => ({
+                    value: item.seriesId,
+                    label: item.title,
+                  })),
+                ]}
+              />
             </div>
             <div className="mb-4">
               <div className='mb-2 text-xl'>
                 <label htmlFor="seriesName">Chapter Number</label>
               </div>
-              <select name="chapterId" className='w-full px-4 py-3 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary' id="">
-                <option value="">Choose a chapter...</option>
-                {chapters?.map((item) => (
-                  <option
-                    key={item.chapterId}
-                    value={item.chapterId}
-                  >Chapter {item.chapterNumber}</option>
-                ))}
-              </select>
+              <CustomSelect
+                name="chapterId"
+                value={selectedChapterId}
+                onChange={onChapterChange}
+                options={[
+                  { value: "", label: "Choose a chapter..." },
+                  ...(chapters || []).map((item) => ({
+                    value: item.chapterId,
+                    label: `Chapter ${item.chapterNumber}`,
+                  })),
+                ]}
+              />
             </div>
 
             <div className="mb-4">
               <div className='mb-2 text-xl'>
                 <label htmlFor="seriesName">Assistant</label>
               </div>
-              <select name="assignedToId" className='w-full px-4 py-3 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary' >
-                <option value="">Choose a Assistant...</option>
-                {showAssistantList?.map((item) => (
-                  <option
-                    key={item.userId}
-                    value={item.userId}
-                  >{item.lastName} {item.firstName}</option>
-                ))}
-              </select>
+              <CustomSelect
+                name="assignedToId"
+                value={localAssignedToId}
+                onChange={setLocalAssignedToId}
+                options={[
+                  { value: "", label: "Choose an Assistant..." },
+                  ...(showAssistantList || []).map((item) => ({
+                    value: item.userId,
+                    label: `${item.lastName} ${item.firstName}`,
+                  })),
+                ]}
+              />
             </div>
             <div>
               <div className='mb-2 text-xl'>
@@ -215,11 +222,10 @@ export default function CreateTaskModal({
               </button>
               <button
                 type="submit"
-                // disabled={isLoading}
-                className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                disabled={isLoading}
+                className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Create
-                {/* {isLoading ? "Creating..." : "Create"} */}
+                {isLoading ? "Creating..." : "Create"}
               </button>
             </div>
           </form>
