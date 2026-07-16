@@ -22,23 +22,24 @@ export const FeedbackViewer = forwardRef(({
     viewFeedback: async () => {
       let annotationFailed = false;
       try {
-        const response = await feedbackService.getFeedbackAnnotation(seriesId, chapterId, taskId);
-        let feedbackData = response?.data || response;
+        const response = await feedbackService.getFeedbackDetail(seriesId, chapterId, taskId);
+        let feedbackData = response?.data;
 
         if (Array.isArray(feedbackData) && feedbackData.length > 0) {
           feedbackData = feedbackData[feedbackData.length - 1];
         }
 
-        const extractedType = feedbackData?.type || feedbackData?.feedbackType;
-        const extractedContent = feedbackData?.content || feedbackData?.note || feedbackData?.text || (typeof feedbackData === 'string' ? feedbackData : null);
+        const extractedType = feedbackData?.data?.type || feedbackData?.type;
+        const extractedContent = feedbackData?.data?.content || feedbackData?.content;
+        console.log("extractedContent", extractedContent);
 
         if (feedbackData && (extractedContent || extractedType)) {
           setFetchedFeedback(extractedContent || fallbackFeedback);
 
-          if (extractedType === "EditPDF" || fallbackFeedbackType === "EditPDF") {
+          if (extractedType === "EditPDF") {
             setIsViewAnnotationOpen(true);
           } else {
-            setFetchedFeedback(extractedContent || fallbackFeedback || (typeof feedbackData === 'object' ? JSON.stringify(feedbackData) : ""));
+            setFetchedFeedback(extractedContent || fallbackFeedback);
             setIsTextFeedbackOpen(true);
           }
           return;
@@ -59,7 +60,7 @@ export const FeedbackViewer = forwardRef(({
             detailDataResult = detailDataResult[detailDataResult.length - 1];
           }
 
-          const textContent = detailDataResult?.content || detailDataResult?.note || detailDataResult?.text || (typeof detailDataResult === 'string' ? detailDataResult : detailDataResult?.feedback) || (typeof detailDataResult === 'object' ? JSON.stringify(detailDataResult) : "");
+          const textContent = detailDataResult?.data?.content;
 
           setFetchedFeedback(textContent || fallbackFeedback);
           setIsTextFeedbackOpen(true);

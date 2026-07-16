@@ -272,13 +272,15 @@ export function ChapterDetail() {
                 )
                 }
 
-                {((chapterDetail?.feedback) || (currentRole?.toLowerCase() === 'mangaka' && ['pending', 'reject', 'rejected', 'approved', 'scheduled', 'publishing'].includes(chapterDetail?.status?.toLowerCase()))) && (
+                {((chapterDetail?.feedback) || (currentRole?.toLowerCase() === 'mangaka' && ['rejected', 'approved', 'scheduled', 'publishing'].includes(chapterDetail?.status?.toLowerCase()))) && (
                   <button
                     onClick={handleViewFeedbackClick}
                     className="bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50">
                     View Feedback
                   </button>
                 )}
+
+                {console.log("Coi chapter ID: ", chapterDetail?.chapterId)}
 
               </div>
             </>
@@ -332,7 +334,7 @@ export function ChapterDetail() {
 
       <FeedbackViewer
         ref={feedbackViewerRef}
-        chapterId={chapterId}
+        chapterId={chapterDetail?.chapterId}
         fallbackFeedback={chapterDetail?.feedback}
         fallbackFeedbackType={chapterDetail?.feedbackType}
         fileUrl={chapterDetail?.chapterFileUrl}

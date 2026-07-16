@@ -6,9 +6,9 @@ export function useSeriesManagement() {
   // State kiểm soát việc đóng/mở popup Tạo truyện mới (CreateSeriesModal)
   const [showCreateSeriesModal, setShowCreateSeriesModal] = useState(false);
 
-  
 
-  
+
+
   // Biến cờ (flag) dùng để trigger (kích hoạt) useEffect fetch lại dữ liệu khi cần
   const [reload, setReload] = useState(false);
 
@@ -37,7 +37,7 @@ export function useSeriesManagement() {
   const handleClick = () => {
     setShowCreateSeriesModal(!showCreateSeriesModal);
   }
-  
+
   // Trả ra các hàm và biến trạng thái
   return {
     showCreateSeriesModal,
@@ -45,6 +45,6 @@ export function useSeriesManagement() {
     handleReload,
     handleClick,
     handleNavigate,
-    handleNavigateToChapter
+    handleNavigateToChapter,
   };
 }
