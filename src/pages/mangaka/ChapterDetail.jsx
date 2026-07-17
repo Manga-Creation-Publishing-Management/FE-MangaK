@@ -153,7 +153,7 @@ export function ChapterDetail() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
             <div className="md:col-span-6 space-y-2">
               <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">Summary</h3>
-              <div className="bg-muted/30 p-4 rounded-lg border border-border min-h-[100px] text-foreground text-sm leading-relaxed">
+              <div className="bg-muted/30 p-4 rounded-lg border border-border min-h-[100px] text-foreground text-sm leading-relaxed max-h-35 overflow-y-auto">
                 {chapterDetail?.summary}
               </div>
             </div>
@@ -315,16 +315,14 @@ export function ChapterDetail() {
             >
               <span>View feedback history</span>
               <ChevronDown
-                className={`w-4 h-4 transition-transform duration-300 ${
-                  isHistoryOpen ? "rotate-180 text-primary" : ""
-                }`}
+                className={`w-4 h-4 transition-transform duration-300 ${isHistoryOpen ? "rotate-180 text-primary" : ""
+                  }`}
               />
             </button>
 
             <div
-              className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
-                isHistoryOpen ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0 pointer-events-none"
-              }`}
+              className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${isHistoryOpen ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0 pointer-events-none"
+                }`}
             >
               <div className="overflow-hidden">
                 <FeedbackHistoryList
