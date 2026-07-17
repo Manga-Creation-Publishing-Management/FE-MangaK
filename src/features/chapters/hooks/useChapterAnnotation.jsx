@@ -23,12 +23,12 @@ export function useChapterAnnotation(onClose, initialFeedbackJson = null) {
         const parsed = JSON.parse(initialFeedbackJson);
         const parsedLines = {};
         const parsedTexts = {};
-        
+
         Object.keys(parsed).forEach(page => {
           if (parsed[page].lines) parsedLines[page] = parsed[page].lines;
           if (parsed[page].texts) parsedTexts[page] = parsed[page].texts;
         });
-        
+
         setAnnotationData(parsedLines);
         setAnnotationText(parsedTexts);
       } catch (err) {
@@ -36,10 +36,6 @@ export function useChapterAnnotation(onClose, initialFeedbackJson = null) {
       }
     }
   }, [initialFeedbackJson]);
-
-  // Nội dung chữ đang nhập trên thanh công cụ của modal
-  const [textInput, setTextInput] = useState('');
-
   // Màu sắc hiện tại của nét vẽ/chữ viết (mặc định là màu đỏ)
   const [brushColor, setBrushColor] = useState("#ef4444");
 
@@ -131,7 +127,6 @@ export function useChapterAnnotation(onClose, initialFeedbackJson = null) {
   const closeModal = () => {
     setPageNumber(1);
     setIsPageLoaded(false);
-    setTextInput('');
     if (onClose) onClose();
   };
 
@@ -200,8 +195,6 @@ export function useChapterAnnotation(onClose, initialFeedbackJson = null) {
     setAnnotationData,
     annotationText,
     setAnnotationText,
-    textInput,
-    setTextInput,
     brushColor,
     setBrushColor,
     pageNumber,

@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
-import { Undo, Brush, Type, X, Eye, EyeOff } from "lucide-react";
+import { Undo, Brush, Type, X, Eye, EyeOff, Move, Eraser } from "lucide-react";
 import { KonvaDraw } from "./KonvaDraw";
 import { useChapterAnnotation } from "../../features/chapters/hooks/useChapterAnnotation";
 import { useState } from "react";
@@ -17,8 +17,6 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
     setTool,
     annotationData,
     annotationText,
-    textInput,
-    setTextInput,
     brushColor,
     setBrushColor,
     pageNumber,
@@ -113,16 +111,22 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
             >
               <Type />
             </button>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <input
-              type="text"
-              value={textInput}
-              onChange={(e) => setTextInput(e.target.value)}
-              placeholder="Enter text..."
-              className="px-3 py-1.5 border border-border rounded-lg bg-background text-foreground text-sm outline-none focus:ring-1 focus:ring-primary w-48"
-            />
+            <button
+              onClick={() => setTool('move')}
+              className={`p-2 rounded-lg transition-all ${tool === 'move' ? 'bg-primary text-primary-foreground shadow-sm' : 'hover:bg-muted/50 text-muted-foreground'
+                }`}
+              title="Move"
+            >
+              <Move />
+            </button>
+            <button
+              onClick={() => setTool('eraser')}
+              className={`p-2 rounded-lg transition-all ${tool === 'eraser' ? 'bg-primary text-primary-foreground shadow-sm' : 'hover:bg-muted/50 text-muted-foreground'
+                }`}
+              title="Eraser"
+            >
+              <Eraser />
+            </button>
           </div>
         </div>
 
@@ -193,8 +197,6 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
                     width={pageWidth}
                     height={pageHeight}
                     tool={tool}
-                    textInput={textInput}
-                    onTextPlaced={() => setTextInput('')}
                     lines={annotationData[pageNumber] || []}
                     setLines={(newLines) => setPageLines(pageNumber, newLines)}
                     texts={annotationText[pageNumber] || []}

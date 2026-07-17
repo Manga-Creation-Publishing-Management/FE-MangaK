@@ -11,8 +11,8 @@ export function ThemeToggle() {
     // Nút hiển thị trong header
     <button
       onClick={toggle}
-      aria-label={theme === 'dark' ? 'Chuyển sang sáng' : 'Chuyển sang tối'}
-      title={theme === 'dark' ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối'}
+      aria-label={theme === 'dark' ? 'Change to light theme' : 'Change to dark theme'}
+      title={theme === 'dark' ? 'Change to light theme' : 'Change to dark theme'}
       className="flex text-muted-foreground hover:text-accent hover:rounded p-2 transition-colors"
     >
       {/* Hiển thị icon Sun (Mặt trời) nếu đang ở chế độ tối, ngược lại hiển thị icon Moon (Mặt trăng) */}

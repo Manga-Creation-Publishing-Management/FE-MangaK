@@ -1,5 +1,6 @@
-import { ArrowLeft, Download, Eye } from "lucide-react";
+import { ArrowLeft, Download, Eye, ChevronDown } from "lucide-react";
 import useCreateSeries from "../../features/series/hooks/useCreateSeries";
+import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { StatusBadge } from "@/shared/components/StatusBadge";
 import { ChapterList } from "../../features/chapters/components/ChapterList";
@@ -60,6 +61,7 @@ export function SeriesDetail() {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   const feedbackViewerRef = useRef(null);
 
@@ -70,6 +72,8 @@ export function SeriesDetail() {
   const handleInitialRejectClick = () => {
     setConfirmModalOpen(true);
   }
+
+
 
   // Hook hỗ trợ xử lý duyệt / từ chối series (Approval Flow)
   const {
@@ -247,7 +251,7 @@ export function SeriesDetail() {
                   }
                 </div>
 
-                <div className="flex flex-col flex-1 h-full pt-2">
+                <div className="flex flex-col flex-1 h-full pt-2  overflow-y-auto ">
                   <p className="text-sm text-muted-foreground uppercase font-semibold mb-2">Description</p>
                   <p className="text-foreground text-justify w-full px-4 py-2 bg-input-background rounded-lg border border-border flex-1 overflow-y-auto text-xs leading-relaxed pr-2">
                     {detailData?.description}
@@ -260,6 +264,35 @@ export function SeriesDetail() {
 
 
         </div>
+
+        {/* Feedback History Log Section */}
+        {['tantou', 'editorial', 'mangaka'].includes(normalizedRole) && (
+          <div className="w-full">
+            <button
+              onClick={() => setIsHistoryOpen(!isHistoryOpen)}
+              className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-primary transition-all duration-300 mt-2 cursor-pointer"
+            >
+              <span>View feedback history</span>
+              <ChevronDown
+                className={`w-4 h-4 transition-transform duration-300 ${isHistoryOpen ? "rotate-180 text-primary" : ""
+                  }`}
+              />
+            </button>
+
+            <div
+              className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${isHistoryOpen ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0 pointer-events-none"
+                }`}
+            >
+              <div className="overflow-hidden">
+                <FeedbackHistoryList
+                  seriesId={id}
+                  fileUrl={detailData?.nameFile}
+                  role={normalizedRole}
+                />
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Component hiển thị Danh sách các Chapter thuộc bộ truyện này */}
         <ChapterList roleName={roleFromState} seriesData={detailData} />

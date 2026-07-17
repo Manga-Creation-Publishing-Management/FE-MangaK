@@ -26,6 +26,9 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
   // Gọi hook useCreateSeries để lấy danh sách series data hiện có
   // Cần truyền biến reload để hook biết khi nào cần fetch lại data (ví dụ sau khi tạo mới thành công)
   const { seriesData } = useCreateSeries(null, handleReload, reload);
+
+  //check khi load dữ liệu
+
   console.log(seriesData);
 
   // Biến dùng để chứa dữ liệu các bộ truyện đã được lọc ra để render
@@ -48,7 +51,9 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
     postsPerPage,
     setCurrentPage,
     currentDataListDisplay,
-    totalPages
+    totalPages,
+    isLoading,
+    setIsLoading
   } = getTotalPage(1, 8, filteredSeriesData);
 
   console.log(role);
@@ -76,40 +81,41 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
             </div>
           }
 
-          {currentDataListDisplay?.length === 0 &&
-            <p className="text-warning p-2 italic text-lg flex justify-center">No series found</p>}
-
           {/* Lưới (Grid) hiển thị danh sách các bộ truyện (3 cột) */}
           <div className="grid grid-cols-4 gap-6">
-            {currentDataListDisplay?.map(item => (
-              // Mỗi bộ truyện hiển thị dưới dạng một Card
-              <div key={item.seriesId} className="col-span-1 md:col-span-1 w-full relative  bg-card border 
+            {currentDataListDisplay.length === 0 ?
+              (<div className="text-center py-8 text-muted-foreground">
+                <p className="text-sm text-accent">No series found.</p>
+              </div>)
+              : (currentDataListDisplay?.map(item => (
+                // Mỗi bộ truyện hiển thị dưới dạng một Card
+                <div key={item.seriesId} className="col-span-1 md:col-span-1 w-full relative  bg-card border 
                                 border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
 
-                {/* Phần Ảnh Bìa (Cover) */}
-                <div className=' aspect-[3/4] w-full relative'>
-                  <img className="w-full h-full object-cover" src={item.coverFile} alt="cover file" />
-                </div>
-
-                {/* Phần Thông Tin Bộ Truyện */}
-                <div className="p-2 px-4 space-y-4">
-                  <div>
-                    <h3 className="font-semibold text-lg">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground mt-1">{item.totalChapters || 0} Chapters</p>
+                  {/* Phần Ảnh Bìa (Cover) */}
+                  <div className=' aspect-[3/4] w-full relative'>
+                    <img className="w-full h-full object-cover" src={item.coverFile} alt="cover file" />
                   </div>
-                  {/* Trạng thái (Processing, Pending, Approved...) */}
-                  <StatusBadge status={item?.status.toLowerCase()} />
 
-                  {/* Nút bấm để xem chi tiết bộ truyện */}
-                  <button className="cursor-pointer w-full block text-center mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-                    onClick={() => handleNavigate(role, item.seriesId)}
-                  >
-                    View Detail
-                  </button>
+                  {/* Phần Thông Tin Bộ Truyện */}
+                  <div className="p-2 px-4 space-y-4">
+                    <div>
+                      <h3 className="font-semibold text-lg">{item.title}</h3>
+                      <p className="text-sm text-muted-foreground mt-1">{item.totalChapters || 0} Chapters</p>
+                    </div>
+                    {/* Trạng thái (Processing, Pending, Approved...) */}
+                    <StatusBadge status={item?.status.toLowerCase()} />
+
+                    {/* Nút bấm để xem chi tiết bộ truyện */}
+                    <button className="cursor-pointer w-full block text-center mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                      onClick={() => handleNavigate(role, item.seriesId)}
+                    >
+                      View Detail
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-
+              )))
+            }
           </div>
         </div>
         <PaginationCustom
@@ -117,7 +123,7 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
           totalPages={totalPages}
           setCurrentPage={setCurrentPage}
         />
-      </div>
+      </div >
 
       {/* Component Modal (Popup) để tạo bộ truyện mới.
           Chỉ render khi state showCreateSeriesModal là true */}

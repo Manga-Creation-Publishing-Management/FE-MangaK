@@ -12,7 +12,7 @@ export function SeriesApproval() {
   const [filterStatus, setFilterStatus] = useState("all");
 
   const filtered = seriesData.filter((item) => {
-    const allowedStatuses = ["pending", "approved", "publishing", "cancelled"];
+    const allowedStatuses = ["pending", "approved", "scheduled", "publishing", "cancelled"];
     const itemStatus = item.status?.toLowerCase();
     if (!allowedStatuses.includes(itemStatus)) return false;
 
@@ -40,6 +40,7 @@ export function SeriesApproval() {
               { value: "all", label: "All Status" },
               { value: "Pending", label: "Pending" },
               { value: "Approved", label: "Approved" },
+              { value: "Scheduled", label: "Scheduled" },
               { value: "Publishing", label: "Publishing" },
               { value: "Cancelled", label: "Cancelled" },
             ]
