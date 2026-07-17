@@ -30,10 +30,10 @@ export function ProtectedRoute({ allowedRole }) {
   try {
     // Chuyển chuỗi JSON chứa thông tin user thành Object
     const user = JSON.parse(userString);
-    
+
     // Lấy ra role của user, đưa về chữ thường để dễ so sánh
     const userRole = (user.role || '').toLowerCase();
-    
+
     // Tìm đường dẫn tương ứng với role, nếu không tìm thấy thì dùng chính tên role
     const normalizedUserRole = rolePathMap[userRole] || userRole;
 

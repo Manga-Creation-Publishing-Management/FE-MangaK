@@ -22,6 +22,9 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
 
   const { seriesData } = useCreateSeries(null, handleReload, reload);
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+
   //check khi load dữ liệu
 
   console.log(seriesData);
