@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
-import { Undo, Brush, Type, X, Eye, EyeOff, Move } from "lucide-react";
+import { Undo, Brush, Type, X, Eye, EyeOff, Move, Eraser } from "lucide-react";
 import { KonvaDraw } from "./KonvaDraw";
 import { useChapterAnnotation } from "../../features/chapters/hooks/useChapterAnnotation";
 import { useState } from "react";
@@ -118,6 +118,14 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
               title="Move"
             >
               <Move />
+            </button>
+            <button
+              onClick={() => setTool('eraser')}
+              className={`p-2 rounded-lg transition-all ${tool === 'eraser' ? 'bg-primary text-primary-foreground shadow-sm' : 'hover:bg-muted/50 text-muted-foreground'
+                }`}
+              title="Eraser"
+            >
+              <Eraser />
             </button>
           </div>
         </div>
