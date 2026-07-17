@@ -20,6 +20,7 @@ export function ReaderLoginPage() {
             // alert("Login with Google sucessfully!");
             console.log("Login sucess!");
             localStorage.setItem("mangak-token", response.data?.accessToken);
+            console.log(response.data?.accessToken);
 
             const user = {
                 role: response.data?.role || "reader",

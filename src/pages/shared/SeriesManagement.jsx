@@ -59,6 +59,7 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
   console.log(role);
   // console.log("Filtered Data for Tantou:", filteredSeriesData);
   // console.log("Filtered Data for Editorial", filteredSeriesData);
+  console.log(currentDataListDisplay);
 
   return (
     <>
