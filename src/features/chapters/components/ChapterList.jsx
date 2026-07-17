@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Outlet, useParams } from "react-router"
 import { StatusBadge } from "@/shared/components/StatusBadge";
 import { Outdent, Plus } from "lucide-react";
@@ -12,6 +13,7 @@ import { useChapterList } from "../hooks/useChapterList";
 import { useProgressing } from "../hooks/useProgressing";
 import { getTotalPage } from "../../Pagination/hooks/getTotalPage";
 import { PaginationCustom } from "../../Pagination/components/PaginationCustom";
+import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
 
 export function ChapterList({ roleName, seriesData }) {
 
@@ -25,9 +27,7 @@ export function ChapterList({ roleName, seriesData }) {
   const { handleApprove, handleReject } = useUpdateChapter();
   const { handleNavigateToChapter } = useSeriesManagement();
 
-
-
-
+  const [selectedChapterId, setSelectedChapterId] = useState("all");
 
   // Hook quản lý trạng thái hiển thị Popup đánh giá của từng chapter
   const { activeChapterId, handlePopUp } = useChapterRate();
@@ -41,37 +41,78 @@ export function ChapterList({ roleName, seriesData }) {
   // console.log("length", chapterList.length)
   console.log(`view series info: ${seriesData?.seriesId}`);
 
+  const visibleChapters = (chapterList || []).filter(chapter => {
+    const showChapter = roleName === 'reader'
+      ? chapter.status?.toLowerCase() === 'publishing'
+      : true;
+    return showChapter;
+  });
+
+  const chapterOptions = [
+    { value: "all", label: "Select Chapter" },
+    ...visibleChapters.map(chap => ({
+      value: String(chap.chapterId),
+      label: `Chapter ${chap.chapterNumber}`
+    }))
+  ];
+
+  const handleChapterSelectChange = (value) => {
+    setSelectedChapterId(value);
+    if (value !== "all") {
+      if (roleName?.toLowerCase() === 'reader') {
+        handlePopUp(value);
+      } else {
+        handleNavigateToChapter(roleName?.toLowerCase(), seriesData?.seriesId, value);
+      }
+      setSelectedChapterId("all");
+    }
+  };
+
   const {
     currentPage,
     postsPerPage,
     setCurrentPage,
     currentDataListDisplay,
     totalPages
-  } = getTotalPage(1, 5, chapterList);
+  } = getTotalPage(1, 5, visibleChapters);
 
   return (
     <>
       {(seriesData?.status === "Scheduled" || seriesData?.status === "Publishing") && (
         <>
           {/* Header của phần danh sách Chapter */}
-          <div className="flex justify-between items-center">
+          {/* Header của phần danh sách Chapter */}
+          <div className="flex justify-between items-center mb-6">
             <div>
               <h2 className="text-2xl ps-2 font-semibold ">Chapters ({chapterList?.length})</h2>
             </div>
 
-            <div className="flex gap-3">
-              <>
-                {/* Chỉ hiển thị nút "Add New Chapter" nếu user hiện tại là Mangaka */}
-                {roleName?.toLowerCase() === "mangaka" &&
-                  <button
-                    onClick={() => handleShowChapterModal()}
-                    className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:opacity-90 transition-opacity"
-                  >
-                    <Plus size={20} />
-                    Add New Chapter
-                  </button>
-                }
-              </>
+            <div className="flex items-center gap-4">
+              <div className="w-48">
+                <SearchFilterBar
+                  showSearch={false}
+                  useCardWrapper={false}
+                  filters={[
+                    {
+                      value: selectedChapterId,
+                      onChange: handleChapterSelectChange,
+                      options: chapterOptions,
+                      className: "w-full"
+                    }
+                  ]}
+                />
+              </div>
+
+              {/* Chỉ hiển thị nút "Add New Chapter" nếu user hiện tại là Mangaka */}
+              {roleName?.toLowerCase() === "mangaka" &&
+                <button
+                  onClick={() => handleShowChapterModal()}
+                  className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:opacity-90 transition-opacity shrink-0"
+                >
+                  <Plus size={20} />
+                  Add New Chapter
+                </button>
+              }
             </div>
           </div>
 

@@ -165,21 +165,19 @@ export function AccountManagement() {
       <div className="flex border-b border-border gap-2">
         <button
           onClick={() => setAccountType("system")}
-          className={`px-5 py-3 text-sm font-semibold border-b-2 transition-all duration-200 ${
-            accountType === "system"
+          className={`px-5 py-3 text-sm font-semibold border-b-2 transition-all duration-200 ${accountType === "system"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted"
-          }`}
+            }`}
         >
           System Accounts
         </button>
         <button
           onClick={() => setAccountType("readers")}
-          className={`px-5 py-3 text-sm font-semibold border-b-2 transition-all duration-200 ${
-            accountType === "readers"
+          className={`px-5 py-3 text-sm font-semibold border-b-2 transition-all duration-200 ${accountType === "readers"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted"
-          }`}
+            }`}
         >
           Reader Accounts
         </button>

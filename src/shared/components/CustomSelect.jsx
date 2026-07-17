@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 
-export function CustomSelect({ value, onChange, options, className = '' }) {
+export function CustomSelect({ value, onChange, options, className = '', name }) {
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -22,6 +22,7 @@ export function CustomSelect({ value, onChange, options, className = '' }) {
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
+      {name && <input type="hidden" name={name} value={value} />}
 
       <button
         type="button"

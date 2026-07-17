@@ -1,15 +1,12 @@
-import { LogOut, Bell, Mail } from 'lucide-react';
-import { LoginHook } from '@/features/auth/hooks/LoginHook';
-import { authService } from '@/services/authService';
+import { useState, useEffect } from 'react';
+import { Bell, Mail } from 'lucide-react';
 import { Logo } from '@/shared/components/Logo';
-import { ThemeToggle } from '@/shared/components/ThemeToggle';
 import { useGetFeedback } from '@/features/series/hooks/useGetFeedback';
 import { FeedbackItem } from '@/shared/components/FeedbackItem';
-import { useState, useEffect } from 'react';
 import { userService } from '@/services/userService';
+import { HeaderMenu } from './HeaderMenu';
 
 export function HeaderPage({ roleName, avatarUrl }) {
-    const { navigate } = LoginHook();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const normalizedRole = roleName ? roleName.toLowerCase() : "";
@@ -33,25 +30,10 @@ export function HeaderPage({ roleName, avatarUrl }) {
     useEffect(() => {
         const fetchHeaderProfile = async () => {
             try {
-                // 1. Kiểm tra localStorage trước để lấy avatar nhanh nếu có
-                const cachedUser = localStorage.getItem('user');
-                if (cachedUser) {
-                    const parsed = JSON.parse(cachedUser);
-                    if (parsed.avatarUrl) {
-                        setCurrentUserAvatar(parsed.avatarUrl);
-                    }
-                }
-                
-                // 2. Gọi API để lấy avatar mới nhất từ Database
+                // Gọi API để lấy avatar trực tiếp từ Database
                 const res = await userService.getProfile();
                 if (res?.data?.avatarUrl) {
                     setCurrentUserAvatar(res.data.avatarUrl);
-                    // Cập nhật lại cache localStorage để các lần sau tải nhanh hơn
-                    if (cachedUser) {
-                        const parsed = JSON.parse(cachedUser);
-                        parsed.avatarUrl = res.data.avatarUrl;
-                        localStorage.setItem('user', JSON.stringify(parsed));
-                    }
                 }
             } catch (error) {
                 console.error("Failed to load header profile avatar:", error);
@@ -61,10 +43,7 @@ export function HeaderPage({ roleName, avatarUrl }) {
         fetchHeaderProfile();
     }, [avatarUrl]);
 
-    const handleLogout = async () => {
-        await authService.logout();
-        navigate('/');
-    };
+
 
     return (
         <>
@@ -137,19 +116,8 @@ export function HeaderPage({ roleName, avatarUrl }) {
                             </div>
                         )}
 
-                        {/* Theme Toggle Button */}
-                        <ThemeToggle />
-
-                        {/* Logout Button */}
-                        <button onClick={handleLogout}
-                            className='flex 
-                        color-background text-muted-foreground
-                        hover:text-accent
-                        hover:rounded
-                        p-2'>
-                            <div className='content-center'> <LogOut /> </div>
-                            <span className='p-2 font-medium'>Logout</span>
-                        </button>
+                        {/* Hamburger Menu */}
+                        <HeaderMenu roleName={roleName} />
                     </div>
                 </div>
             </div>
