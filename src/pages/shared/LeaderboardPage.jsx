@@ -29,8 +29,8 @@ export function LeaderboardPage() {
         const items = Array.isArray(data) ? data : (data?.data || data?.result || []);
         setLeaderboardData(items);
       } catch (err) {
-        console.error("Lỗi khi tải dữ liệu bảng xếp hạng:", err);
-        setError(err.message || "Không thể tải dữ liệu bảng xếp hạng.");
+        console.error("Error when fetching leaderboard:", err);
+        setError(err.message || "Failed to load leaderboard data.");
       } finally {
         setIsLoading(false);
       }

@@ -47,6 +47,10 @@ export function KonvaDraw({
             isDrawing.current = true;
             setLines([...lines, { points: [pos.x, pos.y], color: color }]);
         }
+        else if (tool === 'eraser') {
+            // Chế độ tẩy: Kích hoạt trạng thái kéo chuột để xóa nét vẽ
+            isDrawing.current = true;
+        }
         else if (tool === 'text') {
             // Nếu đang gõ dở một text khác, submit trước
             if (editingText) {
@@ -100,7 +104,7 @@ export function KonvaDraw({
     const handleMouseUp = (e) => {
         if (isReadOnly) return;
 
-        if (tool === 'brush') {
+        if (tool === 'brush' || tool === 'eraser') {
             isDrawing.current = false;
         }
         else if (tool === 'text' && isDrawingText.current) {
@@ -167,6 +171,7 @@ export function KonvaDraw({
     const getCursor = () => {
         if (isReadOnly) return 'default';
         if (tool === 'brush' || tool === 'text') return 'crosshair';
+        if (tool === 'eraser') return 'cell';
         return 'default';
     };
 
@@ -188,6 +193,7 @@ export function KonvaDraw({
                             points={line.points}
                             stroke={line.color || "#ef4444"}
                             strokeWidth={2}
+                            hitStrokeWidth={12} // Vùng hover/click rộng hơn để dễ tẩy
                             tension={0.5}      // Làm mịn các khúc cua của nét vẽ
                             lineCap="round"    // Bo tròn đầu nét vẽ
                             lineJoin="round"   // Bo tròn điểm tiếp nối các nét
@@ -213,14 +219,32 @@ export function KonvaDraw({
                                 };
                                 setLines(newLines);
                             }}
+                            onMouseDown={(e) => {
+                                if (tool === 'eraser' && !isReadOnly) {
+                                    e.cancelBubble = true; // Ngăn sự kiện nổi bọt lên Stage
+                                    const newLines = lines.filter((_, idx) => idx !== i);
+                                    setLines(newLines);
+                                }
+                            }}
                             onMouseEnter={(e) => {
                                 if (tool === 'move' && !isReadOnly) {
                                     const stage = e.target.getStage();
                                     stage.container().style.cursor = 'move';
+                                } else if (tool === 'eraser' && !isReadOnly) {
+                                    const stage = e.target.getStage();
+                                    stage.container().style.cursor = 'crosshair';
+                                    if (isDrawing.current) {
+                                        // Nếu đang đè chuột kéo qua thì xóa luôn nét vẽ này
+                                        const newLines = lines.filter((_, idx) => idx !== i);
+                                        setLines(newLines);
+                                    }
                                 }
                             }}
                             onMouseLeave={(e) => {
                                 if (tool === 'move' && !isReadOnly) {
+                                    const stage = e.target.getStage();
+                                    stage.container().style.cursor = 'default';
+                                } else if (tool === 'eraser' && !isReadOnly) {
                                     const stage = e.target.getStage();
                                     stage.container().style.cursor = 'default';
                                 }
@@ -294,7 +318,7 @@ export function KonvaDraw({
                     onChange={(e) => setEditingText({ ...editingText, text: e.target.value })}
                     onBlur={handleTextSubmit}
                     onKeyDown={handleTextKeyDown}
-                    placeholder="Nhập nhận xét..."
+                    placeholder="Enter comment here..."
                     style={{
                         position: 'absolute',
                         left: `${editingText.x}px`,

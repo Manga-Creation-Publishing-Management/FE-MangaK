@@ -251,7 +251,7 @@ export function SeriesDetail() {
                   }
                 </div>
 
-                <div className="flex flex-col flex-1 h-full pt-2">
+                <div className="flex flex-col flex-1 h-full pt-2  overflow-y-auto ">
                   <p className="text-sm text-muted-foreground uppercase font-semibold mb-2">Description</p>
                   <p className="text-foreground text-justify w-full px-4 py-2 bg-input-background rounded-lg border border-border flex-1 overflow-y-auto text-xs leading-relaxed pr-2">
                     {detailData?.description}
