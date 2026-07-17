@@ -4,7 +4,8 @@ import { useState, useRef } from 'react';
 import dayjs from 'dayjs';
 
 
-import { ArrowLeft, Download, Star } from "lucide-react";
+import { ArrowLeft, Download, Star, ChevronDown } from "lucide-react";
+import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
 import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter";
 import { useProgressing } from "../../features/chapters/hooks/useProgressing";
@@ -59,6 +60,7 @@ export function ChapterDetail() {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   const feedbackViewerRef = useRef(null);
 
@@ -303,6 +305,37 @@ export function ChapterDetail() {
 
 
         </div>
+
+        {/* Feedback History Log Section */}
+        {['tantou', 'editorial', 'board', 'mangaka'].includes(currentRole?.toLowerCase()) && (
+          <div className="w-full">
+            <button
+              onClick={() => setIsHistoryOpen(!isHistoryOpen)}
+              className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-primary transition-all duration-300 mt-2 cursor-pointer"
+            >
+              <span>View feedback history</span>
+              <ChevronDown
+                className={`w-4 h-4 transition-transform duration-300 ${
+                  isHistoryOpen ? "rotate-180 text-primary" : ""
+                }`}
+              />
+            </button>
+
+            <div
+              className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
+                isHistoryOpen ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0 pointer-events-none"
+              }`}
+            >
+              <div className="overflow-hidden">
+                <FeedbackHistoryList
+                  chapterId={chapterId}
+                  fileUrl={chapterDetail?.chapterFileUrl}
+                  role={currentRole?.toLowerCase()}
+                />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <ConfirmRejectModal
