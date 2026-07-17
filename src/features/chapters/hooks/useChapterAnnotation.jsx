@@ -23,12 +23,12 @@ export function useChapterAnnotation(onClose, initialFeedbackJson = null) {
         const parsed = JSON.parse(initialFeedbackJson);
         const parsedLines = {};
         const parsedTexts = {};
-        
+
         Object.keys(parsed).forEach(page => {
           if (parsed[page].lines) parsedLines[page] = parsed[page].lines;
           if (parsed[page].texts) parsedTexts[page] = parsed[page].texts;
         });
-        
+
         setAnnotationData(parsedLines);
         setAnnotationText(parsedTexts);
       } catch (err) {

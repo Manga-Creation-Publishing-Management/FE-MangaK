@@ -22,7 +22,7 @@ export const FeedbackViewer = forwardRef(({
     viewFeedback: async () => {
       let annotationFailed = false;
       try {
-        const response = await feedbackService.getFeedbackDetail(seriesId, chapterId, taskId);
+        const response = await feedbackService.getLastAnnotationFeedback(seriesId, chapterId, taskId);
         let feedbackData = response?.data;
 
         if (Array.isArray(feedbackData) && feedbackData.length > 0) {
@@ -53,23 +53,26 @@ export const FeedbackViewer = forwardRef(({
 
       if (annotationFailed) {
         try {
-          const detailResponse = await feedbackService.getFeedbackDetail(seriesId, chapterId, taskId);
+          const detailResponse = await feedbackService.getLastTextFeedback(seriesId, chapterId, taskId);
+
           let detailDataResult = detailResponse?.data || detailResponse;
 
           if (Array.isArray(detailDataResult) && detailDataResult.length > 0) {
             detailDataResult = detailDataResult[detailDataResult.length - 1];
           }
-
-          const textContent = detailDataResult?.data?.content;
-
+          const textContent = detailDataResult?.data?.content || detailDataResult?.content;
           setFetchedFeedback(textContent || fallbackFeedback);
+
           setIsTextFeedbackOpen(true);
+
+
+
         } catch (error) {
           console.error("Error fetching text feedback detail:", error);
-          showAlert("Could not fetch the latest feedback.", "fail");
+          // showAlert("Could not fetch the latest feedback.", "fail"); // không báo ra nữa, chỉ in console, sửa thành in ra chữ No feedback provided
           // Fallback
-          setFetchedFeedback(fallbackFeedback);
-          if (fallbackFeedbackType === "EditPDF") {
+          setFetchedFeedback("No feedback provided");
+          if (fallbackFeedbackType === "Manual") {
             setIsViewAnnotationOpen(true);
           } else {
             setIsTextFeedbackOpen(true);
