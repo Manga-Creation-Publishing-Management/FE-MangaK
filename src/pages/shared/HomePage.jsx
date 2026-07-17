@@ -1,9 +1,50 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { FooterPage } from '@/layout/FooterPage';
+import { userService } from '@/services/userService';
 
 export function HomePage() {
   // Hook điều hướng của react-router, dùng để chuyển trang (ví dụ sang trang /login)
   const navigate = useNavigate();
+
+  const token = localStorage.getItem('accessToken');
+  const userString = localStorage.getItem('user');
+  let user = null;
+  if (token && userString) {
+    try {
+      user = JSON.parse(userString);
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  const [avatarUrl, setAvatarUrl] = useState("/avatarImgDemo.png");
+
+  useEffect(() => {
+    if (token) {
+      const fetchAvatar = async () => {
+        try {
+          const res = await userService.getProfile();
+          if (res?.data?.avatarUrl) {
+            setAvatarUrl(res.data.avatarUrl);
+          }
+        } catch (error) {
+          console.error("Failed to load homepage profile avatar:", error);
+        }
+      };
+      fetchAvatar();
+    }
+  }, [token]);
+
+  const rolePathMap = {
+    mangaka: 'mangaka',
+    assistant: 'assistant',
+    tantou: 'tantou',
+    editorial: 'editorial',
+    admin: 'admin',
+    reader: 'reader',
+  };
+  const rolePath = user ? (rolePathMap[user.role?.toLowerCase()] || user.role?.toLowerCase()) : '';
 
   return (
     <div className="bg-muted h-full flex flex-col bg-background text-foreground transition-colors duration-300">
@@ -25,12 +66,30 @@ export function HomePage() {
 
           {/* Các nút bấm ở góc phải (Đăng ký, Đăng nhập) */}
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate('/loginReader')}
-              className="text-sm px-6 py-2.5 bg-primary text-primary-foreground hover:opacity-90 rounded-xl font-semibold shadow-sm transition-opacity cursor-pointer"
-            >
-              Reader Login
-            </button>
+            {user ? (
+              <div className="flex items-center gap-4">
+                <span className="text-sm font-medium text-muted-foreground hidden sm:inline">
+                  Hello, <span className="font-bold text-foreground">{user.name || user.role}</span>
+                </span>
+                <div className="relative group cursor-pointer" onClick={() => navigate(`/${rolePath}`)}>
+                  <img
+                    src={avatarUrl}
+                    alt="User Avatar"
+                    className="w-10 h-10 rounded-full object-cover border border-border transition-transform duration-300 hover:scale-105 group-hover:ring-2 group-hover:ring-primary/50"
+                  />
+                  <div className="absolute right-0 top-full mt-2 hidden group-hover:block bg-card text-foreground text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-border shadow-md whitespace-nowrap z-50">
+                    Dashboard
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={() => navigate('/loginReader')}
+                className="text-sm px-6 py-2.5 bg-primary text-primary-foreground hover:opacity-90 rounded-xl font-semibold shadow-sm transition-opacity cursor-pointer"
+              >
+                Reader Login
+              </button>
+            )}
           </div>
         </div>
       </nav>
@@ -87,12 +146,21 @@ export function HomePage() {
           </p>
 
           <div className='w-full flex justify-end px-5'>
-            <button
-              onClick={() => navigate('/login')}
-              className="px-8 py-3.5 bg-foreground text-background font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-md inline-block w-fit cursor-pointer text-sm"
-            >
-              Enter System
-            </button>
+            {user ? (
+              <button
+                onClick={() => navigate(`/${rolePath}`)}
+                className="px-8 py-3.5 bg-primary text-primary-foreground font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-md inline-block w-fit cursor-pointer text-sm"
+              >
+                Go to Dashboard
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate('/login')}
+                className="px-8 py-3.5 bg-foreground text-background font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-md inline-block w-fit cursor-pointer text-sm"
+              >
+                Enter System
+              </button>
+            )}
           </div>
 
           <div className="border-t border-border/60 pt-6 w-full flex justify-end">
