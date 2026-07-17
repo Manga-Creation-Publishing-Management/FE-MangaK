@@ -14,7 +14,7 @@ export function SeriesReview() {
 
   const filtered = seriesData.filter((item) => {
     // Các trạng thái truyện mà Tantou được phép xem/đánh giá
-    const allowedStatuses = ["processing", "rejected", "pending", "approved", "publishing"];
+    const allowedStatuses = ["processing", "rejected", "pending", "approved", "scheduled", "publishing"];
     const itemStatus = item.status?.toLowerCase();
     if (!allowedStatuses.includes(itemStatus)) return false;
 
@@ -43,6 +43,7 @@ export function SeriesReview() {
               { value: "Processing", label: "Processing" },
               { value: "Rejected", label: "Rejected" },
               { value: "Pending", label: "Pending" },
+              { value: "Scheduled", label: "Scheduled" },
               { value: "Approved", label: "Approved" },
               { value: "Publishing", label: "Publishing" },
             ]

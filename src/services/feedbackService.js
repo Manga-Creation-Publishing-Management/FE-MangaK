@@ -15,14 +15,14 @@ export const feedbackService = {
     });
   },
 
-  async getFeedbackAnnotation(seriesId, chapterId, taskId) {
-    const params = new URLSearchParams();
-    if (seriesId) params.append('SeriesId', seriesId);
-    if (chapterId) params.append('ChapterId', chapterId);
-    if (taskId) params.append('MangaTaskId', taskId);
+  // async getFeedbackAnnotation(seriesId, chapterId, taskId) {
+  //   const params = new URLSearchParams();
+  //   if (seriesId) params.append('SeriesId', seriesId);
+  //   if (chapterId) params.append('ChapterId', chapterId);
+  //   if (taskId) params.append('MangaTaskId', taskId);
     
-    return api.get(`/Feedback/get-feedback-annotation?${params.toString()}`);
-  },
+  //   return api.get(`/Feedback/get-feedback-annotation?${params.toString()}`);
+  // },
 
   async getFeedbackDetail(seriesId, chapterId, taskId) {
     const params = new URLSearchParams();
@@ -31,5 +31,23 @@ export const feedbackService = {
     if (taskId) params.append('MangaTaskId', taskId);
     
     return api.get(`/Feedback/get-feedback-detail?${params.toString()}`);
+  }, 
+
+  async getLastTextFeedback(seriesId, chapterId, taskId) {
+    const params = new URLSearchParams();
+    if (seriesId != null) params.append('SeriesId', seriesId);
+    if (chapterId != null) params.append('ChapterId', chapterId);
+    if (taskId != null) params.append('MangaTaskId', taskId);
+    
+    return api.get(`/Feedback/get-latest-feedback?${params.toString()}`);
+  },
+
+  async getLastAnnotationFeedback(seriesId, chapterId, taskId) {
+    const params = new URLSearchParams();
+    if (seriesId != null) params.append('SeriesId', seriesId);
+    if (chapterId != null) params.append('ChapterId', chapterId);
+    if (taskId != null) params.append('MangaTaskId', taskId);
+    
+    return api.get(`/Feedback/get-feedback-annotation?${params.toString()}`);
   }
 }

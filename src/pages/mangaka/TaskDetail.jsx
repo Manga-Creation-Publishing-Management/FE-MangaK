@@ -1,4 +1,5 @@
-import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, SquarePen, UploadCloud } from "lucide-react";
+import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, SquarePen, UploadCloud, ChevronDown } from "lucide-react";
+import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { useTaskDetail } from "../../features/tasks/hooks/useTaskDetail";
 import { StatusBadge } from "@/shared/components/StatusBadge";
@@ -8,7 +9,6 @@ import utc from 'dayjs/plugin/utc';
 import { AnnotationModal } from "../shared/AnnotationModal";
 import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
 import { PreviewModal } from "../shared/PreviewModal";
-
 import { useState, useRef } from "react";
 import { FeedbackViewer } from "../shared/FeedbackViewer";
 import { useToast } from "@/shared/hooks/useToast";
@@ -58,6 +58,7 @@ export function TaskDetail() {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
@@ -435,7 +436,34 @@ export function TaskDetail() {
           />
         </div>
 
-      </div >
+        {/* Feedback History Log Section */}
+        <div className="w-full">
+
+          <button
+            onClick={() => setIsHistoryOpen(!isHistoryOpen)}
+            className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-primary transition-all duration-300 mt-2 cursor-pointer"
+          >
+            <span>View feedback history</span>
+            <ChevronDown
+              className={`w-4 h-4 transition-transform duration-300 ${isHistoryOpen ? "rotate-180 text-primary" : ""
+                }`}
+            />
+          </button>
+
+          <div
+            className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${isHistoryOpen ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0 pointer-events-none"
+              }`}
+          >
+            <div className="overflow-hidden">
+              <FeedbackHistoryList
+                taskId={taskId}
+                fileUrl={taskDetail?.submittedFileUrl}
+                role={role?.toLowerCase()}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   )
 
