@@ -22,23 +22,24 @@ export const FeedbackViewer = forwardRef(({
     viewFeedback: async () => {
       let annotationFailed = false;
       try {
-        const response = await feedbackService.getFeedbackAnnotation(seriesId, chapterId, taskId);
-        let feedbackData = response?.data || response;
+        const response = await feedbackService.getLastAnnotationFeedback(seriesId, chapterId, taskId);
+        let feedbackData = response?.data;
 
         if (Array.isArray(feedbackData) && feedbackData.length > 0) {
           feedbackData = feedbackData[feedbackData.length - 1];
         }
 
-        const extractedType = feedbackData?.type || feedbackData?.feedbackType;
-        const extractedContent = feedbackData?.content || feedbackData?.note || feedbackData?.text || (typeof feedbackData === 'string' ? feedbackData : null);
+        const extractedType = feedbackData?.data?.type || feedbackData?.type;
+        const extractedContent = feedbackData?.data?.content || feedbackData?.content;
+        console.log("extractedContent", extractedContent);
 
         if (feedbackData && (extractedContent || extractedType)) {
           setFetchedFeedback(extractedContent || fallbackFeedback);
 
-          if (extractedType === "EditPDF" || fallbackFeedbackType === "EditPDF") {
+          if (extractedType === "EditPDF") {
             setIsViewAnnotationOpen(true);
           } else {
-            setFetchedFeedback(extractedContent || fallbackFeedback || (typeof feedbackData === 'object' ? JSON.stringify(feedbackData) : ""));
+            setFetchedFeedback(extractedContent || fallbackFeedback);
             setIsTextFeedbackOpen(true);
           }
           return;
@@ -52,23 +53,26 @@ export const FeedbackViewer = forwardRef(({
 
       if (annotationFailed) {
         try {
-          const detailResponse = await feedbackService.getFeedbackDetail(seriesId, chapterId, taskId);
+          const detailResponse = await feedbackService.getLastTextFeedback(seriesId, chapterId, taskId);
+
           let detailDataResult = detailResponse?.data || detailResponse;
 
           if (Array.isArray(detailDataResult) && detailDataResult.length > 0) {
             detailDataResult = detailDataResult[detailDataResult.length - 1];
           }
-
-          const textContent = detailDataResult?.content || detailDataResult?.note || detailDataResult?.text || (typeof detailDataResult === 'string' ? detailDataResult : detailDataResult?.feedback) || (typeof detailDataResult === 'object' ? JSON.stringify(detailDataResult) : "");
-
+          const textContent = detailDataResult?.data?.content || detailDataResult?.content;
           setFetchedFeedback(textContent || fallbackFeedback);
+
           setIsTextFeedbackOpen(true);
+
+
+
         } catch (error) {
           console.error("Error fetching text feedback detail:", error);
-          showAlert("Could not fetch the latest feedback.", "fail");
+          // showAlert("Could not fetch the latest feedback.", "fail"); // không báo ra nữa, chỉ in console, sửa thành in ra chữ No feedback provided
           // Fallback
-          setFetchedFeedback(fallbackFeedback);
-          if (fallbackFeedbackType === "EditPDF") {
+          setFetchedFeedback("No feedback provided");
+          if (fallbackFeedbackType === "Manual") {
             setIsViewAnnotationOpen(true);
           } else {
             setIsTextFeedbackOpen(true);
