@@ -22,7 +22,7 @@ export const FeedbackViewer = forwardRef(({
     viewFeedback: async () => {
       let annotationFailed = false;
       try {
-        const response = await feedbackService.getLastAnnotationFeedback(seriesId, chapterId, taskId);
+        const response = await feedbackService.getLastFeedback(seriesId, chapterId, taskId);
         let feedbackData = response?.data;
 
         if (Array.isArray(feedbackData) && feedbackData.length > 0) {
@@ -53,7 +53,7 @@ export const FeedbackViewer = forwardRef(({
 
       if (annotationFailed) {
         try {
-          const detailResponse = await feedbackService.getLastTextFeedback(seriesId, chapterId, taskId);
+          const detailResponse = await feedbackService.getLastFeedback(seriesId, chapterId, taskId);
 
           let detailDataResult = detailResponse?.data || detailResponse;
 
