@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
-  Home, FolderKanban, DollarSign, TrendingUp, Settings,
+  Home, FolderKanban, DollarSign, TrendingUp,
   CalendarClock, CheckSquare, ClipboardList, FileSearch, BookMarked,
   Menu, Upload, Users
 } from 'lucide-react';
@@ -14,38 +14,32 @@ export function Sidebar({ userRole }) {
   const menuItems = {
     reader: [
       { icon: Home, label: 'Dashboard', path: '/reader', key: 'dashboard' },
-      { icon: Settings, label: 'Profile & Settings', path: '/reader/profile', key: 'profile' },
     ],
     admin: [
       { icon: Home, label: 'Dashboard', path: '/admin', key: 'dashboard' },
       { icon: Users, label: 'Account Management', path: '/admin/accounts', key: 'accounts' },
-      { icon: Settings, label: 'Profile & Settings', path: '/admin/profile', key: 'profile' },
     ],
     mangaka: [
       { icon: Home, label: 'Dashboard', path: '/mangaka', key: 'dashboard' },
       { icon: FolderKanban, label: 'Series Management', path: '/mangaka/series', key: 'series' },
       { icon: ClipboardList, label: 'Task Management', path: '/mangaka/tasks', key: 'tasks' },
       { icon: TrendingUp, label: 'Leaderboard', path: '/mangaka/leaderboard', key: 'leaderboard' },
-      { icon: Settings, label: 'Profile & Settings', path: '/mangaka/profile', key: 'profile' },
     ],
     assistant: [
       { icon: Home, label: 'Dashboard', path: '/assistant', key: 'dashboard' },
       { icon: CheckSquare, label: 'My Tasks', path: '/assistant/tasks', key: 'tasks' },
       { icon: DollarSign, label: 'Income', path: '/assistant/income', key: 'income' },
-      { icon: Settings, label: 'Profile & Settings', path: '/assistant/profile', key: 'profile' },
     ],
     tantou: [
       { icon: Home, label: 'Dashboard', path: '/tantou', key: 'dashboard' },
       { icon: FolderKanban, label: 'Series Review', path: '/tantou/series', key: 'series' },
       { icon: TrendingUp, label: 'Leaderboard', path: '/tantou/leaderboard', key: 'leaderboard' },
-      { icon: Settings, label: 'Profile & Settings', path: '/tantou/profile', key: 'profile' },
     ],
     editorial: [
       { icon: Home, label: 'Dashboard', path: '/editorial', key: 'dashboard' },
       { icon: FileSearch, label: 'Series Approval', path: '/editorial/series', key: 'series' },
       { icon: CalendarClock, label: 'Publishing Schedule', path: '/editorial/schedule', key: 'schedule' },
       { icon: TrendingUp, label: 'Leaderboard', path: '/editorial/leaderboard', key: 'leaderboard' },
-      { icon: Settings, label: 'Profile & Settings', path: '/editorial/profile', key: 'profile' },
     ],
   };
 

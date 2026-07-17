@@ -15,27 +15,33 @@ export function ReaderLoginPage() {
 
             const response = await authService.loginGoogle(idToken);
 
+            // Kiểm tra xem dữ liệu trả về có hợp lệ không
+            if (!response || typeof response !== "object" || !response.success) {
+                throw new Error(response?.message || "Google login failed on server.");
+            }
 
-            showAlert("Login with Google sucessfully!");
-            // alert("Login with Google sucessfully!");
-            console.log("Login sucess!");
-            localStorage.setItem("mangak-token", response.data?.accessToken);
+            showAlert("Login with Google successfully!");
+            console.log("Login success!");
+
+            localStorage.setItem("accessToken", response.data?.accessToken);
+            localStorage.setItem("refreshToken", response.data?.refreshToken || "");
 
             const user = {
+                id: response.data?.userId,
                 role: response.data?.role || "reader",
                 email: response.data?.email,
-                name: response.data?.name
-            }
+                name: response.data?.name || `${response.data?.firstName || ''} ${response.data?.lastName || ''}`.trim()
+            };
             localStorage.setItem("user", JSON.stringify(user));
 
             // in ra để check xem thông tin nhận về
-            console.log("Access token:", localStorage.getItem('mangak-token'));
+            console.log("Access token:", localStorage.getItem('accessToken'));
             console.log("Info user:", response.data);
             navigate("/reader");
         } catch (error) {
-            showAlert("Login with Google failed!")
-            console.log("Login with Google failed!")
-            console.error("login error: ", error)
+            showAlert("Login with Google failed!");
+            console.log("Login with Google failed!");
+            console.error("login error: ", error);
         }
     }
 
