@@ -23,7 +23,7 @@ export function SeriesReview() {
       (item.mangakaName || "").toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesStatus =
-      filterStatus === "all" || itemStatus === filterStatus.toLowerCase();
+      filterStatus === "all" ? itemStatus !== "rejected" : itemStatus === filterStatus.toLowerCase();
 
     return matchesSearch && matchesStatus;
   });

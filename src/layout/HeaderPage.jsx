@@ -28,9 +28,15 @@ export function HeaderPage({ roleName, avatarUrl }) {
     const [currentUserAvatar, setCurrentUserAvatar] = useState(avatarUrl || "/avatarImgDemo.png");
 
     useEffect(() => {
+        if (normalizedRole === 'reader') {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (user?.avatarUrl) {
+                setCurrentUserAvatar(user.avatarUrl);
+            }
+            return;
+        }
         const fetchHeaderProfile = async () => {
             try {
-                // Gọi API để lấy avatar trực tiếp từ Database
                 const res = await userService.getProfile();
                 if (res?.data?.avatarUrl) {
                     setCurrentUserAvatar(res.data.avatarUrl);
@@ -41,7 +47,7 @@ export function HeaderPage({ roleName, avatarUrl }) {
         };
 
         fetchHeaderProfile();
-    }, [avatarUrl]);
+    }, [avatarUrl, normalizedRole]);
 
 
 

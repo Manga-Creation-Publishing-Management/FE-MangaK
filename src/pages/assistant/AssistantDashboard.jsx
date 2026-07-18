@@ -11,7 +11,7 @@ export function AssistantDashboard() {
     completedCount,
     pendingCount,
     reviewCount,
-    urgentTask,
+    urgentTasks,
     handleNavigateToTask,
   } = useAssistantDashboard();
 
@@ -44,7 +44,7 @@ export function AssistantDashboard() {
         {/* Cột trái (col-span-4): Spotlight Task khẩn cấp */}
         <div className="lg:col-span-4">
           <UrgentTaskCard
-            urgentTask={urgentTask}
+            urgentTasks={urgentTasks}
             isLoading={isLoading}
             onNavigateToTask={handleNavigateToTask}
           />

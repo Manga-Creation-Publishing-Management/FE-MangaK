@@ -21,7 +21,7 @@ export function HomePage() {
   const [avatarUrl, setAvatarUrl] = useState("/avatarImgDemo.png");
 
   useEffect(() => {
-    if (token) {
+    if (token && user?.role?.toLowerCase() !== 'reader') {
       const fetchAvatar = async () => {
         try {
           const res = await userService.getProfile();
