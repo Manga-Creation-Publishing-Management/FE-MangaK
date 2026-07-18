@@ -7,7 +7,7 @@ import { Navigate, Outlet } from 'react-router';
  */
 export function PublicRoute() {
   // Kiểm tra token và thông tin user trong localStorage
-  const token = localStorage.getItem('mangak-token');
+  const token = localStorage.getItem('accessToken');
   const userString = localStorage.getItem('user');
 
   // Nếu cả token và user đều tồn tại, nghĩa là người dùng đang trong trạng thái đã đăng nhập
@@ -16,8 +16,8 @@ export function PublicRoute() {
     const rolePathMap = {
       mangaka: 'mangaka',
       assistant: 'assistant',
-      tantou: 'tantouEditor', // tantou trong DB map với route /tantouEditor
-      editorial: 'editorialBoard',
+      tantou: 'tantou',
+      editorial: 'editorial',
       admin: 'admin',
       reader: 'reader',
     };
@@ -35,8 +35,8 @@ export function PublicRoute() {
     } catch (error) {
       // Nếu dữ liệu localStorage bị lỗi (parse JSON thất bại), xóa sạch dữ liệu lỗi đi
       // Để người dùng ở lại trang Public (như trang Đăng nhập) để đăng nhập lại
-      localStorage.removeItem('mangak-token');
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
     }
   }

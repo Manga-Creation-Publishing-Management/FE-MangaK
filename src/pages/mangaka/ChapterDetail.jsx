@@ -77,14 +77,6 @@ export function ChapterDetail() {
       {/* Vùng chứa toàn bộ nội dung của trang chi tiết */}
       <div className="p-6 space-y-8">
 
-        {/* Nút Back quay lại trang trước */}
-        <button
-          onClick={() => navigate(-1)} // navigate(-1) tương đương với bấm nút Back trên trình duyệt
-          className="flex cursor-pointer items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft size={20} />
-          Back
-        </button>
 
         {/* Khung (Card) chứa thông tin chính của Chapter */}
         <div className="bg-card border border-border rounded-xl p-8 space-y-4">

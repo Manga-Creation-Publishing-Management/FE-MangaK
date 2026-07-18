@@ -34,7 +34,7 @@ export function useUpdateTaskDeadline(taskId, initialDeadline, onUpdateSuccess) 
       const formattedDeadline = dayjs(deadlineValue).toISOString();
 
       // Gọi API với data đã chuẩn hóa đúng như Swagger yêu cầu
-       await taskService.updateTaskDeadline(taskId, formattedDeadline);
+      await taskService.updateTaskDeadline(taskId, formattedDeadline);
 
       showAlert?.("Updated deadline successfully!", "success");
       setIsEditingDeadline(false);

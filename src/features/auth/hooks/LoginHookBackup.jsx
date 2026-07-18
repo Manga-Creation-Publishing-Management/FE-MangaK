@@ -27,32 +27,43 @@ export function LoginHook() {
             console.log("Login API Response:", res);
 
             // Kiểm tra xem dữ liệu trả về có hợp lệ (là object) hay không
-            if (!res || typeof res !== "object" || !res.success) {
-                throw new Error(res?.message || "Login failed on server.");
+            if (!res || typeof res !== "object") {
+                throw new Error(`Response from server is not a valid JSON object. Received: ${res}`);
             }
 
-            const data = res.data;
-            if (!data) {
-                throw new Error("No data returned in response.");
+            // Trích xuất token từ response.
+            // Do backend có thể trả về các cấu trúc khác nhau (lúc là res.token, lúc là res.data.accessToken...),
+            // ta thử tất cả các trường hợp phổ biến để lấy token.
+            const token = res.token || res.accessToken || res.data?.token || res.data?.accessToken;
+
+            // Tương tự, trích xuất thông tin user từ response
+            let user = res.user || res.data?.user;
+
+            // Nếu không tìm thấy object `user` lồng bên trong, kiểm tra xem role có nằm trực tiếp ở cấp ngoài cùng không
+            if (!user) {
+                const source = res.data || res;
+                console.log("Dữ liệu gốc từ API:", source);
+                if (source && source.role) {
+                    user = {
+                        id: source.userId || source.userid || source.userId || source.UserId,
+                        role: source.role,
+                        email: source.email || email,
+                        name: source.name || source.fullName || ""
+                    };
+                }
             }
 
-            const { accessToken, refreshToken, userId, email: userEmail, firstName, lastName, role } = data;
-
-            if (!accessToken || !role) {
-                throw new Error("Missing accessToken or role in response data.");
+            // Nếu không thể lấy được cả token lẫn thông tin user, coi như dữ liệu API trả về bị sai cấu trúc
+            if (!token || !user) {
+                console.error("Failed to parse login response:", res);
+                const keys = Object.keys(res).join(", ");
+                const nestedDataKeys = res.data ? ` (data: [${Object.keys(res.data).join(", ")}])` : "";
+                throw new Error(`Invalid response structure. Received keys: [${keys}]${nestedDataKeys}. Expected 'token'/'accessToken' and 'user'/'role'.`);
             }
-
-            // Tạo đối tượng user thống nhất
-            const user = {
-                id: userId,
-                email: userEmail || email,
-                role: role,
-                name: `${firstName || ''} ${lastName || ''}`.trim()
-            };
 
             // Đăng nhập thành công -> Lưu token và thông tin user vào trình duyệt (localStorage)
-            localStorage.setItem('accessToken', accessToken);
-            localStorage.setItem('refreshToken', refreshToken || '');
+            localStorage.setItem('mangak-token', token);
+            localStorage.setItem('accessToken', token); // Lưu dự phòng cho các logic cũ nếu có
             localStorage.setItem('user', JSON.stringify(user));
             // Đăng nhập thành công thì thông báo ở trang layout
 
@@ -68,8 +79,8 @@ export function LoginHook() {
             };
 
             // Ép kiểu role về in thường và lấy đường dẫn tương ứng
-            const userRoleKey = (user.role || '').toLowerCase();
-            const rolePath = rolePathMap[userRoleKey] || userRoleKey;
+            const role = (user.role || '').toLowerCase();
+            const rolePath = rolePathMap[role] || role;
 
             // Chuyển hướng người dùng sang trang dashboard tương ứng
             showAlert("Login successfully!");

@@ -12,7 +12,7 @@ export function TextFeedbackModal({ isOpen, onClose, feedbackText }) {
     >
       <div className="bg-card border border-border rounded-2xl shadow-2xl p-6 w-[95vw] md:w-[600px] max-w-[100vw] max-h-[80vh] overflow-y-auto flex flex-col items-start gap-4 relative">
         <div className="flex justify-between items-center w-full pb-4 border-b border-border">
-          <h2 className="text-lg font-semibold text-foreground">View Annotation Feedback</h2>
+          <h2 className="text-lg font-semibold text-foreground">View Text Feedback</h2>
           <button
             onClick={onClose}
             className="text-muted-foreground hover:text-foreground p-1.5 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"

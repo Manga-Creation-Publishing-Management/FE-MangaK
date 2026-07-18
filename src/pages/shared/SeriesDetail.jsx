@@ -134,17 +134,9 @@ export function SeriesDetail() {
     <>
       <div className="p-6 space-y-8">
 
-        {/* Nút quay lại trang trước */}
-        <button
-          onClick={() => navigate(-1)}
-          className="flex cursor-pointer items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft size={20} />
-          Back
-        </button>
 
         {/* Khung chứa ảnh bìa và thông tin cơ bản của bộ truyện */}
-        <div className="bg-card border-border rounded-xl overflow-hidden p-6">
+        <div className="bg-card border border-border rounded-xl overflow-hidden p-6">
 
           {/* Vùng hiển thị Ảnh bìa */}
           <div className="grid grid-cols-3 md:grid-cols-3 gap-6 border-b border-gray-200 pb-6 items-start">
@@ -262,6 +254,11 @@ export function SeriesDetail() {
             </div>
           </div>
 
+          {/* Component hiển thị Danh sách các Chapter thuộc bộ truyện này */}
+          <div className="pt-6">
+            <ChapterList roleName={roleFromState} seriesData={detailData} />
+          </div>
+          {console.log("Checkrolehientai:", roleFromState)}
 
         </div>
 
