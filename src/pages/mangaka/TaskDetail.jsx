@@ -249,7 +249,7 @@ export function TaskDetail() {
                   Submitted At
                 </h3>
                 {taskDetail?.submittedAt ? (
-                  <div className="text-xl text-muted-foreground flex items-center font-semibold">{taskDetail?.submittedAt}</div>
+                  <div className="text-xl text-muted-foreground flex items-center font-semibold">{dayjs(taskDetail?.submittedAt).utc(true).format('DD/MM/YYYY HH:mm')}</div>
                 ) : (
                   <div className="text-xl text-muted-foreground flex items-center">— — — —</div>
                 )}
