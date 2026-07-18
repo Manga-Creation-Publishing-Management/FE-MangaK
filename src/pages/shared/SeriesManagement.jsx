@@ -44,8 +44,9 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
         (item.mangakaName || "").toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesStatus =
-        filterStatus === "all" ||
-        item.status?.toLowerCase() === filterStatus.toLowerCase();
+        filterStatus === "all"
+          ? item.status?.toLowerCase() !== "rejected"
+          : item.status?.toLowerCase() === filterStatus.toLowerCase();
 
       return matchesStatusProp && matchesSearch && matchesStatus;
     });

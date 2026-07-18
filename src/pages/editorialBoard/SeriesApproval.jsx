@@ -12,7 +12,7 @@ export function SeriesApproval() {
   const [filterStatus, setFilterStatus] = useState("all");
 
   const filtered = seriesData.filter((item) => {
-    const allowedStatuses = ["pending", "approved", "scheduled", "publishing", "cancelled"];
+    const allowedStatuses = ["pending", "approved", "scheduled", "publishing", "cancelled", "rejected"];
     const itemStatus = item.status?.toLowerCase();
     if (!allowedStatuses.includes(itemStatus)) return false;
 
@@ -21,7 +21,7 @@ export function SeriesApproval() {
       (item.mangakaName || "").toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesStatus =
-      filterStatus === "all" || itemStatus === filterStatus.toLowerCase();
+      filterStatus === "all" ? itemStatus !== "rejected" : itemStatus === filterStatus.toLowerCase();
 
     return matchesSearch && matchesStatus;
   });
@@ -43,6 +43,7 @@ export function SeriesApproval() {
               { value: "Scheduled", label: "Scheduled" },
               { value: "Publishing", label: "Publishing" },
               { value: "Cancelled", label: "Cancelled" },
+              { value: "Rejected", label: "Rejected" },
             ]
           }
         ]}

@@ -84,16 +84,20 @@ export function HeaderMenu({ roleName }) {
                         {/* Divider */}
                         <div className="mx-4 my-1 border-t border-border/60"></div>
 
-                        {/* Profile & Settings */}
-                        <button
-                            onClick={handleProfile}
-                            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted/60 transition-colors"
-                        >
-                            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-muted/80">
-                                <Settings size={16} />
-                            </div>
-                            <span>Profile & Settings</span>
-                        </button>
+                        {/* Profile & Settings - hidden for Reader */}
+                        {roleName !== 'Reader' && roleName !== 'reader' && (
+                            <>
+                                <button
+                                    onClick={handleProfile}
+                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted/60 transition-colors"
+                                >
+                                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-muted/80">
+                                        <Settings size={16} />
+                                    </div>
+                                    <span>Profile & Settings</span>
+                                </button>
+                            </>
+                        )}
 
                         {/* Divider */}
                         <div className="mx-4 my-1 border-t border-border/60"></div>
