@@ -77,7 +77,7 @@ export function useCreateTask() {
       const fetchChapters = async () => {
         try {
           const response = await chaptersService.getAllSeriesBySeriesId(selectedSeriesId);
-          setChapters(response?.data.filter(item => (item => item.status === "Created" || item.status === "Processing")) || []);
+          setChapters(response?.data?.filter(item => (item?.status?.toLowerCase() === "created" || item?.status?.toLowerCase() === "processing")) || []);
         } catch (error) {
           console.error("Lỗi khi load chapters:", error);
           setChapters([]);

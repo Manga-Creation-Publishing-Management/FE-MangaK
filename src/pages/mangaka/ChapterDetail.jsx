@@ -126,9 +126,20 @@ export function ChapterDetail() {
             </div>
             <div className="md:col-span-4 space-y-2 ">
               <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
-                <h3 className="font-normal text-sm text-muted-foreground  tracking-wider">Deadline</h3>
+                <h3 className="font-normal text-sm text-muted-foreground gap-2 tracking-wider"><span>Deadline</span>
+                  {chapterDetail?.status != ("Publishing" || "Scheduled") ? (
+                    <>{isOverdue && <span className="text-destructive font-bold">(Overdue)</span>}</>
+                  ) : (
+                    <></>
+                  )}
+
+                </h3>
                 {chapterDetail?.deadline ? (
-                  <div className="text-xs my-2 font-semibold capitalize">{foramttedDeadline}</div>
+                  <>
+                    <div className="text-xs my-2 font-semibold capitalize">{foramttedDeadline}</div>
+
+                  </>
+
                 ) : (
                   <div className="text-sm ms-0.5"> — — — —</div>
                 )}
@@ -282,9 +293,7 @@ export function ChapterDetail() {
                     {isLoading ? "Submitting..." : "Submit Chapter"}
                   </button>
                 ) : (
-                  <button className="bg-secondary text-secondary-foreground  font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:bg-gray-500 disabled:cursor-not-allowed readonly " >
-                    Overdue
-                  </button>
+                  <></>
                 )
                 }
 

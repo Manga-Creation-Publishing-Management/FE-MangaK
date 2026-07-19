@@ -72,6 +72,12 @@ export function TaskDetail() {
     setConfirmModalOpen(true);
   }
 
+  const today = dayjs().utc(true);
+  const deadlineObj = dayjs(taskDetail?.deadline).utc(true);
+  const foramttedDeadline = dayjs(taskDetail?.deadline).utc(true).format('DD/MM/YYYY HH:mm')
+
+  const isOverdue = deadlineObj.isBefore(today)
+
   return (
     <>
       <div className="p-6 space-y-8">
@@ -183,8 +189,8 @@ export function TaskDetail() {
               <div className="border border-border rounded-xl p-4 bg-muted/20 flex flex-col justify-start min-h-[96px]">
                 <div className="flex flex-row justify-between items-center w-full">
                   {/* Thẻ h3 giữ nguyên mb-3 để đẩy chiều cao header chuẩn như mẫu */}
-                  <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3">
-                    deadline
+                  <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3 items-center flex gap-2">
+                    deadline {isOverdue && <span className="text-destructive font-bold text-[10px]">(Overdue)</span>}
                   </h3>
 
                   {(role === "mangaka" && taskDetail?.status != "processing") && (
@@ -327,13 +333,21 @@ export function TaskDetail() {
             {(role === "assistant") &&
               <>
                 {taskDetail?.status == "Available" &&
-                  <button
-                    onClick={handleGetTask}
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
-                    Get Task
-                  </button>
+                  <>
+                    <button
+                      // onClick={}
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                      Reject
+                    </button>
+                    <button
+                      onClick={handleGetTask}
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                      Get
+                    </button>
+                  </>
+
                 }
-                {taskDetail?.status != ("Available" || "Pending" || "Completed") &&
+                {(taskDetail?.status !== "Pending" && taskDetail?.status !== "Revising" && taskDetail?.status !== "Available") &&
                   <button
                     onClick={handleSubmitTask}
                     disabled={isLoading}
