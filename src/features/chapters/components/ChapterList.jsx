@@ -156,7 +156,7 @@ export function ChapterList({ roleName, seriesData }) {
                 <div key={chapter.chapterId} className="bg-card border border-border rounded-xl p-5 hover:shadow-lg transition-shadow">
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
-                      <h3 className="py-1 font-semibold text-xl break-words">
+                      <h3 className="py-1 font-semibold text-xl break-words text-foreground">
                         Chapter {chapter.chapterNumber}: {chapter.title}
                       </h3>
                     </div>

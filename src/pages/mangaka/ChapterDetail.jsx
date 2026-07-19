@@ -97,7 +97,7 @@ export function ChapterDetail() {
           <div className="flex justify-between items-start">
             {/* Cụm thông tin bên trái: Tiêu đề Chapter, Số thứ tự, Tóm tắt */}
             <div>
-              <h1 className="font-semibold text-xl capitalize">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h1>
+              <h1 className="font-semibold text-xl capitalize text-foreground">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h1>
               <div>
                 <p className="mt-3 text-foreground/80">{chapterDetail?.seriesTitle}</p>
               </div>

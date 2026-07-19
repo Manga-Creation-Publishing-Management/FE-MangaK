@@ -139,8 +139,8 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
 
                   <div className="p-2 px-4 space-y-4">
                     <div>
-                      <h3 className="font-semibold text-lg">{item.title}</h3>
-                      <p className="text-sm text-muted-foreground mt-1">{item.totalChapters || 0} Chapters</p>
+                      <h3 className="font-semibold text-lg text-foreground">{item.title}</h3>
+                      <p className="text-sm text-muted-foreground mt-1 text-foreground">{item.totalChapters || 0} Chapters</p>
                     </div>
                     <StatusBadge status={item?.status.toLowerCase()} />
 

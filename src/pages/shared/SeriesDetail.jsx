@@ -148,8 +148,8 @@ export function SeriesDetail() {
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     {/* Tiêu đề truyện và Tên tác giả */}
-                    <h1 className="text-2xl font-semibold">{detailData?.title}</h1>
-                    <p className="text-muted-foreground mt-1">{detailData?.mangakaName}</p>
+                    <h1 className="text-2xl font-semibold text-foreground">{detailData?.title}</h1>
+                    <p className="text-muted-foreground mt-1 text-foreground">{detailData?.mangakaName}</p>
                   </div>
                   {/* Huy hiệu hiển thị trạng thái (Processing, Pending, Approved...) */}
                   <StatusBadge status={currentStatus?.toLowerCase()} />
