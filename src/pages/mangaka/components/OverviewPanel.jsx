@@ -3,7 +3,7 @@ import { BookOpen, CircleEllipsis } from 'lucide-react';
 
 export function OverviewPanel({ isLoading, totalSeries, pendingChaptersCount }) {
   return (
-    <div className="lg:col-span-4 bg-card border border-border rounded-xl p-6 space-y-4 flex flex-col justify-between">
+    <div className="lg:col-span-4 bg-card border border-border rounded-xl p-6 space-y-4 flex flex-col justify-between h-[540px]">
       <div>
         <h3 className="text-lg font-bold text-foreground">Overview</h3>
         <p className="text-xs text-muted-foreground">General metrics and active status summary.</p>

@@ -28,24 +28,25 @@ export function ChapterList({ roleName, seriesData }) {
   const { handleNavigateToChapter } = useSeriesManagement();
 
   const [selectedChapterId, setSelectedChapterId] = useState("all");
+  const [filterStatus, setFilterStatus] = useState("all");
 
-  // Hook quản lý trạng thái hiển thị Popup đánh giá của từng chapter
   const { activeChapterId, handlePopUp } = useChapterRate();
 
-  // Hook thực hiện gửi số sao đánh giá (API submit)
   const { handleRateSubmit } = useUpdateRateChapter();
 
 
   const { } = useProgressing()
 
-  // console.log("length", chapterList.length)
   console.log(`view series info: ${seriesData?.seriesId}`);
 
   const visibleChapters = (chapterList || []).filter(chapter => {
-    const showChapter = roleName === 'reader'
+    const matchesRole = roleName === 'reader'
       ? chapter.status?.toLowerCase() === 'publishing'
       : true;
-    return showChapter;
+    const matchesStatus = filterStatus === "all"
+      ? true
+      : chapter.status?.toLowerCase() === filterStatus.toLowerCase();
+    return matchesRole && matchesStatus;
   });
 
   const chapterOptions = [
@@ -88,6 +89,31 @@ export function ChapterList({ roleName, seriesData }) {
             </div>
 
             <div className="flex items-center gap-4">
+              {roleName !== "reader" && (
+                <div className="w-44">
+                  <SearchFilterBar
+                    showSearch={false}
+                    useCardWrapper={false}
+                    filters={[
+                      {
+                        value: filterStatus,
+                        onChange: setFilterStatus,
+                        options: [
+                          { value: "all", label: "All Status" },
+                          { value: "created", label: "Created" },
+                          { value: "pending", label: "Pending" },
+                          { value: "processing", label: "Processing" },
+                          { value: "scheduled", label: "Scheduled" },
+                          { value: "publishing", label: "Publishing" },
+                          { value: "rejected", label: "Rejected" }
+                        ],
+                        className: "w-full"
+                      }
+                    ]}
+                  />
+                </div>
+              )}
+
               <div className="w-48">
                 <SearchFilterBar
                   showSearch={false}
