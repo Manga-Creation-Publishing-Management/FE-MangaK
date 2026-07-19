@@ -1,13 +1,13 @@
 import { useState } from "react";
-import CreateSeriesModal from "../../features/series/components/CreateSeriesModal";
-import { useSeriesManagement } from "../../features/series/hooks/useSeriesManagement";
-import useCreateSeries from "../../features/series/hooks/useCreateSeries";
+import CreateSeriesModal from "@/features/series/components/CreateSeriesModal";
+import { useSeriesManagement } from "@/features/series/hooks/useSeriesManagement";
+import useCreateSeries from "@/features/series/hooks/useCreateSeries";
 import { StatusBadge } from "@/shared/components/StatusBadge";
-import { ArrowBigLeft, ArrowDownLeft, ArrowLeft, ArrowRight, Plus } from "lucide-react";
-import { getPaginationRange } from "../../features/Pagination/hooks/getPaginationRange";
-import { getTotalPage } from "../../features/Pagination/hooks/getTotalPage";
-import { PaginationCustom } from "../../features/Pagination/components/PaginationCustom";
+import { Plus } from "lucide-react";
+import { getTotalPage } from "@/features/Pagination/hooks/getTotalPage";
+import { PaginationCustom } from "@/features/Pagination/components/PaginationCustom";
 import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
+
 
 export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
 
@@ -16,18 +16,13 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
     reload,
     handleReload,
     handleClick,
-    handleNavigate,
-    getCroppedImage
+    handleNavigate
   } = useSeriesManagement();
 
   const { seriesData } = useCreateSeries(null, handleReload, reload);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
-
-  //check khi load dữ liệu
-
-  console.log(seriesData);
 
   let filteredSeriesData;
 
@@ -54,12 +49,9 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
 
   const {
     currentPage,
-    postsPerPage,
     setCurrentPage,
     currentDataListDisplay,
-    totalPages,
-    isLoading,
-    setIsLoading
+    totalPages
   } = getTotalPage(1, 8, filteredSeriesData);
 
   return (
@@ -82,7 +74,6 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
                         onChange: setFilterStatus,
                         options: [
                           { value: "all", label: "All Status" },
-                          { value: "created", label: "Created" },
                           { value: "processing", label: "Processing" },
                           { value: "pending", label: "Pending" },
                           { value: "approved", label: "Approved" },
@@ -119,7 +110,6 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
                     onChange: setFilterStatus,
                     options: [
                       { value: "all", label: "All Status" },
-                      { value: "created", label: "Created" },
                       { value: "processing", label: "Processing" },
                       { value: "pending", label: "Pending" },
                       { value: "approved", label: "Approved" },
@@ -134,32 +124,26 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
             </div>
           )}
 
-          {/* Lưới (Grid) hiển thị danh sách các bộ truyện (3 cột) */}
           <div className="grid grid-cols-4 gap-6">
             {currentDataListDisplay.length === 0 ?
               (<div className="text-center py-8 text-muted-foreground">
                 <p className="text-sm text-accent">No series found.</p>
               </div>)
               : (currentDataListDisplay?.map(item => (
-                // Mỗi bộ truyện hiển thị dưới dạng một Card
                 <div key={item.seriesId} className="col-span-1 md:col-span-1 w-full relative  bg-card border 
                                 border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
 
-                  {/* Phần Ảnh Bìa (Cover) */}
                   <div className=' aspect-[3/4] w-full relative'>
                     <img className="w-full h-full object-cover" src={item.coverFile} alt="cover file" />
                   </div>
 
-                  {/* Phần Thông Tin Bộ Truyện */}
                   <div className="p-2 px-4 space-y-4">
                     <div>
                       <h3 className="font-semibold text-lg">{item.title}</h3>
                       <p className="text-sm text-muted-foreground mt-1">{item.totalChapters || 0} Chapters</p>
                     </div>
-                    {/* Trạng thái (Processing, Pending, Approved...) */}
                     <StatusBadge status={item?.status.toLowerCase()} />
 
-                    {/* Nút bấm để xem chi tiết bộ truyện */}
                     <button className="cursor-pointer w-full block text-center mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
                       onClick={() => handleNavigate(role, item.seriesId)}
                     >

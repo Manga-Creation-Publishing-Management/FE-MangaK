@@ -85,7 +85,9 @@ export function TaskManagement() {
                     options: [
                       { value: "all", label: "All Status" },
                       { value: "available", label: "Available" },
+                      { value: "rejected", label: "Rejected" },
                       { value: "pending", label: "Pending" },
+                      { value: "processing", label: "Processing" },
                       { value: "completed", label: "Completed" },
                       { value: "revising", label: "Revising" },
                       { value: "unsatisfied", label: "Unsatisfied" },
