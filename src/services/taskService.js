@@ -18,6 +18,8 @@ export const taskService = {
   async getTaskDetail(taskId) {
     return await api.get(`/MangaTask/get-tasks-details?TaskId=${taskId}`)
   },
+
+  //api dùng để claim, deny task
   async updateTaskStatus(taskId, status) {
     return await api.put('/MangaTask/update-task-status', {
       taskId: taskId,
@@ -30,22 +32,34 @@ export const taskService = {
       deadline: deadline
     });
   },
-  async approvedTask(taskId) {
-    return await api.put('/MangaTask/review-task', {
-      taskId: taskId,
-      isApproved: true,
-      feedbackContent: ""
-    });
+  //api dung de approve task
+  async approvedTask(taskId, feedbackContent) {
+    return await api.put('/MangaTask/review-task',   {
+  taskId: taskId,
+  status: "Completed",
+  feedbackContent: feedbackContent,
+  salaryPercentage: ""});
   },
-
+  //api dung de reject task
   async rejectTask(taskId, feedbackContent) {
     return await api.put('/MangaTask/review-task', 
     {
       taskId: taskId,
-      isApproved: false,
-      feedbackContent: feedbackContent
-    }
-);
+      status: "Revising",
+      feedbackContent: feedbackContent,
+      salaryPercentage: ""
+    });
+  },
+
+  //api dung de unsatisfied task
+  async unsatisfiedTask(taskId, feedbackContent, percentage) {
+    return await api.put('/MangaTask/review-task', 
+    {
+      taskId: taskId,
+      status: "Unsatisfied",
+      feedbackContent: feedbackContent,
+      salaryPercentage: percentage
+    });
   },
 
   async submitTask(formData) {

@@ -1,4 +1,4 @@
-import { Check, X } from "lucide-react";
+import { Check, X, SquareX } from "lucide-react";
 
 // Component ApprovalPanel: Bảng điều khiển dùng để gửi nhận xét (Feedback) 
 // và nút Phê duyệt / Từ chối (Approve / Reject) dành cho Tantou hoặc Editorial Board.
@@ -9,7 +9,7 @@ export function ApprovalPanel({
   onReject,
   isLoading = false,
   approveText = "Approve",
-  rejectText = "Reject",
+  rejectText = "Reject"
 }) {
   return (
     // Vỏ ngoài của bảng điều khiển, cách điệu với viền trên và shadow khi hover
@@ -78,6 +78,8 @@ export function ApprovalPanel({
           <X size={16} strokeWidth={2.5} />
           {rejectText}
         </button>
+
+
       </div>
     </div>
   );

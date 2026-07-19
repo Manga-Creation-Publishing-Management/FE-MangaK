@@ -65,6 +65,33 @@ export function useTaskDetail(taskId, role) {
     }
   };
 
+
+  const handleDenyTask = async () => {
+    if (!taskId) {
+      showAlert("Task ID does not exist", "error");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await taskService.updateTaskStatus(taskId, "Rejected");
+      console.log("Update status thành công:", response);
+
+      // Cập nhật state taskDetail với status mới
+      setTaskDetail({
+        ...taskDetail,
+        status: "Rejected"
+      });
+
+      showAlert("You have denied this task!");
+    } catch (error) {
+      console.error("Lỗi khi cập nhật status:", error);
+      showAlert("Update failed: " + error.message, "error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleApprovedTask = async () => {
     if (!taskId) {
       showAlert("Task ID does not exist");
@@ -104,6 +131,32 @@ export function useTaskDetail(taskId, role) {
       // Cập nhật state taskDetail với status mới
 
       showAlert("Reject Task!")
+      handleReload();
+
+
+    } catch (error) {
+      console.error("Lỗi khi cập nhật status:", error);
+      showAlert("Update failed: " + error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+  const handleUnsatisfiedTask = async (customFeedback, salaryPercentage) => {
+    if (!taskId) {
+      showAlert("Task ID does not exist");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await taskService.unsatisfiedTask(taskId, customFeedback, salaryPercentage);
+      console.log("Update status thành công:", response);
+
+      // Cập nhật state taskDetail với status mới
+
+      showAlert("Closed Task!")
       handleReload();
 
 
@@ -159,6 +212,8 @@ export function useTaskDetail(taskId, role) {
     setFeedback,
     handleSubmitTask,
     handleApprovedTask,
-    handleRejectTask
+    handleRejectTask,
+    handleDenyTask,
+    handleUnsatisfiedTask
   }
 }

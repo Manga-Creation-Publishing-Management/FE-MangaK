@@ -1,4 +1,7 @@
-import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, SquarePen, UploadCloud, ChevronDown } from "lucide-react";
+import {
+  ArrowLeft, Calendar, DollarSign, Download, FileText,
+  JapaneseYen, SquarePen, UploadCloud, ChevronDown, SquareX
+} from "lucide-react";
 import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { useTaskDetail } from "../../features/tasks/hooks/useTaskDetail";
@@ -10,6 +13,7 @@ import { AnnotationModal } from "../shared/AnnotationModal";
 import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
 import { PreviewModal } from "../shared/PreviewModal";
 import { useState, useRef } from "react";
+import { UnsatisfiedModal } from "../shared/UnsatisfiedModal";
 import { FeedbackViewer } from "../shared/FeedbackViewer";
 import { useToast } from "@/shared/hooks/useToast";
 import { useUpdateTaskDeadline } from "../../features/tasks/hooks/useUpdateTaskDeadline";
@@ -29,12 +33,14 @@ export function TaskDetail() {
     storyInputRef,
     handleStoryChange,
     handleGetTask,
+    handleDenyTask,
     isLoading,
     feedback,
     setFeedback,
     handleSubmitTask,
     handleRejectTask,
-    handleApprovedTask
+    handleApprovedTask,
+    handleUnsatisfiedTask
   } = useTaskDetail(taskId, role);
 
   const {
@@ -61,6 +67,7 @@ export function TaskDetail() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isUnsatisfiedOpen, setIsUnsatisfiedOpen] = useState(false);
 
   const feedbackViewerRef = useRef(null);
 
@@ -259,7 +266,7 @@ export function TaskDetail() {
 
 
             <div className="space-y-3 w-full">
-              {(role === "assistant" && taskDetail?.status != "Available") &&
+              {(role === "assistant" && (taskDetail?.status === "Processing" || taskDetail?.status === "Revising")) &&
                 <>
                   <h3 className="font-medium text-sm text-muted-foreground">Submit Your Work</h3>
                   <div
@@ -335,19 +342,19 @@ export function TaskDetail() {
                 {taskDetail?.status == "Available" &&
                   <>
                     <button
-                      // onClick={}
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
-                      Reject
+                      onClick={handleDenyTask}
+                      className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                      Deny task
                     </button>
                     <button
                       onClick={handleGetTask}
                       className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
-                      Get
+                      Claim task
                     </button>
                   </>
 
                 }
-                {(taskDetail?.status !== "Pending" && taskDetail?.status !== "Revising" && taskDetail?.status !== "Available") &&
+                {(taskDetail?.status === "Processing" || taskDetail?.status === "Revising") &&
                   <button
                     onClick={handleSubmitTask}
                     disabled={isLoading}
@@ -390,6 +397,45 @@ export function TaskDetail() {
                 approveText="Approve Task"
                 rejectText="Reject Task with Feedback"
               />
+
+              {/* Nút không hài lòng (Unsatisfied) */}
+              {(taskDetail?.status === "Pending" && taskDetail?.rejectCount >= 2) && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!feedback || !feedback.trim()) {
+                        showAlert("Please provide feedback in the panel above before closing the task.", "warning");
+                        return;
+                      }
+                      setIsUnsatisfiedOpen(true);
+                    }}
+                    disabled={isLoading} // Vô hiệu hóa khi đang load
+                    className="
+              flex items-center gap-2
+              px-5 py-2.5 rounded-lg
+              bg-destructive text-destructive-foreground font-semibold
+              hover:opacity-90 active:scale-[0.98]
+              transition-all duration-150
+              disabled:opacity-50 disabled:cursor-not-allowed
+              cursor-pointer
+            "
+                  >
+                    <SquareX size={16} strokeWidth={2.5} />
+                    Close Task
+                  </button>
+
+                  <UnsatisfiedModal
+                    isOpen={isUnsatisfiedOpen}
+                    onClose={() => setIsUnsatisfiedOpen(false)}
+                    onSubmit={async (pct) => {
+                      await handleUnsatisfiedTask(feedback, pct);
+                      setIsUnsatisfiedOpen(false);
+                    }}
+                    isLoading={isLoading}
+                  />
+                </>
+              )}
 
               <AnnotationModal
                 isOpen={isAnnotationOpen}
