@@ -291,9 +291,7 @@ export function SeriesDetail() {
           </div>
         )}
 
-        {/* Component hiển thị Danh sách các Chapter thuộc bộ truyện này */}
-        <ChapterList roleName={roleFromState} seriesData={detailData} />
-        {console.log("Checkrolehientai:", roleFromState)}
+
 
         {/* feedback box for roles tantou and editorial, only when status is processing or pending */}
         {(isTantou || isEditorial) &&

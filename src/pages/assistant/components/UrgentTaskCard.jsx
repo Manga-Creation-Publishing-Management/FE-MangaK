@@ -2,7 +2,7 @@ import { CalendarClock, JapaneseYen, Eye, CheckCircle } from "lucide-react";
 import { StatusBadge } from "@/shared/components/StatusBadge";
 import dayjs from "dayjs";
 
-export function UrgentTaskCard({ urgentTask, isLoading, onNavigateToTask }) {
+export function UrgentTaskCard({ urgentTasks = [], isLoading, onNavigateToTask }) {
   return (
     <div className="bg-card border border-border rounded-xl p-6 h-full flex flex-col justify-between">
       <div>
@@ -15,7 +15,7 @@ export function UrgentTaskCard({ urgentTask, isLoading, onNavigateToTask }) {
           <div className="py-8 text-center text-muted-foreground">
             <p className="text-sm">Loading...</p>
           </div>
-        ) : !urgentTask ? (
+        ) : urgentTasks.length === 0 ? (
           <div className="py-8 text-center text-muted-foreground flex flex-col items-center justify-center h-full min-h-[180px]">
             <CheckCircle size={40} className="text-success mb-3 opacity-80" />
             <p className="text-sm font-medium">All caught up!</p>
@@ -23,40 +23,44 @@ export function UrgentTaskCard({ urgentTask, isLoading, onNavigateToTask }) {
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="p-4 bg-amber-500/5 border border-amber-500/20 rounded-xl space-y-3">
-              <div>
-                <p className="font-semibold text-card-foreground text-lg line-clamp-2">
-                  Chapter {urgentTask.chapterNumber} - {urgentTask.seriesTitle}
-                </p>
-                <p className="text-xs text-muted-foreground mt-0.5">{urgentTask.seriesTitle}</p>
-              </div>
+            {urgentTasks.map((task) => (
+              <div
+                key={task.id}
+                className="p-4 bg-amber-500/5 border border-amber-500/20 rounded-xl space-y-3"
+              >
+                <div>
+                  <p className="font-semibold text-card-foreground text-base line-clamp-2">
+                    Chapter {task.chapterNumber} - {task.seriesTitle}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{task.seriesTitle}</p>
+                </div>
 
-              <div className="flex items-center justify-between">
-                <span className="text-xl font-bold text-success flex items-center gap-0.5">
-                  <JapaneseYen size={20} strokeWidth={2.5} className="shrink-0 translate-y-[1px]" />
-                  <span>{urgentTask.incomeAmount.toLocaleString('en-US')}</span>
-                </span>
-                <StatusBadge status={urgentTask.status.toLowerCase()} />
-              </div>
-            </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-bold text-success flex items-center gap-0.5">
+                    <JapaneseYen size={18} strokeWidth={2.5} className="shrink-0 translate-y-[1px]" />
+                    <span>{task.incomeAmount.toLocaleString('en-US')}</span>
+                  </span>
+                  <StatusBadge status={task.status.toLowerCase()} />
+                </div>
 
-            <div className="flex items-center gap-2 text-sm text-destructive font-semibold">
-              <CalendarClock size={16} />
-              <span>Deadline: {dayjs(urgentTask.deadline).format("DD/MM/YYYY HH:mm")}</span>
-            </div>
+                <div className="flex items-center justify-between gap-2 pt-2 border-t border-amber-500/10">
+                  <div className="flex items-center gap-1.5 text-xs text-destructive font-semibold">
+                    <CalendarClock size={14} />
+                    <span>Deadline: {dayjs(task.deadline).format("DD/MM/YYYY HH:mm")}</span>
+                  </div>
+                  <button
+                    onClick={() => onNavigateToTask(task.id)}
+                    className="cursor-pointer flex items-center gap-1 px-2.5 py-1.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-xs font-medium"
+                  >
+                    <Eye size={12} />
+                    <span>Details</span>
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
-
-      {!isLoading && urgentTask && (
-        <button
-          onClick={() => onNavigateToTask(urgentTask.id)}
-          className="mt-6 w-full cursor-pointer flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
-        >
-          <Eye size={16} />
-          Go to Details
-        </button>
-      )}
     </div>
   );
 }

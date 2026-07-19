@@ -26,11 +26,15 @@ export function ReaderLoginPage() {
             localStorage.setItem("accessToken", response.data?.accessToken);
             localStorage.setItem("refreshToken", response.data?.refreshToken || "");
 
+            // Decode Google JWT để lấy avatar
+            const payload = JSON.parse(atob(idToken.split('.')[1]));
+
             const user = {
                 id: response.data?.userId,
                 role: response.data?.role || "reader",
                 email: response.data?.email,
-                name: response.data?.name || `${response.data?.firstName || ''} ${response.data?.lastName || ''}`.trim()
+                name: response.data?.name || `${response.data?.firstName || ''} ${response.data?.lastName || ''}`.trim(),
+                avatarUrl: payload.picture || ""
             };
             localStorage.setItem("user", JSON.stringify(user));
 
