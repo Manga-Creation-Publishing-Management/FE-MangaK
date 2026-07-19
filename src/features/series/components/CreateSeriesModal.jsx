@@ -136,7 +136,9 @@ export default function CreateSeriesModal({ onClose, onReload }) {
               >
                 <div className="text-primary font-medium">
                   Selected: {coverFile.name}
-                </div> </div>
+                </div>
+                <div className="text-gray-500 text-xs italic">Click here to select a different cover image</div>
+              </div>
             ) : (
               /* Khi CHƯA CHỌN ảnh nào hết -> Hiện khung nét đứt mặc định */
               <div

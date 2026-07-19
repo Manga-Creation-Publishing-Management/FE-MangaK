@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X, Upload, FileImage } from 'lucide-react';
 import { useCreateTask } from '../hooks/useCreateTask';
 import { CustomSelect } from '@/shared/components/CustomSelect';
+import { useToast } from '../../../shared/hooks/useToast';
 
 
 export default function CreateTaskModal({
@@ -14,12 +15,14 @@ export default function CreateTaskModal({
   onSubmitCreateTask,
   onReload,
   selectedChapterId,
-  onChapterChange,  
-  maxPagesAllowed,   
+  onChapterChange,
+  maxPagesAllowed,
   isLoading
 }) {
   const [pageRangeError, setPageRangeError] = useState("");
   const [localAssignedToId, setLocalAssignedToId] = useState("");
+
+  const { showAlert } = useToast();
 
   // 2. Hàm kiểm tra định dạng khi người dùng click ra ngoài (Blur)
   const handlePageRangeBlur = (e) => {
@@ -42,6 +45,9 @@ export default function CreateTaskModal({
       setPageRangeError("");
     }
   };
+  const selectedChapter = (chapters || []).find(
+    (item) => item.chapterId === selectedChapterId
+  );
   return (
     <>
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -60,7 +66,7 @@ export default function CreateTaskModal({
           <form className="p-6 space-y-6" onSubmit={onSubmitCreateTask}>
 
             <div className="mb-4">
-              <div className='mb-2 text-xl'>
+              <div className='mb-2 text-l'>
                 <label htmlFor="seriesName">Series</label>
               </div>
               <CustomSelect
@@ -77,7 +83,7 @@ export default function CreateTaskModal({
               />
             </div>
             <div className="mb-4">
-              <div className='mb-2 text-xl'>
+              <div className='mb-2 text-l'>
                 <label htmlFor="seriesName">Chapter Number</label>
               </div>
               <CustomSelect
@@ -112,7 +118,7 @@ export default function CreateTaskModal({
               />
             </div>
             <div>
-              <div className='mb-2 text-xl'>
+              <div className='mb-2 text-l'>
                 <label htmlFor="">Description</label>
               </div>
               <textarea
@@ -122,14 +128,18 @@ export default function CreateTaskModal({
                 // placeholder="..."
                 required
                 rows={3}
+                onInvalid={(e) => {
+                  e.preventDefault(); // Chặn popup mặc định của trình duyệt
+                  showAlert(`Description cannot be empty`);
+                }}
               />
             </div>
 
             <div className="grid grid-cols-3 gap-4 mb-4">
               {/* Bên trái: Page Range */}
-              
+
               <div>
-                <div className='mb-2 text-xl'>
+                <div className='mb-2 text-l'>
                   <label htmlFor="">From Page</label>
                 </div>
                 <input
@@ -144,8 +154,13 @@ export default function CreateTaskModal({
                 />
               </div>
               <div>
-                <div className='mb-2 text-xl'>
+                <div className='mb-2 text-l flex items-center gap-2'>
                   <label htmlFor="">To Page</label>
+                  {selectedChapter && (
+                    <span className="text-xs text-gray-400">
+                      (Max: {selectedChapter?.totalPage} pages)
+                    </span>
+                  )}
                 </div>
                 <input
                   min={1}
@@ -156,10 +171,18 @@ export default function CreateTaskModal({
                   className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Enter To Page"
                   required
+                  onInvalid={(e) => {
+                    e.preventDefault(); // Chặn popup mặc định của trình duyệt
+                    // Kiểm tra xem lỗi là do vượt quá max hay do chưa nhập
+                    if (e.target.validity.rangeOverflow) {
+                      showAlert(`Value must be less than or equal to ${maxPagesAllowed}`);
+                    }
+                  }}
                 />
+
               </div>
               <div>
-                <div className='mb-2 text-xl'>
+                <div className='mb-2 text-l'>
                   <label htmlFor="income">Income</label>
                 </div>
                 <input
@@ -173,31 +196,9 @@ export default function CreateTaskModal({
                 />
               </div>
 
-
-
-              {/* <input
-                  id="page_range"
-                  name="page_range"
-                  className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                  placeholder="e.g. 1-20"
-                  required
-                  type="text"
-                  onBlur={handlePageRangeBlur}
-                  onChange={() => setPageRangeError("")}
-                /> */}
-              {/* 3. Hiển thị dòng chữ báo lỗi màu đỏ ngay dưới ô nhập nếu có lỗi */}
-              {/* {pageRangeError && (
-                  <span className="text-red-500 text-sm mt-1 block">
-                    {pageRangeError}
-                  </span>
-                )} */}
-
-
-              {/* Bên phải: Income */}
-
             </div>
             <div className="mb-4">
-              <div className='mb-2 text-xl'>
+              <div className='mb-2 text-l'>
                 <label htmlFor="deadline">Deadline</label>
               </div>
               <input
