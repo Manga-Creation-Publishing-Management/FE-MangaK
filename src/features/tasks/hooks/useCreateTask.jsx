@@ -23,7 +23,7 @@ export function useCreateTask() {
     setReload(!reload);
   }
 
-  
+
 
   const handleShowCreateTaskModal = () => {
     setShowCreateTaskModal(!showCreateTaskModal);
@@ -47,18 +47,8 @@ export function useCreateTask() {
   useEffect(() => {
     const fetchApi = async () => {
 
-      let resultApproved = [];
       let resultPublishing = [];
       let resultScheduled = [];
-
-      // Gọi API Approved bằng try-catch riêng biệt
-      try {
-        const seriesApproved = await seriesService.getSeriesByStatus("Approved");
-        resultApproved = seriesApproved?.data ? seriesApproved.data : [];
-      } catch (error) {
-        console.warn("Approved series not found or an error occurred:", error);
-      }
-
       // Gọi API Publishing bằng try-catch riêng biệt
       try {
         const seriesPublishing = await seriesService.getSeriesByStatus("Publishing");
@@ -77,7 +67,7 @@ export function useCreateTask() {
 
 
       // Gộp 2 mảng lại thành một mảng duy nhất và cập nhật vào State
-      setShowSeriesApproval([...resultApproved, ...resultPublishing, ...resultScheduled]);
+      setShowSeriesApproval([...resultPublishing, ...resultScheduled]);
     }
     fetchApi();
   }, [])
@@ -87,7 +77,7 @@ export function useCreateTask() {
       const fetchChapters = async () => {
         try {
           const response = await chaptersService.getAllSeriesBySeriesId(selectedSeriesId);
-          setChapters(response?.data.filter(item => (item => item.status === "Created" || item.status === "Processing")) || []);
+          setChapters(response?.data?.filter(item => (item?.status?.toLowerCase() === "created" || item?.status?.toLowerCase() === "processing")) || []);
         } catch (error) {
           console.error("Lỗi khi load chapters:", error);
           setChapters([]);
@@ -160,7 +150,7 @@ export function useCreateTask() {
       console.error("Chi tiết lỗi:", error);
       showAlert("Create task failed, " + error.message, "error");
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   }
 
@@ -175,12 +165,12 @@ export function useCreateTask() {
     chapters,
     selectedSeriesId,
     setSelectedSeriesId,
-    selectedChapterId,    
-    setSelectedChapterId, 
-    maxPagesAllowed,     
+    selectedChapterId,
+    setSelectedChapterId,
+    maxPagesAllowed,
     handleSubmitCreateTask,
     handleReload,
-    isLoading,            
+    isLoading,
     reload
   }
 }

@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 import dayjs from 'dayjs';
 
 
-import { ArrowLeft, Download, Star, ChevronDown } from "lucide-react";
+import { ArrowLeft, Download, Star, ChevronDown, FileText } from "lucide-react";
 import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
 import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter";
@@ -80,29 +80,33 @@ export function ChapterDetail() {
 
         {/* Khung (Card) chứa thông tin chính của Chapter */}
         <div className="bg-card border border-border rounded-xl p-8 space-y-4">
-          <div className="w-full bg-gray-200 rounded-full h-6 overflow-hidden">
-            <div
-              className={`h-full rounded-full transition-all duration-300 ease-out flex items-center justify-start ps-2 text-xs font-bold text-white ${progress === 100 ? 'bg-green-500' : 'bg-blue-600'
-                }`}
-              style={{ width: `${progress}%` }}
-            >
-              {/* Chỉ hiển thị số khi tiến độ lớn hơn 10% để tránh chữ bị tràn ra ngoài khi thanh quá ngắn */}
-              {`${progress}%`}
+          {currentRole === "mangaka" && (
+            <div className="w-full bg-gray-200 rounded-full h-6 overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all duration-300 ease-out flex items-center justify-start ps-2 text-xs font-bold text-white ${progress === 100 ? 'bg-green-500' : 'bg-blue-600'
+                  }`}
+                style={{ width: `${progress}%` }}
+              >
+                {/* Chỉ hiển thị số khi tiến độ lớn hơn 10% để tránh chữ bị tràn ra ngoài khi thanh quá ngắn */}
+                {`${progress}%`}
+              </div>
             </div>
-          </div>
+          )}
+
 
           <div className="flex justify-between items-start">
             {/* Cụm thông tin bên trái: Tiêu đề Chapter, Số thứ tự, Tóm tắt */}
             <div>
               <h1 className="font-semibold text-xl capitalize">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h1>
               <div>
-                <p className="mt-1 text-foreground/80">{chapterDetail?.seriesTitle}</p>
+                <p className="mt-3 text-foreground/80">{chapterDetail?.seriesTitle}</p>
               </div>
             </div>
 
             {/* Cụm thông tin bên phải: Badge trạng thái (Status) và Ngày tải lên */}
             <div className="flex flex-col items-end space-y-2">
               <StatusBadge status={chapterDetail?.status.toLowerCase()} />
+              <div className="flex items-center gap-1 text-sm text-muted-foreground"><FileText size={16} /> Total pages: <span className="text-foreground font-medium">{chapterDetail?.totalPage}</span></div>
             </div>
 
           </div>
@@ -122,9 +126,20 @@ export function ChapterDetail() {
             </div>
             <div className="md:col-span-4 space-y-2 ">
               <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
-                <h3 className="font-normal text-sm text-muted-foreground  tracking-wider">Deadline</h3>
+                <h3 className="font-normal text-sm text-muted-foreground gap-2 tracking-wider"><span>Deadline</span>
+                  {chapterDetail?.status != ("Publishing" || "Scheduled") ? (
+                    <>{isOverdue && <span className="text-destructive font-bold">(Overdue)</span>}</>
+                  ) : (
+                    <></>
+                  )}
+
+                </h3>
                 {chapterDetail?.deadline ? (
-                  <div className="text-sm my-2 font-semibold capitalize">{foramttedDeadline}</div>
+                  <>
+                    <div className="text-xs my-2 font-semibold capitalize">{foramttedDeadline}</div>
+
+                  </>
+
                 ) : (
                   <div className="text-sm ms-0.5"> — — — —</div>
                 )}
@@ -207,29 +222,47 @@ export function ChapterDetail() {
               progress === 100 ? (
                 <>
                   <h3 className="font-medium text-sm text-muted-foreground">Submit Your Work</h3>
-                  <div
-                    onClick={() => storyInputRef.current.click()}
-                    name="nameFile"
-                    className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center h-[160px] hover:border-primary transition-colors cursor-pointer"
-                  >
-                    {storyFile ? (
-                      <div className="text-primary font-medium">
-                        Selected: {storyFile.name}
+                  {chapterDetail?.chapterFileUrl ? (
+                    <>
+                      <p className="text-xs text-muted-foreground">Download To Review</p>
+                      <div className="flex flex-col gap-2 w-full items-center">
+                        <a
+                          href={chapterDetail?.chapterFileUrl}
+                          download
+                          className="inline-flex items-center justify-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-8 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm w-[240px]"
+                        >
+                          <Download size={16} />
+                          Download File Here
+                        </a>
                       </div>
-                    ) : (
-                      <>
-                        <p className="text-muted-foreground">Click to upload file</p>
-                        <p className="text-sm text-muted-foreground mt-1">PNG, JPG up to 10MB</p>
-                      </>
-                    )}
-                    <input
-                      type="file"
-                      accept=".pdf,.zip"
-                      className="hidden"
-                      ref={storyInputRef}
-                      onChange={handleStoryChange}
-                    />
-                  </div>
+                    </>
+                  ) : (
+                    <div
+                      onClick={() => storyInputRef.current.click()}
+                      name="nameFile"
+                      className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center h-[160px] hover:border-primary transition-colors cursor-pointer"
+                    >
+                      {storyFile ? (
+                        <div className="text-primary font-medium">
+                          Selected: {storyFile.name}
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-muted-foreground">Click to upload file</p>
+                          <p className="text-sm text-muted-foreground mt-1">PNG, JPG up to 10MB</p>
+                        </>
+                      )}
+                      <input
+                        type="file"
+                        accept=".pdf,.zip"
+                        className="hidden"
+                        ref={storyInputRef}
+                        onChange={handleStoryChange}
+                      />
+                    </div>
+                  )
+                  }
+
                 </>
               ) : (
                 <div className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center h-[160px] hover:border-primary transition-colors cursor-pointer">
@@ -260,9 +293,7 @@ export function ChapterDetail() {
                     {isLoading ? "Submitting..." : "Submit Chapter"}
                   </button>
                 ) : (
-                  <button className="bg-secondary text-secondary-foreground  font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:bg-gray-500 disabled:cursor-not-allowed readonly " >
-                    Overdue
-                  </button>
+                  <></>
                 )
                 }
 
