@@ -20,7 +20,7 @@ export function AvatarSection({
   };
 
   return (
-    <div className="bg-card border border-border rounded-xl p-8 space-y-6">
+    <div>
       {isLoading ? (
         <div className="flex items-center justify-center p-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -32,10 +32,10 @@ export function AvatarSection({
               <img
                 src={avatarPreview || avatarUrl}
                 alt="Avatar"
-                className="w-24 h-24 rounded-full object-cover"
+                className="w-24 h-24 rounded-full object-cover ring-2 ring-primary/40 p-0.5 border border-primary/50"
               />
             ) : (
-              <div className="w-24 h-24 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-primary-foreground text-2xl">
+              <div className="w-24 h-24 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-primary-foreground text-2xl font-bold ring-2 ring-primary/40 p-0.5 border border-primary/50">
                 {watchedFirstName?.charAt(0) || ""}
               </div>
             )}
@@ -50,16 +50,16 @@ export function AvatarSection({
 
             <button
               onClick={triggerFileInput}
-              className="absolute bottom-0 right-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center hover:opacity-90 transition-opacity"
+              className="absolute bottom-0 right-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer shadow-md"
             >
               <Camera size={16} />
             </button>
           </div>
 
           <div className="flex-1">
-            <h2>{`${watchedFirstName || ""} ${watchedLastName || ""}`}</h2>
+            <h2 className="text-xl font-semibold text-card-foreground">{`${watchedFirstName || ""} ${watchedLastName || ""}`}</h2>
             <p className="text-muted-foreground mt-1">{roleLabels[role]}</p>
-            <span className="inline-block mt-2 px-3 py-1 bg-success/10 text-success border border-success/30 rounded-full text-sm">
+            <span className="inline-block mt-2 px-3 py-1 bg-success/10 text-success border border-success/30 rounded-full text-sm font-medium">
               Active
             </span>
           </div>

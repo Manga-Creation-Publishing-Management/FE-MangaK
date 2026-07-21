@@ -78,7 +78,7 @@ export function PublishingSchedule() {
         <div className="flex justify-between items-center mb-5">
           <div className="flex items-center gap-2">
             <Calendar size={20} className="text-primary" />
-            <h2 className="text-lg font-semibold">Current Schedules</h2>
+            <h2 className="text-lg font-semibold text-card-foreground">Current Schedules</h2>
           </div>
 
           <button

@@ -3,8 +3,7 @@ import { StatusBadge } from "@/shared/components/StatusBadge";
 import { useState, useRef } from 'react';
 import dayjs from 'dayjs';
 
-
-import { ArrowLeft, Download, Star, ChevronDown, FileText } from "lucide-react";
+import { Download, Star, ChevronDown, FileText } from "lucide-react";
 import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
 import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter";
@@ -12,9 +11,9 @@ import { useProgressing } from "../../features/chapters/hooks/useProgressing";
 import { ApprovalPanel } from "../shared/ApprovalPanel";
 import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
 import { AnnotationModal } from "../shared/AnnotationModal";
-import { TextFeedbackModal } from "../shared/TextFeedbackModal";
 import { FeedbackViewer } from "../shared/FeedbackViewer";
 import { useToast } from "@/shared/hooks/useToast";
+import { Breadcrumb } from "@/shared/components/Breadcrumb";
 
 // (Worker setup moved to AnnotationModal)
 
@@ -72,32 +71,36 @@ export function ChapterDetail() {
     setConfirmModalOpen(true);
   }
 
+  const rolePrefix = currentRole?.toLowerCase() || "mangaka";
+  const customBreadcrumb = [
+    { label: rolePrefix.charAt(0).toUpperCase() + rolePrefix.slice(1), path: `/${rolePrefix}` },
+    { label: "Series", path: `/${rolePrefix}/series` },
+    { label: chapterDetail?.seriesTitle || "Series Detail", path: seriesId ? `/${rolePrefix}/series/${seriesId}` : undefined },
+    { label: chapterDetail?.chapterNumber ? `Chapter ${chapterDetail.chapterNumber}${chapterDetail.title ? `: ${chapterDetail.title}` : ''}` : "Chapter Detail" }
+  ];
+
   return (
     <>
-      {/* Vùng chứa toàn bộ nội dung của trang chi tiết */}
-      <div className="p-6 space-y-8">
+      <div className="p-6 space-y-6">
+        <Breadcrumb items={customBreadcrumb} />
 
-
-        {/* Khung (Card) chứa thông tin chính của Chapter */}
-        <div className="bg-card border border-border rounded-xl p-8 space-y-4">
-          {currentRole === "mangaka" && (
-            <div className="w-full bg-gray-200 rounded-full h-6 overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all duration-300 ease-out flex items-center justify-start ps-2 text-xs font-bold text-white ${progress === 100 ? 'bg-green-500' : 'bg-blue-600'
-                  }`}
-                style={{ width: `${progress}%` }}
-              >
-                {/* Chỉ hiển thị số khi tiến độ lớn hơn 10% để tránh chữ bị tràn ra ngoài khi thanh quá ngắn */}
-                {`${progress}%`}
-              </div>
+      {/* Khung (Card) chứa thông tin chính của Chapter */}
+      <div className="bg-card border border-border rounded-xl p-8 space-y-4">
+          <div className="w-full bg-muted rounded-full h-6 overflow-hidden border border-border">
+            <div
+              className={`h-full rounded-full transition-all duration-300 ease-out flex items-center justify-start ps-2 text-xs font-bold text-white ${progress === 100 ? 'bg-success' : 'bg-info'
+                }`}
+              style={{ width: `${progress}%` }}
+            >
+              {/* Chỉ hiển thị số khi tiến độ lớn hơn 10% để tránh chữ bị tràn ra ngoài khi thanh quá ngắn */}
+              {`${progress}%`}
             </div>
-          )}
-
+          </div>
 
           <div className="flex justify-between items-start">
             {/* Cụm thông tin bên trái: Tiêu đề Chapter, Số thứ tự, Tóm tắt */}
             <div>
-              <h1 className="font-semibold text-xl capitalize">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h1>
+              <h1 className="font-semibold text-xl capitalize text-card-foreground">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h1>
               <div>
                 <p className="mt-3 text-foreground/80">{chapterDetail?.seriesTitle}</p>
               </div>
@@ -111,7 +114,7 @@ export function ChapterDetail() {
 
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 border-b border-gray-200 pb-6">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 border-b border-border pb-6">
 
             <div className="md:col-span-4 space-y-2">
               <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
@@ -288,12 +291,14 @@ export function ChapterDetail() {
                   <button
                     onClick={handleSubmitChapter}
                     disabled={!storyFile || isLoading}
-                    className="bg-secondary cursor-pointer text-secondary-foreground hover:bg-secondary/80 font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:bg-gray-500 disabled:cursor-not-allowed">
+                    className="bg-secondary cursor-pointer text-secondary-foreground hover:bg-secondary/80 font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:opacity-50 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed">
 
                     {isLoading ? "Submitting..." : "Submit Chapter"}
                   </button>
                 ) : (
-                  <></>
+                  <button className="bg-secondary text-secondary-foreground  font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:opacity-50 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed readonly " >
+                    Overdue
+                  </button>
                 )
                 }
 
