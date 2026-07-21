@@ -29,29 +29,34 @@ export function SeriesReview() {
   });
 
   return (
-    <div className="p-6 space-y-8 bg-background min-h-full">
-      <SearchFilterBar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        searchPlaceholder="Search by title or author…"
-        filters={[
-          {
-            value: filterStatus,
-            onChange: setFilterStatus,
-            options: [
-              { value: "all", label: "All Status" },
-              { value: "Processing", label: "Processing" },
-              { value: "Rejected", label: "Rejected" },
-              { value: "Pending", label: "Pending" },
-              { value: "Scheduled", label: "Scheduled" },
-              { value: "Approved", label: "Approved" },
-              { value: "Publishing", label: "Publishing" },
-            ]
-          }
-        ]}
+    <div className="p-6 space-y-6 bg-background min-h-full">
+      <SeriesManagement
+        role="tantou"
+        seriesFiltered={filtered}
+        headerControls={
+          <SearchFilterBar
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            searchPlaceholder="Search by title or author…"
+            useCardWrapper={false}
+            filters={[
+              {
+                value: filterStatus,
+                onChange: setFilterStatus,
+                options: [
+                  { value: "all", label: "All Status" },
+                  { value: "Processing", label: "Processing" },
+                  { value: "Rejected", label: "Rejected" },
+                  { value: "Pending", label: "Pending" },
+                  { value: "Scheduled", label: "Scheduled" },
+                  { value: "Approved", label: "Approved" },
+                  { value: "Publishing", label: "Publishing" },
+                ]
+              }
+            ]}
+          />
+        }
       />
-
-      <SeriesManagement role="tantou" seriesFiltered={filtered} />
     </div>
   );
 }

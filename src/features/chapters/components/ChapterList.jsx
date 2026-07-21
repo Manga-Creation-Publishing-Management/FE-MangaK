@@ -85,7 +85,7 @@ export function ChapterList({ roleName, seriesData }) {
           {/* Header của phần danh sách Chapter */}
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h2 className="text-2xl ps-2 font-semibold ">Chapters ({chapterList?.length})</h2>
+              <h2 className="text-2xl ps-2 font-semibold text-card-foreground">Chapters ({chapterList?.length})</h2>
             </div>
 
             <div className="flex items-center gap-4">
@@ -156,7 +156,7 @@ export function ChapterList({ roleName, seriesData }) {
                 <div key={chapter.chapterId} className="bg-card border border-border rounded-xl p-5 hover:shadow-lg transition-shadow">
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
-                      <h3 className="py-1 font-semibold text-xl break-words">
+                      <h3 className="py-1 font-semibold text-xl break-words text-card-foreground">
                         Chapter {chapter.chapterNumber}: {chapter.title}
                       </h3>
                     </div>

@@ -35,7 +35,7 @@ export function RoleDistributionTable({ roleCounts, isLoading }) {
               Object.entries(roleLabels).map(([roleKey, label]) => (
                 <tr key={roleKey} className="hover:bg-muted/20 transition-colors">
                   <td className="px-6 py-4 flex items-center gap-3">
-                    <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${roleDotColors[roleKey] || 'bg-gray-500'}`} />
+                    <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${roleDotColors[roleKey] || 'bg-muted-foreground'}`} />
                     <span className="font-medium text-sm">{label}</span>
                   </td>
                   <td className="px-6 py-4 text-right font-semibold font-mono text-sm">

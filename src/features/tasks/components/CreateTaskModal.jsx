@@ -53,10 +53,10 @@ export default function CreateTaskModal({
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
         <div className="bg-card rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
           <div className="sticky top-0 bg-card border-b border-border p-6 flex justify-between items-center">
-            <div className="text-2xl font-semibold">Create New Task</div>
+            <div className="text-2xl font-semibold text-card-foreground">Create New Task</div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-muted rounded-lg transition-colors cursor-pointer"
+              className="p-2 hover:bg-muted text-foreground rounded-lg transition-colors cursor-pointer"
 
             >
               <X />
@@ -217,7 +217,7 @@ export default function CreateTaskModal({
               <button
                 onClick={onClose}
                 type="button"
-                className=" cursor-pointer px-6 py-2 rounded-lg border border-border hover:bg-muted transition-colors"
+                className="cursor-pointer px-6 py-2 rounded-lg border border-border text-foreground hover:bg-muted transition-colors"
               >
                 Cancel
               </button>

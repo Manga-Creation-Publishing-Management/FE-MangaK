@@ -13,6 +13,7 @@ import { useState, useRef } from "react";
 import { FeedbackViewer } from "../shared/FeedbackViewer";
 import { useToast } from "@/shared/hooks/useToast";
 import { useUpdateTaskDeadline } from "../../features/tasks/hooks/useUpdateTaskDeadline";
+import { Breadcrumb } from "@/shared/components/Breadcrumb";
 dayjs.extend(utc);
 export function TaskDetail() {
 
@@ -78,15 +79,27 @@ export function TaskDetail() {
 
   const isOverdue = deadlineObj.isBefore(today)
 
+  const rolePrefix = role?.toLowerCase() || "mangaka";
+  const taskLabel = taskDetail?.chapterNumber
+    ? `Chapter ${taskDetail.chapterNumber}${taskDetail.chapterTitle ? `: ${taskDetail.chapterTitle}` : ''}`
+    : "Task Detail";
+
+  const customBreadcrumb = [
+    { label: rolePrefix.charAt(0).toUpperCase() + rolePrefix.slice(1), path: `/${rolePrefix}` },
+    { label: rolePrefix === 'assistant' ? "My Tasks" : "Task Management", path: `/${rolePrefix}/tasks` },
+    { label: taskLabel }
+  ];
+
   return (
     <>
-      <div className="p-6 space-y-8">
+      <div className="p-6 space-y-6">
+        <Breadcrumb items={customBreadcrumb} />
 
-        <div className="bg-card border border-border rounded-xl p-8 space-y-6">
+      <div className="bg-card border border-border rounded-xl p-8 space-y-6">
 
           <div className="flex justify-between items-start border-b border-border pb-6">
             <div className="space-y-1">
-              <div className="flex items-center  text-2xl font-semibold mb-1">
+              <div className="flex items-center text-2xl font-semibold mb-1 text-card-foreground">
                 Chapter {taskDetail?.chapterNumber}: {taskDetail?.chapterTitle}
               </div>
               <p className="text-muted-foreground text-l flex items-center gap-1 mt-2">

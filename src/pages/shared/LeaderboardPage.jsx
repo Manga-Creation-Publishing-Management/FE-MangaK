@@ -44,7 +44,7 @@ export function LeaderboardPage() {
 
   const getRankIcon = (rank) => {
     if (rank === 1) return <Medal className="text-yellow-500" size={24} />;
-    if (rank === 2) return <Medal className="text-gray-400" size={24} />;
+    if (rank === 2) return <Medal className="text-muted-foreground" size={24} />;
     if (rank === 3) return <Medal className="text-orange-600" size={24} />;
     return <span className="text-muted-foreground font-medium">#{rank}</span>;
   };
@@ -53,7 +53,7 @@ export function LeaderboardPage() {
     <div className="p-6 space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className='font-medium text-2xl'>Leaderboard</h1>
+          <h1 className='font-medium text-2xl text-foreground'>Leaderboard</h1>
           <p className="text-muted-foreground mt-1">Top performing series by reader votes</p>
         </div>
 
@@ -85,7 +85,7 @@ export function LeaderboardPage() {
           <div className="flex items-center gap-3">
             <Trophy className="text-primary" size={32} />
             <div>
-              <h2>Top Rankings</h2>
+              <h2 className="text-xl font-semibold text-card-foreground">Top Rankings</h2>
               <p className="text-sm text-muted-foreground mt-1">
                 Based on reader votes - {timePeriod === 'weekly' ? 'This Week' : 'This Month'}
               </p>
@@ -128,7 +128,7 @@ export function LeaderboardPage() {
                   </div>
 
                   <div className="flex-1">
-                    <h3 className="text-base">{item.series}</h3>
+                    <h3 className="text-base font-semibold text-card-foreground">{item.series}</h3>
                     <p className="text-sm text-muted-foreground mt-1">by {item.author}</p>
                   </div>
 
@@ -136,7 +136,7 @@ export function LeaderboardPage() {
 
                   <div className="text-center">
                     <p className="text-muted-foreground text-sm">Votes</p>
-                    <p className="text-xl mt-1">{item.votes.toLocaleString()}</p>
+                    <p className="text-xl font-semibold text-foreground mt-1">{item.votes.toLocaleString()}</p>
                   </div>
 
                   <div className="text-center min-w-24">
@@ -155,7 +155,7 @@ export function LeaderboardPage() {
                   <div className="text-center">
                     <p className="text-muted-foreground text-sm">Avg Rating</p>
                     <div className="flex items-center justify-center gap-1 mt-1">
-                      <p className="text-xl">
+                      <p className="text-xl font-semibold text-foreground">
                         {(item.averageRate ?? 0).toFixed(1)}
                       </p>
                       <Star size={16} className="text-yellow-500 fill-yellow-500" />

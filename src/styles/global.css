@@ -7,6 +7,61 @@ input::-ms-clear {
   display: none;
 }
 
+/* Synchronized smooth theme transition rule */
+.theme-transitioning,
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Dark mode high-contrast placeholder & form styles */
+.dark input::placeholder,
+.dark textarea::placeholder,
+.dark select::placeholder {
+  color: var(--color-muted-foreground);
+  opacity: 0.9;
+}
+
+.dark label {
+  color: var(--color-foreground);
+}
+
+.dark input:not([type="checkbox"]):not([type="radio"]),
+.dark textarea,
+.dark select {
+  color: var(--color-foreground);
+}
+
+/* Native date/datetime picker calendar icon in dark mode */
+.dark input[type="date"]::-webkit-calendar-picker-indicator,
+.dark input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+.dark input[type="time"]::-webkit-calendar-picker-indicator,
+.dark input[type="month"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.5);
+  cursor: pointer;
+}
+
+.dark input[type="date"],
+.dark input[type="datetime-local"],
+.dark input[type="time"],
+.dark input[type="month"] {
+  color-scheme: dark;
+}
+
+/* Override browser autofill (Chrome/Edge/Safari) background & text color in both Light & Dark modes */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--color-foreground) !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-input-background) inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
 @keyframes smallbounce {
 
   0%,
@@ -82,5 +137,5 @@ input::-ms-clear {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: 1a1525;
+  color: var(--color-foreground);
 }

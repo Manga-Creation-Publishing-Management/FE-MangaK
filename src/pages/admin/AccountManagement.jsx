@@ -200,7 +200,7 @@ export function AccountManagement() {
             <div className="flex gap-3 shrink-0">
               <button
                 onClick={() => setShowPermissionsModal(true)}
-                className="flex items-center gap-2 px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors text-sm font-medium"
+                className="flex items-center gap-2 px-4 py-2 border border-border text-foreground rounded-lg hover:bg-muted transition-colors text-sm font-medium"
               >
                 <ShieldCheck size={18} />
                 Role Permissions
