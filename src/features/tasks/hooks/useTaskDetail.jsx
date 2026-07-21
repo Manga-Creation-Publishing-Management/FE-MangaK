@@ -47,7 +47,7 @@ export function useTaskDetail(taskId, role) {
 
     setIsLoading(true);
     try {
-      const response = await taskService.updateTaskStatus(taskId, "Processing");
+      const response = await taskService.claimTask(taskId, "Processing");
       console.log("Update status thành công:", response);
 
       // Cập nhật state taskDetail với status mới
@@ -65,6 +65,32 @@ export function useTaskDetail(taskId, role) {
     }
   };
 
+  const handleDenyTask = async () => {
+    if (!taskId) {
+      showAlert("Task ID does not exist", "error");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await taskService.denyTask(taskId, "Rejected");
+      console.log("Update status thành công:", response);
+
+      // Cập nhật state taskDetail với status mới
+      setTaskDetail({
+        ...taskDetail,
+        status: "Rejected"
+      });
+
+      showAlert("You have rejected this task!");
+    } catch (error) {
+      console.error("Lỗi khi cập nhật status:", error);
+      showAlert("Update failed: " + error.message, "error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleApprovedTask = async () => {
     if (!taskId) {
       showAlert("Task ID does not exist");
@@ -73,7 +99,7 @@ export function useTaskDetail(taskId, role) {
 
     setIsLoading(true);
     try {
-      const response = await taskService.approvedTask(taskId);
+      const response = await taskService.approvedTask(taskId, feedback);
       console.log("Update status thành công:", response);
 
       // Cập nhật state taskDetail với status mới
@@ -115,6 +141,57 @@ export function useTaskDetail(taskId, role) {
     }
   };
 
+  const handleUnsatisfiedTask = async (salaryPercentage) => {
+    if (!taskId) {
+      showAlert("Task ID does not exist");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await taskService.unsatisfiedTask(taskId, feedback, salaryPercentage);
+      console.log("Update status thành công:", response);
+
+      showAlert(`Unsatisfied Task set with salary percentage: ${salaryPercentage}%`);
+      handleReload();
+    } catch (error) {
+      console.error("Lỗi khi cập nhật status:", error);
+      showAlert("Update failed: " + error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const [assistantList, setAssistantList] = useState([]);
+  const [isUpdatingAssistant, setIsUpdatingAssistant] = useState(false);
+
+  const fetchAssistants = async () => {
+    try {
+      const response = await taskService.getAssistantList("Assistant");
+      setAssistantList(response.data || []);
+    } catch (error) {
+      console.error("Failed to fetch assistant list:", error);
+    }
+  };
+
+  const handleUpdateAssistant = async (newAssistantId) => {
+    if (!taskId) {
+      showAlert("Task ID does not exist");
+      return;
+    }
+    setIsUpdatingAssistant(true);
+    try {
+      await taskService.updateTaskAssistant(taskId, newAssistantId);
+      showAlert("Updated assistant successfully!");
+      handleReload();
+    } catch (error) {
+      console.error("Failed to update assistant:", error);
+      showAlert("Update failed: " + error.message);
+    } finally {
+      setIsUpdatingAssistant(false);
+    }
+  };
+
   const handleSubmitTask = async () => {
     if (!taskId) {
       showAlert("Task ID does not exist");
@@ -153,12 +230,18 @@ export function useTaskDetail(taskId, role) {
     storyFile,
     storyInputRef,
     handleStoryChange,
-    handleGetTask,      // ← Thêm hàm này
     isLoading,
     feedback,
     setFeedback,
     handleSubmitTask,
     handleApprovedTask,
-    handleRejectTask
+    handleRejectTask,
+    handleDenyTask,
+    handleGetTask,
+    handleUnsatisfiedTask,
+    assistantList,
+    isUpdatingAssistant,
+    fetchAssistants,
+    handleUpdateAssistant
   }
 }

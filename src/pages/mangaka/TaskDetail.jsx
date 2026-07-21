@@ -1,4 +1,4 @@
-import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, SquarePen, UploadCloud, ChevronDown } from "lucide-react";
+import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, SquarePen, UploadCloud, ChevronDown, X } from "lucide-react";
 import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { useTaskDetail } from "../../features/tasks/hooks/useTaskDetail";
@@ -9,6 +9,7 @@ import utc from 'dayjs/plugin/utc';
 import { AnnotationModal } from "../shared/AnnotationModal";
 import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
 import { PreviewModal } from "../shared/PreviewModal";
+import { UnsatisfiedModal } from "../shared/UnsatisfiedModal";
 import { useState, useRef } from "react";
 import { FeedbackViewer } from "../shared/FeedbackViewer";
 import { useToast } from "@/shared/hooks/useToast";
@@ -29,13 +30,19 @@ export function TaskDetail() {
     storyFile,
     storyInputRef,
     handleStoryChange,
-    handleGetTask,
     isLoading,
     feedback,
     setFeedback,
     handleSubmitTask,
     handleRejectTask,
-    handleApprovedTask
+    handleApprovedTask,
+    handleDenyTask,
+    handleGetTask,
+    handleUnsatisfiedTask,
+    assistantList,
+    isUpdatingAssistant,
+    fetchAssistants,
+    handleUpdateAssistant
   } = useTaskDetail(taskId, role);
 
   const {
@@ -62,6 +69,9 @@ export function TaskDetail() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isUnsatisfiedModalOpen, setIsUnsatisfiedModalOpen] = useState(false);
+  const [isEditingAssistant, setIsEditingAssistant] = useState(false);
+  const [selectedAssistantId, setSelectedAssistantId] = useState("");
 
   const feedbackViewerRef = useRef(null);
 
@@ -95,7 +105,7 @@ export function TaskDetail() {
       <div className="p-6 space-y-6">
         <Breadcrumb items={customBreadcrumb} />
 
-      <div className="bg-card border border-border rounded-xl p-8 space-y-6">
+        <div className="bg-card border border-border rounded-xl p-8 space-y-6">
 
           <div className="flex justify-between items-start border-b border-border pb-6">
             <div className="space-y-1">
@@ -169,17 +179,62 @@ export function TaskDetail() {
                   <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3 ">
                     Assistant in charge
                   </h3>
-                  <span className="cursor-pointer hover:bg-secondary/50 rounded-xl p-2 inline-flex items-center justify-center -mt-[10px] -mr-2">
-
-                    <SquarePen
-                      size={13}
-                    />
-                  </span>
+                  {role === "mangaka" && (
+                    taskDetail?.status === "Available" ||
+                    taskDetail?.status === "Rejected" ||
+                    taskDetail?.status === "Revising" ||
+                    taskDetail?.status === "Unsatisfied"
+                  ) && (
+                      <button
+                        onClick={async () => {
+                          if (isEditingAssistant) {
+                            setIsEditingAssistant(false);
+                          } else {
+                            // Fetch assistant list if empty
+                            if (assistantList.length === 0) {
+                              await fetchAssistants();
+                            }
+                            const currentId = taskDetail?.assignedToId || taskDetail?.assistantId || "";
+                            const matched = assistantList.find(as => as.fullName === taskDetail?.assistantName);
+                            setSelectedAssistantId(currentId || matched?.userId || "");
+                            setIsEditingAssistant(true);
+                          }
+                        }}
+                        className="cursor-pointer hover:bg-secondary/50 rounded-xl p-2 inline-flex items-center justify-center -mt-[10px] -mr-2 text-foreground"
+                      >
+                        {isEditingAssistant ? <X size={13} /> : <SquarePen size={13} />}
+                      </button>
+                    )}
                 </div>
 
-                <span className="text-l font-semibold text-muted-foreground flex items-center">
-                  {taskDetail?.assistantName}
-                </span>
+                {isEditingAssistant ? (
+                  <div className="flex items-center gap-2 -mt-2">
+                    <select
+                      value={selectedAssistantId}
+                      onChange={async (e) => {
+                        const newId = e.target.value;
+                        setSelectedAssistantId(newId);
+                        if (newId) {
+                          await handleUpdateAssistant(newId);
+                          setIsEditingAssistant(false);
+                        }
+                      }}
+                      disabled={isUpdatingAssistant}
+                      className="bg-card text-foreground border border-border rounded px-2 py-1 text-sm font-semibold focus:outline-none focus:ring-1 focus:ring-primary w-full cursor-pointer"
+                    >
+                      <option value="">Select assistant...</option>
+                      {assistantList.map((as) => (
+                        <option key={as.userId} value={as.userId}>
+                          {as.fullName}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ) : (
+                  <span className="text-l font-semibold text-muted-foreground flex items-center">
+                    {taskDetail?.assistantName || "Unassigned"}
+                  </span>
+                )}
               </div>
               {/* Ô 1: Income Amount */}
               <div className="bg-muted/30 p-4 rounded-lg border border-border h-[96px] flex flex-col justify-start">
@@ -272,7 +327,7 @@ export function TaskDetail() {
 
 
             <div className="space-y-3 w-full">
-              {(role === "assistant" && taskDetail?.status != "Available") &&
+              {(role === "assistant" && (taskDetail?.status == "Processing" || taskDetail?.status == "Revising")) &&
                 <>
                   <h3 className="font-medium text-sm text-muted-foreground">Submit Your Work</h3>
                   <div
@@ -301,7 +356,7 @@ export function TaskDetail() {
                 </>
               }
 
-              {role === "mangaka" &&
+              {role === "mangaka" && (taskDetail?.status == "Processing" || taskDetail?.status == "Pending" || taskDetail?.status == "Completed" || taskDetail?.status == "Unsatisfied") &&
                 <>
                   <h3 className="font-medium text-sm text-muted-foreground">Submited File by Assistant</h3>
                   <div className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center space-y-3 h-[160px] ">
@@ -348,7 +403,7 @@ export function TaskDetail() {
                 {taskDetail?.status == "Available" &&
                   <>
                     <button
-                      // onClick={}
+                      onClick={handleDenyTask}
                       className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
                       Reject
                     </button>
@@ -360,7 +415,7 @@ export function TaskDetail() {
                   </>
 
                 }
-                {(taskDetail?.status !== "Pending" && taskDetail?.status !== "Revising" && taskDetail?.status !== "Available") &&
+                {(taskDetail?.status === "Processing" || taskDetail?.status === "Revising") &&
                   <button
                     onClick={handleSubmitTask}
                     disabled={isLoading}
@@ -399,6 +454,8 @@ export function TaskDetail() {
                 onFeedbackChange={(e) => setFeedback(e.target.value)}
                 onApprove={() => handleApprovedTask(taskId)}
                 onReject={() => handleInitialRejectClick()}
+                onUnsatisfied={() => setIsUnsatisfiedModalOpen(true)}
+                rejectCount={taskDetail?.rejectCount}
                 isLoading={isLoading}
                 approveText="Approve Task"
                 rejectText="Reject Task with Feedback"
@@ -435,6 +492,16 @@ export function TaskDetail() {
                 onClose={() => setIsPreviewOpen(false)}
                 fileUrl={taskDetail?.submittedFileUrl}
                 role={role}
+              />
+
+              <UnsatisfiedModal
+                isOpen={isUnsatisfiedModalOpen}
+                onClose={() => setIsUnsatisfiedModalOpen(false)}
+                onSubmit={(percentage) => {
+                  handleUnsatisfiedTask(percentage);
+                  setIsUnsatisfiedModalOpen(false);
+                }}
+                isLoading={isLoading}
               />
 
 
