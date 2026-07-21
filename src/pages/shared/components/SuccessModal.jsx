@@ -9,15 +9,15 @@ export function SuccessModal({ show, onClose }) {
         <div className="w-16 h-16 bg-success/10 text-success rounded-full flex items-center justify-center mb-4">
           <CheckCircle size={32} />
         </div>
-        <h3 className="text-xl font-semibold mb-2">Cập nhật thành công!</h3>
+        <h3 className="text-xl font-semibold mb-2">Updated successfully!</h3>
         <p className="text-muted-foreground mb-6">
-          Thông tin hồ sơ của bạn đã được cập nhật thành công.
+          Your profile information has been updated successfully.
         </p>
         <button
           onClick={onClose}
           className="w-full py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
         >
-          Đóng
+          Close
         </button>
       </div>
     </div>

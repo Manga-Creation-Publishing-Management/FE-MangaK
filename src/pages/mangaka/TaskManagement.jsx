@@ -27,8 +27,12 @@ export function TaskManagement() {
     chapters,
     selectedSeriesId,
     setSelectedSeriesId,
+    selectedChapterId,
+    setSelectedChapterId,
+    maxPagesAllowed,
     handleSubmitCreateTask,
     handleReload,
+    isLoading,
     reload
   } = useCreateTask();
 
@@ -81,7 +85,9 @@ export function TaskManagement() {
                     options: [
                       { value: "all", label: "All Status" },
                       { value: "available", label: "Available" },
+                      { value: "rejected", label: "Rejected" },
                       { value: "pending", label: "Pending" },
+                      { value: "processing", label: "Processing" },
                       { value: "completed", label: "Completed" },
                       { value: "revising", label: "Revising" },
                       { value: "unsatisfied", label: "Unsatisfied" },
@@ -159,6 +165,10 @@ export function TaskManagement() {
           chapters={chapters}
           selectedSeriesId={selectedSeriesId}
           onSeriesChange={setSelectedSeriesId}
+          selectedChapterId={selectedChapterId}
+          onChapterChange={setSelectedChapterId}
+          maxPagesAllowed={maxPagesAllowed}
+          isLoading={isLoading}
           onSubmitCreateTask={handleSubmitCreateTask}
           onReload={handleReload}
         />

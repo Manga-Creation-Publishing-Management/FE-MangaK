@@ -15,7 +15,7 @@ export function TantouStatusDistribution({ statusDistribution, isLoading }) {
     <div className="bg-card border border-border rounded-xl p-6 h-full flex flex-col">
       <div className="flex items-center gap-2 mb-5">
         <BookOpen size={20} className="text-primary" />
-        <h2 className="text-lg font-semibold">Series Status</h2>
+        <h2 className="text-lg font-semibold text-card-foreground">Series Status</h2>
       </div>
 
       {isLoading ? (
@@ -56,13 +56,13 @@ export function TantouStatusDistribution({ statusDistribution, isLoading }) {
                         className="w-2.5 h-2.5 rounded-full shrink-0"
                         style={{ backgroundColor: item.color }}
                       />
-                      <span className="text-sm font-medium">
+                      <span className="text-sm font-medium text-foreground">
                         {STATUS_LABELS[item.status] || item.status}
                       </span>
                     </div>
                   </td>
                   <td className="text-right px-4 py-3">
-                    <span className="text-sm font-semibold">{item.count}</span>
+                    <span className="text-sm font-semibold text-foreground">{item.count}</span>
                   </td>
                 </tr>
               ))}

@@ -100,6 +100,7 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
       setCroppedFile(file);
       setCoverFile(file);
       // setImage("");
+      showAlert("Cropped successfully!");
     }, "image/jpeg");
   };
 
@@ -149,7 +150,6 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
 
   // Trả về tất cả các biến và hàm cần thiết để form (CreateSeriesModal) sử dụng
   return {
-    isLoading,
     genreList,
     selectGenres,
     coverFile,
@@ -167,4 +167,5 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
     cropperRef,
     image
   };
+
 }

@@ -12,14 +12,14 @@ export const authService = {
   async logout() {
     try {
       // Báo cho server biết user muốn đăng xuất, gửi kèm refreshToken để server huỷ hiệu lực
-      await api.post("/Auth/logout", {refreshToken: localStorage.getItem('mangak-token')});
+      await api.post("/Auth/logout", {refreshToken: localStorage.getItem('refreshToken')});
     } catch (error) {
       // Dù API thất bại thì vẫn bắt lỗi để tiến trình xóa bộ nhớ ở dưới không bị chặn
       console.error("Failed to perform logout on backend:", error);
     } finally {
       // Dọn dẹp: Xóa toàn bộ thông tin phiên đăng nhập khỏi Local Storage
-      localStorage.removeItem('mangak-token');
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
     }
   },

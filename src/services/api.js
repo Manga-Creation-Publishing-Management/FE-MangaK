@@ -4,7 +4,7 @@ const BASE_URL = import.meta.env.VITE_API_URL;
 // Hàm request cốt lõi: xử lý mọi yêu cầu (GET, POST, PUT, DELETE...) tới server
 async function request(endpoint, options = {}) {
   // Lấy token xác thực từ Local Storage (được lưu sau khi người dùng đăng nhập)
-  const token = localStorage.getItem('mangak-token');
+  const token = localStorage.getItem('accessToken');
   
   // Khởi tạo headers với các thông số mặc định hoặc được truyền vào
   const headers = {
@@ -55,6 +55,18 @@ async function request(endpoint, options = {}) {
 
     // Nếu HTTP Status Code không nằm trong dải thành công (200-299), ném ra lỗi
     if (!response.ok) {
+      // Nếu gặp lỗi xác thực 401 (token hết hạn hoặc không hợp lệ)
+      if (response.status === 401) {
+        // Không tự động redirect nếu đang thực hiện các cuộc gọi API liên quan đến Auth (đăng nhập, đăng ký, quên mật khẩu...)
+        if (!endpoint.includes('/Auth/')) {
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          localStorage.removeItem('user');
+          window.location.href = '/';
+          return null;
+        }
+      }
+
       const errorMsg = (data && typeof data === 'object' && (data.message || data.error)) 
         || `Request failed with status ${response.status}`;
       throw new Error(errorMsg);

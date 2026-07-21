@@ -28,24 +28,25 @@ export function ChapterList({ roleName, seriesData }) {
   const { handleNavigateToChapter } = useSeriesManagement();
 
   const [selectedChapterId, setSelectedChapterId] = useState("all");
+  const [filterStatus, setFilterStatus] = useState("all");
 
-  // Hook quản lý trạng thái hiển thị Popup đánh giá của từng chapter
   const { activeChapterId, handlePopUp } = useChapterRate();
 
-  // Hook thực hiện gửi số sao đánh giá (API submit)
   const { handleRateSubmit } = useUpdateRateChapter();
 
 
   const { } = useProgressing()
 
-  // console.log("length", chapterList.length)
   console.log(`view series info: ${seriesData?.seriesId}`);
 
   const visibleChapters = (chapterList || []).filter(chapter => {
-    const showChapter = roleName === 'reader'
+    const matchesRole = roleName === 'reader'
       ? chapter.status?.toLowerCase() === 'publishing'
       : true;
-    return showChapter;
+    const matchesStatus = filterStatus === "all"
+      ? true
+      : chapter.status?.toLowerCase() === filterStatus.toLowerCase();
+    return matchesRole && matchesStatus;
   });
 
   const chapterOptions = [
@@ -84,10 +85,35 @@ export function ChapterList({ roleName, seriesData }) {
           {/* Header của phần danh sách Chapter */}
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h2 className="text-2xl ps-2 font-semibold ">Chapters ({chapterList?.length})</h2>
+              <h2 className="text-2xl ps-2 font-semibold text-card-foreground">Chapters ({chapterList?.length})</h2>
             </div>
 
             <div className="flex items-center gap-4">
+              {roleName !== "reader" && (
+                <div className="w-44">
+                  <SearchFilterBar
+                    showSearch={false}
+                    useCardWrapper={false}
+                    filters={[
+                      {
+                        value: filterStatus,
+                        onChange: setFilterStatus,
+                        options: [
+                          { value: "all", label: "All Status" },
+                          { value: "created", label: "Created" },
+                          { value: "pending", label: "Pending" },
+                          { value: "processing", label: "Processing" },
+                          { value: "scheduled", label: "Scheduled" },
+                          { value: "publishing", label: "Publishing" },
+                          { value: "rejected", label: "Rejected" }
+                        ],
+                        className: "w-full"
+                      }
+                    ]}
+                  />
+                </div>
+              )}
+
               <div className="w-48">
                 <SearchFilterBar
                   showSearch={false}
@@ -130,7 +156,7 @@ export function ChapterList({ roleName, seriesData }) {
                 <div key={chapter.chapterId} className="bg-card border border-border rounded-xl p-5 hover:shadow-lg transition-shadow">
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
-                      <h3 className="py-1 font-semibold text-xl break-words">
+                      <h3 className="py-1 font-semibold text-xl break-words text-card-foreground">
                         Chapter {chapter.chapterNumber}: {chapter.title}
                       </h3>
                     </div>

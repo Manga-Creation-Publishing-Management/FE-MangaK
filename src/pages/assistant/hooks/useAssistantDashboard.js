@@ -7,7 +7,7 @@ export function useAssistantDashboard() {
   const [completedCount, setCompletedCount] = useState(0);
   const [pendingCount, setPendingCount] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
-  const [urgentTask, setUrgentTask] = useState(null);
+  const [urgentTasks, setUrgentTasks] = useState([]);
 
   const navigate = useNavigate();
 
@@ -51,9 +51,9 @@ export function useAssistantDashboard() {
             if (!b.deadline) return -1;
             return new Date(a.deadline) - new Date(b.deadline);
           });
-          setUrgentTask(sorted[0]);
+          setUrgentTasks(sorted.slice(0, 2));
         } else {
-          setUrgentTask(null);
+          setUrgentTasks([]);
         }
       } catch (error) {
         console.error("Error loading Assistant Dashboard data:", error);
@@ -76,7 +76,7 @@ export function useAssistantDashboard() {
     completedCount,
     pendingCount,
     reviewCount,
-    urgentTask,
+    urgentTasks,
     handleNavigateToTask,
   };
 }
