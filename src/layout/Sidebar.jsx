@@ -7,7 +7,7 @@ import {
 import { Link, useLocation } from 'react-router';
 import { Logo } from '@/shared/components/Logo';
 
-export function Sidebar({ userRole }) {
+export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(true);
 
@@ -45,49 +45,86 @@ export function Sidebar({ userRole }) {
 
   const items = menuItems[userRole] ?? [];
 
+  const renderNavItems = (isCollapsed = false) => (
+    <nav className="space-y-1 flex-1">
+      {items.map((item) => {
+        const Icon = item.icon;
+        const cleanPath = location.pathname.replace(/\/$/, "");
+        const cleanItemPath = item.path.replace(/\/$/, "");
+        const isActive = item.key === 'dashboard'
+          ? cleanPath === cleanItemPath
+          : (item.key === 'series' && location.pathname.includes('/chapter/'))
+            ? true
+            : cleanPath.startsWith(cleanItemPath);
+
+        return (
+          <Link
+            key={item.key}
+            to={item.path}
+            onClick={() => {
+              if (onCloseMobile) onCloseMobile();
+            }}
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors unique-sidebar-item ${isActive
+              ? 'bg-sidebar-primary text-sidebar-primary-foreground font-semibold'
+              : 'text-sidebar-foreground hover:bg-sidebar-accent'
+              } ${isCollapsed && 'justify-center'}`}
+            title={isCollapsed ? item.label : undefined}
+          >
+            <Icon size={20} className="shrink-0" />
+            {!isCollapsed && <span className="truncate text-sm">{item.label}</span>}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+
   return (
-    <div
-      className={`bg-sidebar border-r border-sidebar-border h-screen p-4 transition-all duration-300 relative flex flex-col ${isOpen ? 'w-60' : 'w-20'
+    <>
+      {/* Mobile Backdrop */}
+      {isMobileOpen && (
+        <div
+          onClick={onCloseMobile}
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 md:hidden transition-opacity"
+        />
+      )}
+
+      {/* Mobile Off-canvas Drawer */}
+      <div
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-sidebar p-4 border-r border-sidebar-border flex flex-col transition-transform duration-300 md:hidden ${
+          isMobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
-    >
-      <div className={`flex items-center mb-6 ${isOpen ? 'justify-between' : 'justify-center flex-col gap-4'}`}>
-        <Logo size="sm" showText={isOpen} to={`/${userRole}`} />
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="p-1.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent border border-sidebar-border transition-colors shrink-0"
-          title={isOpen ? "Close sidebar" : "Open sidebar"}
-        >
-          <Menu size={20} />
-        </button>
+      >
+        <div className="flex items-center justify-between mb-6 pb-2 border-b border-sidebar-border">
+          <Logo size="sm" showText={true} to={`/${userRole}`} />
+          <button
+            onClick={onCloseMobile}
+            className="p-1.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent border border-sidebar-border transition-colors shrink-0"
+            title="Close menu"
+          >
+            <Menu size={20} />
+          </button>
+        </div>
+        {renderNavItems(false)}
       </div>
 
-      <nav className="space-y-1 flex-1">
-        {items.map((item) => {
-          const Icon = item.icon;
-          const cleanPath = location.pathname.replace(/\/$/, "");
-          const cleanItemPath = item.path.replace(/\/$/, "");
-          const isActive = item.key === 'dashboard'
-            ? cleanPath === cleanItemPath
-            : (item.key === 'series' && location.pathname.includes('/chapter/'))
-              ? true
-              : cleanPath.startsWith(cleanItemPath);
-
-          return (
-            <Link
-              key={item.key}
-              to={item.path}
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors unique-sidebar-item ${isActive
-                ? 'bg-sidebar-primary text-sidebar-primary-foreground'
-                : 'text-sidebar-foreground hover:bg-sidebar-accent'
-                } ${!isOpen && 'justify-center'}`}
-              title={!isOpen ? item.label : undefined}
-            >
-              <Icon size={20} className="shrink-0" />
-              {isOpen && <span className="truncate">{item.label}</span>}
-            </Link>
-          );
-        })}
-      </nav>
-    </div>
+      {/* Desktop Sidebar */}
+      <div
+        className={`hidden md:flex bg-sidebar border-r border-sidebar-border h-screen p-4 transition-all duration-300 relative flex-col shrink-0 ${
+          isOpen ? 'w-60' : 'w-20'
+        }`}
+      >
+        <div className={`flex items-center mb-6 ${isOpen ? 'justify-between' : 'justify-center flex-col gap-4'}`}>
+          <Logo size="sm" showText={isOpen} to={`/${userRole}`} />
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-1.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent border border-sidebar-border transition-colors shrink-0"
+            title={isOpen ? "Close sidebar" : "Open sidebar"}
+          >
+            <Menu size={20} />
+          </button>
+        </div>
+        {renderNavItems(!isOpen)}
+      </div>
+    </>
   );
 }

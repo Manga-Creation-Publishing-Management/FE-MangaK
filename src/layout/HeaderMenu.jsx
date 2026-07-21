@@ -62,7 +62,7 @@ export function HeaderMenu({ roleName }) {
 
             {/* Dropdown Menu */}
             {isOpen && (
-                <div className="absolute right-0 top-full mt-2 w-56 bg-card border border-border shadow-2xl rounded-2xl z-50 overflow-hidden">
+                <div className="absolute right-0 top-full mt-2 w-56 bg-card border border-border shadow-2xl rounded-2xl z-[999] overflow-hidden">
                     {/* Header */}
                     <div className="px-4 py-3 border-b border-border bg-muted/40">
                         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Menu</p>
