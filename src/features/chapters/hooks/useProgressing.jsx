@@ -8,9 +8,9 @@ export function useProgressing(chapterId) {
     const fetchApi = async () => {
       try {
         const completedChapter = await chaptersService.getProgressingChapter(chapterId, "Completed");
-        const unsatisfiedChapter = await chaptersService.getProgressingChapter(chapterId, "Unsatisfied");
-        const total = completedChapter?.data?.total + unsatisfiedChapter?.data?.total || 0;
-        const numberOfStatus = completedChapter?.data?.numberOfStatus + unsatisfiedChapter?.data?.numberOfStatus || 0;
+        const unsatisChapter = await chaptersService.getProgressingChapter(chapterId, "Unsatisfactory");
+        const total = completedChapter?.data?.total + unsatisChapter?.data?.total || 0;
+        const numberOfStatus = completedChapter?.data?.numberOfStatus + unsatisChapter?.data?.numberOfStatus || 0;
 
         if (total > 0) {
           let currentProgressing = (numberOfStatus / total) * 100;

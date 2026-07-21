@@ -125,7 +125,7 @@ export default function CreateTaskModal({
                 id="page_range"
                 name="taskTitle"
                 className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                // placeholder="..."
+                placeholder="Enter description"
                 required
                 rows={3}
                 onInvalid={(e) => {
