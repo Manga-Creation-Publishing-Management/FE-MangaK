@@ -133,19 +133,19 @@ export function HomePage() {
           </div>
         </div>
 
-        <div className="lg:col-span-6 space-y-6 flex flex-col justify-end">
-          <div className="w-full flex justify-center bg-primary/10 text-primary text-[10px] md:text-xs font-bold tracking-widest uppercase px-4 py-2 rounded-full w-fit">
+        <div className="lg:col-span-6 space-y-6 flex flex-col items-start lg:items-end text-left lg:text-right">
+          <div className="bg-primary/10 text-primary text-[10px] md:text-xs font-bold tracking-widest uppercase px-4 py-2 rounded-full w-fit">
             Manga Production & Publishing Management Platform
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] text-foreground">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] text-foreground">
             Professional Manga <br />
             <span className="text-primary">Creative Workflow</span>
           </h1>
-          <p className="w-full flex justify-end text-muted-foreground text-sm md:text-base leading-relaxed max-w-xl">
+          <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-xl">
             A comprehensive platform for managing manga production and publishing workflows — from sketching, coloring, to publication — supporting efficient collaboration between Mangakas and Assistants.
           </p>
 
-          <div className='w-full flex justify-end px-5'>
+          <div className='w-full flex justify-start lg:justify-end'>
             {user ? (
               <button
                 onClick={() => navigate(`/${rolePath}`)}
@@ -163,22 +163,22 @@ export function HomePage() {
             )}
           </div>
 
-          <div className="border-t border-border/60 pt-6 w-full flex justify-end">
-            <div className="flex items-center gap-8 md:gap-12">
+          <div className="border-t border-border/60 pt-6 w-full flex justify-start lg:justify-end">
+            <div className="flex items-center gap-6 sm:gap-8 md:gap-12">
               <div>
-                <div className="text-2xl md:text-3xl font-extrabold text-foreground">500+</div>
+                <div className="text-xl sm:text-2xl md:text-3xl font-extrabold text-foreground">500+</div>
                 <div className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-0.5">
                   Mangakas
                 </div>
               </div>
               <div>
-                <div className="text-2xl md:text-3xl font-extrabold text-foreground">2.4K+</div>
+                <div className="text-xl sm:text-2xl md:text-3xl font-extrabold text-foreground">2.4K+</div>
                 <div className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-0.5">
                   Assistants
                 </div>
               </div>
               <div>
-                <div className="text-2xl md:text-3xl font-extrabold text-foreground">1,200+</div>
+                <div className="text-xl sm:text-2xl md:text-3xl font-extrabold text-foreground">1,200+</div>
                 <div className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-0.5">
                   Published Works
                 </div>

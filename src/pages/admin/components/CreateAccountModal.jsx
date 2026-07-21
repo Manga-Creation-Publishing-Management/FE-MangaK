@@ -78,19 +78,19 @@ export function CreateAccountModal({ show, onClose, onCreated, tantouList }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-card rounded-xl p-8 w-full max-w-lg">
+      <div className="bg-card rounded-xl p-6 sm:p-8 w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="font-semibold text-xl">Create Account</h2>
           <button
             onClick={handleClose}
-            className="text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground cursor-pointer"
           >
             <X size={20} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-sm text-muted-foreground mb-1.5 block">
                 First Name
@@ -117,7 +117,7 @@ export function CreateAccountModal({ show, onClose, onCreated, tantouList }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-sm text-muted-foreground mb-1.5 block">
                 Phone Number
@@ -144,7 +144,7 @@ export function CreateAccountModal({ show, onClose, onCreated, tantouList }) {
             </div>
           </div>
 
-          <div className={`grid ${selectedRole === 'mangaka' ? 'grid-cols-2 gap-4' : 'grid-cols-1'}`}>
+          <div className={`grid ${selectedRole === 'mangaka' ? 'grid-cols-1 sm:grid-cols-2 gap-4' : 'grid-cols-1'}`}>
             <div>
               <label className="text-sm text-muted-foreground mb-1.5 block">
                 Role
@@ -219,7 +219,7 @@ export function CreateAccountModal({ show, onClose, onCreated, tantouList }) {
                   type={showNewPassword ? "text" : "password"}
                   {...register("password")}
                   placeholder="Set a password"
-                  className="w-full px-4 py-2.5 pr-10 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary font-mono"
+                  className="w-full px-4 py-2.5 pr-10 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary font-mono text-sm"
                 />
                 <button
                   type="button"
@@ -236,7 +236,7 @@ export function CreateAccountModal({ show, onClose, onCreated, tantouList }) {
               <button
                 type="button"
                 onClick={generatePassword}
-                className="px-4 py-2.5 border border-border rounded-lg hover:bg-muted transition-colors text-sm whitespace-nowrap"
+                className="px-4 py-2.5 border border-border rounded-lg hover:bg-muted transition-colors text-xs sm:text-sm whitespace-nowrap cursor-pointer"
               >
                 Generate
               </button>
@@ -251,18 +251,18 @@ export function CreateAccountModal({ show, onClose, onCreated, tantouList }) {
             <p className="text-sm text-destructive">{createError}</p>
           )}
 
-          <div className="flex gap-3 pt-2">
+          <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
             <button
               type="button"
               onClick={handleClose}
-              className="flex-1 px-4 py-2.5 border border-border rounded-lg hover:bg-muted transition-colors"
+              className="flex-1 px-4 py-2.5 border border-border rounded-lg hover:bg-muted transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {isSubmitting ? "Creating..." : "Create Account"}
             </button>
