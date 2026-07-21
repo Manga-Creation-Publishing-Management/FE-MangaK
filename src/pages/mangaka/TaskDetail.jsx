@@ -13,6 +13,7 @@ import { useState, useRef } from "react";
 import { FeedbackViewer } from "../shared/FeedbackViewer";
 import { useToast } from "@/shared/hooks/useToast";
 import { useUpdateTaskDeadline } from "../../features/tasks/hooks/useUpdateTaskDeadline";
+import { Breadcrumb } from "@/shared/components/Breadcrumb";
 dayjs.extend(utc);
 export function TaskDetail() {
 
@@ -72,22 +73,33 @@ export function TaskDetail() {
     setConfirmModalOpen(true);
   }
 
+  const today = dayjs().utc(true);
+  const deadlineObj = dayjs(taskDetail?.deadline).utc(true);
+  const foramttedDeadline = dayjs(taskDetail?.deadline).utc(true).format('DD/MM/YYYY HH:mm')
+
+  const isOverdue = deadlineObj.isBefore(today)
+
+  const rolePrefix = role?.toLowerCase() || "mangaka";
+  const taskLabel = taskDetail?.chapterNumber
+    ? `Chapter ${taskDetail.chapterNumber}${taskDetail.chapterTitle ? `: ${taskDetail.chapterTitle}` : ''}`
+    : "Task Detail";
+
+  const customBreadcrumb = [
+    { label: rolePrefix.charAt(0).toUpperCase() + rolePrefix.slice(1), path: `/${rolePrefix}` },
+    { label: rolePrefix === 'assistant' ? "My Tasks" : "Task Management", path: `/${rolePrefix}/tasks` },
+    { label: taskLabel }
+  ];
+
   return (
     <>
-      <div className="p-6 space-y-8">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex cursor-pointer items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft size={20} />
-          Back
-        </button>
+      <div className="p-6 space-y-6">
+        <Breadcrumb items={customBreadcrumb} />
 
-        <div className="bg-card border border-border rounded-xl p-8 space-y-6">
+      <div className="bg-card border border-border rounded-xl p-8 space-y-6">
 
           <div className="flex justify-between items-start border-b border-border pb-6">
             <div className="space-y-1">
-              <div className="flex items-center  text-2xl font-semibold mb-1">
+              <div className="flex items-center text-2xl font-semibold mb-1 text-card-foreground">
                 Chapter {taskDetail?.chapterNumber}: {taskDetail?.chapterTitle}
               </div>
               <p className="text-muted-foreground text-l flex items-center gap-1 mt-2">
@@ -165,17 +177,17 @@ export function TaskDetail() {
                   </span>
                 </div>
 
-                <span className="text-xl font-semibold text-muted-foreground flex items-center">
+                <span className="text-l font-semibold text-muted-foreground flex items-center">
                   {taskDetail?.assistantName}
                 </span>
               </div>
               {/* Ô 1: Income Amount */}
               <div className="bg-muted/30 p-4 rounded-lg border border-border h-[96px] flex flex-col justify-start">
-                <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
+                <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-2">
                   Income Amount
                 </h3>
-                <span className="text-2xl font-semibold text-success flex items-center gap-0.5 mt-1">
-                  <JapaneseYen size={22} strokeWidth={2.5} className="shrink-0 translate-y-[2px]" />
+                <span className="text-l font-semibold text-success flex items-center gap-0.5 mt-1">
+                  <JapaneseYen size={20} strokeWidth={2.5} className="shrink-0 translate-y-[2px]" />
                   <span>{taskDetail?.incomeAmount}</span>
                 </span>
               </div>
@@ -190,11 +202,11 @@ export function TaskDetail() {
               <div className="border border-border rounded-xl p-4 bg-muted/20 flex flex-col justify-start min-h-[96px]">
                 <div className="flex flex-row justify-between items-center w-full">
                   {/* Thẻ h3 giữ nguyên mb-3 để đẩy chiều cao header chuẩn như mẫu */}
-                  <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3">
-                    deadline
+                  <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3 items-center flex gap-2">
+                    deadline {isOverdue && <span className="text-destructive font-bold text-[10px]">(Overdue)</span>}
                   </h3>
 
-                  {role === "mangaka" && (
+                  {(role === "mangaka" && taskDetail?.status != "processing") && (
                     isEditingDeadline ? (
                       <div className="flex items-center gap-1 -mt-[10px] -mr-2">
                         <button
@@ -235,7 +247,7 @@ export function TaskDetail() {
                     />
                   </div>
                 ) : (
-                  <span className="text-xl text-muted-foreground flex items-center font-semibold">
+                  <span className="text-l text-muted-foreground flex items-center font-semibold">
                     {taskDetail?.deadline
                       ? dayjs(taskDetail?.deadline).utc(true).format('DD/MM/YYYY HH:mm')
                       : "— — — —"}
@@ -245,13 +257,13 @@ export function TaskDetail() {
 
               {/* Ô 4: Submitted At */}
               <div className="bg-muted/30 p-4 rounded-xl border border-border flex flex-col justify-start h-[96px]">
-                <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-1">
+                <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3">
                   Submitted At
                 </h3>
                 {taskDetail?.submittedAt ? (
-                  <div className="text-xl text-muted-foreground flex items-center font-semibold">{taskDetail?.submittedAt}</div>
+                  <div className="text-l text-muted-foreground flex items-center font-semibold">{dayjs(taskDetail?.submittedAt).utc(true).format('DD/MM/YYYY HH:mm')}</div>
                 ) : (
-                  <div className="text-xl text-muted-foreground flex items-center">— — — —</div>
+                  <div className="text-l text-muted-foreground flex items-center">— — — —</div>
                 )}
               </div>
             </div>
@@ -334,13 +346,21 @@ export function TaskDetail() {
             {(role === "assistant") &&
               <>
                 {taskDetail?.status == "Available" &&
-                  <button
-                    onClick={handleGetTask}
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
-                    Get Task
-                  </button>
+                  <>
+                    <button
+                      // onClick={}
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                      Reject
+                    </button>
+                    <button
+                      onClick={handleGetTask}
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                      Get
+                    </button>
+                  </>
+
                 }
-                {taskDetail?.status != ("Available" || "Pending" || "Completed") &&
+                {(taskDetail?.status !== "Pending" && taskDetail?.status !== "Revising" && taskDetail?.status !== "Available") &&
                   <button
                     onClick={handleSubmitTask}
                     disabled={isLoading}

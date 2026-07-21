@@ -33,21 +33,13 @@ export const feedbackService = {
     return api.get(`/Feedback/get-feedback-detail?${params.toString()}`);
   }, 
 
-  async getLastTextFeedback(seriesId, chapterId, taskId) {
+
+  async getLastFeedback(seriesId, chapterId, taskId) {
     const params = new URLSearchParams();
     if (seriesId != null) params.append('SeriesId', seriesId);
     if (chapterId != null) params.append('ChapterId', chapterId);
     if (taskId != null) params.append('MangaTaskId', taskId);
     
     return api.get(`/Feedback/get-latest-feedback?${params.toString()}`);
-  },
-
-  async getLastAnnotationFeedback(seriesId, chapterId, taskId) {
-    const params = new URLSearchParams();
-    if (seriesId != null) params.append('SeriesId', seriesId);
-    if (chapterId != null) params.append('ChapterId', chapterId);
-    if (taskId != null) params.append('MangaTaskId', taskId);
-    
-    return api.get(`/Feedback/get-feedback-annotation?${params.toString()}`);
   }
 }

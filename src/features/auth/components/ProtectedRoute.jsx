@@ -8,7 +8,7 @@ import { Navigate, Outlet } from 'react-router';
  */
 export function ProtectedRoute({ allowedRole }) {
   // Lấy token và chuỗi thông tin user từ localStorage để kiểm tra trạng thái đăng nhập
-  const token = localStorage.getItem('mangak-token');
+  const token = localStorage.getItem('accessToken');
   const userString = localStorage.getItem('user');
 
   // Nếu không có token hoặc không có thông tin user, lập tức đẩy về trang đăng nhập
@@ -30,10 +30,10 @@ export function ProtectedRoute({ allowedRole }) {
   try {
     // Chuyển chuỗi JSON chứa thông tin user thành Object
     const user = JSON.parse(userString);
-    
+
     // Lấy ra role của user, đưa về chữ thường để dễ so sánh
     const userRole = (user.role || '').toLowerCase();
-    
+
     // Tìm đường dẫn tương ứng với role, nếu không tìm thấy thì dùng chính tên role
     const normalizedUserRole = rolePathMap[userRole] || userRole;
 
@@ -45,8 +45,8 @@ export function ProtectedRoute({ allowedRole }) {
   } catch (error) {
     // Bắt lỗi nếu quá trình parse JSON thất bại (ví dụ dữ liệu localStorage bị hỏng/sửa bậy)
     // Xóa sạch thông tin cũ để buộc người dùng đăng nhập lại
-    localStorage.removeItem('mangak-token');
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     return <Navigate to="/login" replace />;
   }

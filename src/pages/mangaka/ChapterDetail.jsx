@@ -3,8 +3,7 @@ import { StatusBadge } from "@/shared/components/StatusBadge";
 import { useState, useRef } from 'react';
 import dayjs from 'dayjs';
 
-
-import { ArrowLeft, Download, Star, ChevronDown } from "lucide-react";
+import { Download, Star, ChevronDown, FileText } from "lucide-react";
 import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
 import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter";
@@ -12,9 +11,9 @@ import { useProgressing } from "../../features/chapters/hooks/useProgressing";
 import { ApprovalPanel } from "../shared/ApprovalPanel";
 import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
 import { AnnotationModal } from "../shared/AnnotationModal";
-import { TextFeedbackModal } from "../shared/TextFeedbackModal";
 import { FeedbackViewer } from "../shared/FeedbackViewer";
 import { useToast } from "@/shared/hooks/useToast";
+import { Breadcrumb } from "@/shared/components/Breadcrumb";
 
 // (Worker setup moved to AnnotationModal)
 
@@ -72,25 +71,24 @@ export function ChapterDetail() {
     setConfirmModalOpen(true);
   }
 
+  const rolePrefix = currentRole?.toLowerCase() || "mangaka";
+  const customBreadcrumb = [
+    { label: rolePrefix.charAt(0).toUpperCase() + rolePrefix.slice(1), path: `/${rolePrefix}` },
+    { label: "Series", path: `/${rolePrefix}/series` },
+    { label: chapterDetail?.seriesTitle || "Series Detail", path: seriesId ? `/${rolePrefix}/series/${seriesId}` : undefined },
+    { label: chapterDetail?.chapterNumber ? `Chapter ${chapterDetail.chapterNumber}${chapterDetail.title ? `: ${chapterDetail.title}` : ''}` : "Chapter Detail" }
+  ];
+
   return (
     <>
-      {/* Vùng chứa toàn bộ nội dung của trang chi tiết */}
-      <div className="p-6 space-y-8">
+      <div className="p-6 space-y-6">
+        <Breadcrumb items={customBreadcrumb} />
 
-        {/* Nút Back quay lại trang trước */}
-        <button
-          onClick={() => navigate(-1)} // navigate(-1) tương đương với bấm nút Back trên trình duyệt
-          className="flex cursor-pointer items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft size={20} />
-          Back
-        </button>
-
-        {/* Khung (Card) chứa thông tin chính của Chapter */}
-        <div className="bg-card border border-border rounded-xl p-8 space-y-4">
-          <div className="w-full bg-gray-200 rounded-full h-6 overflow-hidden">
+      {/* Khung (Card) chứa thông tin chính của Chapter */}
+      <div className="bg-card border border-border rounded-xl p-8 space-y-4">
+          <div className="w-full bg-muted rounded-full h-6 overflow-hidden border border-border">
             <div
-              className={`h-full rounded-full transition-all duration-300 ease-out flex items-center justify-start ps-2 text-xs font-bold text-white ${progress === 100 ? 'bg-green-500' : 'bg-blue-600'
+              className={`h-full rounded-full transition-all duration-300 ease-out flex items-center justify-start ps-2 text-xs font-bold text-white ${progress === 100 ? 'bg-success' : 'bg-info'
                 }`}
               style={{ width: `${progress}%` }}
             >
@@ -102,20 +100,21 @@ export function ChapterDetail() {
           <div className="flex justify-between items-start">
             {/* Cụm thông tin bên trái: Tiêu đề Chapter, Số thứ tự, Tóm tắt */}
             <div>
-              <h1 className="font-semibold text-xl capitalize">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h1>
+              <h1 className="font-semibold text-xl capitalize text-card-foreground">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h1>
               <div>
-                <p className="mt-1 text-foreground/80">{chapterDetail?.seriesTitle}</p>
+                <p className="mt-3 text-foreground/80">{chapterDetail?.seriesTitle}</p>
               </div>
             </div>
 
             {/* Cụm thông tin bên phải: Badge trạng thái (Status) và Ngày tải lên */}
             <div className="flex flex-col items-end space-y-2">
               <StatusBadge status={chapterDetail?.status.toLowerCase()} />
+              <div className="flex items-center gap-1 text-sm text-muted-foreground"><FileText size={16} /> Total pages: <span className="text-foreground font-medium">{chapterDetail?.totalPage}</span></div>
             </div>
 
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 border-b border-gray-200 pb-6">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 border-b border-border pb-6">
 
             <div className="md:col-span-4 space-y-2">
               <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
@@ -130,9 +129,20 @@ export function ChapterDetail() {
             </div>
             <div className="md:col-span-4 space-y-2 ">
               <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
-                <h3 className="font-normal text-sm text-muted-foreground  tracking-wider">Deadline</h3>
+                <h3 className="font-normal text-sm text-muted-foreground gap-2 tracking-wider"><span>Deadline</span>
+                  {chapterDetail?.status != ("Publishing" || "Scheduled") ? (
+                    <>{isOverdue && <span className="text-destructive font-bold">(Overdue)</span>}</>
+                  ) : (
+                    <></>
+                  )}
+
+                </h3>
                 {chapterDetail?.deadline ? (
-                  <div className="text-sm my-2 font-semibold capitalize">{foramttedDeadline}</div>
+                  <>
+                    <div className="text-xs my-2 font-semibold capitalize">{foramttedDeadline}</div>
+
+                  </>
+
                 ) : (
                   <div className="text-sm ms-0.5"> — — — —</div>
                 )}
@@ -215,29 +225,47 @@ export function ChapterDetail() {
               progress === 100 ? (
                 <>
                   <h3 className="font-medium text-sm text-muted-foreground">Submit Your Work</h3>
-                  <div
-                    onClick={() => storyInputRef.current.click()}
-                    name="nameFile"
-                    className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center h-[160px] hover:border-primary transition-colors cursor-pointer"
-                  >
-                    {storyFile ? (
-                      <div className="text-primary font-medium">
-                        Selected: {storyFile.name}
+                  {chapterDetail?.chapterFileUrl ? (
+                    <>
+                      <p className="text-xs text-muted-foreground">Download To Review</p>
+                      <div className="flex flex-col gap-2 w-full items-center">
+                        <a
+                          href={chapterDetail?.chapterFileUrl}
+                          download
+                          className="inline-flex items-center justify-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-8 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm w-[240px]"
+                        >
+                          <Download size={16} />
+                          Download File Here
+                        </a>
                       </div>
-                    ) : (
-                      <>
-                        <p className="text-muted-foreground">Click to upload file</p>
-                        <p className="text-sm text-muted-foreground mt-1">PNG, JPG up to 10MB</p>
-                      </>
-                    )}
-                    <input
-                      type="file"
-                      accept=".pdf,.zip"
-                      className="hidden"
-                      ref={storyInputRef}
-                      onChange={handleStoryChange}
-                    />
-                  </div>
+                    </>
+                  ) : (
+                    <div
+                      onClick={() => storyInputRef.current.click()}
+                      name="nameFile"
+                      className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center h-[160px] hover:border-primary transition-colors cursor-pointer"
+                    >
+                      {storyFile ? (
+                        <div className="text-primary font-medium">
+                          Selected: {storyFile.name}
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-muted-foreground">Click to upload file</p>
+                          <p className="text-sm text-muted-foreground mt-1">PNG, JPG up to 10MB</p>
+                        </>
+                      )}
+                      <input
+                        type="file"
+                        accept=".pdf,.zip"
+                        className="hidden"
+                        ref={storyInputRef}
+                        onChange={handleStoryChange}
+                      />
+                    </div>
+                  )
+                  }
+
                 </>
               ) : (
                 <div className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center h-[160px] hover:border-primary transition-colors cursor-pointer">
@@ -263,12 +291,12 @@ export function ChapterDetail() {
                   <button
                     onClick={handleSubmitChapter}
                     disabled={!storyFile || isLoading}
-                    className="bg-secondary cursor-pointer text-secondary-foreground hover:bg-secondary/80 font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:bg-gray-500 disabled:cursor-not-allowed">
+                    className="bg-secondary cursor-pointer text-secondary-foreground hover:bg-secondary/80 font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:opacity-50 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed">
 
                     {isLoading ? "Submitting..." : "Submit Chapter"}
                   </button>
                 ) : (
-                  <button className="bg-secondary text-secondary-foreground  font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:bg-gray-500 disabled:cursor-not-allowed readonly " >
+                  <button className="bg-secondary text-secondary-foreground  font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:opacity-50 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed readonly " >
                     Overdue
                   </button>
                 )

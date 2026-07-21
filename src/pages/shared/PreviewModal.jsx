@@ -75,7 +75,7 @@ export function PreviewModal({ isOpen, onClose, fileUrl, role }) {
 
 
                 {/* Vùng hiển thị PDF và lớp vẽ KonvaDraw */}
-                <div className="relative overflow-auto border border-border rounded-xl shadow-inner bg-slate-100 min-h-[400px] max-h-[65vh] w-full flex justify-center items-start p-4">
+                <div className="relative overflow-auto border border-border rounded-xl shadow-inner bg-muted min-h-[400px] max-h-[65vh] w-full flex justify-center items-start p-4">
                     <Document
                         file={fileUrl}
                         onLoadSuccess={onDocumentLoadSuccess}

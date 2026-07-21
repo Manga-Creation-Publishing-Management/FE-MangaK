@@ -49,7 +49,7 @@ export function ApprovalPanel({
           onClick={onApprove}
           disabled={isLoading} // Vô hiệu hóa khi đang load
           className="
-            flex items-center gap-2 px-5 py-2.5 rounded-lg bg-success text-white font-semibold
+            flex items-center gap-2 px-5 py-2.5 rounded-lg bg-success text-success-foreground font-semibold
             hover:opacity-90 active:scale-[0.98]
             transition-all duration-150
             disabled:opacity-50 disabled:cursor-not-allowed

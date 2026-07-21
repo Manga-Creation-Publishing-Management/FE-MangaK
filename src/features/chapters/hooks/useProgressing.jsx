@@ -7,13 +7,10 @@ export function useProgressing(chapterId) {
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        const response = await chaptersService.getProgressingChapter(chapterId, "Completed");
-
-        const total = response?.data?.total || 0;
-        const numberOfStatus = response?.data?.numberOfStatus || 0;
-
-        console.log("tota: ", total);
-        console.log("numberOfStatus: ", numberOfStatus);
+        const completedChapter = await chaptersService.getProgressingChapter(chapterId, "Completed");
+        const unsatisfiedChapter = await chaptersService.getProgressingChapter(chapterId, "Unsatisfied");
+        const total = completedChapter?.data?.total + unsatisfiedChapter?.data?.total || 0;
+        const numberOfStatus = completedChapter?.data?.numberOfStatus + unsatisfiedChapter?.data?.numberOfStatus || 0;
 
         if (total > 0) {
           let currentProgressing = (numberOfStatus / total) * 100;
@@ -28,7 +25,7 @@ export function useProgressing(chapterId) {
     }
     fetchApi();
   }, [chapterId])
-  
+
   return {
     progress
   }

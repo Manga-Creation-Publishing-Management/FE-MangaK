@@ -8,8 +8,8 @@ export function PersonalInfoForm({
   onSubmit,
 }) {
   return (
-    <form onSubmit={onSubmit} className="bg-card border border-border rounded-xl p-8 space-y-6">
-      <h2>Personal Information</h2>
+    <form onSubmit={onSubmit} className="space-y-6">
+      <h2 className="text-xl font-semibold text-card-foreground mb-4">Personal Information</h2>
 
       <div className="grid grid-cols-2 gap-6">
         <div className="space-y-2">

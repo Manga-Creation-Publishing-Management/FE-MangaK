@@ -8,15 +8,15 @@ export function ScheduleCard({ schedule, onEditClick, onDeleteClick }) {
         <div className="flex-1">
           <div className="grid grid-cols-3 gap-6 mt-4">
             <div>
-              <h3 className="text-lg font-semibold">{schedule.seriesName}</h3>
+              <h3 className="text-lg font-semibold text-card-foreground">{schedule.seriesName}</h3>
               <p className="text-sm text-muted-foreground mt-1">by {schedule.author}</p>
             </div>
             <div>
-              <p className="text-lg font-semibold">Frequency</p>
+              <p className="text-lg font-semibold text-card-foreground">Frequency</p>
               <p className="text-sm text-muted-foreground mt-1 capitalize">{schedule.frequency}</p>
             </div>
             <div>
-              <p className="text-lg font-semibold">Publishing Date</p>
+              <p className="text-lg font-semibold text-card-foreground">Publishing Date</p>
               <p className="text-sm text-muted-foreground mt-1">
                 {schedule.startDate ? dayjs(schedule.startDate).format("DD/MM/YYYY") : ""}
               </p>

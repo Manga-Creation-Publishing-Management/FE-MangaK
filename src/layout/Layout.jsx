@@ -18,13 +18,9 @@ export function Layout({ roleName }) {
   const displayRole = roleDisplayNames[roleName] || roleName;
   const { showAlert } = useToast();
 
-  // useEffect(() => {
-  //   showAlert("Login successfully! Welcome back");
-  // }, []);
-
   return (
     <div className="flex h-screen w-full overflow-hidden">
-      <Sidebar userRole={roleName} className="" />
+      {roleName !== 'reader' && <Sidebar userRole={roleName} className="" />}
       <main className="flex-1 flex flex-col h-full overflow-hidden bg-background">
         <HeaderPage roleName={displayRole} avatarUrl="/avatarImgDemo.png" />
         {pageHeader && (

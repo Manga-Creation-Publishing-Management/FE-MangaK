@@ -16,6 +16,7 @@ import { FeedbackViewer } from "./FeedbackViewer";
 import { useToast } from "@/shared/hooks/useToast";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { Breadcrumb } from "@/shared/components/Breadcrumb";
 dayjs.extend(utc);
 
 // Component hiển thị trang chi tiết của một bộ truyện (Series)
@@ -130,24 +131,23 @@ export function SeriesDetail() {
     ? "Reject & Send Feedback"
     : "Reject Series";
 
+  const rolePrefix = roleFromState || "mangaka";
+  const customBreadcrumb = [
+    { label: rolePrefix.charAt(0).toUpperCase() + rolePrefix.slice(1), path: `/${rolePrefix}` },
+    { label: "Series", path: `/${rolePrefix}/series` },
+    { label: detailData?.title || "Series Detail" }
+  ];
+
   return (
     <>
-      <div className="p-6 space-y-8">
+      <div className="p-6 space-y-6">
+        <Breadcrumb items={customBreadcrumb} />
 
-        {/* Nút quay lại trang trước */}
-        <button
-          onClick={() => navigate(-1)}
-          className="flex cursor-pointer items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft size={20} />
-          Back
-        </button>
-
-        {/* Khung chứa ảnh bìa và thông tin cơ bản của bộ truyện */}
-        <div className="bg-card border-border rounded-xl overflow-hidden p-6">
+      {/* Khung chứa ảnh bìa và thông tin cơ bản của bộ truyện */}
+      <div className="bg-card border border-border rounded-xl overflow-hidden p-6">
 
           {/* Vùng hiển thị Ảnh bìa */}
-          <div className="grid grid-cols-3 md:grid-cols-3 gap-6 border-b border-gray-200 pb-6 items-start">
+          <div className="grid grid-cols-3 md:grid-cols-3 gap-6 border-b border-border pb-6 items-start">
             <div className="col-span-1 md:col-span-1 w-full aspect-[3/4] relative rounded-xl" >
               <img className="w-full h-full object-cover rounded-xl" src={detailData?.coverFile} alt="" />
             </div>
@@ -156,7 +156,7 @@ export function SeriesDetail() {
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     {/* Tiêu đề truyện và Tên tác giả */}
-                    <h1 className="text-2xl font-semibold">{detailData?.title}</h1>
+                    <h1 className="text-2xl font-semibold text-card-foreground">{detailData?.title}</h1>
                     <p className="text-muted-foreground mt-1">{detailData?.mangakaName}</p>
                   </div>
                   {/* Huy hiệu hiển thị trạng thái (Processing, Pending, Approved...) */}
@@ -262,6 +262,11 @@ export function SeriesDetail() {
             </div>
           </div>
 
+          {/* Component hiển thị Danh sách các Chapter thuộc bộ truyện này */}
+          <div className="pt-6">
+            <ChapterList roleName={roleFromState} seriesData={detailData} />
+          </div>
+          {console.log("Checkrolehientai:", roleFromState)}
 
         </div>
 
@@ -294,9 +299,7 @@ export function SeriesDetail() {
           </div>
         )}
 
-        {/* Component hiển thị Danh sách các Chapter thuộc bộ truyện này */}
-        <ChapterList roleName={roleFromState} seriesData={detailData} />
-        {console.log("Checkrolehientai:", roleFromState)}
+
 
         {/* feedback box for roles tantou and editorial, only when status is processing or pending */}
         {(isTantou || isEditorial) &&

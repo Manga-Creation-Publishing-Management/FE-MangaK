@@ -1,18 +1,29 @@
-import { LogOut, Bell, Mail } from 'lucide-react';
-import { LoginHook } from '@/features/auth/hooks/LoginHook';
-import { authService } from '@/services/authService';
+import { useState, useEffect } from 'react';
+import { Bell, Mail } from 'lucide-react';
+import { Link } from 'react-router';
 import { Logo } from '@/shared/components/Logo';
-import { ThemeToggle } from '@/shared/components/ThemeToggle';
 import { useGetFeedback } from '@/features/series/hooks/useGetFeedback';
 import { FeedbackItem } from '@/shared/components/FeedbackItem';
-import { useState, useEffect } from 'react';
 import { userService } from '@/services/userService';
+import { HeaderMenu } from './HeaderMenu';
+
+const roleRouteMap = {
+    mangaka: "mangaka",
+    assistant: "assistant",
+    tantou: "tantou",
+    editorial: "editorial",
+    admin: "admin",
+    reader: "reader",
+    "tantou editor": "tantou",
+    "editorial board": "editorial",
+};
 
 export function HeaderPage({ roleName, avatarUrl }) {
-    const { navigate } = LoginHook();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const normalizedRole = roleName ? roleName.toLowerCase() : "";
+    const routeRole = roleRouteMap[normalizedRole] || "mangaka";
+    const profilePath = `/${routeRole}/profile`;
     const hasFeedbackSupport = ["mangaka", "assistant", "tantou editor", "editorial board", "tantou", "editorial"].includes(normalizedRole);
 
     const { feedbackData } = useGetFeedback(hasFeedbackSupport);
@@ -31,27 +42,18 @@ export function HeaderPage({ roleName, avatarUrl }) {
     const [currentUserAvatar, setCurrentUserAvatar] = useState(avatarUrl || "/avatarImgDemo.png");
 
     useEffect(() => {
+        if (normalizedRole === 'reader') {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (user?.avatarUrl) {
+                setCurrentUserAvatar(user.avatarUrl);
+            }
+            return;
+        }
         const fetchHeaderProfile = async () => {
             try {
-                // 1. Kiểm tra localStorage trước để lấy avatar nhanh nếu có
-                const cachedUser = localStorage.getItem('user');
-                if (cachedUser) {
-                    const parsed = JSON.parse(cachedUser);
-                    if (parsed.avatarUrl) {
-                        setCurrentUserAvatar(parsed.avatarUrl);
-                    }
-                }
-                
-                // 2. Gọi API để lấy avatar mới nhất từ Database
                 const res = await userService.getProfile();
                 if (res?.data?.avatarUrl) {
                     setCurrentUserAvatar(res.data.avatarUrl);
-                    // Cập nhật lại cache localStorage để các lần sau tải nhanh hơn
-                    if (cachedUser) {
-                        const parsed = JSON.parse(cachedUser);
-                        parsed.avatarUrl = res.data.avatarUrl;
-                        localStorage.setItem('user', JSON.stringify(parsed));
-                    }
                 }
             } catch (error) {
                 console.error("Failed to load header profile avatar:", error);
@@ -59,24 +61,20 @@ export function HeaderPage({ roleName, avatarUrl }) {
         };
 
         fetchHeaderProfile();
-    }, [avatarUrl]);
-
-    const handleLogout = async () => {
-        await authService.logout();
-        navigate('/');
-    };
+    }, [avatarUrl, normalizedRole]);
 
     return (
         <>
-            <div className="grid grid-cols-12 shadow p-2 px-8 bg-card relative">
-                <div className="hidden md:block col-span-1 px-2 content-center">
-                    <img className="rounded-full w-10 h-10 object-cover border border-border"
-                        src={currentUserAvatar || "/avatarImgDemo.png"} alt="Avatar Image" />
-                </div>
-
-                <div className={`${roleName === 'reader' ? 'col-span-3' : 'col-span-5'} content-center`}>
-                    <span className="text-sidebar-foreground text-lg font-medium">Welcome back!</span><br />
-                    <span className="text-muted-foreground">{roleName}</span>
+            <div className="grid grid-cols-12 shadow p-2.5 px-8 bg-card relative items-center">
+                <div className={`${roleName === 'reader' ? 'col-span-4' : 'col-span-6'} flex items-center gap-3`}>
+                    <Link to={profilePath} className="shrink-0 hover:opacity-85 transition-opacity" title="View Profile">
+                        <img className="rounded-full w-10 h-10 object-cover ring-2 ring-primary/50 p-0.5 border border-primary/60 cursor-pointer"
+                            src={currentUserAvatar || "/avatarImgDemo.png"} alt="Avatar Image" />
+                    </Link>
+                    <div>
+                        <span className="text-foreground text-sm sm:text-base font-semibold leading-snug block">Welcome back!</span>
+                        <span className="text-muted-foreground text-xs font-medium capitalize block">{roleName}</span>
+                    </div>
                 </div>
 
                 {roleName === 'reader' &&
@@ -137,19 +135,8 @@ export function HeaderPage({ roleName, avatarUrl }) {
                             </div>
                         )}
 
-                        {/* Theme Toggle Button */}
-                        <ThemeToggle />
-
-                        {/* Logout Button */}
-                        <button onClick={handleLogout}
-                            className='flex 
-                        color-background text-muted-foreground
-                        hover:text-accent
-                        hover:rounded
-                        p-2'>
-                            <div className='content-center'> <LogOut /> </div>
-                            <span className='p-2 font-medium'>Logout</span>
-                        </button>
+                        {/* Hamburger Menu */}
+                        <HeaderMenu roleName={roleName} />
                     </div>
                 </div>
             </div>

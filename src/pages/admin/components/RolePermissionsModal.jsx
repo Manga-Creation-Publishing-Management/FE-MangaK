@@ -8,10 +8,10 @@ export function RolePermissionsModal({ show, onClose }) {
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-card rounded-xl p-8 w-full max-w-2xl max-h-[80vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2>Role Permissions</h2>
+          <h2 className="text-xl font-semibold text-card-foreground">Role Permissions</h2>
           <button
             onClick={onClose}
-            className="text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground cursor-pointer"
           >
             <X size={20} />
           </button>
@@ -34,7 +34,7 @@ export function RolePermissionsModal({ show, onClose }) {
                 {perms.map((perm) => (
                   <li
                     key={perm}
-                    className="flex items-center gap-2 text-sm"
+                    className="flex items-center gap-2 text-sm text-foreground"
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
                     {perm}
