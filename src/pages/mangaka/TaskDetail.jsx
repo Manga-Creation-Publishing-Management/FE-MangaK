@@ -162,9 +162,9 @@ export function TaskDetail() {
             </div>
 
             {/* 2. Cột giữa */}
-            <div className="md:col-span-3 flex flex-col gap-2 h-[200px]">
+            <div className="md:col-span-3 flex flex-col gap-2 min-h-[200px] h-auto">
               {/* Ô 2: Assistant in Charge */}
-              <div className="bg-muted/30 p-4 rounded-xl border border-border flex flex-col justify-start h-[96px]">
+              <div className="bg-muted/30 p-4 rounded-xl border border-border flex flex-col justify-start min-h-[96px]">
                 <div className="flex flex-row justify-between items-center">
                   <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3 ">
                     Assistant in charge
@@ -182,7 +182,7 @@ export function TaskDetail() {
                 </span>
               </div>
               {/* Ô 1: Income Amount */}
-              <div className="bg-muted/30 p-4 rounded-lg border border-border h-[96px] flex flex-col justify-start">
+              <div className="bg-muted/30 p-4 rounded-lg border border-border min-h-[96px] flex flex-col justify-start">
                 <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-2">
                   Income Amount
                 </h3>
@@ -196,8 +196,7 @@ export function TaskDetail() {
             </div>
 
             {/* 3. Cột phải */}
-            <div className="md:col-span-3 flex flex-col gap-2 h-[200px]">
-              {/* Ô 3: Deadline */}
+            <div className="md:col-span-3 flex flex-col gap-2 min-h-[200px] h-auto">
               {/* Ô 3: Deadline */}
               <div className="border border-border rounded-xl p-4 bg-muted/20 flex flex-col justify-start min-h-[96px]">
                 <div className="flex flex-row justify-between items-center w-full">
@@ -256,7 +255,7 @@ export function TaskDetail() {
               </div>
 
               {/* Ô 4: Submitted At */}
-              <div className="bg-muted/30 p-4 rounded-xl border border-border flex flex-col justify-start h-[96px]">
+              <div className="bg-muted/30 p-4 rounded-xl border border-border flex flex-col justify-start min-h-[96px]">
                 <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3">
                   Submitted At
                 </h3>
@@ -341,7 +340,7 @@ export function TaskDetail() {
 
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-border">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4 border-t border-border">
 
             {(role === "assistant") &&
               <>
@@ -349,12 +348,12 @@ export function TaskDetail() {
                   <>
                     <button
                       // onClick={}
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-full sm:w-auto">
                       Reject
                     </button>
                     <button
                       onClick={handleGetTask}
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-full sm:w-auto">
                       Get
                     </button>
                   </>
@@ -364,7 +363,7 @@ export function TaskDetail() {
                   <button
                     onClick={handleSubmitTask}
                     disabled={isLoading}
-                    className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50 disabled:cursor-not-allowed">
+                    className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-full sm:w-auto disabled:cursor-not-allowed">
                     {isLoading ? "Submitting..." : "Submit Task"}
                   </button>
                 }
@@ -372,7 +371,7 @@ export function TaskDetail() {
                 {(taskDetail?.status === "Revising" || taskDetail?.status === "Unsatisfied") && (
                   <button
                     onClick={handleViewFeedbackClick}
-                    className="bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                    className="bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-full sm:w-auto">
                     View Feedback
                   </button>
                 )}
@@ -384,7 +383,7 @@ export function TaskDetail() {
             {role === "mangaka" && (taskDetail?.status === "Revising" || taskDetail?.status === "Unsatisfied" || taskDetail?.status === "Completed") && (
               <button
                 onClick={handleViewFeedbackClick}
-                className="bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                className="bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-full sm:w-auto">
                 View Feedback
               </button>
             )}

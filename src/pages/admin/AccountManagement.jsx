@@ -197,17 +197,17 @@ export function AccountManagement() {
             />
           </div>
           {accountType !== "readers" ? (
-            <div className="flex gap-3 shrink-0">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 shrink-0 w-full md:w-auto">
               <button
                 onClick={() => setShowPermissionsModal(true)}
-                className="flex items-center gap-2 px-4 py-2 border border-border text-foreground rounded-lg hover:bg-muted transition-colors text-sm font-medium"
+                className="flex items-center justify-center gap-2 px-4 py-2 border border-border text-foreground rounded-lg hover:bg-muted transition-colors text-sm font-medium w-full sm:w-auto cursor-pointer"
               >
                 <ShieldCheck size={18} />
                 Role Permissions
               </button>
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium w-full sm:w-auto cursor-pointer"
               >
                 <Plus size={18} />
                 Create Account

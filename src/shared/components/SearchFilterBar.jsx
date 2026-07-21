@@ -17,7 +17,7 @@ export function SearchFilterBar({
     <div className={containerClass}>
       {/* Ô tìm kiếm */}
       {showSearch && (
-        <div className="relative flex-1 max-w-sm w-full">
+        <div className="relative flex-1 sm:max-w-sm w-full">
           <Search
             size={18}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
