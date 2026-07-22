@@ -1,9 +1,9 @@
 import { useState } from "react";
 import CreateSeriesModal from "@/features/series/components/CreateSeriesModal";
 import { useSeriesManagement } from "@/features/series/hooks/useSeriesManagement";
-import useCreateSeries from "@/features/series/hooks/useCreateSeries";
+import useSeriesList from "@/features/series/hooks/useSeriesList";
 import { StatusBadge } from "@/shared/components/StatusBadge";
-import { Plus } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { getTotalPage } from "@/features/Pagination/hooks/getTotalPage";
 import { PaginationCustom } from "@/features/Pagination/components/PaginationCustom";
 import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
@@ -19,7 +19,7 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
     handleNavigate
   } = useSeriesManagement();
 
-  const { seriesData } = useCreateSeries(null, handleReload, reload);
+  const { seriesData, isLoading } = useSeriesList(reload);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -125,14 +125,20 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
           )}
 
           <div className="grid grid-cols-4 gap-6">
-            {currentDataListDisplay.length === 0 ?
-              (<div className="text-center py-8 text-muted-foreground">
+            {isLoading ? (
+              <div className="col-span-4 flex justify-center items-center py-12">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                <span className="ml-2 text-muted-foreground">Loading series...</span>
+              </div>
+            ) : currentDataListDisplay.length === 0 ? (
+              <div className="col-span-4 text-center py-8 text-muted-foreground">
                 <p className="text-sm text-accent">No series found.</p>
-              </div>)
-              : (currentDataListDisplay?.map(item => (
+              </div>
+            ) : (
+              currentDataListDisplay?.map(item => (
                 <div key={item.seriesId} className="col-span-1 md:col-span-1 w-full relative  bg-card border 
                                 border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
-
+                  {/* ... (giữ nguyên nội dung card bên trong) ... */}
                   <div className=' aspect-[3/4] w-full relative'>
                     <img className="w-full h-full object-cover" src={item.coverFile} alt="cover file" />
                   </div>
@@ -151,9 +157,10 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered }) {
                     </button>
                   </div>
                 </div>
-              )))
-            }
+              ))
+            )}
           </div>
+
         </div>
         <PaginationCustom
           currentPage={currentPage}

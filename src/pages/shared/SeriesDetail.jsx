@@ -1,4 +1,4 @@
-import { ArrowLeft, Download, Eye, ChevronDown } from "lucide-react";
+import { ArrowLeft, Download, Eye, ChevronDown, Loader2 } from "lucide-react";
 import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -129,6 +129,15 @@ export function SeriesDetail() {
   const rejectText = isTantou
     ? "Reject & Send Feedback"
     : "Reject Series";
+
+  if (!detailData) {
+    return (
+      <div className="flex justify-center items-center h-[70vh]">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+        <span className="ml-3 text-muted-foreground font-medium text-lg">Loading series details...</span>
+      </div>
+    );
+  }
 
   return (
     <>

@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 import dayjs from 'dayjs';
 
 
-import { ArrowLeft, Download, Star, ChevronDown, FileText } from "lucide-react";
+import { ArrowLeft, Download, Star, ChevronDown, FileText, Loader2 } from "lucide-react";
 import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
 import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter";
@@ -70,6 +70,15 @@ export function ChapterDetail() {
 
   const handleInitialRejectClick = () => {
     setConfirmModalOpen(true);
+  }
+
+  if (!chapterDetail) {
+    return (
+      <div className="flex justify-center items-center h-[70vh]">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+        <span className="ml-3 text-muted-foreground font-medium text-lg">Loading chapter details...</span>
+      </div>
+    );
   }
 
   return (
