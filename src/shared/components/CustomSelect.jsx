@@ -35,7 +35,7 @@ export function CustomSelect({ value, onChange, options, className = '', name })
 
       {isOpen && (
         <div className="absolute z-50 w-full mt-1 bg-card border border-border rounded-lg shadow-lg overflow-hidden py-1">
-          <ul className="max-h-60 overflow-y-auto">
+          <ul className="max-h-60 overflow-y-auto no-scrollbar">
             {options.map((option) => (
               <li
                 key={option.value}

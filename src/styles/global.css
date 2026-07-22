@@ -7,6 +7,28 @@ input::-ms-clear {
   display: none;
 }
 
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Automatically hide scrollbars inside modal overlays */
+.fixed [class*="overflow-y-auto"]::-webkit-scrollbar,
+.fixed [class*="overflow-auto"]::-webkit-scrollbar,
+.fixed.overflow-y-auto::-webkit-scrollbar {
+  display: none;
+}
+.fixed [class*="overflow-y-auto"],
+.fixed [class*="overflow-auto"],
+.fixed.overflow-y-auto {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Synchronized smooth theme transition rule */
 .theme-transitioning,
 .theme-transitioning *,
