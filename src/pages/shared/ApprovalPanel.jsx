@@ -1,4 +1,4 @@
-import { Check, X } from "lucide-react";
+import { Check, X, SquareX } from "lucide-react";
 
 // Component ApprovalPanel: Bảng điều khiển dùng để gửi nhận xét (Feedback) 
 // và nút Phê duyệt / Từ chối (Approve / Reject) dành cho Tantou hoặc Editorial Board.
@@ -7,6 +7,8 @@ export function ApprovalPanel({
   onFeedbackChange,
   onApprove,
   onReject,
+  onUnsatisfied,
+  rejectCount = 0,
   isLoading = false,
   approveText = "Approve",
   rejectText = "Reject",
@@ -41,19 +43,19 @@ export function ApprovalPanel({
       />
 
       {/* Khung chứa các nút bấm hành động (Approve & Reject) */}
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-col sm:flex-row gap-3">
 
         {/* Nút Phê Duyệt (Approve) */}
         <button
           type="button"
           onClick={onApprove}
-          disabled={isLoading} // Vô hiệu hóa khi đang load
+          disabled={isLoading}
           className="
-            flex items-center gap-2 px-5 py-2.5 rounded-lg bg-success text-success-foreground font-semibold
+            flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-success text-success-foreground font-semibold
             hover:opacity-90 active:scale-[0.98]
             transition-all duration-150
             disabled:opacity-50 disabled:cursor-not-allowed
-            cursor-pointer
+            cursor-pointer w-full sm:w-auto text-sm
           "
         >
           <Check size={16} strokeWidth={2.5} />
@@ -64,20 +66,41 @@ export function ApprovalPanel({
         <button
           type="button"
           onClick={onReject}
-          disabled={isLoading} // Vô hiệu hóa khi đang load
+          disabled={isLoading}
           className="
-            flex items-center gap-2
+            flex items-center justify-center gap-2
             px-5 py-2.5 rounded-lg
             bg-destructive text-destructive-foreground font-semibold
             hover:opacity-90 active:scale-[0.98]
             transition-all duration-150
             disabled:opacity-50 disabled:cursor-not-allowed
-            cursor-pointer
+            cursor-pointer w-full sm:w-auto text-sm
           "
         >
           <X size={16} strokeWidth={2.5} />
           {rejectText}
         </button>
+
+        {/* Nút Không hài lòng (Unsatisfied) - chỉ hiển thị khi rejectCount >= 2 */}
+        {rejectCount >= 2 && onUnsatisfied && (
+          <button
+            type="button"
+            onClick={onUnsatisfied}
+            disabled={isLoading}
+            className="
+              flex items-center gap-2
+              px-5 py-2.5 rounded-lg
+              bg-warning text-warning-foreground font-semibold
+              hover:opacity-90 active:scale-[0.98]
+              transition-all duration-150
+              disabled:opacity-50 disabled:cursor-not-allowed
+              cursor-pointer
+            "
+          >
+            <SquareX size={16} strokeWidth={2.5} />
+            Unsatisfied
+          </button>
+        )}
       </div>
     </div>
   );

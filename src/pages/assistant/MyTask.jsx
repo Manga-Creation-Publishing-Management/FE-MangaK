@@ -25,14 +25,17 @@ export function MyTask({ isDashboardView = false }) {
       (item.seriesTitle || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
       String(item.chapterNumber || "").includes(searchQuery);
 
+    const status = item.status?.toLowerCase();
+
     const matchesStatus =
-      filterStatus === "all" ||
-      item.status?.toLowerCase() === filterStatus.toLowerCase();
+      filterStatus === "all"
+        ? status !== "rejected"
+        : status === filterStatus.toLowerCase();
 
     return matchesSearch && matchesStatus;
   });
 
-  const postsPerPageLimit = 4;
+  const postsPerPageLimit = isDashboardView ? 2 : 4;
   const {
     currentPage,
     setCurrentPage,
@@ -56,7 +59,9 @@ export function MyTask({ isDashboardView = false }) {
               { value: "pending", label: "Pending" },
               { value: "processing", label: "Processing" },
               { value: "revising", label: "Revising" },
-              { value: "completed", label: "Completed" }
+              { value: "completed", label: "Completed" },
+              { value: "unsatisfied", label: "Unsatisfied" },
+              { value: "rejected", label: "Rejected" },
             ]
           }
         ]}
@@ -71,33 +76,33 @@ export function MyTask({ isDashboardView = false }) {
   ) : (
     <div className="space-y-4">
       {currentDataListDisplay.map(item => (
-        <div className="bg-card border border-border rounded-xl p-6 hover:shadow-lg transition-shadow" key={item.id}>
-          <div className="flex items-start justify-between gap-2">
+        <div className="bg-card border border-border rounded-xl p-4 sm:p-6 hover:shadow-lg transition-shadow" key={item.id}>
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-card-foreground truncate text-xl">
+              <p className="font-semibold text-card-foreground truncate text-base sm:text-xl">
                 Chapter {item.chapterNumber} - {item.seriesTitle}
               </p>
-              <p className="text-sm text-muted-foreground mt-1">{item.seriesTitle}</p>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{item.seriesTitle}</p>
             </div>
 
             <div className="flex items-center gap-4 shrink-0">
-              <span className="text-2xl font-semibold text-success flex items-center gap-0.5">
-                <JapaneseYen size={23} strokeWidth={2.5} className="shrink-0 translate-y-[2px]" />
+              <span className="text-xl sm:text-2xl font-semibold text-success flex items-center gap-0.5">
+                <JapaneseYen size={20} strokeWidth={2.5} className="shrink-0 translate-y-[2px]" />
                 <span>{item.incomeAmount.toLocaleString('en-US')}</span>
               </span>
             </div>
           </div>
 
-          <div className="flex items-end justify-between gap-4 mt-2.5 pt-3 border-t border-border/50">
-            <div className="flex items-center gap-1.5 text-sm text-destructive font-medium shrink-0 pb-0.5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-3 pt-3 border-t border-border/50">
+            <div className="flex items-center gap-1.5 text-xs sm:text-sm text-destructive font-medium shrink-0">
               <CalendarClock size={16} />
               <span>Deadline: {dayjs(item.deadline).format('DD/MM/YYYY HH:mm')}</span>
             </div>
 
-            <div className="flex items-center gap-4 text-sm shrink-0">
+            <div className="flex flex-wrap items-center justify-between sm:justify-end gap-3 w-full sm:w-auto text-xs sm:text-sm shrink-0">
               <StatusBadge status={item.status?.toLowerCase()} />
               <button
-                className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+                className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-xs sm:text-sm font-medium"
                 onClick={() => handleNavigateToTask(role.toLowerCase(), item.id)}
               >
                 View Detail

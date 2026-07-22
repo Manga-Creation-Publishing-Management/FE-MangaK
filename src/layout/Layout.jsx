@@ -3,6 +3,7 @@ import { Sidebar } from './Sidebar';
 import { HeaderPage } from './HeaderPage';
 import { useEffect, useState } from 'react';
 import { useToast } from '@/shared/hooks/useToast';
+import { Breadcrumb } from '@/shared/components/Breadcrumb';
 
 const roleDisplayNames = {
   mangaka: "Mangaka",
@@ -15,31 +16,47 @@ const roleDisplayNames = {
 
 export function Layout({ roleName }) {
   const [pageHeader, setPageHeader] = useState(null);
+  const [breadcrumbItems, setBreadcrumbItems] = useState(null);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const displayRole = roleDisplayNames[roleName] || roleName;
   const { showAlert } = useToast();
 
   return (
-    <div className="flex h-screen w-full overflow-hidden">
-      {roleName !== 'reader' && <Sidebar userRole={roleName} className="" />}
-      <main className="flex-1 flex flex-col h-full overflow-hidden bg-background">
-        <HeaderPage roleName={displayRole} avatarUrl="/avatarImgDemo.png" />
+    <div className="flex h-screen w-full overflow-hidden bg-background">
+      {roleName !== 'reader' && (
+        <Sidebar
+          userRole={roleName}
+          isMobileOpen={isMobileOpen}
+          onCloseMobile={() => setIsMobileOpen(false)}
+        />
+      )}
+      <main className="flex-1 flex flex-col h-full overflow-hidden bg-background min-w-0">
+        <HeaderPage
+          roleName={displayRole}
+          avatarUrl="/avatarImgDemo.png"
+          onToggleMobileSidebar={() => setIsMobileOpen((prev) => !prev)}
+        />
+        {breadcrumbItems && (
+          <Breadcrumb items={breadcrumbItems} />
+        )}
         {pageHeader && (
-          <div className="p-6 m-4 bg-card border border-border rounded-2xl">
+          <div className="p-4 sm:p-6 m-3 sm:m-4 bg-card border border-border rounded-2xl shrink-0">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
-                <h1 className="text-2xl font-bold">{pageHeader.title}</h1>
-                <p className="text-muted-foreground">{pageHeader.subtitle}</p>
+                <h1 className="text-xl sm:text-2xl font-bold">{pageHeader.title}</h1>
+                <p className="text-xs sm:text-sm text-muted-foreground">{pageHeader.subtitle}</p>
               </div>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-2 sm:gap-3">
                 {pageHeader.actions}
               </div>
             </div>
           </div>
         )}
-        <div className="flex-1 overflow-y-auto p-1 bg-background">
-          <Outlet context={{ setPageHeader }} />
+        <div className="flex-1 overflow-y-auto p-2 sm:p-4 bg-background">
+          <Outlet context={{ setPageHeader, setBreadcrumbItems }} />
         </div>
       </main>
     </div>
   );
 }
+
