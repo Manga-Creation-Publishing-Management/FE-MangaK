@@ -132,14 +132,6 @@ export function SeriesDetail() {
     ? "Reject & Send Feedback"
     : "Reject Series";
 
-  if (!detailData) {
-    return (
-      <div className="flex justify-center items-center h-[70vh]">
-        <Loader2 className="w-10 h-10 animate-spin text-primary" />
-        <span className="ml-3 text-muted-foreground font-medium text-lg">Loading series details...</span>
-      </div>
-    );
-  }
   const rolePrefix = roleFromState || "mangaka";
   const customBreadcrumb = [
     { label: rolePrefix.charAt(0).toUpperCase() + rolePrefix.slice(1), path: `/${rolePrefix}` },
@@ -148,9 +140,21 @@ export function SeriesDetail() {
   ];
 
   useEffect(() => {
-    setBreadcrumbItems(customBreadcrumb);
-    return () => setBreadcrumbItems(null);
+    if (detailData) {
+      setBreadcrumbItems(customBreadcrumb);
+      return () => setBreadcrumbItems(null);
+    }
   }, [detailData?.title, rolePrefix]);
+
+  if (!detailData) {
+    return (
+      <div className="flex justify-center items-center h-[70vh]">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+        <span className="ml-3 text-muted-foreground font-medium text-lg">Loading series details...</span>
+      </div>
+    );
+  }
+
 
   return (
     <>
