@@ -27,9 +27,9 @@ export function CustomSelect({ value, onChange, options, className = '', name })
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-4 py-2.5 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary text-left"
+        className="w-full flex items-center justify-between px-4 py-2.5 bg-input-background text-foreground rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary text-left"
       >
-        <span className="truncate">{selectedOption?.label}</span>
+        <span className="truncate text-foreground">{selectedOption?.label}</span>
         <ChevronDown size={18} className="text-muted-foreground ml-2 flex-shrink-0" />
       </button>
 

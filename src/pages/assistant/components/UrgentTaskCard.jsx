@@ -8,7 +8,7 @@ export function UrgentTaskCard({ urgentTasks = [], isLoading, onNavigateToTask }
       <div>
         <div className="flex items-center gap-2 mb-5">
           <CalendarClock size={20} className="text-amber-500" />
-          <h2 className="text-lg font-semibold">Urgent Tasks</h2>
+          <h2 className="text-lg font-semibold text-card-foreground">Urgent Tasks</h2>
         </div>
 
         {isLoading ? (

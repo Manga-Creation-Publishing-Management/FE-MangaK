@@ -20,11 +20,11 @@ export function Income() {
     <div className='p-6 space-y-8 bg-background min-h-full'>
       <div className='flex gap-6 xs:flex-col'>
         <OverviewCard contentText="Completed tasks" iconName={<CircleCheckBig size={30} />} iconColor="#34d399" valueNum={`${countCompletedTask}`} />
-        <OverviewCard contentText="Total Income This Month" iconName={<JapaneseYen size={30} />} iconColor="" valueNum={`${totalIncome.toLocaleString('en-US') }`} />
+        <OverviewCard contentText="Total Income This Month" iconName={<JapaneseYen size={30} />} iconColor="#34d399" valueNum={`${totalIncome.toLocaleString('en-US') }`} />
       </div>
 
       <div className="bg-card border border-border rounded-xl p-6">
-        <h2 className="text-xl font-semibold mb-5">Income History</h2>
+        <h2 className="text-xl font-semibold mb-5 text-card-foreground">Income History</h2>
 
         <div className="grid grid-cols-1 gap-4">
           {monthlyIncomesList?.map(item => (
@@ -39,7 +39,7 @@ export function Income() {
                     <Calendar size={22} strokeWidth={2.2} />
                   </div>
                   <div className="min-w-0">
-                    <p className="font-semibold text-muted-foreground text-2xl">
+                    <p className="font-semibold text-foreground text-2xl">
                       {item.month}/{item.year}
                     </p>
                   </div>

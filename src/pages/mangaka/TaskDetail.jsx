@@ -1,4 +1,4 @@
-import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, SquarePen, UploadCloud, ChevronDown } from "lucide-react";
+import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, SquarePen, UploadCloud, ChevronDown, X } from "lucide-react";
 import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { useTaskDetail } from "../../features/tasks/hooks/useTaskDetail";
@@ -9,10 +9,12 @@ import utc from 'dayjs/plugin/utc';
 import { AnnotationModal } from "../shared/AnnotationModal";
 import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
 import { PreviewModal } from "../shared/PreviewModal";
+import { UnsatisfiedModal } from "../shared/UnsatisfiedModal";
 import { useState, useRef } from "react";
 import { FeedbackViewer } from "../shared/FeedbackViewer";
 import { useToast } from "@/shared/hooks/useToast";
 import { useUpdateTaskDeadline } from "../../features/tasks/hooks/useUpdateTaskDeadline";
+import { Breadcrumb } from "@/shared/components/Breadcrumb";
 dayjs.extend(utc);
 export function TaskDetail() {
 
@@ -28,13 +30,19 @@ export function TaskDetail() {
     storyFile,
     storyInputRef,
     handleStoryChange,
-    handleGetTask,
     isLoading,
     feedback,
     setFeedback,
     handleSubmitTask,
     handleRejectTask,
-    handleApprovedTask
+    handleApprovedTask,
+    handleDenyTask,
+    handleGetTask,
+    handleUnsatisfiedTask,
+    assistantList,
+    isUpdatingAssistant,
+    fetchAssistants,
+    handleUpdateAssistant
   } = useTaskDetail(taskId, role);
 
   const {
@@ -61,6 +69,9 @@ export function TaskDetail() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isUnsatisfiedModalOpen, setIsUnsatisfiedModalOpen] = useState(false);
+  const [isEditingAssistant, setIsEditingAssistant] = useState(false);
+  const [selectedAssistantId, setSelectedAssistantId] = useState("");
 
   const feedbackViewerRef = useRef(null);
 
@@ -78,15 +89,27 @@ export function TaskDetail() {
 
   const isOverdue = deadlineObj.isBefore(today)
 
+  const rolePrefix = role?.toLowerCase() || "mangaka";
+  const taskLabel = taskDetail?.chapterNumber
+    ? `Chapter ${taskDetail.chapterNumber}${taskDetail.chapterTitle ? `: ${taskDetail.chapterTitle}` : ''}`
+    : "Task Detail";
+
+  const customBreadcrumb = [
+    { label: rolePrefix.charAt(0).toUpperCase() + rolePrefix.slice(1), path: `/${rolePrefix}` },
+    { label: rolePrefix === 'assistant' ? "My Tasks" : "Task Management", path: `/${rolePrefix}/tasks` },
+    { label: taskLabel }
+  ];
+
   return (
     <>
-      <div className="p-6 space-y-8">
+      <div className="p-6 space-y-6">
+        <Breadcrumb items={customBreadcrumb} />
 
         <div className="bg-card border border-border rounded-xl p-8 space-y-6">
 
           <div className="flex justify-between items-start border-b border-border pb-6">
             <div className="space-y-1">
-              <div className="flex items-center  text-2xl font-semibold mb-1">
+              <div className="flex items-center text-2xl font-semibold mb-1 text-card-foreground">
                 Chapter {taskDetail?.chapterNumber}: {taskDetail?.chapterTitle}
               </div>
               <p className="text-muted-foreground text-l flex items-center gap-1 mt-2">
@@ -149,27 +172,72 @@ export function TaskDetail() {
             </div>
 
             {/* 2. Cột giữa */}
-            <div className="md:col-span-3 flex flex-col gap-2 h-[200px]">
+            <div className="md:col-span-3 flex flex-col gap-2 min-h-[200px] h-auto">
               {/* Ô 2: Assistant in Charge */}
-              <div className="bg-muted/30 p-4 rounded-xl border border-border flex flex-col justify-start h-[96px]">
+              <div className="bg-muted/30 p-4 rounded-xl border border-border flex flex-col justify-start min-h-[96px]">
                 <div className="flex flex-row justify-between items-center">
                   <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3 ">
                     Assistant in charge
                   </h3>
-                  <span className="cursor-pointer hover:bg-secondary/50 rounded-xl p-2 inline-flex items-center justify-center -mt-[10px] -mr-2">
-
-                    <SquarePen
-                      size={13}
-                    />
-                  </span>
+                  {role === "mangaka" && (
+                    taskDetail?.status === "Available" ||
+                    taskDetail?.status === "Rejected" ||
+                    taskDetail?.status === "Revising" ||
+                    taskDetail?.status === "Unsatisfied"
+                  ) && (
+                      <button
+                        onClick={async () => {
+                          if (isEditingAssistant) {
+                            setIsEditingAssistant(false);
+                          } else {
+                            // Fetch assistant list if empty
+                            if (assistantList.length === 0) {
+                              await fetchAssistants();
+                            }
+                            const currentId = taskDetail?.assignedToId || taskDetail?.assistantId || "";
+                            const matched = assistantList.find(as => as.fullName === taskDetail?.assistantName);
+                            setSelectedAssistantId(currentId || matched?.userId || "");
+                            setIsEditingAssistant(true);
+                          }
+                        }}
+                        className="cursor-pointer hover:bg-secondary/50 rounded-xl p-2 inline-flex items-center justify-center -mt-[10px] -mr-2 text-foreground"
+                      >
+                        {isEditingAssistant ? <X size={13} /> : <SquarePen size={13} />}
+                      </button>
+                    )}
                 </div>
 
-                <span className="text-l font-semibold text-muted-foreground flex items-center">
-                  {taskDetail?.assistantName}
-                </span>
+                {isEditingAssistant ? (
+                  <div className="flex items-center gap-2 -mt-2">
+                    <select
+                      value={selectedAssistantId}
+                      onChange={async (e) => {
+                        const newId = e.target.value;
+                        setSelectedAssistantId(newId);
+                        if (newId) {
+                          await handleUpdateAssistant(newId);
+                          setIsEditingAssistant(false);
+                        }
+                      }}
+                      disabled={isUpdatingAssistant}
+                      className="bg-card text-foreground border border-border rounded px-2 py-1 text-sm font-semibold focus:outline-none focus:ring-1 focus:ring-primary w-full cursor-pointer"
+                    >
+                      <option value="">Select assistant...</option>
+                      {assistantList.map((as) => (
+                        <option key={as.userId} value={as.userId}>
+                          {as.fullName}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ) : (
+                  <span className="text-l font-semibold text-muted-foreground flex items-center">
+                    {taskDetail?.assistantName || "Unassigned"}
+                  </span>
+                )}
               </div>
               {/* Ô 1: Income Amount */}
-              <div className="bg-muted/30 p-4 rounded-lg border border-border h-[96px] flex flex-col justify-start">
+              <div className="bg-muted/30 p-4 rounded-lg border border-border min-h-[96px] flex flex-col justify-start">
                 <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-2">
                   Income Amount
                 </h3>
@@ -183,8 +251,7 @@ export function TaskDetail() {
             </div>
 
             {/* 3. Cột phải */}
-            <div className="md:col-span-3 flex flex-col gap-2 h-[200px]">
-              {/* Ô 3: Deadline */}
+            <div className="md:col-span-3 flex flex-col gap-2 min-h-[200px] h-auto">
               {/* Ô 3: Deadline */}
               <div className="border border-border rounded-xl p-4 bg-muted/20 flex flex-col justify-start min-h-[96px]">
                 <div className="flex flex-row justify-between items-center w-full">
@@ -243,7 +310,7 @@ export function TaskDetail() {
               </div>
 
               {/* Ô 4: Submitted At */}
-              <div className="bg-muted/30 p-4 rounded-xl border border-border flex flex-col justify-start h-[96px]">
+              <div className="bg-muted/30 p-4 rounded-xl border border-border flex flex-col justify-start min-h-[96px]">
                 <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3">
                   Submitted At
                 </h3>
@@ -259,7 +326,7 @@ export function TaskDetail() {
 
 
             <div className="space-y-3 w-full">
-              {(role === "assistant" && taskDetail?.status != "Available") &&
+              {(role === "assistant" && (taskDetail?.status == "Processing" || taskDetail?.status == "Revising")) &&
                 <>
                   <h3 className="font-medium text-sm text-muted-foreground">Submit Your Work</h3>
                   <div
@@ -288,7 +355,7 @@ export function TaskDetail() {
                 </>
               }
 
-              {role === "mangaka" &&
+              {role === "mangaka" && (taskDetail?.status == "Processing" || taskDetail?.status == "Pending" || taskDetail?.status == "Completed" || taskDetail?.status == "Unsatisfied") &&
                 <>
                   <h3 className="font-medium text-sm text-muted-foreground">Submited File by Assistant</h3>
                   <div className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center space-y-3 h-[160px] ">
@@ -328,30 +395,30 @@ export function TaskDetail() {
 
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-border">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4 border-t border-border">
 
             {(role === "assistant") &&
               <>
                 {taskDetail?.status == "Available" &&
                   <>
                     <button
-                      // onClick={}
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                      onClick={handleDenyTask}
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-full sm:w-auto">
                       Reject
                     </button>
                     <button
                       onClick={handleGetTask}
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-full sm:w-auto">
                       Get
                     </button>
                   </>
 
                 }
-                {(taskDetail?.status !== "Pending" && taskDetail?.status !== "Revising" && taskDetail?.status !== "Available") &&
+                {(taskDetail?.status === "Processing" || taskDetail?.status === "Revising") &&
                   <button
                     onClick={handleSubmitTask}
                     disabled={isLoading}
-                    className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50 disabled:cursor-not-allowed">
+                    className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-full sm:w-auto disabled:cursor-not-allowed">
                     {isLoading ? "Submitting..." : "Submit Task"}
                   </button>
                 }
@@ -359,7 +426,7 @@ export function TaskDetail() {
                 {(taskDetail?.status === "Revising" || taskDetail?.status === "Unsatisfied") && (
                   <button
                     onClick={handleViewFeedbackClick}
-                    className="bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                    className="bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-full sm:w-auto">
                     View Feedback
                   </button>
                 )}
@@ -371,7 +438,7 @@ export function TaskDetail() {
             {role === "mangaka" && (taskDetail?.status === "Revising" || taskDetail?.status === "Unsatisfied" || taskDetail?.status === "Completed") && (
               <button
                 onClick={handleViewFeedbackClick}
-                className="bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
+                className="bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-full sm:w-auto">
                 View Feedback
               </button>
             )}
@@ -386,6 +453,8 @@ export function TaskDetail() {
                 onFeedbackChange={(e) => setFeedback(e.target.value)}
                 onApprove={() => handleApprovedTask(taskId)}
                 onReject={() => handleInitialRejectClick()}
+                onUnsatisfied={() => setIsUnsatisfiedModalOpen(true)}
+                rejectCount={taskDetail?.rejectCount}
                 isLoading={isLoading}
                 approveText="Approve Task"
                 rejectText="Reject Task with Feedback"
@@ -422,6 +491,16 @@ export function TaskDetail() {
                 onClose={() => setIsPreviewOpen(false)}
                 fileUrl={taskDetail?.submittedFileUrl}
                 role={role}
+              />
+
+              <UnsatisfiedModal
+                isOpen={isUnsatisfiedModalOpen}
+                onClose={() => setIsUnsatisfiedModalOpen(false)}
+                onSubmit={(percentage) => {
+                  handleUnsatisfiedTask(percentage);
+                  setIsUnsatisfiedModalOpen(false);
+                }}
+                isLoading={isLoading}
               />
 
 

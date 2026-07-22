@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { Menu, Sun, Moon, Settings, LogOut } from 'lucide-react';
+import { Menu, Sun, Moon, User, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { ThemeContext } from '@/features/theme/ThemeContext.jsx';
 import { authService } from '@/services/authService';
@@ -62,7 +62,7 @@ export function HeaderMenu({ roleName }) {
 
             {/* Dropdown Menu */}
             {isOpen && (
-                <div className="absolute right-0 top-full mt-2 w-56 bg-card border border-border shadow-2xl rounded-2xl z-50 overflow-hidden">
+                <div className="absolute right-0 top-full mt-2 w-56 bg-card border border-border shadow-2xl rounded-2xl z-[999] overflow-hidden">
                     {/* Header */}
                     <div className="px-4 py-3 border-b border-border bg-muted/40">
                         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Menu</p>
@@ -84,17 +84,17 @@ export function HeaderMenu({ roleName }) {
                         {/* Divider */}
                         <div className="mx-4 my-1 border-t border-border/60"></div>
 
-                        {/* Profile & Settings - hidden for Reader */}
+                        {/* Profile - hidden for Reader */}
                         {roleName !== 'Reader' && roleName !== 'reader' && (
                             <>
                                 <button
                                     onClick={handleProfile}
-                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted/60 transition-colors"
+                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted/60 transition-colors cursor-pointer"
                                 >
                                     <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-muted/80">
-                                        <Settings size={16} />
+                                        <User size={16} />
                                     </div>
-                                    <span>Profile & Settings</span>
+                                    <span>Profile</span>
                                 </button>
                             </>
                         )}
@@ -105,9 +105,9 @@ export function HeaderMenu({ roleName }) {
                         {/* Logout */}
                         <button
                             onClick={handleLogout}
-                            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-500/10 transition-colors"
+                            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-destructive hover:bg-destructive/10 transition-colors"
                         >
-                            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-500/10">
+                            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-destructive/10">
                                 <LogOut size={16} />
                             </div>
                             <span>Logout</span>

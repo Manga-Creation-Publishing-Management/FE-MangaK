@@ -20,7 +20,7 @@ export function ScheduleFormModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-card rounded-xl p-8 w-full max-w-2xl">
-        <h2 className="mb-6">
+        <h2 className="mb-6 text-xl font-semibold text-card-foreground">
           {isEditing ? "Update Publishing Schedule" : "Create Publishing Schedule"}
         </h2>
 
@@ -64,7 +64,7 @@ export function ScheduleFormModal({
                   frequency === "Weekly" ? "border-primary bg-primary/10" : "border-border"
                 }`}
               >
-                <p className="font-medium">Weekly</p>
+                <p className="font-medium text-foreground">Weekly</p>
                 <p className="text-sm text-muted-foreground">
                   New chapter every week
                 </p>
@@ -75,7 +75,7 @@ export function ScheduleFormModal({
                   frequency === "Monthly" ? "border-primary bg-primary/10" : "border-border"
                 }`}
               >
-                <p className="font-medium">Monthly</p>
+                <p className="font-medium text-foreground">Monthly</p>
                 <p className="text-sm text-muted-foreground">
                   New chapter every month
                 </p>
@@ -92,7 +92,7 @@ export function ScheduleFormModal({
               value={startDate}
               onChange={(e) => onStartDateChange(e.target.value)}
               min={new Date().toISOString().split("T")[0]}
-              className="w-full px-4 py-3 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-4 py-3 bg-input-background text-foreground rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
@@ -107,7 +107,7 @@ export function ScheduleFormModal({
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors cursor-pointer"
+            className="flex-1 px-4 py-2 border border-border text-foreground rounded-lg hover:bg-muted transition-colors cursor-pointer"
           >
             Cancel
           </button>

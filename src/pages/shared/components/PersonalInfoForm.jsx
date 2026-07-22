@@ -8,10 +8,10 @@ export function PersonalInfoForm({
   onSubmit,
 }) {
   return (
-    <form onSubmit={onSubmit} className="bg-card border border-border rounded-xl p-8 space-y-6">
-      <h2>Personal Information</h2>
+    <form onSubmit={onSubmit} className="space-y-6">
+      <h2 className="text-xl font-semibold text-card-foreground mb-4">Personal Information</h2>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <div className="space-y-2">
           <label htmlFor="firstName" className="flex items-center gap-2 text-sm text-muted-foreground">
             <User size={16} />
@@ -58,7 +58,7 @@ export function PersonalInfoForm({
             type="email"
             {...register("email")}
             disabled
-            className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none opacity-60 cursor-not-allowed"
+            className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none opacity-60 cursor-not-allowed text-sm"
           />
         </div>
 
@@ -121,7 +121,7 @@ export function PersonalInfoForm({
         <button
           type="submit"
           disabled={isSaving}
-          className="flex items-center gap-2 px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+          className="flex items-center justify-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer w-full sm:w-auto text-sm font-medium"
         >
           {isSaving ? (
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>

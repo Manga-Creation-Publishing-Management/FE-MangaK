@@ -7,7 +7,7 @@ export function RecentlyReviewedList({ recentlyReviewed, isLoading, onNavigateTo
     <div className="bg-card border border-border rounded-xl p-6">
       <div className="flex items-center gap-2 mb-5">
         <ClipboardCheck size={20} className="text-primary" />
-        <h2 className="text-lg font-semibold">Recently Reviewed</h2>
+        <h2 className="text-lg font-semibold text-card-foreground">Recently Reviewed</h2>
       </div>
 
       {isLoading ? (
@@ -25,7 +25,7 @@ export function RecentlyReviewedList({ recentlyReviewed, isLoading, onNavigateTo
               className="flex items-center justify-between p-4 bg-background rounded-lg border border-border/50 hover:border-primary/30 transition-colors"
             >
               <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-sm truncate">{item.name}</h3>
+                <h3 className="font-medium text-sm truncate text-foreground">{item.name}</h3>
                 <p className="text-xs text-muted-foreground mt-1">
                   by {item.author} · {item.chapters} Chapters
                 </p>
