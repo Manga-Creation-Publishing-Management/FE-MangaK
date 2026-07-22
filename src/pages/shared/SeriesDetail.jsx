@@ -1,4 +1,4 @@
-import { ArrowLeft, Download, Eye, ChevronDown } from "lucide-react";
+import { ArrowLeft, Download, Eye, ChevronDown, Loader2 } from "lucide-react";
 import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -131,6 +131,14 @@ export function SeriesDetail() {
     ? "Reject & Send Feedback"
     : "Reject Series";
 
+  if (!detailData) {
+    return (
+      <div className="flex justify-center items-center h-[70vh]">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+        <span className="ml-3 text-muted-foreground font-medium text-lg">Loading series details...</span>
+      </div>
+    );
+  }
   const rolePrefix = roleFromState || "mangaka";
   const customBreadcrumb = [
     { label: rolePrefix.charAt(0).toUpperCase() + rolePrefix.slice(1), path: `/${rolePrefix}` },
@@ -143,8 +151,8 @@ export function SeriesDetail() {
       <div className="p-6 space-y-6">
         <Breadcrumb items={customBreadcrumb} />
 
-      {/* Khung chứa ảnh bìa và thông tin cơ bản của bộ truyện */}
-      <div className="bg-card border border-border rounded-xl overflow-hidden p-4 sm:p-6">
+        {/* Khung chứa ảnh bìa và thông tin cơ bản của bộ truyện */}
+        <div className="bg-card border border-border rounded-xl overflow-hidden p-4 sm:p-6">
 
           {/* Vùng hiển thị Ảnh bìa */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 border-b border-border pb-6 items-start">

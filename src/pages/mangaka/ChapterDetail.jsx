@@ -3,7 +3,8 @@ import { StatusBadge } from "@/shared/components/StatusBadge";
 import { useState, useRef } from 'react';
 import dayjs from 'dayjs';
 
-import { Download, Star, ChevronDown, FileText } from "lucide-react";
+
+import { ArrowLeft, Download, Star, ChevronDown, FileText, Loader2 } from "lucide-react";
 import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
 import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter";
@@ -71,6 +72,15 @@ export function ChapterDetail() {
     setConfirmModalOpen(true);
   }
 
+  if (!chapterDetail) {
+    return (
+      <div className="flex justify-center items-center h-[70vh]">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+        <span className="ml-3 text-muted-foreground font-medium text-lg">Loading chapter details...</span>
+      </div>
+    );
+  }
+
   const rolePrefix = currentRole?.toLowerCase() || "mangaka";
   const customBreadcrumb = [
     { label: rolePrefix.charAt(0).toUpperCase() + rolePrefix.slice(1), path: `/${rolePrefix}` },
@@ -84,8 +94,8 @@ export function ChapterDetail() {
       <div className="p-6 space-y-6">
         <Breadcrumb items={customBreadcrumb} />
 
-      {/* Khung (Card) chứa thông tin chính của Chapter */}
-      <div className="bg-card border border-border rounded-xl p-8 space-y-4">
+        {/* Khung (Card) chứa thông tin chính của Chapter */}
+        <div className="bg-card border border-border rounded-xl p-8 space-y-4">
           <div className="w-full bg-muted rounded-full h-6 overflow-hidden border border-border">
             <div
               className={`h-full rounded-full transition-all duration-300 ease-out flex items-center justify-start ps-2 text-xs font-bold text-white ${progress === 100 ? 'bg-success' : 'bg-info'

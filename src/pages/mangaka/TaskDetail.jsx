@@ -1,4 +1,4 @@
-import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, SquarePen, UploadCloud, ChevronDown, X, Check } from "lucide-react";
+import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, SquarePen, UploadCloud, ChevronDown, Loader2, X, Check } from "lucide-react";
 import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { useTaskDetail } from "../../features/tasks/hooks/useTaskDetail";
@@ -201,32 +201,32 @@ export function TaskDetail() {
                     taskDetail?.status === "Revising" ||
                     taskDetail?.status === "Unsatisfied"
                   ) && (
-                    isEditingTaskAssistant ? (
-                      <div className="flex items-center gap-1 -mt-[10px] -mr-2">
-                        <button
-                          onClick={handleCancelEditTaskAssistant}
-                          disabled={isUpdatingTaskAssistant}
-                          className="bg-secondary hover:bg-secondary/80 text-secondary-foreground p-1 rounded cursor-pointer transition-colors disabled:opacity-50"
+                      isEditingTaskAssistant ? (
+                        <div className="flex items-center gap-1 -mt-[10px] -mr-2">
+                          <button
+                            onClick={handleCancelEditTaskAssistant}
+                            disabled={isUpdatingTaskAssistant}
+                            className="bg-secondary hover:bg-secondary/80 text-secondary-foreground p-1 rounded cursor-pointer transition-colors disabled:opacity-50"
+                          >
+                            <X size={14} />
+                          </button>
+                          <button
+                            onClick={handleSaveTaskAssistant}
+                            disabled={isUpdatingTaskAssistant}
+                            className="bg-primary hover:bg-primary/90 text-primary-foreground p-1 rounded cursor-pointer transition-colors disabled:opacity-50"
+                          >
+                            {isUpdatingTaskAssistant ? "..." : <Check size={14} />}
+                          </button>
+                        </div>
+                      ) : (
+                        <span
+                          onClick={handleStartEditTaskAssistant}
+                          className="cursor-pointer hover:bg-secondary/50 rounded-xl p-2 inline-flex items-center justify-center text-muted-foreground -mt-[10px] -mr-2"
                         >
-                          <X size={14} />
-                        </button>
-                        <button
-                          onClick={handleSaveTaskAssistant}
-                          disabled={isUpdatingTaskAssistant}
-                          className="bg-primary hover:bg-primary/90 text-primary-foreground p-1 rounded cursor-pointer transition-colors disabled:opacity-50"
-                        >
-                          {isUpdatingTaskAssistant ? "..." : <Check size={14} />}
-                        </button>
-                      </div>
-                    ) : (
-                      <span
-                        onClick={handleStartEditTaskAssistant}
-                        className="cursor-pointer hover:bg-secondary/50 rounded-xl p-2 inline-flex items-center justify-center text-muted-foreground -mt-[10px] -mr-2"
-                      >
-                        <SquarePen size={13} />
-                      </span>
-                    )
-                  )}
+                          <SquarePen size={13} />
+                        </span>
+                      )
+                    )}
                 </div>
 
                 {isEditingTaskAssistant ? (
