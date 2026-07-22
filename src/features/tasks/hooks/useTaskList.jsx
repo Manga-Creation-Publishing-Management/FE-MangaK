@@ -7,18 +7,22 @@ export function useTaskList(reload) {
 
 
   const [taskList, setTaskList] = useState([]);
+  const [isLoadingList, setIsLoadingList] = useState(true);
 
   const navigate = useNavigate();
 
-  
+
 
   useEffect(() => {
     const fetchApi = async () => {
+      setIsLoadingList(true);
       try {
         const response = await taskService.getTaskList();
         setTaskList(response.data || response);
       } catch (error) {
         console.error("Lỗi khi lấy danh sách task:", error);
+      } finally {
+        setIsLoadingList(false);
       }
     }
     fetchApi();
@@ -30,6 +34,7 @@ export function useTaskList(reload) {
 
   return {
     taskList,
-    handleNavigateToTask
+    handleNavigateToTask,
+    isLoadingList
   }
 }
