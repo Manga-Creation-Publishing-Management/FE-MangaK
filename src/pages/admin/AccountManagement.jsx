@@ -31,15 +31,17 @@ export function AccountManagement() {
         : await userService.getReaderList();
       const userList = Array.isArray(response) ? response : (response.data || []);
 
-      const mapped = userList.map((user) => ({
-        id: user.id || user.userId,
-        name: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.userName || 'N/A',
-        email: user.email || '',
-        phone: user.phoneNumber || user.phone || user.phone || '',
-        role: accountType === "readers" ? "reader" : apiRoleMap[user.role?.toLowerCase()] || user.role?.toLowerCase() || "mangaka",
-        status: user.isActive === false || user.status?.toLowerCase() === 'suspended' || user.status?.toLowerCase() === 'inactive' ? 'inactive' : 'active',
-        supervisorId: user.supervisorId || user.SupervisorId || null,
-      }));
+      const mapped = userList
+        .map((user) => ({
+          id: user.id || user.userId,
+          name: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.userName || 'N/A',
+          email: user.email || '',
+          phone: user.phoneNumber || user.phone || user.phone || '',
+          role: accountType === "readers" ? "reader" : apiRoleMap[user.role?.toLowerCase()] || user.role?.toLowerCase() || "mangaka",
+          status: user.isActive === false || user.status?.toLowerCase() === 'suspended' || user.status?.toLowerCase() === 'inactive' ? 'inactive' : 'active',
+          supervisorId: user.supervisorId || user.SupervisorId || null,
+        }))
+        .filter((user) => user.role !== "admin");
 
       setUsers(mapped);
     } catch (error) {

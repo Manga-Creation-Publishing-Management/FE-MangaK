@@ -21,8 +21,7 @@ export function UserFilters({
         { value: "mangaka", label: "Mangaka" },
         { value: "assistant", label: "Assistant" },
         { value: "tantou", label: "Tantou Editor" },
-        { value: "editorial", label: "Editorial Board" },
-        { value: "admin", label: "Admin" }
+        { value: "editorial", label: "Editorial Board" }
       ]
     });
   }

@@ -25,7 +25,6 @@ export function Breadcrumb({ items, className = "" }) {
 
   let breadcrumbItems = items;
 
-  // Auto-generate items if not explicitly provided
   if (!breadcrumbItems) {
     const segments = location.pathname.split('/').filter(Boolean);
     const role = segments[0] || "mangaka";
@@ -38,10 +37,9 @@ export function Breadcrumb({ items, className = "" }) {
     if (segments.length > 1) {
       const parentSection = segments[1];
       const parentLabel = routeLabels[parentSection] || parentSection.charAt(0).toUpperCase() + parentSection.slice(1);
-      
-      // If it's a detail route with an ID (e.g. /mangaka/series/123)
       if (segments.length > 2) {
-        breadcrumbItems.push({ label: parentLabel, path: `/${role}/${parentSection}` });
+        const parentPath = (role === 'reader' && parentSection === 'series') ? `/${role}` : `/${role}/${parentSection}`;
+        breadcrumbItems.push({ label: parentLabel, path: parentPath });
         if (parentSection === 'series') {
           breadcrumbItems.push({ label: 'Series Detail' });
         } else if (parentSection === 'chapter') {
@@ -62,12 +60,12 @@ export function Breadcrumb({ items, className = "" }) {
   }
 
   return (
-    <nav 
-      aria-label="Breadcrumb" 
+    <nav
+      aria-label="Breadcrumb"
       className={`flex items-center flex-wrap gap-2 text-sm text-muted-foreground bg-card/90 backdrop-blur-md border-b border-border px-4 sm:px-8 py-2.5 shrink-0 ${className}`}
     >
-      <Link 
-        to={breadcrumbItems[0]?.path || "/"} 
+      <Link
+        to={breadcrumbItems[0]?.path || "/"}
         className="hover:text-primary transition-colors flex items-center gap-1.5 font-medium"
       >
         <Home size={16} className="shrink-0" />
@@ -80,8 +78,8 @@ export function Breadcrumb({ items, className = "" }) {
           <div key={index} className="flex items-center gap-2">
             <ChevronRight size={16} className="text-muted-foreground/60 shrink-0" />
             {item.path && !isLast ? (
-              <Link 
-                to={item.path} 
+              <Link
+                to={item.path}
                 className="hover:text-primary transition-colors font-medium truncate max-w-[200px]"
               >
                 {item.label}
