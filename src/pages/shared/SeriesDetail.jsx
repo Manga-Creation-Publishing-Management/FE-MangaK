@@ -142,8 +142,8 @@ export function SeriesDetail() {
   useEffect(() => {
     if (detailData) {
       setBreadcrumbItems(customBreadcrumb);
+      return () => setBreadcrumbItems(null);
     }
-    return () => setBreadcrumbItems(null);
   }, [detailData?.title, rolePrefix]);
 
   if (!detailData) {
@@ -154,6 +154,7 @@ export function SeriesDetail() {
       </div>
     );
   }
+
 
   return (
     <>

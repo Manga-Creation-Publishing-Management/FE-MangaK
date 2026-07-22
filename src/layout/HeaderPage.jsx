@@ -65,7 +65,7 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
 
     return (
         <>
-            <div className="flex items-center justify-between shadow p-2.5 px-4 sm:px-8 bg-card relative z-50">
+            <div className="flex items-center justify-between shadow p-2.5 px-4 sm:px-8  relative z-50">
                 <div className="flex items-center gap-2 sm:gap-3">
                     {/* Mobile Sidebar Toggle Button */}
                     {normalizedRole !== 'reader' && (
