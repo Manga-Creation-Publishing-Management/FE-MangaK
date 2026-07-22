@@ -1,15 +1,29 @@
 import { useState, useEffect } from 'react';
-import { Bell, Mail } from 'lucide-react';
+import { Bell, Mail, PanelLeft } from 'lucide-react';
+import { Link } from 'react-router';
 import { Logo } from '@/shared/components/Logo';
 import { useGetFeedback } from '@/features/series/hooks/useGetFeedback';
 import { FeedbackItem } from '@/shared/components/FeedbackItem';
 import { userService } from '@/services/userService';
 import { HeaderMenu } from './HeaderMenu';
 
-export function HeaderPage({ roleName, avatarUrl }) {
+const roleRouteMap = {
+    mangaka: "mangaka",
+    assistant: "assistant",
+    tantou: "tantou",
+    editorial: "editorial",
+    admin: "admin",
+    reader: "reader",
+    "tantou editor": "tantou",
+    "editorial board": "editorial",
+};
+
+export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const normalizedRole = roleName ? roleName.toLowerCase() : "";
+    const routeRole = roleRouteMap[normalizedRole] || "mangaka";
+    const profilePath = `/${routeRole}/profile`;
     const hasFeedbackSupport = ["mangaka", "assistant", "tantou editor", "editorial board", "tantou", "editorial"].includes(normalizedRole);
 
     const { feedbackData } = useGetFeedback(hasFeedbackSupport);
@@ -49,82 +63,91 @@ export function HeaderPage({ roleName, avatarUrl }) {
         fetchHeaderProfile();
     }, [avatarUrl, normalizedRole]);
 
-
-
     return (
         <>
-            <div className="grid grid-cols-12 shadow p-2 px-8 bg-card relative">
-                <div className="hidden md:block col-span-1 px-2 content-center">
-                    <img className="rounded-full w-10 h-10 object-cover border border-border"
-                        src={currentUserAvatar || "/avatarImgDemo.png"} alt="Avatar Image" />
-                </div>
+            <div className="flex items-center justify-between shadow p-2.5 px-4 sm:px-8 bg-card relative z-50">
+                <div className="flex items-center gap-2 sm:gap-3">
+                    {/* Mobile Sidebar Toggle Button */}
+                    {roleName !== 'reader' && roleName !== 'Reader' && (
+                        <button
+                            onClick={onToggleMobileSidebar}
+                            className="md:hidden p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted transition-colors cursor-pointer"
+                            title="Open Navigation"
+                        >
+                            <PanelLeft size={22} />
+                        </button>
+                    )}
 
-                <div className={`${roleName === 'reader' ? 'col-span-3' : 'col-span-5'} content-center`}>
-                    <span className="text-sidebar-foreground text-lg font-medium">Welcome back!</span><br />
-                    <span className="text-muted-foreground">{roleName}</span>
-                </div>
-
-                {roleName === 'reader' &&
-                    <div className="col-span-4 content-center justify-center">
-                        <Logo />
-                    </div>}
-
-                <div className={`${roleName === 'reader' ? 'col-span-4' : 'col-span-6'} content-center`}>
-                    <div className='place-self-end flex items-center gap-3 relative'>
-                        {/* Bell Icon & Feedback Dropdown */}
-                        {hasFeedbackSupport && (
-                            <div className="bell-container">
-                                <button
-                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                    className="relative flex text-muted-foreground hover:text-accent hover:rounded p-2 transition-colors"
-                                    title="Feedback Mailbox"
-                                >
-                                    <div className="content-center">
-                                        <Bell size={20} />
-                                    </div>
-                                </button>
-
-                                {isDropdownOpen && (
-                                    <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-card border border-border shadow-2xl rounded-2xl z-50 overflow-hidden">
-                                        <div className="p-4 border-b border-border flex justify-between items-center bg-muted/40">
-                                            <div className="flex items-center gap-2">
-                                                <Mail size={18} className="text-primary" />
-                                                <h3 className="font-bold text-foreground text-sm sm:text-base">Feedback Mailbox</h3>
-                                            </div>
-                                            {feedbackData?.data?.length > 0 && (
-                                                <span className="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-xs font-semibold">
-                                                    {feedbackData.data.length} messages
-                                                </span>
-                                            )}
-                                        </div>
-                                        <div className="max-h-80 overflow-y-auto p-3 flex flex-col gap-3 custom-scrollbar">
-                                            {feedbackData?.data?.length > 0 ? (
-                                                feedbackData.data.map((feedback) => (
-                                                    <FeedbackItem
-                                                        key={feedback.id}
-                                                        senderName={feedback.senderName}
-                                                        seriesTitle={feedback.seriesTitle}
-                                                        content={feedback.content}
-                                                        createdAt={feedback.createdAt}
-                                                        hasIcon={false}
-                                                        isNew={true}
-                                                    />
-                                                ))
-                                            ) : (
-                                                <div className="text-center py-8 text-muted-foreground flex flex-col items-center justify-center">
-                                                    <Mail size={36} className="mb-2 opacity-30 stroke-[1.5]" />
-                                                    <p className="text-xs">No feedback messages</p>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Hamburger Menu */}
-                        <HeaderMenu roleName={roleName} />
+                    <Link to={profilePath} className="shrink-0 hover:opacity-85 transition-opacity" title="View Profile">
+                        <img className="rounded-full w-9 h-9 sm:w-10 sm:h-10 object-cover ring-2 ring-primary/50 p-0.5 border border-primary/60 cursor-pointer"
+                            src={currentUserAvatar || "/avatarImgDemo.png"} alt="Avatar Image" />
+                    </Link>
+                    <div>
+                        <span className="text-foreground text-xs sm:text-base font-semibold leading-snug block">Welcome back!</span>
+                        <span className="text-muted-foreground text-[10px] sm:text-xs font-medium capitalize block">{roleName}</span>
                     </div>
+                </div>
+
+                {roleName === 'reader' && (
+                    <div className="hidden sm:flex items-center justify-center">
+                        <Logo />
+                    </div>
+                )}
+
+                <div className="flex items-center gap-2 sm:gap-3">
+                    {/* Bell Icon & Feedback Dropdown */}
+                    {hasFeedbackSupport && (
+                        <div className="bell-container relative">
+                            <button
+                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                className="relative flex text-muted-foreground hover:text-accent hover:rounded p-2 transition-colors cursor-pointer"
+                                title="Feedback Mailbox"
+                            >
+                                <div className="content-center">
+                                    <Bell size={20} />
+                                </div>
+                            </button>
+
+                            {isDropdownOpen && (
+                                <div className="fixed sm:absolute left-4 right-4 sm:left-auto sm:right-0 top-16 sm:top-full mt-2 w-auto sm:w-96 bg-card border border-border shadow-2xl rounded-2xl z-[999] overflow-hidden">
+                                    <div className="p-4 border-b border-border flex justify-between items-center bg-muted/40">
+                                        <div className="flex items-center gap-2">
+                                            <Mail size={18} className="text-primary" />
+                                            <h3 className="font-bold text-foreground text-sm sm:text-base">Feedback Mailbox</h3>
+                                        </div>
+                                        {feedbackData?.data?.length > 0 && (
+                                            <span className="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-xs font-semibold">
+                                                {feedbackData.data.length} messages
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="max-h-80 overflow-y-auto p-3 flex flex-col gap-3 custom-scrollbar">
+                                        {feedbackData?.data?.length > 0 ? (
+                                            feedbackData.data.map((feedback) => (
+                                                <FeedbackItem
+                                                    key={feedback.id}
+                                                    senderName={feedback.senderName}
+                                                    seriesTitle={feedback.seriesTitle}
+                                                    content={feedback.content}
+                                                    createdAt={feedback.createdAt}
+                                                    hasIcon={false}
+                                                    isNew={true}
+                                                />
+                                            ))
+                                        ) : (
+                                            <div className="text-center py-8 text-muted-foreground flex flex-col items-center justify-center">
+                                                <Mail size={36} className="mb-2 opacity-30 stroke-[1.5]" />
+                                                <p className="text-xs">No feedback messages</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Hamburger Menu */}
+                    <HeaderMenu roleName={roleName} />
                 </div>
             </div>
         </>

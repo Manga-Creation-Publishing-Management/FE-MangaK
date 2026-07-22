@@ -12,14 +12,14 @@ export function ActiveAssistantsTable({ isLoading, activeAssistants }) {
   } = getTotalPage(1, postsPerPageLimit, activeAssistants || []);
 
   return (
-    <div className="lg:col-span-8 bg-card border border-border rounded-xl p-6 space-y-4 flex flex-col justify-between h-[540px]">
+    <div className="lg:col-span-8 bg-card border border-border rounded-xl p-6 space-y-4 flex flex-col justify-between min-h-[400px] lg:h-[540px]">
 
       <div className="space-y-4">
         <div>
           <h3 className="text-lg font-bold text-foreground">Active Assistants</h3>
           <p className="text-xs text-muted-foreground">Assistants currently active on the platform.</p>
         </div>
-        <div className="overflow-hidden border border-border rounded-lg">
+        <div className="overflow-x-auto border border-border rounded-lg">
           <table className="w-full text-sm">
             <thead className="bg-muted/50 border-b border-border text-muted-foreground font-medium">
               <tr>

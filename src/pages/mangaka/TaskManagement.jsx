@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CalendarClock, Plus } from "lucide-react";
+import { CalendarClock, Plus, Loader2 } from "lucide-react";
 import { useCreateTask } from "../../features/tasks/hooks/useCreateTask";
 import CreateTaskModal from "../../features/tasks/components/CreateTaskModal";
 import { useTaskList } from "../../features/tasks/hooks/useTaskList";
@@ -38,7 +38,8 @@ export function TaskManagement() {
 
   const {
     taskList,
-    handleNavigateToTask
+    handleNavigateToTask,
+    isLoadingList
   } = useTaskList(reload);
 
   console.log("chapet", taskList);
@@ -70,9 +71,9 @@ export function TaskManagement() {
   return (
     <>
       <div className="p-6 space-y-8">
-        <div className="bg-card border border-border rounded-xl p-6 space-y-6">
-          <div className="flex justify-between items-center gap-4">
-            <div className="flex-1 max-w-xl">
+        <div className="bg-card border border-border rounded-xl p-4 sm:p-6 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <div className="flex-1 w-full max-w-xl">
               <SearchFilterBar
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
@@ -90,10 +91,7 @@ export function TaskManagement() {
                       { value: "processing", label: "Processing" },
                       { value: "completed", label: "Completed" },
                       { value: "revising", label: "Revising" },
-                      { value: "unsatisfied", label: "Unsatisfied" },
-                      {
-
-                      }
+                      { value: "unsatisfied", label: "Unsatisfied" }
                     ]
                   }
                 ]}
@@ -101,53 +99,65 @@ export function TaskManagement() {
             </div>
             <button
               onClick={handleShowCreateTaskModal}
-              className="cursor-pointer border-2 flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity shrink-0"
+              className="cursor-pointer border-2 flex items-center justify-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity shrink-0 w-full sm:w-auto"
             >
               <Plus size={20} />
               Create New Task
             </button>
           </div>
-
           <div className="space-y-6">
-            {currentDataListDisplay?.map(item => (
-              <div key={item.id} className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-shadow">
-                {/* Phần trên: Tiêu đề bên trái, Trạng thái & Nút bấm bên phải */}
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-card-foreground truncate text-xl font-semibold">Chapter {item.chapterNumber} - {item.seriesTitle}</h3>
-                    <p className="text-sm text-muted-foreground mt-1">Page Range: {item.taskDescription}</p>
+            {isLoadingList ? (
+              <div className="flex flex-col items-center justify-center py-20 text-muted-foreground gap-3">
+                <Loader2 className="animate-spin text-primary" size={32} />
+                <span className="text-sm font-medium">Loading tasks...</span>
+              </div>
+            ) : currentDataListDisplay?.length === 0 ? (
+              <div className="text-center py-20 text-muted-foreground">
+                No tasks found.
+              </div>
+            ) : (
+              currentDataListDisplay?.map(item => (
+                <div key={item.id} className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-shadow">
+                  {/* Phần trên: Tiêu đề bên trái, Trạng thái & Nút bấm bên phải */}
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-card-foreground truncate text-xl font-semibold">Chapter {item.chapterNumber} - {item.seriesTitle}</h3>
+                      <p className="text-sm text-muted-foreground mt-1">Page Range: {item.taskDescription}</p>
+                    </div>
+
+                    {/* Cụm Status và Button bên phải (Đồng bộ từ bên Chapter qua) */}
+                    <div className="flex items-center gap-4 shrink-0">
+                      <span>
+                        <StatusBadge status={item.status?.toLowerCase()} />
+                      </span>
+
+                      <button
+                        className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+                        onClick={() => handleNavigateToTask(role.toLowerCase(), item.id)}
+                      >
+                        View Detail
+                      </button>
+                    </div>
                   </div>
 
-                  {/* Cụm Status và Button bên phải (Đồng bộ từ bên Chapter qua) */}
-                  <div className="flex items-center gap-4 shrink-0">
-                    <span>
-                      <StatusBadge status={item.status?.toLowerCase()} />
+                  {/* Phần dưới: Đường phân cách + Assigned (Trái) và Deadline (Phải) */}
+                  <div className="flex items-center justify-between gap-4 mt-4 pt-3 border-t border-border/50">
+                    <span className="text-sm text-muted-foreground">
+                      Assigned to: <span className="font-medium text-foreground">{item.assistantName}</span>
                     </span>
 
-                    <button
-                      className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
-                      onClick={() => handleNavigateToTask(role.toLowerCase(), item.id)}
-                    >
-                      View Detail
-                    </button>
+                    {/* Deadline được đẩy hẳn sang bên phải */}
+                    <div className="flex items-center gap-1.5 text-sm text-destructive font-medium shrink-0">
+                      <CalendarClock size={16} />
+                      <span>Deadline: {dayjs(item.deadline).utc(true).format('DD/MM/YYYY HH:mm')}</span>
+                    </div>
                   </div>
                 </div>
-
-                {/* Phần dưới: Đường phân cách + Assigned (Trái) và Deadline (Phải) */}
-                <div className="flex items-center justify-between gap-4 mt-4 pt-3 border-t border-border/50">
-                  <span className="text-sm text-muted-foreground">
-                    Assigned to: <span className="font-medium text-foreground">{item.assistantName}</span>
-                  </span>
-
-                  {/* Deadline được đẩy hẳn sang bên phải */}
-                  <div className="flex items-center gap-1.5 text-sm text-destructive font-medium shrink-0">
-                    <CalendarClock size={16} />
-                    <span>Deadline: {dayjs(item.deadline).utc(true).format('DD/MM/YYYY HH:mm')}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
+
+
 
           <PaginationCustom
             currentPage={currentPage}
@@ -155,7 +165,7 @@ export function TaskManagement() {
             setCurrentPage={setCurrentPage}
           />
         </div>
-      </div>
+      </div >
       {
         showCreateTaskModal &&
         <CreateTaskModal

@@ -39,7 +39,14 @@ export function ThemeProvider({ children }) {
 
   // Hàm đảo ngược trạng thái theme (từ sáng thành tối, từ tối thành sáng)
   const toggle = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
+    if (typeof window !== 'undefined') {
+      const root = document.documentElement;
+      root.classList.add('theme-transitioning');
+      setTimeout(() => {
+        root.classList.remove('theme-transitioning');
+      }, 220);
+    }
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   }
 
   // Render context provider và bọc toàn bộ ứng dụng bên trong (children)

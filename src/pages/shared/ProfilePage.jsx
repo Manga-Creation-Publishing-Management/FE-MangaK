@@ -10,6 +10,7 @@ import { AvatarSection } from "./components/AvatarSection";
 import { PersonalInfoForm } from "./components/PersonalInfoForm";
 import { ConfirmUpdateModal } from "./components/ConfirmUpdateModal";
 import { SuccessModal } from "./components/SuccessModal";
+import { Breadcrumb } from "@/shared/components/Breadcrumb";
 
 export function ProfilePage() {
   const { showAlert } = useToast();
@@ -131,36 +132,38 @@ export function ProfilePage() {
     }
   };
 
+  const customBreadcrumb = [
+    { label: role.charAt(0).toUpperCase() + role.slice(1), path: `/${role}` },
+    { label: "Profile" }
+  ];
+
   return (
-    <div className="p-6 space-y-8">
-      {/* <div>
-        <h1 className="text-sidebar-foreground font-medium text-2xl">
-          Profile Settings
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Manage your account information and preferences
-        </p>
-      </div> */}
+    <div className="p-6 space-y-6">
+      <Breadcrumb items={customBreadcrumb} />
 
-      <AvatarSection
-        isLoading={isLoading}
-        avatarPreview={avatarPreview}
-        avatarUrl={avatarUrl}
-        watchedFirstName={watchedFirstName}
-        watchedLastName={watchedLastName}
-        fileInputRef={fileInputRef}
-        handleFileChange={handleFileChange}
-        triggerFileInput={triggerFileInput}
-        role={role}
-      />
+      <div className="bg-card border border-border rounded-xl p-8 space-y-8 shadow-xs">
+        <AvatarSection
+          isLoading={isLoading}
+          avatarPreview={avatarPreview}
+          avatarUrl={avatarUrl}
+          watchedFirstName={watchedFirstName}
+          watchedLastName={watchedLastName}
+          fileInputRef={fileInputRef}
+          handleFileChange={handleFileChange}
+          triggerFileInput={triggerFileInput}
+          role={role}
+        />
 
-      <PersonalInfoForm
-        register={register}
-        errors={errors}
-        role={role}
-        isSaving={isSaving}
-        onSubmit={handleSubmit(onFormSubmit)}
-      />
+        <div className="border-t border-border/60 pt-6">
+          <PersonalInfoForm
+            register={register}
+            errors={errors}
+            role={role}
+            isSaving={isSaving}
+            onSubmit={handleSubmit(onFormSubmit)}
+          />
+        </div>
+      </div>
 
       <ConfirmUpdateModal
         show={showConfirmModal}
