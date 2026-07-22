@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Trophy, TrendingUp, TrendingDown, Medal, Loader2, AlertCircle, Star } from 'lucide-react';
 import { leaderboardService } from '../../services/leaderboardService';
+import { getTotalPage } from '@/features/Pagination/hooks/getTotalPage';
+import { PaginationCustom } from '@/features/Pagination/components/PaginationCustom';
 
 export function LeaderboardPage() {
   const [timePeriod, setTimePeriod] = useState('weekly');
@@ -8,8 +10,10 @@ export function LeaderboardPage() {
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
+    setCurrentPage(1);
     const fetchLeaderboard = async () => {
       setIsLoading(true);
       setError(null);
@@ -36,6 +40,13 @@ export function LeaderboardPage() {
 
     fetchLeaderboard();
   }, [timePeriod]);
+
+  const pageSize = 10;
+  const totalPages = Math.ceil(leaderboardData.length / pageSize);
+  const paginatedData = leaderboardData.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   const isTrendingUp = (change) => {
     if (!change) return true;
@@ -115,10 +126,10 @@ export function LeaderboardPage() {
             </div>
 
           ) : (
-            leaderboardData.map((item, index) => (
+            paginatedData.map((item) => (
               <div
                 key={item.rank}
-                className={`p-4 sm:p-6 hover:bg-muted/50 transition-colors ${index < 3 ? 'bg-muted/30' : ''
+                className={`p-4 sm:p-6 hover:bg-muted/50 transition-colors ${item.rank <= 3 ? 'bg-muted/30' : ''
                   }`}
               >
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
@@ -167,6 +178,14 @@ export function LeaderboardPage() {
           )}
         </div>
       </div>
+
+      {totalPages > 1 && (
+        <PaginationCustom
+          currentPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
     </div>
   );
 }

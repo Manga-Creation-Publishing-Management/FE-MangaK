@@ -247,7 +247,7 @@ export function ChapterDetail() {
                     >
                       <input
                         type="file"
-                        accept=".pdf,.zip" // Bạn có thể thêm các định dạng hỗ trợ khác ở đây
+                        accept=".pdf,.zip"
                         className="hidden"
                         ref={manuscriptInputRef}
                         onChange={handleManuscriptChange}
@@ -348,7 +348,7 @@ export function ChapterDetail() {
                       ) : (
                         <>
                           <p className="text-muted-foreground">Click to upload file</p>
-                          <p className="text-sm text-muted-foreground mt-1">PNG, JPG up to 10MB</p>
+                          <p className="text-sm text-muted-foreground mt-1">PDF, ZIP up to 50MB</p>
                         </>
                       )}
                       <input

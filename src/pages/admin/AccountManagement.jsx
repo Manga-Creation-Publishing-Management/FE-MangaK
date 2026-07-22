@@ -10,6 +10,9 @@ import { CreateAccountModal } from "./components/CreateAccountModal.jsx";
 import { ConfirmStatusModal } from "./components/ConfirmStatusModal.jsx";
 import { RolePermissionsModal } from "./components/RolePermissionsModal.jsx";
 
+import { getTotalPage } from "@/features/Pagination/hooks/getTotalPage";
+import { PaginationCustom } from "@/features/Pagination/components/PaginationCustom";
+
 export function AccountManagement() {
   const { showAlert } = useToast();
   const [users, setUsers] = useState([]);
@@ -17,6 +20,7 @@ export function AccountManagement() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterRole, setFilterRole] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
@@ -107,7 +111,12 @@ export function AccountManagement() {
     setSearchQuery("");
     setFilterRole("all");
     setFilterStatus("all");
+    setCurrentPage(1);
   }, [accountType]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, filterRole, filterStatus]);
 
   useEffect(() => {
     fetchTantouList();
@@ -122,6 +131,13 @@ export function AccountManagement() {
     const matchesStatus = filterStatus === "all" || u.status === filterStatus;
     return matchesSearch && matchesRole && matchesStatus;
   });
+
+  const pageSize = 10;
+  const totalPages = Math.ceil(filtered.length / pageSize);
+  const paginatedUsers = filtered.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   const handleToggleStatus = (user) => {
     const action = user.status === "active" ? "inactive" : "activate";
@@ -224,11 +240,19 @@ export function AccountManagement() {
 
         <UserTable
           isLoading={isLoading}
-          filteredUsers={filtered}
+          filteredUsers={paginatedUsers}
           onSupervisorChange={handleSupervisorChange}
           getSupervisorOptions={getSupervisorOptions}
           onToggleStatus={handleToggleStatus}
         />
+
+        {totalPages > 1 && (
+          <PaginationCustom
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+          />
+        )}
 
         <CreateAccountModal
           show={showCreateModal}

@@ -176,13 +176,13 @@ export default function CreateSeriesModal({ onClose, onReload }) {
               ) : (
                 <>
                   <p className="text-muted-foreground">Click to upload or drag and drop</p>
-                  <p className="text-sm text-muted-foreground mt-1">PDF, ZIP up to 50MB</p> {/* Lưu ý: ở input dưới là pdf,zip nên text nên đổi tương ứng */}
+                  <p className="text-sm text-muted-foreground mt-1">PDF, ZIP up to 50MB</p>
                 </>
               )}
               {/* Thẻ input file bị ẩn */}
               <input
                 type="file"
-                accept=".pdf,.zip" // Chỉ nhận file PDF hoặc ZIP
+                accept=".pdf,.zip"
                 className="hidden"
                 ref={storyInputRef}
                 onChange={handleStoryChange}

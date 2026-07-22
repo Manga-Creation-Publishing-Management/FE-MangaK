@@ -1,6 +1,17 @@
+import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
+import { getTotalPage } from '@/features/Pagination/hooks/getTotalPage';
+import { PaginationCustom } from '@/features/Pagination/components/PaginationCustom';
 
-export function TasksToApproveTable({ isLoading, pendingTasks, onNavigateToTask }) {
+export function TasksToApproveTable({ isLoading, pendingTasks = [], onNavigateToTask }) {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const pageSize = 5;
+  const totalPages = Math.ceil(pendingTasks.length / pageSize);
+  const paginatedTasks = pendingTasks.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
   return (
     <div className="bg-card border border-border rounded-xl p-4 sm:p-6 space-y-4">
       <div>
@@ -24,7 +35,7 @@ export function TasksToApproveTable({ isLoading, pendingTasks, onNavigateToTask 
           <>
             {/* Mobile Card Layout (< 640px) */}
             <div className="sm:hidden divide-y divide-border bg-card">
-              {pendingTasks.map((task) => (
+              {paginatedTasks.map((task) => (
                 <div key={task.id} className="p-4 flex flex-col gap-2.5 hover:bg-muted/20 transition-colors">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 flex-1">
@@ -63,7 +74,7 @@ export function TasksToApproveTable({ isLoading, pendingTasks, onNavigateToTask 
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border text-foreground">
-                  {pendingTasks.map((task) => (
+                  {paginatedTasks.map((task) => (
                     <tr key={task.id} className="hover:bg-muted/20 transition-colors">
                       <td className="px-6 py-4">
                         <div className="font-semibold text-sm text-foreground">
@@ -92,6 +103,14 @@ export function TasksToApproveTable({ isLoading, pendingTasks, onNavigateToTask 
           </>
         )}
       </div>
+
+      {totalPages > 1 && (
+        <PaginationCustom
+          currentPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
     </div>
   );
 }

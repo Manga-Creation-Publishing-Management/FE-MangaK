@@ -82,12 +82,12 @@ export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
       {isMobileOpen && (
         <div
           onClick={onCloseMobile}
-          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 md:hidden transition-opacity"
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-[60] md:hidden transition-opacity"
         />
       )}
 
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-sidebar p-4 manga-sidebar flex flex-col transition-transform duration-300 md:hidden ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed inset-y-0 left-0 z-[70] w-64 bg-sidebar p-4 manga-sidebar flex flex-col transition-transform duration-300 md:hidden ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
       >
         <div className="flex items-center justify-between mb-6 pb-2 border-b border-sidebar-border">

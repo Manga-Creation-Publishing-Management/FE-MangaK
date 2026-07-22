@@ -5,6 +5,8 @@ export function useProgressing(chapterId) {
   const [progress, setProgressing] = useState(0);
 
   useEffect(() => {
+    if (!chapterId || chapterId === "undefined") return;
+
     const fetchApi = async () => {
       try {
         const completedChapter = await chaptersService.getProgressingChapter(chapterId, "Completed");

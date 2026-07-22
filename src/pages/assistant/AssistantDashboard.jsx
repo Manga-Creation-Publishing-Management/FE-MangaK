@@ -16,9 +16,9 @@ export function AssistantDashboard() {
   } = useAssistantDashboard();
 
   return (
-    <div className='p-6 space-y-8 bg-background min-h-full animate-in fade-in duration-300'>
+    <div className='p-4 sm:p-6 space-y-6 sm:space-y-8 bg-background min-h-full animate-in fade-in duration-300'>
       {/* Hàng 1: Overview Cards */}
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6'>
         <OverviewCard
           contentText="Completed tasks"
           iconName={<CircleCheckBig size={30} />}
@@ -40,7 +40,7 @@ export function AssistantDashboard() {
       </div>
 
       {/* Hàng 2: Grid 4-8 (Urgent Spotlight + Nhiệm vụ khác) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch">
         {/* Cột trái (col-span-4): Spotlight Task khẩn cấp */}
         <div className="lg:col-span-4">
           <UrgentTaskCard
@@ -51,7 +51,7 @@ export function AssistantDashboard() {
         </div>
 
         {/* Cột phải (col-span-8): Danh sách các nhiệm vụ khác */}
-        <div className="lg:col-span-8 bg-card border border-border rounded-xl p-6">
+        <div className="lg:col-span-8 bg-card border border-border rounded-xl p-4 sm:p-6">
           <h2 className="text-xl font-semibold mb-5 text-card-foreground">My Assigned Tasks</h2>
           <MyTask isDashboardView={true} />
         </div>

@@ -45,50 +45,33 @@ export function ChapterList({ roleName, seriesData }) {
 
   // Khi role là Reader, lấy số sao đã đánh giá cho từng chapter
   useEffect(() => {
-    console.log('[VoteEffect] Running. roleName:', roleName, 'chapterList length:', chapterList?.length);
-    
-    if (roleName?.toLowerCase() !== 'reader') {
-      console.log('[VoteEffect] Skipped: role is not reader');
-      return;
-    }
-    if (!chapterList?.length) {
-      console.log('[VoteEffect] Skipped: chapterList is empty');
-      return;
-    }
-
-    const userString = localStorage.getItem('user');
-    const user = userString ? JSON.parse(userString) : null;
-    const readerId = user?.id;
-    console.log('[VoteEffect] readerId:', readerId);
-    if (!readerId) return;
+    if (roleName?.toLowerCase() !== 'reader' || !chapterList?.length) return;
 
     const fetchVotes = async () => {
       const votes = {};
       await Promise.all(
         chapterList.map(async (chapter) => {
           try {
-            const res = await chaptersService.getReaderVote(chapter.chapterId, readerId);
-            console.log(`[VoteEffect] API response for chapter ${chapter.chapterId}:`, JSON.stringify(res));
-            // Parse số sao từ response - hỗ trợ nhiều format
-            if (res !== null && res !== undefined) {
-              let rating = null;
-              if (typeof res === 'number') {
-                rating = res;
-              } else if (typeof res === 'object') {
-                rating = res.data?.rate ?? res.data?.rating ?? res.data?.score
-                  ?? res.rate ?? res.rating ?? res.score ?? null;
+            const res = await chaptersService.getReaderVote(chapter.chapterId);
+            // Parse số sao từ response
+            // Structure: { success: true, message: "...", data: { readerId: "...", chapterId: "...", rating: 4 } }
+            if (res && typeof res === 'object') {
+              const voteData = res.data ?? res;
+              const rating = typeof voteData === 'object'
+                ? (voteData.rating ?? voteData.rate ?? voteData.score ?? voteData.star)
+                : (typeof voteData === 'number' ? voteData : null);
+
+              if (rating != null && !isNaN(Number(rating))) {
+                votes[chapter.chapterId] = Number(rating);
               }
-              if (rating !== null) {
-                votes[chapter.chapterId] = rating;
-              }
+            } else if (typeof res === 'number') {
+              votes[chapter.chapterId] = res;
             }
           } catch (err) {
-            // Reader chưa đánh giá chapter này -> bỏ qua
-            console.log(`[VoteEffect] No vote for chapter ${chapter.chapterId}`, err?.message);
+            // Reader chưa đánh giá chapter này -> bỏ qua yên lặng
           }
         })
       );
-      console.log('[VoteEffect] Final readerVotes:', votes);
       setReaderVotes(votes);
     };
 
