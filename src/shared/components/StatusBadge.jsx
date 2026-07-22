@@ -33,7 +33,7 @@ export function StatusBadge({ status }) {
   const currentLabel = labels[status] || status;
 
   return (
-    <span className={`px-3 py-1 rounded-full border text-sm ${currentStyle}`}>
+    <span className={`sticker-badge ${currentStyle}`}>
       {currentLabel}
     </span>
   );

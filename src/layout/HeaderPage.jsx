@@ -67,17 +67,6 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
         <>
             <div className="flex items-center justify-between shadow p-2.5 px-4 sm:px-8 bg-card relative z-50">
                 <div className="flex items-center gap-2 sm:gap-3">
-                    {/* Mobile Sidebar Toggle Button */}
-                    {roleName !== 'reader' && roleName !== 'Reader' && (
-                        <button
-                            onClick={onToggleMobileSidebar}
-                            className="md:hidden p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted transition-colors cursor-pointer"
-                            title="Open Navigation"
-                        >
-                            <PanelLeft size={22} />
-                        </button>
-                    )}
-
                     <Link to={profilePath} className="shrink-0 hover:opacity-85 transition-opacity" title="View Profile">
                         <img className="rounded-full w-9 h-9 sm:w-10 sm:h-10 object-cover ring-2 ring-primary/50 p-0.5 border border-primary/60 cursor-pointer"
                             src={currentUserAvatar || "/avatarImgDemo.png"} alt="Avatar Image" />
@@ -100,7 +89,7 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
                         <div className="bell-container relative">
                             <button
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                className="relative flex text-muted-foreground hover:text-accent hover:rounded p-2 transition-colors cursor-pointer"
+                                className="relative flex text-muted-foreground hover:text-accent p-2 transition-colors cursor-pointer toggle-btn"
                                 title="Feedback Mailbox"
                             >
                                 <div className="content-center">

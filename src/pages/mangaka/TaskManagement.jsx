@@ -117,7 +117,7 @@ export function TaskManagement() {
               </div>
             ) : (
               currentDataListDisplay?.map(item => (
-                <div key={item.id} className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-shadow">
+                <div key={item.id} className="task-card p-6 transition-shadow">
                   {/* Phần trên: Tiêu đề bên trái, Trạng thái & Nút bấm bên phải */}
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex-1 min-w-0">

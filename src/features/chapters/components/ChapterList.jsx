@@ -85,7 +85,7 @@ export function ChapterList({ roleName, seriesData }) {
           {/* Header của phần danh sách Chapter */}
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
             <div>
-              <h2 className="text-xl sm:text-2xl ps-2 font-semibold text-card-foreground">Chapters ({chapterList?.length})</h2>
+              <h3 className="text-xl sm:text-xl ps-2 font-semibold text-card-foreground">Chapters ({chapterList?.length})</h3>
             </div>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
@@ -155,11 +155,11 @@ export function ChapterList({ roleName, seriesData }) {
                 <div key={chapter.chapterId} className="bg-card border border-border rounded-xl p-4 sm:p-5 hover:shadow-lg transition-shadow">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <h3 className="py-1 font-semibold text-base sm:text-xl break-words text-card-foreground">
+                      <h4 className="py-1 text-base sm:text-xl break-words text-card-foreground">
                         Chapter {chapter.chapterNumber}: {chapter.title}
-                      </h3>
+                      </h4>
                     </div>
-                    <div className="flex flex-wrap items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border/40">
+                    <div className="flex flex-wrap items-center justify-between sm:justify-end gap-10 w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border/40">
                       <StatusBadge status={chapter.status.toLowerCase()} />
 
                       {roleName !== 'reader' ?
