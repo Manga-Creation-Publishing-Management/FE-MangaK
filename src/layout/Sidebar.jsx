@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import {
-  Home, FolderKanban, DollarSign, TrendingUp,
-  CalendarClock, CheckSquare, ClipboardList, FileSearch, BookMarked,
-  Menu, Upload, Users
+  Home, FolderKanban, DollarSign, TrendingUp, CalendarClock,
+  CheckSquare, ClipboardList, FileSearch, Menu, Users
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router';
 import { Logo } from '@/shared/components/Logo';
@@ -80,7 +79,6 @@ export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
 
   return (
     <>
-      {/* Mobile Backdrop */}
       {isMobileOpen && (
         <div
           onClick={onCloseMobile}
@@ -88,11 +86,9 @@ export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
         />
       )}
 
-      {/* Mobile Off-canvas Drawer */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-sidebar p-4 border-r border-sidebar-border flex flex-col transition-transform duration-300 md:hidden ${
-          isMobileOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-sidebar p-4 border-r border-sidebar-border flex flex-col transition-transform duration-300 md:hidden ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         <div className="flex items-center justify-between mb-6 pb-2 border-b border-sidebar-border">
           <Logo size="sm" showText={true} to={`/${userRole}`} />
@@ -107,11 +103,9 @@ export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
         {renderNavItems(false)}
       </div>
 
-      {/* Desktop Sidebar */}
       <div
-        className={`hidden md:flex bg-sidebar border-r border-sidebar-border h-screen p-4 transition-all duration-300 relative flex-col shrink-0 ${
-          isOpen ? 'w-60' : 'w-20'
-        }`}
+        className={`hidden md:flex bg-sidebar border-r border-sidebar-border h-screen p-4 transition-all duration-300 relative flex-col shrink-0 ${isOpen ? 'w-60' : 'w-20'
+          }`}
       >
         <div className={`flex items-center mb-6 ${isOpen ? 'justify-between' : 'justify-center flex-col gap-4'}`}>
           <Logo size="sm" showText={isOpen} to={`/${userRole}`} />
