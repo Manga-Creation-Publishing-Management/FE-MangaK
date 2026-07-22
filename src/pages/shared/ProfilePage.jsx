@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useOutletContext } from "react-router";
 import { userService } from "../../services/userService";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -11,9 +11,11 @@ import { PersonalInfoForm } from "./components/PersonalInfoForm";
 import { ConfirmUpdateModal } from "./components/ConfirmUpdateModal";
 import { SuccessModal } from "./components/SuccessModal";
 
+
 export function ProfilePage() {
   const { showAlert } = useToast();
   const location = useLocation();
+  const { setBreadcrumbItems } = useOutletContext();
 
   const role = location.pathname.includes("mangaka")
     ? "mangaka"
@@ -131,36 +133,42 @@ export function ProfilePage() {
     }
   };
 
+  const customBreadcrumb = [
+    { label: role.charAt(0).toUpperCase() + role.slice(1), path: `/${role}` },
+    { label: "Profile" }
+  ];
+
+  useEffect(() => {
+    setBreadcrumbItems(customBreadcrumb);
+    return () => setBreadcrumbItems(null);
+  }, [role]);
+
   return (
-    <div className="p-6 space-y-8">
-      {/* <div>
-        <h1 className="text-sidebar-foreground font-medium text-2xl">
-          Profile Settings
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Manage your account information and preferences
-        </p>
-      </div> */}
+    <div className="p-6 space-y-6">
 
-      <AvatarSection
-        isLoading={isLoading}
-        avatarPreview={avatarPreview}
-        avatarUrl={avatarUrl}
-        watchedFirstName={watchedFirstName}
-        watchedLastName={watchedLastName}
-        fileInputRef={fileInputRef}
-        handleFileChange={handleFileChange}
-        triggerFileInput={triggerFileInput}
-        role={role}
-      />
+      <div className="bg-card border border-border rounded-xl p-8 space-y-8 shadow-xs">
+        <AvatarSection
+          isLoading={isLoading}
+          avatarPreview={avatarPreview}
+          avatarUrl={avatarUrl}
+          watchedFirstName={watchedFirstName}
+          watchedLastName={watchedLastName}
+          fileInputRef={fileInputRef}
+          handleFileChange={handleFileChange}
+          triggerFileInput={triggerFileInput}
+          role={role}
+        />
 
-      <PersonalInfoForm
-        register={register}
-        errors={errors}
-        role={role}
-        isSaving={isSaving}
-        onSubmit={handleSubmit(onFormSubmit)}
-      />
+        <div className="border-t border-border/60 pt-6">
+          <PersonalInfoForm
+            register={register}
+            errors={errors}
+            role={role}
+            isSaving={isSaving}
+            onSubmit={handleSubmit(onFormSubmit)}
+          />
+        </div>
+      </div>
 
       <ConfirmUpdateModal
         show={showConfirmModal}

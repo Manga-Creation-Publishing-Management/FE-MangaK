@@ -28,28 +28,33 @@ export function SeriesApproval() {
 
   return (
     <div className="p-6 space-y-6">
-      <SearchFilterBar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        searchPlaceholder="Search by title or author…"
-        filters={[
-          {
-            value: filterStatus,
-            onChange: setFilterStatus,
-            options: [
-              { value: "all", label: "All Status" },
-              { value: "Pending", label: "Pending" },
-              { value: "Approved", label: "Approved" },
-              { value: "Scheduled", label: "Scheduled" },
-              { value: "Publishing", label: "Publishing" },
-              { value: "Cancelled", label: "Cancelled" },
-              { value: "Rejected", label: "Rejected" },
-            ]
-          }
-        ]}
+      <SeriesManagement
+        role="editorial"
+        seriesFiltered={filtered}
+        headerControls={
+          <SearchFilterBar
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            searchPlaceholder="Search by title or author…"
+            useCardWrapper={false}
+            filters={[
+              {
+                value: filterStatus,
+                onChange: setFilterStatus,
+                options: [
+                  { value: "all", label: "All Status" },
+                  { value: "Pending", label: "Pending" },
+                  { value: "Approved", label: "Approved" },
+                  { value: "Scheduled", label: "Scheduled" },
+                  { value: "Publishing", label: "Publishing" },
+                  { value: "Cancelled", label: "Cancelled" },
+                  { value: "Rejected", label: "Rejected" },
+                ]
+              }
+            ]}
+          />
+        }
       />
-
-      <SeriesManagement role="editorial" seriesFiltered={filtered} />
     </div>
   );
 }

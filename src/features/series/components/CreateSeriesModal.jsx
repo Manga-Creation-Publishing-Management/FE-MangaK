@@ -35,9 +35,9 @@ export default function CreateSeriesModal({ onClose, onReload }) {
 
         {/* Phần Header của Modal, dính cố định trên cùng khi cuộn (sticky) */}
         <div className="sticky top-0 bg-card border-b border-border p-6 flex justify-between items-center">
-          <div className="text-2xl font-semibold">Create New Series</div>
+          <div className="text-2xl font-semibold text-card-foreground">Create New Series</div>
           <button onClick={onClose}
-            className="p-2 hover:bg-muted rounded-lg transition-colors cursor-pointer"
+            className="p-2 hover:bg-muted text-foreground rounded-lg transition-colors cursor-pointer"
             disabled={isLoading}>
             <X />
           </button>
@@ -48,11 +48,11 @@ export default function CreateSeriesModal({ onClose, onReload }) {
 
           {/* Input Tiêu đề truyện */}
           <div className="space-y-2">
-            <label htmlFor="title">Title</label>
+            <label htmlFor="title" className="text-card-foreground font-medium">Title</label>
             <input
               id="title"
               type="text"
-              className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-4 py-2 bg-input-background text-foreground rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Enter series name"
               required
               onChange={handleChange}
@@ -62,7 +62,7 @@ export default function CreateSeriesModal({ onClose, onReload }) {
 
           {/* Chọn Thể loại (Genres) */}
           <div className="space-y-2">
-            <label>Genres</label>
+            <label className="text-card-foreground font-medium">Genres</label>
             <div className="flex flex-wrap gap-2">
               {/* Duyệt qua mảng genreList để render từng nút bấm thể loại */}
               {genreList.map(item => {
@@ -75,7 +75,7 @@ export default function CreateSeriesModal({ onClose, onReload }) {
                     onClick={() => handleActive(item.categoryId)} // Click để đổi trạng thái
                     className={`px-3 py-1.5 rounded-lg border text-sm transition-colors cursor-pointer ${isSelected
                       ? "bg-primary text-primary-foreground border-primary" // Màu sắc khi ĐƯỢC CHỌN
-                      : "bg-background border-border hover:bg-muted"        // Màu sắc khi CHƯA CHỌN
+                      : "bg-background text-foreground border-border hover:bg-muted"        // Màu sắc khi CHƯA CHỌN
                       }`}
                   >
                     {item.name}
@@ -87,10 +87,10 @@ export default function CreateSeriesModal({ onClose, onReload }) {
 
           {/* Ô nhập Mô tả */}
           <div className="space-y-2">
-            <label htmlFor="description">Description</label>
+            <label htmlFor="description" className="text-card-foreground font-medium">Description</label>
             <textarea
               id="description"
-              className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary min-h-32 resize-none"
+              className="w-full px-4 py-2 bg-input-background text-foreground rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary min-h-32 resize-none"
               placeholder="Enter series description"
               required
               onChange={handleChange}
@@ -100,7 +100,7 @@ export default function CreateSeriesModal({ onClose, onReload }) {
 
           {/* Khu vực Upload Ảnh bìa (Cover) */}
           <div className="space-y-4">
-            <label className="block font-medium">Upload Cover Page</label>
+            <label className="block font-medium text-card-foreground">Upload Cover Page</label>
 
             {/* 1. KHÚC TRÊN: Bộ cắt ảnh và nút Crop (Chỉ hiện khi ĐÃ CHỌN ảnh vào bộ nhớ tạm) */}
             {image && (
@@ -136,7 +136,9 @@ export default function CreateSeriesModal({ onClose, onReload }) {
               >
                 <div className="text-primary font-medium">
                   Selected: {coverFile.name}
-                </div> </div>
+                </div>
+                <div className="text-muted-foreground text-xs italic">Click here to select a different cover image</div>
+              </div>
             ) : (
               /* Khi CHƯA CHỌN ảnh nào hết -> Hiện khung nét đứt mặc định */
               <div
@@ -160,7 +162,7 @@ export default function CreateSeriesModal({ onClose, onReload }) {
 
           {/* Khu vực Upload Bản nháp truyện (Story Name / NameFile) */}
           <div className="space-y-2">
-            <label>Upload Story Name</label>
+            <label className="text-card-foreground font-medium">Upload Story Name</label>
             <div
               onClick={() => storyInputRef.current.click()} // Kích hoạt sự kiện click lên thẻ input bị ẩn
               name="nameFile"
@@ -189,18 +191,18 @@ export default function CreateSeriesModal({ onClose, onReload }) {
           </div>
 
           {/* Vùng chứa các nút điều khiển form (Hủy / Tạo mới) */}
-          <div className="flex justify-end gap-3 pt-4">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4">
             <button
               onClick={onClose}
               type="button"
-              className="cursor-pointer px-6 py-2 rounded-lg border border-border hover:bg-muted transition-colors"
+              className="cursor-pointer px-6 py-2 rounded-lg border border-border text-foreground hover:bg-muted transition-colors w-full sm:w-auto"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading} // Khóa nút bấm khi đang lưu để tránh spam
-              className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:cursor-not-allowed"
+              className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:cursor-not-allowed w-full sm:w-auto"
             >
               {isLoading ? "Creating..." : "Create"}
             </button>

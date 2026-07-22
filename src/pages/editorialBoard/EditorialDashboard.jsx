@@ -58,7 +58,7 @@ export function EditorialDashboard() {
       <div className="bg-card border border-border rounded-xl p-6">
         <div className="flex items-center gap-2 mb-5">
           <CheckCircle size={20} className="text-primary" />
-          <h2 className="text-lg font-semibold">Approved Series</h2>
+          <h2 className="text-lg font-semibold text-card-foreground">Approved Series</h2>
         </div>
 
         <div className="space-y-4 max-h-[480px] overflow-y-auto pr-2 custom-scrollbar">

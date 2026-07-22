@@ -11,6 +11,7 @@ export function StatusBadge({ status }) {
     'revising': 'bg-gold/10 text-gold border-gold/30',
     'completed': 'bg-success/10 text-success border-success/30',
     'scheduled': 'bg-schedule/10 text-schedule border-schedule/30',
+    'unsatisfied': 'bg-destructive/10 text-destructive border-destructive/30',
   };
 
   const labels = {
@@ -24,7 +25,8 @@ export function StatusBadge({ status }) {
     'available': 'Available',
     'revising': 'Revising',
     'completed': 'Completed',
-    'scheduled': 'Scheduled'
+    'scheduled': 'Scheduled',
+    'unsatisfied': 'Unsatisfied'
   };
 
   const currentStyle = styles[status] || '';

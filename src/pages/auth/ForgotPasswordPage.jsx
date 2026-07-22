@@ -75,10 +75,7 @@ export function ForgotPasswordPage() {
 
                         {/* Input Email */}
                         <div className="space-y-2">
-                            <label className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
-                                Email
-                            </label>
-                            <div className="w-full bg-muted/40 border border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 rounded-xl px-4 py-3 flex items-center gap-3 transition-all">
+                            <div className="w-full bg-input-background border border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 rounded-xl px-4 py-3 flex items-center gap-3 transition-all">
                                 <User size={18} className="text-muted-foreground/80 shrink-0" />
                                 <input
                                     type="email"

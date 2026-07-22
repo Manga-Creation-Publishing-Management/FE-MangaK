@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { X, Upload, FileImage } from 'lucide-react';
 import { useCreateTask } from '../hooks/useCreateTask';
 import { CustomSelect } from '@/shared/components/CustomSelect';
+import { useToast } from '../../../shared/hooks/useToast';
+import { useGetPageRange } from '../hooks/useGetPageRange';
 
 
 export default function CreateTaskModal({
@@ -14,12 +16,14 @@ export default function CreateTaskModal({
   onSubmitCreateTask,
   onReload,
   selectedChapterId,
-  onChapterChange,  
-  maxPagesAllowed,   
+  onChapterChange,
+  maxPagesAllowed,
   isLoading
 }) {
   const [pageRangeError, setPageRangeError] = useState("");
   const [localAssignedToId, setLocalAssignedToId] = useState("");
+
+  const { showAlert } = useToast();
 
   // 2. Hàm kiểm tra định dạng khi người dùng click ra ngoài (Blur)
   const handlePageRangeBlur = (e) => {
@@ -42,15 +46,22 @@ export default function CreateTaskModal({
       setPageRangeError("");
     }
   };
+  const selectedChapter = (chapters || []).find(
+    (item) => item.chapterId === selectedChapterId
+  );
+  const { assignedRanges, isLoadingRanges } = useGetPageRange(selectedChapterId);
+
+
+
   return (
     <>
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
         <div className="bg-card rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
           <div className="sticky top-0 bg-card border-b border-border p-6 flex justify-between items-center">
-            <div className="text-2xl font-semibold">Create New Task</div>
+            <div className="text-2xl font-semibold text-card-foreground">Create New Task</div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-muted rounded-lg transition-colors cursor-pointer"
+              className="p-2 hover:bg-muted text-foreground rounded-lg transition-colors cursor-pointer"
 
             >
               <X />
@@ -60,7 +71,7 @@ export default function CreateTaskModal({
           <form className="p-6 space-y-6" onSubmit={onSubmitCreateTask}>
 
             <div className="mb-4">
-              <div className='mb-2 text-xl'>
+              <div className='mb-2 text-l'>
                 <label htmlFor="seriesName">Series</label>
               </div>
               <CustomSelect
@@ -77,7 +88,7 @@ export default function CreateTaskModal({
               />
             </div>
             <div className="mb-4">
-              <div className='mb-2 text-xl'>
+              <div className='mb-2 text-l'>
                 <label htmlFor="seriesName">Chapter Number</label>
               </div>
               <CustomSelect
@@ -112,24 +123,28 @@ export default function CreateTaskModal({
               />
             </div>
             <div>
-              <div className='mb-2 text-xl'>
+              <div className='mb-2 text-l'>
                 <label htmlFor="">Description</label>
               </div>
               <textarea
                 id="page_range"
                 name="taskTitle"
                 className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                // placeholder="..."
+                placeholder="Enter description"
                 required
                 rows={3}
+                onInvalid={(e) => {
+                  e.preventDefault(); // Chặn popup mặc định của trình duyệt
+                  showAlert(`Description cannot be empty`);
+                }}
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
               {/* Bên trái: Page Range */}
-              
+
               <div>
-                <div className='mb-2 text-xl'>
+                <div className='mb-2 text-l'>
                   <label htmlFor="">From Page</label>
                 </div>
                 <input
@@ -142,10 +157,20 @@ export default function CreateTaskModal({
                   placeholder="Enter From Page"
                   required
                 />
+                {assignedRanges && (
+                  <div className="mt-2 text-sm text-gray-500  p-2 rounded">
+                    Assigned Ranges: <strong>{assignedRanges}</strong>
+                  </div>
+                )}
               </div>
               <div>
-                <div className='mb-2 text-xl'>
+                <div className='mb-2 text-l flex items-center gap-2'>
                   <label htmlFor="">To Page</label>
+                  {selectedChapter && (
+                    <span className="text-xs text-gray-400">
+                      (Max: {selectedChapter?.totalPage} pages)
+                    </span>
+                  )}
                 </div>
                 <input
                   min={1}
@@ -156,10 +181,18 @@ export default function CreateTaskModal({
                   className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Enter To Page"
                   required
+                  onInvalid={(e) => {
+                    e.preventDefault(); // Chặn popup mặc định của trình duyệt
+                    // Kiểm tra xem lỗi là do vượt quá max hay do chưa nhập
+                    if (e.target.validity.rangeOverflow) {
+                      showAlert(`Value must be less than or equal to ${maxPagesAllowed}`);
+                    }
+                  }}
                 />
+
               </div>
               <div>
-                <div className='mb-2 text-xl'>
+                <div className='mb-2 text-l'>
                   <label htmlFor="income">Income</label>
                 </div>
                 <input
@@ -173,31 +206,9 @@ export default function CreateTaskModal({
                 />
               </div>
 
-
-
-              {/* <input
-                  id="page_range"
-                  name="page_range"
-                  className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                  placeholder="e.g. 1-20"
-                  required
-                  type="text"
-                  onBlur={handlePageRangeBlur}
-                  onChange={() => setPageRangeError("")}
-                /> */}
-              {/* 3. Hiển thị dòng chữ báo lỗi màu đỏ ngay dưới ô nhập nếu có lỗi */}
-              {/* {pageRangeError && (
-                  <span className="text-red-500 text-sm mt-1 block">
-                    {pageRangeError}
-                  </span>
-                )} */}
-
-
-              {/* Bên phải: Income */}
-
             </div>
             <div className="mb-4">
-              <div className='mb-2 text-xl'>
+              <div className='mb-2 text-l'>
                 <label htmlFor="deadline">Deadline</label>
               </div>
               <input
@@ -208,22 +219,18 @@ export default function CreateTaskModal({
               />
             </div>
 
-
-
-
-
-            <div className="flex justify-end gap-3 pt-4">
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4">
               <button
                 onClick={onClose}
                 type="button"
-                className=" cursor-pointer px-6 py-2 rounded-lg border border-border hover:bg-muted transition-colors"
+                className="cursor-pointer px-6 py-2 rounded-lg border border-border text-foreground hover:bg-muted transition-colors w-full sm:w-auto"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isLoading}
-                className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
               >
                 {isLoading ? "Creating..." : "Create"}
               </button>

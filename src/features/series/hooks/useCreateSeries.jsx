@@ -100,6 +100,7 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
       setCroppedFile(file);
       setCoverFile(file);
       // setImage("");
+      showAlert("Cropped successfully!");
     }, "image/jpeg");
   };
 
