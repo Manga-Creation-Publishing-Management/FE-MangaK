@@ -66,17 +66,7 @@ export const taskService = {
   },
 
   async rejectTask(taskId, feedbackContent) {
-
-    return await api.put('/MangaTask/review-task',
-      {
-        taskId: taskId,
-        isApproved: false,
-        feedbackContent: feedbackContent
-      }
-    );
-
-    return await api.put('/MangaTask/review-task',
-      {
+    return await api.put('/MangaTask/review-task', {
         taskId: taskId,
         status: "Revising",
         feedbackContent: feedbackContent,

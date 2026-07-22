@@ -1,18 +1,18 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-background: #faf9f5;
-  --color-foreground: #0d0a14;
+  --color-background: #faf8fc !important;
+  --color-foreground: #2d2438;
   --color-card: #ffffff;
-  --color-card-foreground: #0d0a14;
+  --color-card-foreground: #2d2438;
   --color-primary: #9b7eb8;
   --color-primary-foreground: #ffffff;
   --color-secondary: #e8d5f2;
-  --color-secondary-foreground: #0d0a14;
+  --color-secondary-foreground: #2d2438;
   --color-muted: #f0ebf5;
   --color-muted-foreground: #6b5e7a;
   --color-accent: #ffb88c;
-  --color-accent-foreground: #0d0a14;
+  --color-accent-foreground: #2d2438;
   --color-destructive: #e85d75;
   --color-destructive-foreground: #ffffff;
   --color-border: rgba(155, 126, 184, 0.2);

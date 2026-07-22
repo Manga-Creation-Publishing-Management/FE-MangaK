@@ -125,9 +125,9 @@ export function TaskDetail() {
 
           <div className="flex justify-between items-start border-b border-border pb-6">
             <div className="space-y-1">
-              <div className="flex items-center text-2xl font-semibold mb-1 text-card-foreground">
+              <h3 className="flex items-center text-2xl font-semibold mb-1 text-card-foreground">
                 Chapter {taskDetail?.chapterNumber}: {taskDetail?.chapterTitle}
-              </div>
+              </h3>
               <p className="text-muted-foreground text-l flex items-center gap-1 mt-2">
                 <span>{taskDetail?.seriesTitle}</span>
               </p>

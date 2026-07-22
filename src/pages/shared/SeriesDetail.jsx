@@ -246,14 +246,6 @@ export function SeriesDetail() {
                   <h5 className="text-xs sm:text-sm text-muted-foreground uppercase font-semibold mb-1">Description</h5>
                   <p className="text-foreground text-justify w-full px-4 py-2 info-box flex-1 max-h-30 overflow-y-auto text-sm leading-relaxed">
                     {detailData?.description}
-                    {detailData?.description}
-                    {detailData?.description}
-                    {detailData?.description}
-                    {detailData?.description}
-                    {detailData?.description}
-                    {detailData?.description}
-                    {detailData?.description}
-                    {detailData?.description}
                   </p>
                 </div>
 

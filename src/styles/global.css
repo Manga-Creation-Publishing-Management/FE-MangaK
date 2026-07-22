@@ -413,3 +413,8 @@ button:not(.toggle-btn):not(.bell-container button):not(.header-menu-container b
 .sticker-badge:hover {
   transform: rotate(-1.5deg) scale(1.06) !important;
 }
+
+/* Utility for explicit background */
+.bg-background {
+  background-color: var(--color-background) !important;
+}
