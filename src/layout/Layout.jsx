@@ -1,8 +1,8 @@
 import { Outlet } from 'react-router';
 import { Sidebar } from './Sidebar';
 import { HeaderPage } from './HeaderPage';
-import { useEffect, useState } from 'react';
-import { useToast } from '@/shared/hooks/useToast';
+import { useState } from 'react';
+import { Breadcrumb } from '@/shared/components/Breadcrumb';
 
 const roleDisplayNames = {
   mangaka: "Mangaka",
@@ -15,9 +15,9 @@ const roleDisplayNames = {
 
 export function Layout({ roleName }) {
   const [pageHeader, setPageHeader] = useState(null);
+  const [breadcrumbItems, setBreadcrumbItems] = useState(null);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const displayRole = roleDisplayNames[roleName] || roleName;
-  const { showAlert } = useToast();
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background">
@@ -34,6 +34,9 @@ export function Layout({ roleName }) {
           avatarUrl="/avatarImgDemo.png"
           onToggleMobileSidebar={() => setIsMobileOpen((prev) => !prev)}
         />
+        {breadcrumbItems && (
+          <Breadcrumb items={breadcrumbItems} />
+        )}
         {pageHeader && (
           <div className="p-4 sm:p-6 m-3 sm:m-4 bg-card border border-border rounded-2xl shrink-0">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -48,9 +51,10 @@ export function Layout({ roleName }) {
           </div>
         )}
         <div className="flex-1 overflow-y-auto p-2 sm:p-4 bg-background">
-          <Outlet context={{ setPageHeader }} />
+          <Outlet context={{ setPageHeader, setBreadcrumbItems }} />
         </div>
       </main>
     </div>
   );
 }
+
