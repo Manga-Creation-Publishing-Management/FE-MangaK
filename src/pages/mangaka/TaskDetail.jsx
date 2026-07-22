@@ -1,4 +1,4 @@
-import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, SquarePen, UploadCloud, ChevronDown, X } from "lucide-react";
+import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, SquarePen, UploadCloud, ChevronDown, X, Check } from "lucide-react";
 import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { useTaskDetail } from "../../features/tasks/hooks/useTaskDetail";
@@ -15,6 +15,7 @@ import { FeedbackViewer } from "../shared/FeedbackViewer";
 import { useToast } from "@/shared/hooks/useToast";
 import { useUpdateTaskDeadline } from "../../features/tasks/hooks/useUpdateTaskDeadline";
 import { Breadcrumb } from "@/shared/components/Breadcrumb";
+import { useUpdateTaskAssistant } from "../../features/tasks/hooks/useUpdateTaskAssistant";
 dayjs.extend(utc);
 export function TaskDetail() {
 
@@ -39,10 +40,7 @@ export function TaskDetail() {
     handleDenyTask,
     handleGetTask,
     handleUnsatisfiedTask,
-    assistantList,
-    isUpdatingAssistant,
-    fetchAssistants,
-    handleUpdateAssistant
+    handleReload
   } = useTaskDetail(taskId, role);
 
   const {
@@ -70,8 +68,6 @@ export function TaskDetail() {
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isUnsatisfiedModalOpen, setIsUnsatisfiedModalOpen] = useState(false);
-  const [isEditingAssistant, setIsEditingAssistant] = useState(false);
-  const [selectedAssistantId, setSelectedAssistantId] = useState("");
 
   const feedbackViewerRef = useRef(null);
 
@@ -99,6 +95,26 @@ export function TaskDetail() {
     { label: rolePrefix === 'assistant' ? "My Tasks" : "Task Management", path: `/${rolePrefix}/tasks` },
     { label: taskLabel }
   ];
+
+  const {
+    isEditingTaskAssistant,
+    isUpdatingTaskAssistant,
+    taskAssistantList,
+    selectedTaskAssistantId,
+    setSelectedTaskAssistantId,
+    handleStartEditTaskAssistant,
+    handleSaveTaskAssistant,
+    handleCancelEditTaskAssistant
+  } = useUpdateTaskAssistant(
+    taskId,
+    taskDetail?.assignedToId || taskDetail?.assistantId,
+    taskDetail?.assistantName,
+    (newAssistantId, newAssistantName) => {
+      // Gọi hàm handleReload để fetch lại API
+      handleReload();
+    }
+  );
+
 
   return (
     <>
@@ -175,8 +191,8 @@ export function TaskDetail() {
             <div className="md:col-span-3 flex flex-col gap-2 min-h-[200px] h-auto">
               {/* Ô 2: Assistant in Charge */}
               <div className="bg-muted/30 p-4 rounded-xl border border-border flex flex-col justify-start min-h-[96px]">
-                <div className="flex flex-row justify-between items-center">
-                  <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3 ">
+                <div className="flex flex-row justify-between items-center w-full">
+                  <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3 items-center flex gap-2">
                     Assistant in charge
                   </h3>
                   {role === "mangaka" && (
@@ -185,47 +201,46 @@ export function TaskDetail() {
                     taskDetail?.status === "Revising" ||
                     taskDetail?.status === "Unsatisfied"
                   ) && (
-                      <button
-                        onClick={async () => {
-                          if (isEditingAssistant) {
-                            setIsEditingAssistant(false);
-                          } else {
-                            // Fetch assistant list if empty
-                            if (assistantList.length === 0) {
-                              await fetchAssistants();
-                            }
-                            const currentId = taskDetail?.assignedToId || taskDetail?.assistantId || "";
-                            const matched = assistantList.find(as => as.fullName === taskDetail?.assistantName);
-                            setSelectedAssistantId(currentId || matched?.userId || "");
-                            setIsEditingAssistant(true);
-                          }
-                        }}
-                        className="cursor-pointer hover:bg-secondary/50 rounded-xl p-2 inline-flex items-center justify-center -mt-[10px] -mr-2 text-foreground"
+                    isEditingTaskAssistant ? (
+                      <div className="flex items-center gap-1 -mt-[10px] -mr-2">
+                        <button
+                          onClick={handleCancelEditTaskAssistant}
+                          disabled={isUpdatingTaskAssistant}
+                          className="bg-secondary hover:bg-secondary/80 text-secondary-foreground p-1 rounded cursor-pointer transition-colors disabled:opacity-50"
+                        >
+                          <X size={14} />
+                        </button>
+                        <button
+                          onClick={handleSaveTaskAssistant}
+                          disabled={isUpdatingTaskAssistant}
+                          className="bg-primary hover:bg-primary/90 text-primary-foreground p-1 rounded cursor-pointer transition-colors disabled:opacity-50"
+                        >
+                          {isUpdatingTaskAssistant ? "..." : <Check size={14} />}
+                        </button>
+                      </div>
+                    ) : (
+                      <span
+                        onClick={handleStartEditTaskAssistant}
+                        className="cursor-pointer hover:bg-secondary/50 rounded-xl p-2 inline-flex items-center justify-center text-muted-foreground -mt-[10px] -mr-2"
                       >
-                        {isEditingAssistant ? <X size={13} /> : <SquarePen size={13} />}
-                      </button>
-                    )}
+                        <SquarePen size={13} />
+                      </span>
+                    )
+                  )}
                 </div>
 
-                {isEditingAssistant ? (
-                  <div className="flex items-center gap-2 -mt-2">
+                {isEditingTaskAssistant ? (
+                  <div className="w-full mt-1">
                     <select
-                      value={selectedAssistantId}
-                      onChange={async (e) => {
-                        const newId = e.target.value;
-                        setSelectedAssistantId(newId);
-                        if (newId) {
-                          await handleUpdateAssistant(newId);
-                          setIsEditingAssistant(false);
-                        }
-                      }}
-                      disabled={isUpdatingAssistant}
-                      className="bg-card text-foreground border border-border rounded px-2 py-1 text-sm font-semibold focus:outline-none focus:ring-1 focus:ring-primary w-full cursor-pointer"
+                      value={selectedTaskAssistantId} // BIẾN MỚI
+                      onChange={(e) => setSelectedTaskAssistantId(e.target.value)} // Cập nhật state cục bộ thay vì gọi API ngay
+                      disabled={isUpdatingTaskAssistant} // BIẾN MỚI
+                      className="bg-card text-foreground border border-border rounded px-2 py-0.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary w-full cursor-pointer h-[26px]"
                     >
                       <option value="">Select assistant...</option>
-                      {assistantList.map((as) => (
+                      {taskAssistantList.map((as) => ( // MAP TỪ LIST MỚI
                         <option key={as.userId} value={as.userId}>
-                          {as.fullName}
+                          {as.firstName + " " + as.lastName}
                         </option>
                       ))}
                     </select>
@@ -266,16 +281,16 @@ export function TaskDetail() {
                         <button
                           onClick={handleCancelEditDeadline}
                           disabled={isUpdating}
-                          className="text-[10px] bg-secondary hover:bg-secondary/80 text-secondary-foreground px-1.5 py-0.5 rounded cursor-pointer transition-colors disabled:opacity-50"
+                          className="bg-secondary hover:bg-secondary/80 text-secondary-foreground p-1 rounded cursor-pointer transition-colors disabled:opacity-50"
                         >
-                          Cancel
+                          <X size={14} />
                         </button>
                         <button
                           onClick={handleSaveDeadline}
                           disabled={isUpdating}
-                          className="text-[10px] bg-primary hover:bg-primary/90 text-primary-foreground px-1.5 py-0.5 rounded cursor-pointer font-medium transition-colors disabled:opacity-50"
+                          className="bg-primary hover:bg-primary/90 text-primary-foreground p-1 rounded cursor-pointer transition-colors disabled:opacity-50"
                         >
-                          {isUpdating ? "..." : "Save"}
+                          {isUpdating ? "..." : <Check size={14} />}
                         </button>
                       </div>
                     ) : (
@@ -556,7 +571,7 @@ export function TaskDetail() {
             </div>
           </div>
         </div>
-      </div>
+      </div >
     </>
   )
 
