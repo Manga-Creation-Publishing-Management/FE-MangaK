@@ -144,9 +144,9 @@ export function ProfilePage() {
   }, [role]);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-3 sm:p-6 space-y-6">
 
-      <div className="bg-card border border-border rounded-xl p-8 space-y-8 shadow-xs">
+      <div className="bg-card border border-border rounded-xl p-4 sm:p-8 space-y-8 shadow-xs">
         <AvatarSection
           isLoading={isLoading}
           avatarPreview={avatarPreview}

@@ -34,4 +34,9 @@ export const chaptersService = {
     return await  api.get(`/MangaTask/process-task?ChapterId=${chapterId}&Status=${status}`);
   },
 
+  // Lấy số sao mà Reader đã đánh giá cho một chapter cụ thể
+  async getReaderVote(chapterId, readerId) {
+    return await api.get(`/Vote/${chapterId}/reader/${readerId}`);
+  },
+
 };

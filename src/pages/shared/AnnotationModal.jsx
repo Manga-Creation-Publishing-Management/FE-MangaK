@@ -212,21 +212,21 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
 
         {/* Phân trang PDF */}
         {numPages && (
-          <div className="flex items-center justify-between w-full px-2">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full px-2">
             <button
               disabled={pageNumber <= 1}
               onClick={() => { setPageNumber(prev => prev - 1); setIsPageLoaded(false); }}
-              className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 disabled:opacity-40 disabled:cursor-not-allowed text-sm font-medium transition-colors cursor-pointer border border-border"
+              className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 disabled:opacity-40 disabled:cursor-not-allowed text-xs sm:text-sm font-medium transition-colors cursor-pointer border border-border w-full sm:w-auto text-center"
             >
               Previous Page
             </button>
-            <span className="text-sm font-semibold text-muted-foreground">
+            <span className="text-xs sm:text-sm font-semibold text-muted-foreground order-first sm:order-none">
               Page {pageNumber} of {numPages}
             </span>
             <button
               disabled={pageNumber >= numPages}
               onClick={() => { setPageNumber(prev => prev + 1); setIsPageLoaded(false); }}
-              className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 disabled:opacity-40 disabled:cursor-not-allowed text-sm font-medium transition-colors cursor-pointer border border-border"
+              className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 disabled:opacity-40 disabled:cursor-not-allowed text-xs sm:text-sm font-medium transition-colors cursor-pointer border border-border w-full sm:w-auto text-center"
             >
               Next Page
             </button>

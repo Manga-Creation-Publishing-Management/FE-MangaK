@@ -1,4 +1,4 @@
-import { ArrowLeft, Download, Eye, ChevronDown } from "lucide-react";
+import { ArrowLeft, Download, Eye, ChevronDown, Loader2 } from "lucide-react";
 import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { useLocation, useNavigate, useOutletContext, useParams } from "react-router";
@@ -140,28 +140,39 @@ export function SeriesDetail() {
   ];
 
   useEffect(() => {
-    setBreadcrumbItems(customBreadcrumb);
+    if (detailData) {
+      setBreadcrumbItems(customBreadcrumb);
+    }
     return () => setBreadcrumbItems(null);
   }, [detailData?.title, rolePrefix]);
+
+  if (!detailData) {
+    return (
+      <div className="flex justify-center items-center h-[70vh]">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+        <span className="ml-3 text-muted-foreground font-medium text-lg">Loading series details...</span>
+      </div>
+    );
+  }
 
   return (
     <>
       <div className="p-6 space-y-6">
 
-      {/* Khung chứa ảnh bìa và thông tin cơ bản của bộ truyện */}
-      <div className="bg-card border border-border rounded-xl overflow-hidden p-4 sm:p-6">
+        {/* Khung chứa ảnh bìa và thông tin cơ bản của bộ truyện */}
+        <div className="bg-card border border-border rounded-xl overflow-hidden p-4 sm:p-6">
 
           {/* Vùng hiển thị Ảnh bìa */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 border-b border-border pb-6 items-start">
             <div className="col-span-1 md:col-span-4 lg:col-span-3 w-full aspect-[3/4] relative rounded-xl max-w-xs mx-auto md:max-w-none" >
-              <img className="w-full h-full object-cover rounded-xl" src={detailData?.coverFile} alt="" />
+              <img className="w-full h-full object-cover rounded-xl" src={detailData?.coverFile} alt="Series-cover-image" />
             </div>
             <div className="col-span-1 md:col-span-8 lg:col-span-9 w-full min-h-[440px] relative rounded-xl flex flex-col justify-between space-y-4" >
               <div className="flex flex-col h-full justify-between space-y-4">
                 <div className="flex justify-between items-start gap-4">
                   <div className="flex-1">
                     {/* Tiêu đề truyện và Tên tác giả */}
-                    <h1 className="text-xl sm:text-2xl font-semibold text-card-foreground">{detailData?.title}</h1>
+                    <h2 className="title-obelix text-md sm:text-2xl font-semibold text-card-foreground">{detailData?.title}</h2>
                     <p className="text-muted-foreground text-xs sm:text-sm mt-1">{detailData?.mangakaName}</p>
                   </div>
                   {/* Huy hiệu hiển thị trạng thái (Processing, Pending, Approved...) */}
@@ -170,20 +181,20 @@ export function SeriesDetail() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <div className="bg-muted/30 p-3 rounded-lg border border-border text-foreground text-sm leading-relaxed">
-                      <h3 className="font-normal text-xs sm:text-sm text-muted-foreground tracking-wider">Upcoming Chapter Release Date</h3>
+                    <div className="min-h-[40px] info-box p-3 text-foreground text-sm leading-relaxed">
+                      <h5 className="font-normal text-sm sm:text-sm text-muted-foreground tracking-wider">Upcoming Chapter Release Date</h5>
                       {detailData?.publishDate ? (
-                        <div className="text-xs sm:text-sm my-1.5 font-semibold">{dayjs(detailData?.publishDate).utc(true).format('DD/MM/YYYY HH:mm')}</div>
+                        <div className="text-sm sm:text-lg my-1.5 font-semibold">{dayjs(detailData?.publishDate).utc(true).format('DD/MM/YYYY HH:mm')}</div>
                       ) : (
                         <div className="text-xs sm:text-sm ms-0.5">— — — —</div>
                       )}
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <div className="bg-muted/30 p-3 rounded-lg border border-border text-foreground text-sm leading-relaxed">
-                      <h3 className="font-normal text-xs sm:text-sm text-muted-foreground tracking-wider">Publish Period</h3>
+                    <div className="min-h-[40px] info-box p-3 text-foreground text-sm leading-relaxed">
+                      <h5 className="font-normal text-sm  sm:text-sm text-muted-foreground tracking-wider">Publish Period</h5>
                       {detailData?.publishPeriod ? (
-                        <div className="text-xs sm:text-sm my-1.5 font-semibold capitalize">{detailData?.publishPeriod}</div>
+                        <div className="text-sm sm:text-lg my-1.5 font-semibold capitalize">{detailData?.publishPeriod}</div>
                       ) : (
                         <div className="text-xs sm:text-sm ms-0.5">— — — —</div>
                       )}
@@ -193,7 +204,7 @@ export function SeriesDetail() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-start">
                   <div className="sm:col-span-7 md:col-span-8 space-y-2">
-                    <h3 className="text-xs sm:text-sm text-muted-foreground uppercase font-semibold">Genres</h3>
+                    <h5 className="text-xs sm:text-sm text-muted-foreground uppercase font-semibold">Genres</h5>
                     {/* Danh sách các thể loại */}
                     <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {detailData?.categories?.map((item, index) => {
@@ -201,7 +212,7 @@ export function SeriesDetail() {
                         return (
                           <span
                             key={index}
-                            className="px-2.5 py-0.5 text-xs font-medium rounded-full bg-secondary/50 text-secondary-foreground border border-border"
+                            className="genre-card px-2.5 py-0.5 text-xs font-medium rounded bg-secondary/50 text-secondary-foreground border border-border"
                           >
                             {nameGenre ? nameGenre.name : item}
                           </span>
@@ -240,8 +251,8 @@ export function SeriesDetail() {
                 </div>
 
                 <div className="flex flex-col flex-1 h-full pt-2">
-                  <p className="text-xs sm:text-sm text-muted-foreground uppercase font-semibold mb-1">Description</p>
-                  <p className="text-foreground text-justify w-full px-4 py-2 bg-input-background rounded-lg border border-border flex-1 max-h-40 overflow-y-auto text-xs leading-relaxed">
+                  <h5 className="text-xs sm:text-sm text-muted-foreground uppercase font-semibold mb-1">Description</h5>
+                  <p className="text-foreground text-justify w-full px-4 py-2 info-box flex-1 max-h-30 overflow-y-auto text-sm leading-relaxed">
                     {detailData?.description}
                   </p>
                 </div>

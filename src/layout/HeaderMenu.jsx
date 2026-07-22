@@ -49,7 +49,7 @@ export function HeaderMenu({ roleName }) {
         <div className="header-menu-container relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center justify-center text-muted-foreground hover:text-accent p-2 rounded-lg transition-colors"
+                className="flex items-center justify-center text-muted-foreground hover:text-accent p-2 transition-colors toggle-btn"
                 title="Menu"
                 aria-label="Toggle menu"
             >

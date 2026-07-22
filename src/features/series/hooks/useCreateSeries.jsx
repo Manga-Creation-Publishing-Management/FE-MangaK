@@ -16,8 +16,6 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
   const [selectGenres, setSelectGenres] = useState([]);
   // State lưu trữ dữ liệu các ô text trong form (như title, description)
   const [formSeriesData, setFormSeriesData] = useState({});
-  // State lưu danh sách các bộ truyện hiện tại
-  const [seriesData, setSeriesData] = useState([]);
 
   // State quản lý trạng thái loading (khi đang gọi API submit)
   const [isLoading, setIsLoading] = useState(false);
@@ -40,12 +38,9 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
     const fetchApi = async () => {
       // Chờ gọi 2 API lấy thể loại và series
       const resultsGenre = await seriesService.getAllCategory();
-      const resultsSeries = await seriesService.getAllSeries();
 
       // Cập nhật state
       setGenreList(resultsGenre.data);
-      // Đảo ngược mảng series (toReversed) để hiển thị truyện mới nhất lên đầu
-      setSeriesData(resultsSeries.data.toReversed());
     };
     fetchApi();
   }, [reloadState])
@@ -156,7 +151,6 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
     storyFile,
     coverInputRef,
     storyInputRef,
-    seriesData,
     formSeriesData,
     handleActive,
     handleChange,

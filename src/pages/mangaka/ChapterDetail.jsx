@@ -3,7 +3,8 @@ import { StatusBadge } from "@/shared/components/StatusBadge";
 import { useState, useRef, useEffect } from 'react';
 import dayjs from 'dayjs';
 
-import { Download, Star, ChevronDown, FileText } from "lucide-react";
+
+import { ArrowLeft, Download, Star, ChevronDown, FileText, Loader2 } from "lucide-react";
 import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
 import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter";
@@ -81,16 +82,27 @@ export function ChapterDetail() {
   ];
 
   useEffect(() => {
-    setBreadcrumbItems(customBreadcrumb);
+    if (chapterDetail) {
+      setBreadcrumbItems(customBreadcrumb);
+    }
     return () => setBreadcrumbItems(null);
   }, [chapterDetail?.seriesTitle, chapterDetail?.chapterNumber, chapterDetail?.title, rolePrefix]);
+
+  if (!chapterDetail) {
+    return (
+      <div className="flex justify-center items-center h-[70vh]">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+        <span className="ml-3 text-muted-foreground font-medium text-lg">Loading chapter details...</span>
+      </div>
+    );
+  }
 
   return (
     <>
       <div className="p-6 space-y-6">
 
-      {/* Khung (Card) chứa thông tin chính của Chapter */}
-      <div className="bg-card border border-border rounded-xl p-8 space-y-4">
+        {/* Khung (Card) chứa thông tin chính của Chapter */}
+        <div className="bg-card border border-border rounded-xl p-8 space-y-4">
           <div className="w-full bg-muted rounded-full h-6 overflow-hidden border border-border">
             <div
               className={`h-full rounded-full transition-all duration-300 ease-out flex items-center justify-start ps-2 text-xs font-bold text-white ${progress === 100 ? 'bg-success' : 'bg-info'
@@ -102,19 +114,19 @@ export function ChapterDetail() {
             </div>
           </div>
 
-          <div className="flex justify-between items-start">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
             {/* Cụm thông tin bên trái: Tiêu đề Chapter, Số thứ tự, Tóm tắt */}
-            <div>
-              <h1 className="font-semibold text-xl capitalize text-card-foreground">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h1>
+            <div className="min-w-0">
+              <h3 className="title-obelix font-semibold text-lg sm:text-xl capitalize text-card-foreground break-words">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h3>
               <div>
-                <p className="mt-3 text-foreground/80">{chapterDetail?.seriesTitle}</p>
+                <p className="mt-1 sm:mt-3 text-xs sm:text-sm text-muted-foreground">{chapterDetail?.seriesTitle}</p>
               </div>
             </div>
 
             {/* Cụm thông tin bên phải: Badge trạng thái (Status) và Ngày tải lên */}
-            <div className="flex flex-col items-end space-y-2">
+            <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-3 w-full sm:w-auto shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-border/40">
               <StatusBadge status={chapterDetail?.status.toLowerCase()} />
-              <div className="flex items-center gap-1 text-sm text-muted-foreground"><FileText size={16} /> Total pages: <span className="text-foreground font-medium">{chapterDetail?.totalPage}</span></div>
+              <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground"><FileText size={16} /> Total pages: <span className="text-foreground font-medium">{chapterDetail?.totalPage}</span></div>
             </div>
 
           </div>
@@ -134,7 +146,7 @@ export function ChapterDetail() {
             </div>
             <div className="md:col-span-4 space-y-2 ">
               <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
-                <h3 className="font-normal text-sm text-muted-foreground gap-2 tracking-wider"><span>Deadline</span>
+                <h3 className="font-normal text-sm text-muted-foreground  tracking-wider">Deadline
                   {chapterDetail?.status != ("Publishing" || "Scheduled") ? (
                     <>{isOverdue && <span className="text-destructive font-bold">(Overdue)</span>}</>
                   ) : (

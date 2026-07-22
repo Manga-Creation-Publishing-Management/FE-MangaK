@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { SeriesManagement } from "../shared/SeriesManagement";
 import { useSeriesManagement } from "../../features/series/hooks/useSeriesManagement";
-import useCreateSeries from "../../features/series/hooks/useCreateSeries";
+import useSeriesList from "../../features/series/hooks/useSeriesList";
 import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
 
 export function SeriesApproval() {
   const { reload, handleReload } = useSeriesManagement();
-  const { seriesData } = useCreateSeries(null, handleReload, reload);
+  const { seriesData } = useSeriesList(reload);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");

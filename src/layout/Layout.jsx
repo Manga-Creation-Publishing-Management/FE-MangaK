@@ -41,7 +41,7 @@ export function Layout({ roleName }) {
           <div className="p-4 sm:p-6 m-3 sm:m-4 bg-card border border-border rounded-2xl shrink-0">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold">{pageHeader.title}</h1>
+                <h1 className="text-xl sm:text-2xl font-bold manga-title">{pageHeader.title}</h1>
                 <p className="text-xs sm:text-sm text-muted-foreground">{pageHeader.subtitle}</p>
               </div>
               <div className="flex flex-wrap gap-2 sm:gap-3">
