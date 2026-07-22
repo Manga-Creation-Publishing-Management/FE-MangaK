@@ -67,7 +67,6 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
         <>
             <div className="flex items-center justify-between shadow p-2.5 px-4 sm:px-8 bg-card relative z-50">
                 <div className="flex items-center gap-2 sm:gap-3">
-                    {/* Mobile Sidebar Toggle Button */}
                     {roleName !== 'reader' && roleName !== 'Reader' && (
                         <button
                             onClick={onToggleMobileSidebar}
@@ -95,7 +94,6 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
                 )}
 
                 <div className="flex items-center gap-2 sm:gap-3">
-                    {/* Bell Icon & Feedback Dropdown */}
                     {hasFeedbackSupport && (
                         <div className="bell-container relative">
                             <button
@@ -146,7 +144,6 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
                         </div>
                     )}
 
-                    {/* Hamburger Menu */}
                     <HeaderMenu roleName={roleName} />
                 </div>
             </div>

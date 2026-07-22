@@ -1,8 +1,7 @@
 import { Outlet } from 'react-router';
 import { Sidebar } from './Sidebar';
 import { HeaderPage } from './HeaderPage';
-import { useEffect, useState } from 'react';
-import { useToast } from '@/shared/hooks/useToast';
+import { useState } from 'react';
 import { Breadcrumb } from '@/shared/components/Breadcrumb';
 
 const roleDisplayNames = {
@@ -19,7 +18,6 @@ export function Layout({ roleName }) {
   const [breadcrumbItems, setBreadcrumbItems] = useState(null);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const displayRole = roleDisplayNames[roleName] || roleName;
-  const { showAlert } = useToast();
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background">
