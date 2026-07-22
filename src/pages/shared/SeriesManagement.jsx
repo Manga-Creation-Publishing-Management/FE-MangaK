@@ -178,7 +178,7 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered, headerCon
 
                   <div className="p-3 sm:p-4 space-y-3">
                     <div>
-                      <h3 className="font-semibold text-base sm:text-lg text-card-foreground line-clamp-1">{item.title}</h3>
+                      <h3 className="font-semibold truncate sm:text-lg text-card-foreground line-clamp-1">{item.title}</h3>
                       <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{item.totalChapters || 0} Chapters</p>
                     </div>
                     <StatusBadge status={item?.status.toLowerCase()} />

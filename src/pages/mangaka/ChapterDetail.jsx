@@ -1,6 +1,6 @@
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useOutletContext } from "react-router";
 import { StatusBadge } from "@/shared/components/StatusBadge";
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import dayjs from 'dayjs';
 
 
@@ -14,7 +14,7 @@ import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
 import { AnnotationModal } from "../shared/AnnotationModal";
 import { FeedbackViewer } from "../shared/FeedbackViewer";
 import { useToast } from "@/shared/hooks/useToast";
-import { Breadcrumb } from "@/shared/components/Breadcrumb";
+
 
 // (Worker setup moved to AnnotationModal)
 
@@ -25,6 +25,7 @@ export function ChapterDetail() {
   // Hook dùng để quay lại trang trước đó
   const navigate = useNavigate();
   const { showAlert } = useToast();
+  const { setBreadcrumbItems } = useOutletContext();
 
   // Lấy seriesId và chapterId được truyền ngầm qua state khi gọi hàm navigate từ component cha (VD: ChapterList)
   const seriesId = useLocation().state?.seriesId;
@@ -89,10 +90,14 @@ export function ChapterDetail() {
     { label: chapterDetail?.chapterNumber ? `Chapter ${chapterDetail.chapterNumber}${chapterDetail.title ? `: ${chapterDetail.title}` : ''}` : "Chapter Detail" }
   ];
 
+  useEffect(() => {
+    setBreadcrumbItems(customBreadcrumb);
+    return () => setBreadcrumbItems(null);
+  }, [chapterDetail?.seriesTitle, chapterDetail?.chapterNumber, chapterDetail?.title, rolePrefix]);
+
   return (
     <>
       <div className="p-6 space-y-6">
-        <Breadcrumb items={customBreadcrumb} />
 
         {/* Khung (Card) chứa thông tin chính của Chapter */}
         <div className="bg-card border border-border rounded-xl p-8 space-y-4">

@@ -95,7 +95,6 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
                 )}
 
                 <div className="flex items-center gap-2 sm:gap-3">
-                    {/* Bell Icon & Feedback Dropdown */}
                     {hasFeedbackSupport && (
                         <div className="bell-container relative">
                             <button
@@ -146,7 +145,6 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
                         </div>
                     )}
 
-                    {/* Hamburger Menu */}
                     <HeaderMenu roleName={roleName} />
                 </div>
             </div>
