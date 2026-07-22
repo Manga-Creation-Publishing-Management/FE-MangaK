@@ -3,6 +3,7 @@ import { X, Upload, FileImage } from 'lucide-react';
 import { useCreateTask } from '../hooks/useCreateTask';
 import { CustomSelect } from '@/shared/components/CustomSelect';
 import { useToast } from '../../../shared/hooks/useToast';
+import { useGetPageRange } from '../hooks/useGetPageRange';
 
 
 export default function CreateTaskModal({
@@ -48,6 +49,10 @@ export default function CreateTaskModal({
   const selectedChapter = (chapters || []).find(
     (item) => item.chapterId === selectedChapterId
   );
+  const { assignedRanges, isLoadingRanges } = useGetPageRange(selectedChapterId);
+
+
+
   return (
     <>
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -125,7 +130,7 @@ export default function CreateTaskModal({
                 id="page_range"
                 name="taskTitle"
                 className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                // placeholder="..."
+                placeholder="Enter description"
                 required
                 rows={3}
                 onInvalid={(e) => {
@@ -152,6 +157,11 @@ export default function CreateTaskModal({
                   placeholder="Enter From Page"
                   required
                 />
+                {assignedRanges && (
+                  <div className="mt-2 text-sm text-gray-500  p-2 rounded">
+                    Assigned Ranges: <strong>{assignedRanges}</strong>
+                  </div>
+                )}
               </div>
               <div>
                 <div className='mb-2 text-l flex items-center gap-2'>
