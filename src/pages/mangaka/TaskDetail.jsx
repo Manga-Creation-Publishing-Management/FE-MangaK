@@ -130,9 +130,9 @@ export function TaskDetail() {
 
           <div className="flex justify-between items-start border-b border-border pb-6">
             <div className="space-y-1">
-              <div className="flex items-center text-2xl font-semibold mb-1 text-card-foreground">
+              <h3 className="flex items-center text-2xl font-semibold mb-1 text-card-foreground">
                 Chapter {taskDetail?.chapterNumber}: {taskDetail?.chapterTitle}
-              </div>
+              </h3>
               <p className="text-muted-foreground text-l flex items-center gap-1 mt-2">
                 <span>{taskDetail?.seriesTitle}</span>
               </p>
@@ -184,7 +184,7 @@ export function TaskDetail() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             {/* 1. Task Description */}
             <div className="md:col-span-6">
-              <div className="bg-muted/30 p-4 rounded-lg border border-border min-h-[200px] text-foreground text-sm leading-relaxed max-h-20 overflow-y-auto">
+              <div className="info-box p-4 min-h-[200px] text-foreground text-sm leading-relaxed max-h-20 overflow-y-auto">
                 <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-2">
                   Task Description
                 </h3>
@@ -195,7 +195,7 @@ export function TaskDetail() {
             {/* 2. Cột giữa */}
             <div className="md:col-span-3 flex flex-col gap-2 min-h-[200px] h-auto">
               {/* Ô 2: Assistant in Charge */}
-              <div className="bg-muted/30 p-4 rounded-xl border border-border flex flex-col justify-start min-h-[96px]">
+              <div className="info-box p-4 flex flex-col justify-start min-h-[96px]">
                 <div className="flex flex-row justify-between items-center w-full">
                   <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3 items-center flex gap-2">
                     Assistant in charge
@@ -257,7 +257,7 @@ export function TaskDetail() {
                 )}
               </div>
               {/* Ô 1: Income Amount */}
-              <div className="bg-muted/30 p-4 rounded-lg border border-border min-h-[96px] flex flex-col justify-start">
+              <div className="info-box p-4 min-h-[96px] flex flex-col justify-start">
                 <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-2">
                   Income Amount
                 </h3>
@@ -273,7 +273,7 @@ export function TaskDetail() {
             {/* 3. Cột phải */}
             <div className="md:col-span-3 flex flex-col gap-2 min-h-[200px] h-auto">
               {/* Ô 3: Deadline */}
-              <div className="border border-border rounded-xl p-4 bg-muted/20 flex flex-col justify-start min-h-[96px]">
+              <div className="info-box p-4 flex flex-col justify-start min-h-[96px]">
                 <div className="flex flex-row justify-between items-center w-full">
                   {/* Thẻ h3 giữ nguyên mb-3 để đẩy chiều cao header chuẩn như mẫu */}
                   <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3 items-center flex gap-2">
@@ -330,7 +330,7 @@ export function TaskDetail() {
               </div>
 
               {/* Ô 4: Submitted At */}
-              <div className="bg-muted/30 p-4 rounded-xl border border-border flex flex-col justify-start min-h-[96px]">
+              <div className="info-box p-4 flex flex-col justify-start min-h-[96px]">
                 <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3">
                   Submitted At
                 </h3>

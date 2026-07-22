@@ -115,7 +115,7 @@ export function ChapterDetail() {
           <div className="flex justify-between items-start">
             {/* Cụm thông tin bên trái: Tiêu đề Chapter, Số thứ tự, Tóm tắt */}
             <div>
-              <h1 className="font-semibold text-xl capitalize text-card-foreground">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h1>
+              <h3 className="title-obelix font-semibold text-xl capitalize text-card-foreground">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h3>
               <div>
                 <p className="mt-3 text-foreground/80">{chapterDetail?.seriesTitle}</p>
               </div>
@@ -144,7 +144,7 @@ export function ChapterDetail() {
             </div>
             <div className="md:col-span-4 space-y-2 ">
               <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
-                <h3 className="font-normal text-sm text-muted-foreground gap-2 tracking-wider"><span>Deadline</span>
+                <h3 className="font-normal text-sm text-muted-foreground  tracking-wider">Deadline
                   {chapterDetail?.status != ("Publishing" || "Scheduled") ? (
                     <>{isOverdue && <span className="text-destructive font-bold">(Overdue)</span>}</>
                   ) : (

@@ -64,9 +64,9 @@ export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
             onClick={() => {
               if (onCloseMobile) onCloseMobile();
             }}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors unique-sidebar-item ${isActive
-              ? 'bg-sidebar-primary text-sidebar-primary-foreground font-semibold'
-              : 'text-sidebar-foreground hover:bg-sidebar-accent'
+            className={`flex items-center gap-3 px-3 py-2.5 transition-colors unique-sidebar-item ${isActive
+              ? 'unique-sidebar-item-active'
+              : 'text-sidebar-foreground hover:bg-sidebar-accent rounded-md'
               } ${isCollapsed && 'justify-center'}`}
             title={isCollapsed ? item.label : undefined}
           >
@@ -98,7 +98,7 @@ export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
           <Logo size="sm" showText={true} to={`/${userRole}`} />
           <button
             onClick={onCloseMobile}
-            className="p-1.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent border border-sidebar-border transition-colors shrink-0"
+            className="p-1.5 text-sidebar-foreground hover:bg-sidebar-accent border border-sidebar-border transition-colors shrink-0 toggle-btn"
             title="Close menu"
           >
             <Menu size={20} />
@@ -117,7 +117,7 @@ export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
           <Logo size="sm" showText={isOpen} to={`/${userRole}`} />
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="p-1.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent border border-sidebar-border transition-colors shrink-0"
+            className="p-1.5 text-sidebar-foreground hover:bg-sidebar-accent border border-sidebar-border transition-colors shrink-0 toggle-btn"
             title={isOpen ? "Close sidebar" : "Open sidebar"}
           >
             <Menu size={20} />

@@ -4,7 +4,7 @@ export function TasksToApproveTable({ isLoading, pendingTasks, onNavigateToTask 
   return (
     <div className="bg-card border border-border rounded-xl p-4 sm:p-6 space-y-4">
       <div>
-        <h3 className="text-base sm:text-lg font-bold text-foreground">Tasks to Approve</h3>
+        <h3 className="text-lg sm:text-lg font-bold text-foreground">Tasks to Approve</h3>
         <p className="text-xs text-muted-foreground">Tasks submitted by assistants awaiting your review.</p>
       </div>
 

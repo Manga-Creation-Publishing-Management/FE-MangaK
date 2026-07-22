@@ -76,12 +76,12 @@ export function MyTask({ isDashboardView = false }) {
   ) : (
     <div className="space-y-4">
       {currentDataListDisplay.map(item => (
-        <div className="bg-card border border-border rounded-xl p-4 sm:p-6 hover:shadow-lg transition-shadow" key={item.id}>
+        <div className="task-card p-4 sm:p-6 transition-shadow" key={item.id}>
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-card-foreground truncate text-base sm:text-xl">
+              <h3 className="font-semibold text-card-foreground truncate text-xl font-semibold">
                 Chapter {item.chapterNumber} - {item.seriesTitle}
-              </p>
+              </h3>
               <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{item.seriesTitle}</p>
             </div>
 
@@ -110,8 +110,9 @@ export function MyTask({ isDashboardView = false }) {
             </div>
           </div>
         </div>
-      ))}
-    </div>
+      ))
+      }
+    </div >
   );
 
   const paginationEl = totalPages > 1 && (
