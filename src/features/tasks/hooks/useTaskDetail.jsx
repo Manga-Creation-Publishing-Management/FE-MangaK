@@ -162,36 +162,6 @@ export function useTaskDetail(taskId, role) {
     }
   };
 
-  const [assistantList, setAssistantList] = useState([]);
-  const [isUpdatingAssistant, setIsUpdatingAssistant] = useState(false);
-
-  const fetchAssistants = async () => {
-    try {
-      const response = await taskService.getAssistantList("Assistant");
-      setAssistantList(response.data || []);
-    } catch (error) {
-      console.error("Failed to fetch assistant list:", error);
-    }
-  };
-
-  const handleUpdateAssistant = async (newAssistantId) => {
-    if (!taskId) {
-      showAlert("Task ID does not exist");
-      return;
-    }
-    setIsUpdatingAssistant(true);
-    try {
-      await taskService.updateTaskAssistant(taskId, newAssistantId);
-      showAlert("Updated assistant successfully!");
-      handleReload();
-    } catch (error) {
-      console.error("Failed to update assistant:", error);
-      showAlert("Update failed: " + error.message);
-    } finally {
-      setIsUpdatingAssistant(false);
-    }
-  };
-
   const handleSubmitTask = async () => {
     if (!taskId) {
       showAlert("Task ID does not exist");
@@ -239,9 +209,6 @@ export function useTaskDetail(taskId, role) {
     handleDenyTask,
     handleGetTask,
     handleUnsatisfiedTask,
-    assistantList,
-    isUpdatingAssistant,
-    fetchAssistants,
-    handleUpdateAssistant
+    handleReload
   }
 }
