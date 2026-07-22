@@ -25,9 +25,12 @@ export function MyTask({ isDashboardView = false }) {
       (item.seriesTitle || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
       String(item.chapterNumber || "").includes(searchQuery);
 
+    const status = item.status?.toLowerCase();
+
     const matchesStatus =
-      filterStatus === "all" ||
-      item.status?.toLowerCase() === filterStatus.toLowerCase();
+      filterStatus === "all"
+        ? status !== "rejected"
+        : status === filterStatus.toLowerCase();
 
     return matchesSearch && matchesStatus;
   });
@@ -56,7 +59,9 @@ export function MyTask({ isDashboardView = false }) {
               { value: "pending", label: "Pending" },
               { value: "processing", label: "Processing" },
               { value: "revising", label: "Revising" },
-              { value: "completed", label: "Completed" }
+              { value: "completed", label: "Completed" },
+              { value: "unsatisfied", label: "Unsatisfied" },
+              { value: "rejected", label: "Rejected" },
             ]
           }
         ]}

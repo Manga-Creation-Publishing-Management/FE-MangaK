@@ -1,7 +1,7 @@
 import { ArrowLeft, Download, Eye, ChevronDown } from "lucide-react";
 import useCreateSeries from "../../features/series/hooks/useCreateSeries";
 import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useOutletContext, useParams } from "react-router";
 import { StatusBadge } from "@/shared/components/StatusBadge";
 import { ChapterList } from "../../features/chapters/components/ChapterList";
 import { ApprovalPanel } from "./ApprovalPanel";
@@ -16,7 +16,7 @@ import { FeedbackViewer } from "./FeedbackViewer";
 import { useToast } from "@/shared/hooks/useToast";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { Breadcrumb } from "@/shared/components/Breadcrumb";
+
 dayjs.extend(utc);
 
 // Component hiển thị trang chi tiết của một bộ truyện (Series)
@@ -26,6 +26,7 @@ export function SeriesDetail() {
   // useNavigate dùng để quay lại trang trước đó khi nhấn nút "Back"
   const navigate = useNavigate();
   const { showAlert } = useToast();
+  const { setBreadcrumbItems } = useOutletContext();
 
   // useLocation dùng để lấy đường dẫn hiện tại hoặc state truyền qua URL
   const location = useLocation();
@@ -138,10 +139,14 @@ export function SeriesDetail() {
     { label: detailData?.title || "Series Detail" }
   ];
 
+  useEffect(() => {
+    setBreadcrumbItems(customBreadcrumb);
+    return () => setBreadcrumbItems(null);
+  }, [detailData?.title, rolePrefix]);
+
   return (
     <>
       <div className="p-6 space-y-6">
-        <Breadcrumb items={customBreadcrumb} />
 
       {/* Khung chứa ảnh bìa và thông tin cơ bản của bộ truyện */}
       <div className="bg-card border border-border rounded-xl overflow-hidden p-4 sm:p-6">

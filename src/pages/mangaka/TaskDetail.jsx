@@ -1,6 +1,6 @@
 import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, SquarePen, UploadCloud, ChevronDown, X, Check } from "lucide-react";
 import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
-import { Navigate, useLocation, useNavigate } from "react-router";
+import { Navigate, useLocation, useNavigate, useOutletContext } from "react-router";
 import { useTaskDetail } from "../../features/tasks/hooks/useTaskDetail";
 import { StatusBadge } from "@/shared/components/StatusBadge";
 import { ApprovalPanel } from "@/pages/shared/ApprovalPanel";
@@ -10,17 +10,18 @@ import { AnnotationModal } from "../shared/AnnotationModal";
 import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
 import { PreviewModal } from "../shared/PreviewModal";
 import { UnsatisfiedModal } from "../shared/UnsatisfiedModal";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FeedbackViewer } from "../shared/FeedbackViewer";
 import { useToast } from "@/shared/hooks/useToast";
 import { useUpdateTaskDeadline } from "../../features/tasks/hooks/useUpdateTaskDeadline";
-import { Breadcrumb } from "@/shared/components/Breadcrumb";
+
 import { useUpdateTaskAssistant } from "../../features/tasks/hooks/useUpdateTaskAssistant";
 dayjs.extend(utc);
 export function TaskDetail() {
 
   const navigate = useNavigate();
   const { showAlert } = useToast();
+  const { setBreadcrumbItems } = useOutletContext();
   const taskId = useLocation().state?.taskId;
   const role = useLocation().state?.role;
 
@@ -96,6 +97,11 @@ export function TaskDetail() {
     { label: taskLabel }
   ];
 
+  useEffect(() => {
+    setBreadcrumbItems(customBreadcrumb);
+    return () => setBreadcrumbItems(null);
+  }, [taskDetail?.chapterNumber, taskDetail?.chapterTitle, rolePrefix]);
+
   const {
     isEditingTaskAssistant,
     isUpdatingTaskAssistant,
@@ -119,7 +125,6 @@ export function TaskDetail() {
   return (
     <>
       <div className="p-6 space-y-6">
-        <Breadcrumb items={customBreadcrumb} />
 
         <div className="bg-card border border-border rounded-xl p-8 space-y-6">
 
