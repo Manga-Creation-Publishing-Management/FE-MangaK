@@ -98,7 +98,9 @@ export function ChapterDetail() {
   ];
 
   useEffect(() => {
-    setBreadcrumbItems(customBreadcrumb);
+    if (chapterDetail) {
+      setBreadcrumbItems(customBreadcrumb);
+    }
     return () => setBreadcrumbItems(null);
   }, [chapterDetail?.seriesTitle, chapterDetail?.chapterNumber, chapterDetail?.title, rolePrefix]);
 
@@ -130,19 +132,19 @@ export function ChapterDetail() {
             </div>
           )}
 
-          <div className="flex justify-between items-start">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
             {/* Cụm thông tin bên trái: Tiêu đề Chapter, Số thứ tự, Tóm tắt */}
-            <div>
-              <h3 className="title-obelix font-semibold text-xl capitalize text-card-foreground">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h3>
+            <div className="min-w-0">
+              <h3 className="title-obelix font-semibold text-lg sm:text-xl capitalize text-card-foreground break-words">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h3>
               <div>
-                <p className="mt-3 text-foreground/80">{chapterDetail?.seriesTitle}</p>
+                <p className="mt-1 sm:mt-3 text-xs sm:text-sm text-muted-foreground">{chapterDetail?.seriesTitle}</p>
               </div>
             </div>
 
             {/* Cụm thông tin bên phải: Badge trạng thái (Status) và Ngày tải lên */}
-            <div className="flex flex-col items-end space-y-2">
+            <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-3 w-full sm:w-auto shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-border/40">
               <StatusBadge status={chapterDetail?.status.toLowerCase()} />
-              <div className="flex items-center gap-1 text-sm text-muted-foreground"><FileText size={16} /> Total pages: <span className="text-foreground font-medium">{chapterDetail?.totalPage}</span></div>
+              <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground"><FileText size={16} /> Total pages: <span className="text-foreground font-medium">{chapterDetail?.totalPage}</span></div>
             </div>
 
           </div>

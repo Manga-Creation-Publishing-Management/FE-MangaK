@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Plus, ShieldCheck } from "lucide-react";
-import { userService } from "../../services/userService.js";
+import { userService } from "@/services/userService.js";
 import { useToast } from "@/shared/hooks/useToast";
 
 import { apiRoleMap } from "./constants/adminConstants.js";
@@ -166,8 +166,8 @@ export function AccountManagement() {
         <button
           onClick={() => setAccountType("system")}
           className={`px-5 py-3 text-sm font-semibold border-b-2 transition-all duration-200 ${accountType === "system"
-              ? "border-primary text-primary"
-              : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted"
+            ? "border-primary text-primary"
+            : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted"
             }`}
         >
           System Accounts
@@ -175,8 +175,8 @@ export function AccountManagement() {
         <button
           onClick={() => setAccountType("readers")}
           className={`px-5 py-3 text-sm font-semibold border-b-2 transition-all duration-200 ${accountType === "readers"
-              ? "border-primary text-primary"
-              : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted"
+            ? "border-primary text-primary"
+            : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted"
             }`}
         >
           Reader Accounts

@@ -117,22 +117,20 @@ export function TaskManagement() {
               </div>
             ) : (
               currentDataListDisplay?.map(item => (
-                <div key={item.id} className="task-card p-6 transition-shadow">
+                <div key={item.id} className="task-card p-4 sm:p-6 transition-shadow animate-in fade-in duration-200">
                   {/* Phần trên: Tiêu đề bên trái, Trạng thái & Nút bấm bên phải */}
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-card-foreground truncate text-xl font-semibold">Chapter {item.chapterNumber} - {item.seriesTitle}</h3>
-                      <p className="text-sm text-muted-foreground mt-1">Page Range: {item.taskDescription}</p>
+                      <h3 className="font-semibold text-card-foreground truncate text-base sm:text-xl font-semibold">Chapter {item.chapterNumber} - {item.seriesTitle}</h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Page Range: {item.taskDescription}</p>
                     </div>
 
-                    {/* Cụm Status và Button bên phải (Đồng bộ từ bên Chapter qua) */}
-                    <div className="flex items-center gap-4 shrink-0">
-                      <span>
-                        <StatusBadge status={item.status?.toLowerCase()} />
-                      </span>
+                    {/* Cụm Status và Button bên phải */}
+                    <div className="flex flex-wrap items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border/40">
+                      <StatusBadge status={item.status?.toLowerCase()} />
 
                       <button
-                        className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+                        className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-xs sm:text-sm font-medium w-full sm:w-auto"
                         onClick={() => handleNavigateToTask(role.toLowerCase(), item.id)}
                       >
                         View Detail
@@ -141,13 +139,13 @@ export function TaskManagement() {
                   </div>
 
                   {/* Phần dưới: Đường phân cách + Assigned (Trái) và Deadline (Phải) */}
-                  <div className="flex items-center justify-between gap-4 mt-4 pt-3 border-t border-border/50">
-                    <span className="text-sm text-muted-foreground">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-4 pt-3 border-t border-border/50">
+                    <span className="text-xs sm:text-sm text-muted-foreground">
                       Assigned to: <span className="font-medium text-foreground">{item.assistantName}</span>
                     </span>
 
                     {/* Deadline được đẩy hẳn sang bên phải */}
-                    <div className="flex items-center gap-1.5 text-sm text-destructive font-medium shrink-0">
+                    <div className="flex items-center gap-1.5 text-xs sm:text-sm text-destructive font-medium shrink-0">
                       <CalendarClock size={16} />
                       <span>Deadline: {dayjs(item.deadline).utc(true).format('DD/MM/YYYY HH:mm')}</span>
                     </div>

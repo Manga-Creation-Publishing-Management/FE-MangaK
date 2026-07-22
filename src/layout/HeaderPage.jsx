@@ -69,13 +69,15 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
                 <div className="flex items-center gap-2 sm:gap-3">
                     {/* Mobile Sidebar Toggle Button */}
                     {normalizedRole !== 'reader' && (
-                        <button
-                            onClick={onToggleMobileSidebar}
-                            className="md:hidden p-2 text-muted-foreground hover:text-foreground border border-sidebar-border transition-colors cursor-pointer toggle-btn"
-                            title="Open Navigation"
-                        >
-                            <PanelLeft size={22} />
-                        </button>
+                        <div className="md:hidden">
+                            <button
+                                onClick={onToggleMobileSidebar}
+                                className="p-2 text-muted-foreground hover:text-foreground border border-sidebar-border transition-colors cursor-pointer toggle-btn"
+                                title="Open Navigation"
+                            >
+                                <PanelLeft size={22} />
+                            </button>
+                        </div>
                     )}
 
                     <Link to={profilePath} className="shrink-0 hover:opacity-85 transition-opacity" title="View Profile">

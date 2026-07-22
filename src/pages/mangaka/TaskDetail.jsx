@@ -128,55 +128,37 @@ export function TaskDetail() {
 
         <div className="bg-card border border-border rounded-xl p-8 space-y-6">
 
-          <div className="flex justify-between items-start border-b border-border pb-6">
-            <div className="space-y-1">
-              <h3 className="flex items-center text-2xl font-semibold mb-1 text-card-foreground">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 border-b border-border pb-6">
+            <div className="space-y-1 min-w-0">
+              <h3 className="text-lg sm:text-2xl font-semibold text-card-foreground break-words">
                 Chapter {taskDetail?.chapterNumber}: {taskDetail?.chapterTitle}
               </h3>
-              <p className="text-muted-foreground text-l flex items-center gap-1 mt-2">
+              <p className="text-muted-foreground text-sm sm:text-base flex items-center gap-1 mt-1 sm:mt-2">
                 <span>{taskDetail?.seriesTitle}</span>
               </p>
-              <p className="text-muted-foreground text-l flex items-center gap-1 mt-2">
+              <p className="text-muted-foreground text-sm sm:text-base flex items-center gap-1 mt-1 sm:mt-2">
                 <FileText size={16} />
                 Page Range: <span className="text-foreground font-medium">{taskDetail?.taskDescription}</span>
               </p>
             </div>
 
-            <div className="flex flex-col items-end space-y-1">
-              <span className="flex items-center mb-6" >
-                <span>
-                  <StatusBadge status={taskDetail?.status?.toLowerCase()} />
-                </span>
-
+            <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-4 w-full sm:w-auto pt-4 sm:pt-0 border-t sm:border-t-0 border-border/40 shrink-0">
+              <span className="flex items-center" >
+                <StatusBadge status={taskDetail?.status?.toLowerCase()} />
               </span>
 
-              {/* <div className="flex items-center gap-1.5 text-sm text-muted-foreground bg-muted/50 px-3 py-1 rounded-md border border-border">
-                <Calendar size={14} className="text-destructive" />
-                <span>Deadline: <strong className="text-foreground">
-                  {dayjs(taskDetail?.deadline).utc(true).format('DD/MM/YYYY HH:mm')}
-                </strong></span>
-                <span className="cursor-pointer hover:bg-secondary/50 rounded-xl p-2">
-
-                  <SquarePen
-                    size={20}
-                  />
-                </span>
-              </div> */}
-              <div className="flex flex-col justify-center space-y-2 items-end">
-                {/* <p className="text-xs text-muted-foreground">Download the initial manuscript file to start working</p> */}
-                <h3 className="font-medium text-sm text-muted-foreground uppercase">Original Manuscript</h3>
-
-                <span className="items-center">
+              <div className="flex flex-col justify-center space-y-1.5 items-start sm:items-end">
+                <h3 className="font-medium text-xs sm:text-sm text-muted-foreground uppercase tracking-wider">Original Manuscript</h3>
+                <span>
                   <a
                     href={taskDetail?.manuscriptFileUrl}
                     download
-                    className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80  py-2 px-4 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
+                    className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 py-1.5 px-3 sm:py-2 sm:px-4 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
                   >
-                    <Download size={16} />
+                    <Download size={14} />
                     Download
                   </a>
                 </span>
-
               </div>
             </div>
           </div>

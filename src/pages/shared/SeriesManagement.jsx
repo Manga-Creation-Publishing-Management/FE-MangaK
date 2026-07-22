@@ -157,20 +157,19 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered, headerCon
             </div>
           )}
 
-          <div className="grid grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {isLoading ? (
-              <div className="col-span-4 flex justify-center items-center py-12">
+              <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 flex justify-center items-center py-12">
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
                 <span className="ml-2 text-muted-foreground">Loading series...</span>
               </div>
             ) : currentDataListDisplay.length === 0 ? (
-              <div className="col-span-4 text-center py-8 text-muted-foreground">
+              <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 text-center py-8 text-muted-foreground">
                 <p className="text-sm text-accent">No series found.</p>
               </div>
             ) : (
               currentDataListDisplay?.map(item => (
-                <div key={item.seriesId} className="col-span-1 md:col-span-1 w-full relative  bg-card border 
-                                border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
+                <div key={item.seriesId} className="w-full relative bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
                   {/* ... (giữ nguyên nội dung card bên trong) ... */}
                   <div className=' aspect-[3/4] w-full relative'>
                     <img className="w-full h-full object-cover" src={item.coverFile} alt="cover file" />

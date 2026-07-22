@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet, useParams } from "react-router"
 import { StatusBadge } from "@/shared/components/StatusBadge";
-import { Outdent, Plus } from "lucide-react";
+import { Outdent, Plus, Star } from "lucide-react";
 import { useCreateChapter } from "../hooks/useCreateChapter";
 import { useSeriesManagement } from "../../series/hooks/useSeriesManagement";
 import { useUpdateChapter } from "../hooks/useUpdateChapter";
 import { useChapterRate } from "../hooks/useChapterRate";
 import { RatePanel } from "../../../pages/reader/RatePanel";
+import { chaptersService } from "../../../services/chapterService";
 import { useUpdateRateChapter } from "../hooks/useUpdateRateChapter";
 import { CreateChapterModal } from "./CreateChapterModal";
 import { useChapterList } from "../hooks/useChapterList";
@@ -30,6 +31,9 @@ export function ChapterList({ roleName, seriesData }) {
   const [selectedChapterId, setSelectedChapterId] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
 
+  // State lưu trữ số sao Reader đã đánh giá cho từng chapter { [chapterId]: rating }
+  const [readerVotes, setReaderVotes] = useState({});
+
   const { activeChapterId, handlePopUp } = useChapterRate();
 
   const { handleRateSubmit } = useUpdateRateChapter();
@@ -38,6 +42,58 @@ export function ChapterList({ roleName, seriesData }) {
   const { } = useProgressing()
 
   console.log(`view series info: ${seriesData?.seriesId}`);
+
+  // Khi role là Reader, lấy số sao đã đánh giá cho từng chapter
+  useEffect(() => {
+    console.log('[VoteEffect] Running. roleName:', roleName, 'chapterList length:', chapterList?.length);
+    
+    if (roleName?.toLowerCase() !== 'reader') {
+      console.log('[VoteEffect] Skipped: role is not reader');
+      return;
+    }
+    if (!chapterList?.length) {
+      console.log('[VoteEffect] Skipped: chapterList is empty');
+      return;
+    }
+
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
+    const readerId = user?.id;
+    console.log('[VoteEffect] readerId:', readerId);
+    if (!readerId) return;
+
+    const fetchVotes = async () => {
+      const votes = {};
+      await Promise.all(
+        chapterList.map(async (chapter) => {
+          try {
+            const res = await chaptersService.getReaderVote(chapter.chapterId, readerId);
+            console.log(`[VoteEffect] API response for chapter ${chapter.chapterId}:`, JSON.stringify(res));
+            // Parse số sao từ response - hỗ trợ nhiều format
+            if (res !== null && res !== undefined) {
+              let rating = null;
+              if (typeof res === 'number') {
+                rating = res;
+              } else if (typeof res === 'object') {
+                rating = res.data?.rate ?? res.data?.rating ?? res.data?.score
+                  ?? res.rate ?? res.rating ?? res.score ?? null;
+              }
+              if (rating !== null) {
+                votes[chapter.chapterId] = rating;
+              }
+            }
+          } catch (err) {
+            // Reader chưa đánh giá chapter này -> bỏ qua
+            console.log(`[VoteEffect] No vote for chapter ${chapter.chapterId}`, err?.message);
+          }
+        })
+      );
+      console.log('[VoteEffect] Final readerVotes:', votes);
+      setReaderVotes(votes);
+    };
+
+    fetchVotes();
+  }, [roleName, chapterList]);
 
   const visibleChapters = (chapterList || []).filter(chapter => {
     const matchesRole = roleName === 'reader'
@@ -158,6 +214,25 @@ export function ChapterList({ roleName, seriesData }) {
                       <h4 className="py-1 text-base sm:text-xl break-words text-card-foreground">
                         Chapter {chapter.chapterNumber}: {chapter.title}
                       </h4>
+                      {/* Hiển thị số sao Reader đã đánh giá cho chapter */}
+                      {roleName?.toLowerCase() === 'reader' && (
+                        <div className="flex items-center gap-1 mt-1">
+                          <span className="text-xs text-muted-foreground mr-1">
+                            {readerVotes[chapter.chapterId] != null ? 'Your rating:' : 'Not rated yet'}
+                          </span>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              size={16}
+                              className={star <= (readerVotes[chapter.chapterId] || 0)
+                                ? "text-[#FBBF24] fill-[#FBBF24]"
+                                : "text-[#71618a] fill-transparent"
+                              }
+                              strokeWidth={1.5}
+                            />
+                          ))}
+                        </div>
+                      )}
                     </div>
                     <div className="flex flex-wrap items-center justify-between sm:justify-end gap-10 w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border/40">
                       <StatusBadge status={chapter.status.toLowerCase()} />
@@ -199,6 +274,8 @@ export function ChapterList({ roleName, seriesData }) {
               onSubmit={async (rating) => {
                 // Gọi API gửi điểm đánh giá số sao lên server
                 await handleRateSubmit(activeChapterId, rating);
+                // Cập nhật readerVotes ngay lập tức để hiển thị số sao trên UI
+                setReaderVotes(prev => ({ ...prev, [activeChapterId]: rating }));
                 handlePopUp(null); // Đóng popup sau khi submit thành công
               }}
             />

@@ -56,19 +56,19 @@ export function UnsatisfiedModal({ isOpen, onClose, onSubmit, isLoading }) {
             {error && <p className="text-destructive text-xs">{error}</p>}
           </div>
 
-          <div className="flex justify-end gap-3 pt-2">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="px-5 py-2.5 rounded-lg bg-secondary text-secondary-foreground font-semibold cursor-pointer transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
+              className="px-5 py-2.5 rounded-lg bg-secondary text-secondary-foreground font-semibold cursor-pointer transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50 w-full sm:w-auto text-center"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="px-5 py-2.5 rounded-lg bg-warning text-warning-foreground font-semibold cursor-pointer transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
+              className="px-5 py-2.5 rounded-lg bg-warning text-warning-foreground font-semibold cursor-pointer transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50 w-full sm:w-auto text-center"
             >
               {isLoading ? "Submitting..." : "Submit"}
             </button>

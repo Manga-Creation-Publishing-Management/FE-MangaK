@@ -4,7 +4,6 @@ import { FooterPage } from '@/layout/FooterPage';
 import { userService } from '@/services/userService';
 
 export function HomePage() {
-  // Hook điều hướng của react-router, dùng để chuyển trang (ví dụ sang trang /login)
   const navigate = useNavigate();
 
   const token = localStorage.getItem('accessToken');
@@ -14,11 +13,10 @@ export function HomePage() {
     try {
       user = JSON.parse(userString);
     } catch (e) {
-      // ignore
     }
   }
 
-  const [avatarUrl, setAvatarUrl] = useState("/avatarImgDemo.png");
+  const [avatarUrl, setAvatarUrl] = useState(user?.avatarUrl || "/avatarImgDemo.png");
 
   useEffect(() => {
     if (token && user?.role?.toLowerCase() !== 'reader') {
@@ -51,7 +49,6 @@ export function HomePage() {
       <nav className="sticky top-0 z-40 bg-background/90 backdrop-blur border-b border-border transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
 
-          {/* Logo và Tên ứng dụng */}
           <div className="flex items-center gap-3">
             <img
               src="/logo.png"
@@ -64,7 +61,6 @@ export function HomePage() {
             </span>
           </div>
 
-          {/* Các nút bấm ở góc phải (Đăng ký, Đăng nhập) */}
           <div className="flex items-center gap-4">
             {user ? (
               <div className="flex items-center gap-4">
@@ -96,10 +92,8 @@ export function HomePage() {
 
 
       <main className="h-full flex-grow max-w-7xl mx-auto px-6 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
-        {/* //image tab */}
         <div className="animate-smallbounce lg:col-span-6 grid grid-cols-2 gap-4 md:gap-5">
 
-          {/* Cột ảnh thứ nhất */}
           <div className="flex flex-col gap-4 md:gap-5 justify-center">
             <img
               src="https://images.unsplash.com/photo-1763732397784-c5ff2651d40c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxtYW5nYSUyMHBhZ2VzJTIwYmxhY2slMjB3aGl0ZSUyMGNvbWljJTIwYm9vayUyMHBhbmVscyUyMGlua3xlbnwxfHx8fDE3ODAwMjQ5NjV8MA&ixlib=rb-4.1.0&q=80&w=600"
@@ -113,7 +107,6 @@ export function HomePage() {
             />
           </div>
 
-          {/* Cột ảnh thứ hai */}
           <div className="flex flex-col gap-4 md:gap-5 justify-center">
             <img
               src="https://images.unsplash.com/photo-1639634252346-0a27c7d168dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYW5nYSUyMHBhZ2VzJTIwYmxhY2slMjB3aGl0ZSUyMGNvbWljJTIwYm9vayUyMHBhbmVscyUyMGlua3xlbnwxfHx8fDE3ODAwMjQ5NjV8MA&ixlib=rb-4.1.0&q=80&w=600"

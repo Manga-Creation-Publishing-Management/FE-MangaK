@@ -26,7 +26,7 @@ export function AvatarSection({
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
       ) : (
-        <div className="flex items-start gap-6">
+        <div className="flex flex-col items-center sm:flex-row sm:items-start gap-4 sm:gap-6">
           <div className="relative">
             {avatarPreview || avatarUrl ? (
               <img
@@ -56,12 +56,14 @@ export function AvatarSection({
             </button>
           </div>
 
-          <div className="flex-1">
+          <div className="flex-1 text-center sm:text-left">
             <h2 className="text-xl font-semibold text-card-foreground">{`${watchedFirstName || ""} ${watchedLastName || ""}`}</h2>
-            <p className="text-muted-foreground mt-1">{roleLabels[role]}</p>
-            <span className="inline-block mt-2 px-3 py-1 bg-success/10 text-success border border-success/30 rounded-full text-sm font-medium">
-              Active
-            </span>
+            <div className="flex items-center gap-2 mt-1 justify-center sm:justify-start">
+              <p className="text-muted-foreground">{roleLabels[role]}</p>
+              <span className="inline-block px-3 py-0.5 bg-success/10 text-success border border-success/30 rounded-full text-sm font-medium">
+                Active
+              </span>
+            </div>
           </div>
         </div>
       )}

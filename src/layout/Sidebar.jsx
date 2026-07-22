@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import {
-  Home, FolderKanban, DollarSign, TrendingUp,
-  CalendarClock, CheckSquare, ClipboardList, FileSearch, BookMarked,
-  Menu, Upload, Users
+  Home, FolderKanban, DollarSign, TrendingUp, CalendarClock,
+  CheckSquare, ClipboardList, FileSearch, Users, ChevronLeft, ChevronRight, X
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router';
 import { Logo } from '@/shared/components/Logo';
@@ -80,7 +79,6 @@ export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
 
   return (
     <>
-      {/* Mobile Backdrop */}
       {isMobileOpen && (
         <div
           onClick={onCloseMobile}
@@ -88,42 +86,39 @@ export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
         />
       )}
 
-      {/* Mobile Off-canvas Drawer */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-sidebar p-4 border-r border-sidebar-border flex flex-col transition-transform duration-300 md:hidden ${
-          isMobileOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-sidebar p-4 manga-sidebar flex flex-col transition-transform duration-300 md:hidden ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         <div className="flex items-center justify-between mb-6 pb-2 border-b border-sidebar-border">
-          <Logo size="sm" showText={true} to={`/${userRole}`} />
+          <Logo size="md" showText={true} to={`/${userRole}`} />
           <button
             onClick={onCloseMobile}
             className="p-1.5 text-sidebar-foreground hover:bg-sidebar-accent border border-sidebar-border transition-colors shrink-0 toggle-btn"
             title="Close menu"
           >
-            <Menu size={20} />
+            <X size={20} />
           </button>
         </div>
         {renderNavItems(false)}
       </div>
 
-      {/* Desktop Sidebar */}
       <div
-        className={`hidden md:flex bg-sidebar border-r border-sidebar-border h-screen p-4 transition-all duration-300 relative flex-col shrink-0 ${
-          isOpen ? 'w-60' : 'w-20'
-        }`}
+        className={`hidden md:flex bg-sidebar manga-sidebar h-screen p-4 transition-all duration-300 relative z-10 flex-col shrink-0 ${isOpen ? 'w-60' : 'w-20'
+          }`}
       >
-        <div className={`flex items-center mb-6 ${isOpen ? 'justify-between' : 'justify-center flex-col gap-4'}`}>
-          <Logo size="sm" showText={isOpen} to={`/${userRole}`} />
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="p-1.5 text-sidebar-foreground hover:bg-sidebar-accent border border-sidebar-border transition-colors shrink-0 toggle-btn"
-            title={isOpen ? "Close sidebar" : "Open sidebar"}
-          >
-            <Menu size={20} />
-          </button>
+        <div className={`flex items-center mb-6 ${isOpen ? 'justify-start px-1' : 'justify-center'}`}>
+          <Logo size="md" showText={isOpen} to={`/${userRole}`} />
         </div>
         {renderNavItems(!isOpen)}
+
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="absolute top-1/2 -translate-y-1/2 right-0 z-20 w-6 h-10 p-0 text-sidebar-foreground hover:bg-sidebar-accent transition-colors shrink-0 toggle-btn"
+          title={isOpen ? "Close sidebar" : "Open sidebar"}
+        >
+          {isOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+        </button>
       </div>
     </>
   );
