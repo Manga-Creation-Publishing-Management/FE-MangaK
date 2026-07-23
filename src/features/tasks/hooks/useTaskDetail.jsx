@@ -124,7 +124,7 @@ export function useTaskDetail(taskId, role) {
 
     setIsLoading(true);
     try {
-      const response = await taskService.rejectTask(taskId, feedback);
+      const response = await taskService.rejectTask(taskId, "Annotation Feedback added");
       console.log("Update status thành công:", response);
 
       // Cập nhật state taskDetail với status mới
