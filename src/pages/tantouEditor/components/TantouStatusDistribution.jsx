@@ -14,7 +14,7 @@ export function TantouStatusDistribution({ statusDistribution, isLoading }) {
   return (
     <div className="bg-card border border-border rounded-xl p-6 h-full flex flex-col">
       <div className="flex items-center gap-2 mb-5">
-        <BookOpen size={20} className="text-primary" />
+        <BookOpen size={30} className="text-primary" />
         <h3 className="text-lg font-semibold text-card-foreground">Series Status</h3>
       </div>
 
@@ -24,7 +24,7 @@ export function TantouStatusDistribution({ statusDistribution, isLoading }) {
         </div>
       ) : statusDistribution.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground">
-          <BookOpen size={40} className="mb-3 opacity-30" />
+          <BookOpen size={30} className="mb-3 opacity-30" />
           <p className="text-sm">No series data available</p>
         </div>
       ) : (
@@ -45,8 +45,8 @@ export function TantouStatusDistribution({ statusDistribution, isLoading }) {
                 <tr
                   key={item.status}
                   className={`${index !== statusDistribution.length - 1
-                      ? "border-b border-border/30"
-                      : ""
+                    ? "border-b border-border/30"
+                    : ""
                     } hover:bg-background/50 transition-colors`}
                 >
                   <td className="px-4 py-3">

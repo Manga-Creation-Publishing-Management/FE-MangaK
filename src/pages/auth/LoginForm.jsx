@@ -26,7 +26,7 @@ export function LoginForm() {
                         Email
                     </label>
                     <div
-                        className="w-full bg-input-background rounded-xl px-4 py-3 flex items-center gap-3 transition-all"
+                        className="w-full bg-background rounded-xl px-4 py-3 flex items-center gap-3 transition-all"
                         style={{
                             borderWidth: '3px',
                             borderStyle: 'solid',
@@ -42,7 +42,7 @@ export function LoginForm() {
                             placeholder="Enter email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="bg-transparent text-foreground placeholder-muted-foreground/70 outline-none w-full text-sm font-medium !border-none !shadow-none !p-0"
+                            className="text-foreground bg-transparent placeholder-muted-foreground/70 outline-none w-full text-sm font-medium !border-none !shadow-none !p-0"
                             style={{ border: 'none', outline: 'none', boxShadow: 'none', background: 'transparent', padding: 0 }}
                         />
                     </div>
@@ -56,7 +56,7 @@ export function LoginForm() {
                     </div>
 
                     <div
-                        className="w-full bg-input-background rounded-xl px-4 py-3 flex items-center gap-3 transition-all"
+                        className="w-full bg-background rounded-xl px-4 py-3 flex items-center gap-3 transition-all"
                         style={{
                             borderWidth: '3px',
                             borderStyle: 'solid',
@@ -72,7 +72,7 @@ export function LoginForm() {
                             placeholder="Enter password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="bg-transparent text-foreground placeholder-muted-foreground/70 outline-none w-full text-sm font-medium !border-none !shadow-none !p-0"
+                            className="text-foreground bg-transparent placeholder-muted-foreground/70 outline-none w-full text-sm font-medium !border-none !shadow-none !p-0"
                             style={{ border: 'none', outline: 'none', boxShadow: 'none', background: 'transparent', padding: 0 }}
                         />
                         <button

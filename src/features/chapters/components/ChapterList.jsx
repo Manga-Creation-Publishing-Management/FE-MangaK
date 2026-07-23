@@ -124,7 +124,7 @@ export function ChapterList({ roleName, seriesData }) {
           {/* Header của phần danh sách Chapter */}
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
             <div>
-              <h3 className="text-xl sm:text-xl ps-2 font-semibold text-card-foreground">Chapters ({chapterList?.length})</h3>
+              <h3 className="text-xl sm:text-xl ps-2 font-semibold text-card-foreground">Chapters {roleName === 'reader' ? `(${visibleChapters?.length})` : `(${chapterList?.length})`}</h3>
             </div>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
