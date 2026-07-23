@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { seriesService } from "@/services/seriesService";
 import { publishingScheduleService } from "@/services/publishingScheduleService";
 import { updateSeries } from "@/services/updateSeriesService";
+import { feedbackService } from "@/services/feedbackService";
 import { useSeriesManagement } from "@/features/series/hooks/useSeriesManagement";
 import { useToast } from "@/shared/hooks/useToast";
 
@@ -133,6 +134,13 @@ export function useEditorialDashboard() {
 
     try {
       await updateSeries.cancelSeries(selectedSeries.id, cancelFeedback);
+      await feedbackService.sendAnnotation(
+        selectedSeries.id,
+        null,
+        null,
+        cancelFeedback,
+        "StatusChange"
+      );
       setCancelledSeriesName(selectedSeries.name);
       setShowCancelModal(false);
       setCancelFeedback("");

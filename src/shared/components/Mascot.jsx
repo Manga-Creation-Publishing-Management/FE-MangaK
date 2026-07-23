@@ -95,7 +95,7 @@ export function Mascot({ userRole, isOpen = true, isMobile = false, isMobileOpen
           </button>
 
           <p className="text-xs font-bold text-slate-800 dark:text-slate-100 leading-relaxed font-sans px-1 pt-1">
-            "{activeTip}"
+            {activeTip}
           </p>
           <span className="block mt-2 text-[10px] font-extrabold uppercase tracking-wide text-purple-700 dark:text-purple-300 opacity-90">
             Tip {(tipIndex % currentTips.length) + 1}/{currentTips.length} • Click mascot for next

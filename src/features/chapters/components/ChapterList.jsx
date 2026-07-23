@@ -1,17 +1,13 @@
 import { useState, useEffect } from "react";
-import { Outlet, useParams } from "react-router"
 import { StatusBadge } from "@/shared/components/StatusBadge";
-import { Outdent, Plus, Star } from "lucide-react";
-import { useCreateChapter } from "../hooks/useCreateChapter";
+import { Plus, Star } from "lucide-react";
 import { useSeriesManagement } from "../../series/hooks/useSeriesManagement";
-import { useUpdateChapter } from "../hooks/useUpdateChapter";
 import { useChapterRate } from "../hooks/useChapterRate";
 import { RatePanel } from "../../../pages/reader/RatePanel";
 import { chaptersService } from "../../../services/chapterService";
 import { useUpdateRateChapter } from "../hooks/useUpdateRateChapter";
 import { CreateChapterModal } from "./CreateChapterModal";
 import { useChapterList } from "../hooks/useChapterList";
-import { useProgressing } from "../hooks/useProgressing";
 import { getTotalPage } from "../../Pagination/hooks/getTotalPage";
 import { PaginationCustom } from "../../Pagination/components/PaginationCustom";
 import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
@@ -19,13 +15,11 @@ import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
 export function ChapterList({ roleName, seriesData }) {
 
   const { reload, handleReload } = useSeriesManagement();
-  console.log("seriesID:", seriesData?.seriesId)
   const {
     chapterList,
     showCreateChapterModal,
     handleShowChapterModal
   } = useChapterList(seriesData?.seriesId, reload);
-  const { handleApprove, handleReject } = useUpdateChapter();
   const { handleNavigateToChapter } = useSeriesManagement();
 
   const [selectedChapterId, setSelectedChapterId] = useState("all");
@@ -37,11 +31,6 @@ export function ChapterList({ roleName, seriesData }) {
   const { activeChapterId, handlePopUp } = useChapterRate();
 
   const { handleRateSubmit } = useUpdateRateChapter();
-
-
-  const { } = useProgressing()
-
-  console.log(`view series info: ${seriesData?.seriesId}`);
 
   // Khi role là Reader, lấy số sao đã đánh giá cho từng chapter
   useEffect(() => {
@@ -110,7 +99,6 @@ export function ChapterList({ roleName, seriesData }) {
 
   const {
     currentPage,
-    postsPerPage,
     setCurrentPage,
     currentDataListDisplay,
     totalPages
@@ -261,13 +249,16 @@ export function ChapterList({ roleName, seriesData }) {
           {/* Nếu activeChapterId không null (tức đang chọn đánh giá cho một chapter nào đó), hiển thị RatePanel Popup */}
           {activeChapterId &&
             <RatePanel
+              initialRating={readerVotes[activeChapterId] || 0}
               onClose={() => handlePopUp(null)} // Đóng popup khi nhấn nút hủy/X
               onSubmit={async (rating) => {
                 // Gọi API gửi điểm đánh giá số sao lên server
-                await handleRateSubmit(activeChapterId, rating);
-                // Cập nhật readerVotes ngay lập tức để hiển thị số sao trên UI
-                setReaderVotes(prev => ({ ...prev, [activeChapterId]: rating }));
-                handlePopUp(null); // Đóng popup sau khi submit thành công
+                const isSuccess = await handleRateSubmit(activeChapterId, rating);
+                // Chỉ cập nhật readerVotes hiển thị số sao trên UI khi gọi API THÀNH CÔNG
+                if (isSuccess) {
+                  setReaderVotes(prev => ({ ...prev, [activeChapterId]: rating }));
+                  handlePopUp(null); // Đóng popup sau khi submit thành công
+                }
               }}
             />
           }
