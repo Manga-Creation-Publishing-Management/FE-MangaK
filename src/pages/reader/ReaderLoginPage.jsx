@@ -11,7 +11,6 @@ export function ReaderLoginPage() {
     const handleSucessLogin = async (credentialResponse) => {
         try {
             const idToken = credentialResponse.credential;
-            console.log(idToken);
 
             const response = await authService.loginGoogle(idToken);
 
@@ -21,7 +20,6 @@ export function ReaderLoginPage() {
             }
 
             showAlert("Login with Google successfully!");
-            console.log("Login success!");
 
             localStorage.setItem("accessToken", response.data?.accessToken);
             localStorage.setItem("refreshToken", response.data?.refreshToken || "");
@@ -38,13 +36,9 @@ export function ReaderLoginPage() {
             };
             localStorage.setItem("user", JSON.stringify(user));
 
-            // in ra để check xem thông tin nhận về
-            console.log("Access token:", localStorage.getItem('accessToken'));
-            console.log("Info user:", response.data);
             navigate("/reader");
         } catch (error) {
             showAlert("Login with Google failed!");
-            console.log("Login with Google failed!");
             console.error("login error: ", error);
         }
     }
@@ -122,10 +116,7 @@ export function ReaderLoginPage() {
                             </div>
                             <GoogleLogin
                                 onSuccess={handleSucessLogin}
-
-                                onError={() => {
-                                    console.log("Omg, login failed");
-                                }}
+                                onError={() => {}}
                             />
                         </div >
                     </div>

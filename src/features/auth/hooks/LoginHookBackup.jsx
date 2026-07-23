@@ -24,7 +24,6 @@ export function LoginHook() {
         try {
             // Gọi API đăng nhập từ authService
             const res = await authService.login(email, password);
-            console.log("Login API Response:", res);
 
             // Kiểm tra xem dữ liệu trả về có hợp lệ (là object) hay không
             if (!res || typeof res !== "object") {
@@ -42,7 +41,6 @@ export function LoginHook() {
             // Nếu không tìm thấy object `user` lồng bên trong, kiểm tra xem role có nằm trực tiếp ở cấp ngoài cùng không
             if (!user) {
                 const source = res.data || res;
-                console.log("Dữ liệu gốc từ API:", source);
                 if (source && source.role) {
                     user = {
                         id: source.userId || source.userid || source.userId || source.UserId,
@@ -55,7 +53,6 @@ export function LoginHook() {
 
             // Nếu không thể lấy được cả token lẫn thông tin user, coi như dữ liệu API trả về bị sai cấu trúc
             if (!token || !user) {
-                console.error("Failed to parse login response:", res);
                 const keys = Object.keys(res).join(", ");
                 const nestedDataKeys = res.data ? ` (data: [${Object.keys(res.data).join(", ")}])` : "";
                 throw new Error(`Invalid response structure. Received keys: [${keys}]${nestedDataKeys}. Expected 'token'/'accessToken' and 'user'/'role'.`);
