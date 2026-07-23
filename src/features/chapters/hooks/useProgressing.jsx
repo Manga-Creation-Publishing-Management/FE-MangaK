@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { chaptersService } from "../../../services/chapterService";
+import { chaptersService } from "@/services/chapterService";
 
 export function useProgressing(chapterId) {
   const [progress, setProgressing] = useState(0);
@@ -11,7 +11,7 @@ export function useProgressing(chapterId) {
       try {
         const completedChapter = await chaptersService.getProgressingChapter(chapterId, "Completed");
         const unsatisfiedChapter = await chaptersService.getProgressingChapter(chapterId, "Unsatisfied");
-        const total = completedChapter?.data?.total + unsatisfiedChapter?.data?.total || 0;
+        const total = completedChapter?.data?.total || 0;
         const numberOfStatus = completedChapter?.data?.numberOfStatus + unsatisfiedChapter?.data?.numberOfStatus || 0;
 
         if (total > 0) {
