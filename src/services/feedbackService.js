@@ -41,5 +41,11 @@ export const feedbackService = {
     if (taskId != null) params.append('MangaTaskId', taskId);
     
     return api.get(`/Feedback/get-latest-feedback?${params.toString()}`);
+  },
+
+  async putFeedbackAsRead(feedbackId) {
+    return api.patch(`/Feedback/mark-as-read/${feedbackId}`)  
   }
+
+  
 }

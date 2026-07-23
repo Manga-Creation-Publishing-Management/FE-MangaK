@@ -3,13 +3,12 @@ import { useNavigate } from 'react-router';
 export function useNavigateFromFeedback() {
     const navigate = useNavigate();
 
-    const handleNavigateFromFeedback = (feedback, currentRole) => {
-        const role = currentRole || "mangaka"; // fallback
+    const handleNavigateFromFeedback = (feedback, role) => {
         const normalizedRole = role.toLowerCase();
 
         // Check if mangaTaskId exists (indicating it's a task)
-        if (feedback.mangaTaskId || feedback.taskId) {
-            const taskId = feedback.mangaTaskId || feedback.taskId;
+        if (feedback.mangaTaskId) {
+            const taskId = feedback.mangaTaskId;
             navigate(`/${normalizedRole}/tasks/${taskId}`, { state: { role: normalizedRole, taskId } });
         }
         // Else if chapterId exists (indicating it's a chapter)

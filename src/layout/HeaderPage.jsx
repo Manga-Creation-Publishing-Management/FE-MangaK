@@ -6,6 +6,8 @@ import { useGetFeedback } from '@/features/series/hooks/useGetFeedback';
 import { FeedbackItem } from '@/shared/components/FeedbackItem';
 import { userService } from '@/services/userService';
 import { HeaderMenu } from './HeaderMenu';
+import { useNavigateFromFeedback } from '../shared/hooks/useNavigateFromFeedback';
+import { useMarkFeedbackAsRead } from '../shared/hooks/useMarkFeedbackAsRead';
 
 const roleRouteMap = {
     mangaka: "mangaka",
@@ -27,6 +29,16 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
     const hasFeedbackSupport = ["mangaka", "assistant", "tantou editor", "editorial board", "tantou", "editorial"].includes(normalizedRole);
 
     const { feedbackData, unreadFeedbackCount } = useGetFeedback(hasFeedbackSupport);
+    const { handleNavigateFromFeedback } = useNavigateFromFeedback();
+    const { handleMarkAsRead } = useMarkFeedbackAsRead();
+
+    const handleNavigateToFeedbackItem = (feedback) => {
+        handleNavigateFromFeedback(feedback, roleName);
+        if (feedback?.id) {
+            handleMarkAsRead(feedback.id);
+        }
+        setIsDropdownOpen(false);
+    };
 
     useEffect(() => {
         if (!isDropdownOpen) return;
@@ -133,13 +145,21 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
                                         {feedbackData?.data?.length > 0 ? (
                                             feedbackData.data.map((feedback) => (
                                                 <FeedbackItem
+                                                    onClick={
+                                                        () => {
+                                                            handleNavigateToFeedbackItem(feedback);
+                                                        }
+                                                    }
                                                     key={feedback.id}
+                                                    seriesId={feedback.seriesId || null}
+                                                    chapterId={feedback.chapterId || null}
+                                                    taskId={feedback.mangaTaskId || null}
                                                     senderName={feedback.senderName}
                                                     seriesTitle={feedback.seriesTitle}
                                                     content={feedback.content}
                                                     createdAt={feedback.createdAt}
                                                     hasIcon={false}
-                                                    isNew={true}
+                                                    isNew={feedback.isRead === false}
                                                 />
                                             ))
                                         ) : (
