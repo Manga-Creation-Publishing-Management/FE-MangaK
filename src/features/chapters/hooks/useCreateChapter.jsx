@@ -67,17 +67,15 @@ export function useCreateChapter(seriesId, onClose, onReload) {
     e.preventDefault();
     setIsLoading(true);
 
-    if (!chapterListForm.Title?.trim()) {
-      showAlert("Title is required", "warning");
-      setIsLoading(false);
-      return;
-    }
-    if (!storyFile) {
-      showAlert("Manuscript file is required", "warning");
-      setIsLoading(false);
-      return;
-    }
     const formElement = e.target;
+    const summary = formElement.elements["Summary"]?.value?.trim();
+
+    if (!chapterListForm.Title?.trim() || !summary || !storyFile) {
+      showAlert("Please fill in all required fields: Title, Summary, and Manuscript File!", "error");
+      setIsLoading(false);
+      return;
+    }
+
     // 1. Khởi tạo một đối tượng FormData trống hoàn toàn
     const formDataToSend = new FormData();
     if (pageCount !== null) {
