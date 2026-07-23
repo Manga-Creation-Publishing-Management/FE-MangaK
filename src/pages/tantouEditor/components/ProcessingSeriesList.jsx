@@ -8,7 +8,7 @@ export function ProcessingSeriesList({ pendingSeries, isLoading, onNavigateToSer
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
           <FileSearch size={20} className="text-primary" />
-          <h2 className="text-lg font-semibold text-card-foreground">Series to Review</h2>
+          <h3 className="text-lg font-semibold text-card-foreground">Series to Review</h3>
         </div>
         <button
           onClick={onNavigateToSeriesList}

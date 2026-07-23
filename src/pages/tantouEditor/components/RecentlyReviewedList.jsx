@@ -7,7 +7,7 @@ export function RecentlyReviewedList({ recentlyReviewed, isLoading, onNavigateTo
     <div className="bg-card border border-border rounded-xl p-6">
       <div className="flex items-center gap-2 mb-5">
         <ClipboardCheck size={20} className="text-primary" />
-        <h2 className="text-lg font-semibold text-card-foreground">Recently Reviewed</h2>
+        <h3 className="text-lg font-semibold text-card-foreground">Recently Reviewed</h3>
       </div>
 
       {isLoading ? (

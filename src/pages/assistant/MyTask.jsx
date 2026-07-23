@@ -79,9 +79,9 @@ export function MyTask({ isDashboardView = false }) {
         <div className="task-card p-4 sm:p-6 transition-shadow" key={item.id}>
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-card-foreground truncate text-xl font-semibold">
+              <h4 className="font-semibold text-card-foreground truncate text-xl font-semibold">
                 Chapter {item.chapterNumber} - {item.seriesTitle}
-              </h3>
+              </h4>
               <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{item.seriesTitle}</p>
             </div>
 
