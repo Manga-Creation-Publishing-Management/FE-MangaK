@@ -121,7 +121,7 @@ export function TaskManagement() {
                   {/* Phần trên: Tiêu đề bên trái, Trạng thái & Nút bấm bên phải */}
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-card-foreground truncate text-base sm:text-xl font-semibold">Chapter {item.chapterNumber} - {item.seriesTitle}</h3>
+                      <h4 className="font-semibold text-card-foreground truncate sm:text-xl font-semibold">Chapter {item.chapterNumber} - {item.seriesTitle}</h4>
                       <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Page Range: {item.taskDescription}</p>
                     </div>
 
