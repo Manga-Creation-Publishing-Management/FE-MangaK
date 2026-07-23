@@ -99,9 +99,17 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
     }, "image/jpeg");
   };
 
-  // Hàm xử lý khi form được submit
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Chặn việc reload trang
+    e.preventDefault();
+
+    const title = formSeriesData.title?.trim();
+    const description = formSeriesData.description?.trim();
+
+    if (!title || !description || selectGenres.length === 0 || !croppedFile || !storyFile) {
+      showAlert("Please enter all information");
+      return;
+    }
+
     setIsLoading(true); // Bật trạng thái loading
 
     // Tạo đối tượng FormData để chứa dữ liệu text và file

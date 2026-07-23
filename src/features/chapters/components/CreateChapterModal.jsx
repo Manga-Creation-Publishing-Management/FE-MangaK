@@ -40,7 +40,6 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
                   type="text"
                   className="w-full px-4 py-2 bg-input-background text-foreground rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Enter chapter's title"
-                  required
                   onChange={handleChange}
                   name="Title"
                 />
@@ -56,7 +55,6 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
                   type="text"
                   className="w-full px-4 py-2 bg-input-background text-foreground rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Enter summary"
-                  required
                   onChange={handleChange}
                   name="Summary"
                 />
