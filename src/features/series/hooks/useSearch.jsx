@@ -29,7 +29,7 @@ export function useSearch() {
         // Yêu cầu 2: Tiêu đề bộ truyện (in thường) phải bắt đầu bằng (startsWith) từ khóa tìm kiếm (in thường)
         const filtered = (seriesData || []).filter((series) =>
             series.status === "Publishing" &&
-            series.title.toLowerCase().startsWith(searchTxt.toLowerCase())
+            series.title.toLowerCase().includes(searchTxt.toLowerCase())
         );
 
         // Lưu kết quả tìm kiếm vào state
