@@ -15,7 +15,7 @@ export function TantouStatusDistribution({ statusDistribution, isLoading }) {
     <div className="bg-card border border-border rounded-xl p-6 h-full flex flex-col">
       <div className="flex items-center gap-2 mb-5">
         <BookOpen size={20} className="text-primary" />
-        <h2 className="text-lg font-semibold text-card-foreground">Series Status</h2>
+        <h3 className="text-lg font-semibold text-card-foreground">Series Status</h3>
       </div>
 
       {isLoading ? (
@@ -44,11 +44,10 @@ export function TantouStatusDistribution({ statusDistribution, isLoading }) {
               {statusDistribution.map((item, index) => (
                 <tr
                   key={item.status}
-                  className={`${
-                    index !== statusDistribution.length - 1
+                  className={`${index !== statusDistribution.length - 1
                       ? "border-b border-border/30"
                       : ""
-                  } hover:bg-background/50 transition-colors`}
+                    } hover:bg-background/50 transition-colors`}
                 >
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2.5">

@@ -52,7 +52,7 @@ export function AssistantDashboard() {
 
         {/* Cột phải (col-span-8): Danh sách các nhiệm vụ khác */}
         <div className="lg:col-span-8 bg-card border border-border rounded-xl p-4 sm:p-6">
-          <h2 className="text-xl font-semibold mb-5 text-card-foreground">My Assigned Tasks</h2>
+          <h3 className="text-xl font-semibold mb-5 text-card-foreground">My Assigned Tasks</h3>
           <MyTask isDashboardView={true} />
         </div>
       </div>

@@ -70,7 +70,7 @@ export function EditorialDashboard() {
       <div className="bg-card border border-border rounded-xl p-6 space-y-4">
         <div className="flex items-center gap-2 mb-5">
           <CheckCircle size={20} className="text-primary" />
-          <h2 className="text-lg font-semibold text-card-foreground">Approved Series</h2>
+          <h3 className="text-lg font-semibold text-card-foreground">Approved Series</h3>
         </div>
 
         {isLoading ? (

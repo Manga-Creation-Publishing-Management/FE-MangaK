@@ -6,7 +6,7 @@ export function ApprovedSeriesCard({ item, onCancelClick, onNavigate }) {
     <div className="bg-card border border-border rounded-xl p-4 sm:p-6 hover:shadow-lg transition-shadow">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div className="flex-1 min-w-0">
-          <h3 className="text-base sm:text-lg font-semibold text-foreground truncate">{item.name}</h3>
+          <h4 className="text-lg font-semibold text-foreground truncate">{item.name}</h4>
           <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">by {item.author}</p>
           <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{item.chapters} Chapters</p>
         </div>
