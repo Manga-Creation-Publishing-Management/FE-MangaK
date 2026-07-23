@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router';
 import { Logo } from '@/shared/components/Logo';
+import { Mascot } from '@/shared/components/Mascot';
 
 export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
   const location = useLocation();
@@ -45,7 +46,7 @@ export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
   const items = menuItems[userRole] ?? [];
 
   const renderNavItems = (isCollapsed = false) => (
-    <nav className="space-y-1 flex-1">
+    <nav className="space-y-1 flex-1 overflow-y-auto no-scrollbar">
       {items.map((item) => {
         const Icon = item.icon;
         const cleanPath = location.pathname.replace(/\/$/, "");
@@ -101,6 +102,9 @@ export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
           </button>
         </div>
         {renderNavItems(false)}
+        <div className="mt-auto shrink-0">
+          <Mascot userRole={userRole} isMobile={true} isMobileOpen={isMobileOpen} />
+        </div>
       </div>
 
       <div
@@ -111,6 +115,10 @@ export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
           <Logo size="md" showText={isOpen} to={`/${userRole}`} />
         </div>
         {renderNavItems(!isOpen)}
+
+        <div className="mt-auto shrink-0">
+          <Mascot userRole={userRole} isOpen={isOpen} />
+        </div>
 
         <button
           onClick={() => setIsOpen(!isOpen)}
