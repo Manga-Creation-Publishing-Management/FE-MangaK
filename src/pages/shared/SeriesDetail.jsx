@@ -143,15 +143,15 @@ export function SeriesDetail() {
 
   const customBreadcrumb = isReaderRole
     ? [
-        { label: "Reader", path: "/reader" },
-        { label: "Series", path: "/reader" },
-        { label: detailData?.title || "Series Detail" }
-      ]
+      { label: "Reader", path: "/reader" },
+      { label: "Series", path: "/reader" },
+      { label: detailData?.title || "Series Detail" }
+    ]
     : [
-        { label: rolePrefix.charAt(0).toUpperCase() + rolePrefix.slice(1), path: `/${rolePrefix}` },
-        { label: "Series", path: `/${rolePrefix}/series` },
-        { label: detailData?.title || "Series Detail" }
-      ];
+      { label: rolePrefix.charAt(0).toUpperCase() + rolePrefix.slice(1), path: `/${rolePrefix}` },
+      { label: "Series", path: `/${rolePrefix}/series` },
+      { label: detailData?.title || "Series Detail" }
+    ];
 
   useEffect(() => {
     if (detailData) {
@@ -178,17 +178,17 @@ export function SeriesDetail() {
         <div className="bg-card border border-border rounded-xl overflow-hidden p-4 sm:p-6">
 
           {/* Vùng hiển thị Ảnh bìa */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 border-b border-border pb-6 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 border-b border-border pb-2 items-start">
             <div className="col-span-1 md:col-span-4 lg:col-span-3 w-full aspect-[3/4] relative rounded-xl max-w-xs mx-auto md:max-w-none" >
               <img className="w-full h-full object-cover rounded-xl" src={detailData?.coverFile} alt="Series-cover-image" />
             </div>
-            <div className="col-span-1 md:col-span-8 lg:col-span-9 w-full min-h-[440px] relative rounded-xl flex flex-col justify-between space-y-4" >
+            <div className="col-span-1 md:col-span-8 lg:col-span-9 w-full min-h-[350px] relative rounded-xl flex flex-col justify-between space-y-4" >
               <div className="flex flex-col h-full justify-between space-y-4">
                 <div className="flex justify-between items-start gap-4">
                   <div className="flex-1">
                     {/* Tiêu đề truyện và Tên tác giả */}
                     <h2 className="title-obelix text-md sm:text-2xl font-semibold text-card-foreground">{detailData?.title}</h2>
-                    <p className="text-muted-foreground text-xs sm:text-sm mt-1">{detailData?.mangakaName}</p>
+                    <h3 className="text-muted-foreground text-xs sm:text-sm mt-1">{detailData?.mangakaName}</h3>
                   </div>
                   {/* Huy hiệu hiển thị trạng thái (Processing, Pending, Approved...) */}
                   <StatusBadge status={currentStatus?.toLowerCase()} />
@@ -201,7 +201,7 @@ export function SeriesDetail() {
                       {detailData?.publishDate ? (
                         <div className="text-sm sm:text-lg my-1.5 font-semibold">{dayjs(detailData?.publishDate).utc(true).format('DD/MM/YYYY HH:mm')}</div>
                       ) : (
-                        <div className="text-xs sm:text-sm ms-0.5">— — — —</div>
+                        <div className="text-sm sm:text-lg my-1.5 font-semibold ms-0.5">— — — —</div>
                       )}
                     </div>
                   </div>
@@ -211,7 +211,27 @@ export function SeriesDetail() {
                       {detailData?.publishPeriod ? (
                         <div className="text-sm sm:text-lg my-1.5 font-semibold capitalize">{detailData?.publishPeriod}</div>
                       ) : (
-                        <div className="text-xs sm:text-sm ms-0.5">— — — —</div>
+                        <div className="text-sm sm:text-lg my-1.5 font-semibold ms-0.5">— — — —</div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="min-h-[40px] info-box p-3 text-foreground text-sm leading-relaxed">
+                      <h5 className="font-normal text-sm sm:text-sm text-muted-foreground tracking-wider">Series Creation Date</h5>
+                      {detailData?.createAt ? (
+                        <div className="text-sm sm:text-lg my-1.5 font-semibold">{dayjs(detailData?.createAt).utc(true).format('DD/MM/YYYY HH:mm')}</div>
+                      ) : (
+                        <div className="text-sm sm:text-lg my-1.5 font-semibold ms-0.5">— — — —</div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="min-h-[40px] info-box p-3 text-foreground text-sm leading-relaxed">
+                      <h5 className="font-normal text-sm  sm:text-sm text-muted-foreground tracking-wider">Series Updated Date</h5>
+                      {detailData?.updatedAt ? (
+                        <div className="text-sm sm:text-lg my-1.5 font-semibold capitalize">{dayjs(detailData?.updatedAt).utc(true).format('DD/MM/YYYY HH:mm')}</div>
+                      ) : (
+                        <div className="text-sm sm:text-lg my-1.5 font-semibold ms-0.5">— — — —</div>
                       )}
                     </div>
                   </div>
@@ -243,7 +263,7 @@ export function SeriesDetail() {
                         <a
                           href={detailData?.nameFile}
                           download
-                          className="inline-flex items-center gap-2 bg-secondary/50 text-secondary-foreground hover:bg-secondary/80 p-3 sm:p-4 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm w-full sm:w-auto justify-center"
+                          className="inline-flex items-center gap-2 bg-secondary/50 text-secondary-foreground hover:bg-secondary/80 p-2 sm:p-2 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm w-full sm:w-auto justify-center"
                         >
                           <Download size={16} />
                           Download Name
@@ -265,14 +285,15 @@ export function SeriesDetail() {
                   }
                 </div>
 
-                <div className="flex flex-col flex-1 h-full pt-2">
-                  <h5 className="text-xs sm:text-sm text-muted-foreground uppercase font-semibold mb-1">Description</h5>
-                  <p className="text-foreground text-justify w-full px-4 py-2 info-box flex-1 max-h-30 overflow-y-auto text-sm leading-relaxed">
-                    {detailData?.description}
-                  </p>
-                </div>
+
 
               </div>
+            </div>
+            <div className="col-span-1 md:col-span-12 flex flex-col flex-1">
+              <h5 className="text-xs sm:text-sm text-muted-foreground uppercase font-semibold mb-1">Description</h5>
+              <p className="text-foreground  min-h-30 text-justify w-full px-4 py-2 info-box flex-1 max-h-50 overflow-y-auto text-sm leading-relaxed">
+                {detailData?.description}
+              </p>
             </div>
           </div>
 
