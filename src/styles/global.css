@@ -85,7 +85,7 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-text-fill-color: var(--color-foreground) !important;
-  -webkit-box-shadow: 0 0 0px 1000px var(--color-input-background) inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-background) inset !important;
   transition: background-color 5000s ease-in-out 0s !important;
 }
 
@@ -351,7 +351,7 @@ select {
   border-image-slice: 12 !important;
   border-image-repeat: stretch !important;
   border-radius: 0px !important;
-  background-color: var(--color-input-background) !important;
+  background-color: var(--color-background);
   color: var(--color-foreground) !important;
   padding: 0.625rem 0.875rem !important;
   font-family: 'TeddyUTM', 'Comic Neue', sans-serif !important;

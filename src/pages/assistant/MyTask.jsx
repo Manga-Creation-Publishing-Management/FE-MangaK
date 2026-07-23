@@ -56,6 +56,7 @@ export function MyTask({ isDashboardView = false }) {
             onChange: setFilterStatus,
             options: [
               { value: "all", label: "All Status" },
+              { value: "available", label: "Available" },
               { value: "pending", label: "Pending" },
               { value: "processing", label: "Processing" },
               { value: "revising", label: "Revising" },

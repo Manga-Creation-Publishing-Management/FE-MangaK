@@ -32,7 +32,7 @@ export function Feedback({ Feedbacks }) {
         {feedbackData?.data?.length > 0 ? (
           feedbackData?.data?.map((feedback) => (
             <FeedbackItem
-              key={feedback.id}
+
               senderName={feedback.senderName}
               seriesTitle={feedback.seriesTitle}
               content={feedback.content}

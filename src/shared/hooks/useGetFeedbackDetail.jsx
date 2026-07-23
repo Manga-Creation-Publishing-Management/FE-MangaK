@@ -14,7 +14,6 @@ export function useGetFeedbackDetail(seriesId = null, chapterId = null, taskId =
   };
 
   useEffect(() => {
-    // Only fetch if at least one ID is present
     if (!seriesId && !chapterId && !taskId) return;
 
     let active = true;
@@ -25,7 +24,7 @@ export function useGetFeedbackDetail(seriesId = null, chapterId = null, taskId =
       try {
         const response = await feedbackService.getFeedbackDetail(seriesId, chapterId, taskId);
         const data = response?.data || response;
-        
+
         if (!active) return;
 
         if (Array.isArray(data)) {

@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { CalendarClock, Plus, Loader2 } from "lucide-react";
-import { useCreateTask } from "../../features/tasks/hooks/useCreateTask";
-import CreateTaskModal from "../../features/tasks/components/CreateTaskModal";
-import { useTaskList } from "../../features/tasks/hooks/useTaskList";
+import { useCreateTask } from "@/features/tasks/hooks/useCreateTask";
+import CreateTaskModal from "@/features/tasks/components/CreateTaskModal";
+import { useTaskList } from "@/features/tasks/hooks/useTaskList";
 import { StatusBadge } from "@/shared/components/StatusBadge";
 import dayjs from 'dayjs';
-import { useParams } from "react-router";
-// import { useSeriesManagement } from "../../series/hooks/useSeriesManagement";
 import utc from 'dayjs/plugin/utc';
-import { getTotalPage } from "../../features/Pagination/hooks/getTotalPage";
-import { PaginationCustom } from "../../features/Pagination/components/PaginationCustom";
+import { getTotalPage } from "@/features/Pagination/hooks/getTotalPage";
+import { PaginationCustom } from "@/features/Pagination/components/PaginationCustom";
 import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
 dayjs.extend(utc);
 export function TaskManagement() {
@@ -42,7 +40,6 @@ export function TaskManagement() {
     isLoadingList
   } = useTaskList(reload);
 
-  console.log("chapet", taskList);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -121,7 +118,7 @@ export function TaskManagement() {
                   {/* Phần trên: Tiêu đề bên trái, Trạng thái & Nút bấm bên phải */}
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-card-foreground truncate text-base sm:text-xl font-semibold">Chapter {item.chapterNumber} - {item.seriesTitle}</h3>
+                      <h4 className="font-semibold text-card-foreground truncate sm:text-xl font-semibold">Chapter {item.chapterNumber} - {item.seriesTitle}</h4>
                       <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Page Range: {item.taskDescription}</p>
                     </div>
 
@@ -181,7 +178,6 @@ export function TaskManagement() {
           onReload={handleReload}
         />
       }
-      {/* {showCreateSeriesModal && (<CreateSeriesModal onClose={handleClick} onReload={handleReload} />)} */}
 
 
     </>

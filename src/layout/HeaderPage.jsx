@@ -6,6 +6,8 @@ import { useGetFeedback } from '@/features/series/hooks/useGetFeedback';
 import { FeedbackItem } from '@/shared/components/FeedbackItem';
 import { userService } from '@/services/userService';
 import { HeaderMenu } from './HeaderMenu';
+import { useNavigateFromFeedback } from '../shared/hooks/useNavigateFromFeedback';
+import { useMarkFeedbackAsRead } from '../shared/hooks/useMarkFeedbackAsRead';
 
 const roleRouteMap = {
     mangaka: "mangaka",
@@ -26,7 +28,17 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
     const profilePath = `/${routeRole}/profile`;
     const hasFeedbackSupport = ["mangaka", "assistant", "tantou editor", "editorial board", "tantou", "editorial"].includes(normalizedRole);
 
-    const { feedbackData } = useGetFeedback(hasFeedbackSupport);
+    const { feedbackData, unreadFeedbackCount } = useGetFeedback(hasFeedbackSupport);
+    const { handleNavigateFromFeedback } = useNavigateFromFeedback();
+    const { handleMarkAsRead } = useMarkFeedbackAsRead();
+
+    const handleNavigateToFeedbackItem = (feedback) => {
+        handleNavigateFromFeedback(feedback, roleName);
+        if (feedback?.id) {
+            handleMarkAsRead(feedback.id);
+        }
+        setIsDropdownOpen(false);
+    };
 
     useEffect(() => {
         if (!isDropdownOpen) return;
@@ -44,19 +56,24 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
     useEffect(() => {
         if (normalizedRole === 'reader') {
             const user = JSON.parse(localStorage.getItem('user') || '{}');
-            if (user?.avatarUrl) {
+            if (user?.avatarUrl && typeof user.avatarUrl === 'string' && user.avatarUrl.trim() !== '' && user.avatarUrl !== 'null') {
                 setCurrentUserAvatar(user.avatarUrl);
+            } else {
+                setCurrentUserAvatar("/avatarImgDemo.png");
             }
             return;
         }
         const fetchHeaderProfile = async () => {
             try {
                 const res = await userService.getProfile();
-                if (res?.data?.avatarUrl) {
+                if (res?.data?.avatarUrl && typeof res.data.avatarUrl === 'string' && res.data.avatarUrl.trim() !== '' && res.data.avatarUrl !== 'null') {
                     setCurrentUserAvatar(res.data.avatarUrl);
+                } else {
+                    setCurrentUserAvatar("/avatarImgDemo.png");
                 }
             } catch (error) {
                 console.error("Failed to load header profile avatar:", error);
+                setCurrentUserAvatar("/avatarImgDemo.png");
             }
         };
 
@@ -81,8 +98,15 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
                     )}
 
                     <Link to={profilePath} className="shrink-0 hover:opacity-85 transition-opacity" title="View Profile">
-                        <img className="rounded-full w-9 h-9 sm:w-10 sm:h-10 object-cover ring-2 ring-primary/50 p-0.5 border border-primary/60 cursor-pointer"
-                            src={currentUserAvatar || "/avatarImgDemo.png"} alt="Avatar Image" />
+                        <img
+                            className="rounded-full w-9 h-9 sm:w-10 sm:h-10 object-cover ring-2 ring-primary/50 p-0.5 border border-primary/60 cursor-pointer"
+                            src={currentUserAvatar || "/avatarImgDemo.png"}
+                            alt="Avatar Image"
+                            onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = "/avatarImgDemo.png";
+                            }}
+                        />
                     </Link>
                     <div>
                         <span className="text-foreground text-xs sm:text-base font-semibold leading-snug block">Welcome back!</span>
@@ -107,6 +131,13 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
                                 <div className="content-center">
                                     <Bell size={20} />
                                 </div>
+
+                                {/* //số thông báo chưa đọc */}
+                                {unreadFeedbackCount > 0 &&
+                                    (<span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-destructive text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-background shadow-xs">
+                                        {unreadFeedbackCount > 99 ? '99+' : unreadFeedbackCount}
+                                    </span>
+                                    )}
                             </button>
 
                             {isDropdownOpen && (
@@ -126,13 +157,21 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
                                         {feedbackData?.data?.length > 0 ? (
                                             feedbackData.data.map((feedback) => (
                                                 <FeedbackItem
+                                                    onClick={
+                                                        () => {
+                                                            handleNavigateToFeedbackItem(feedback);
+                                                        }
+                                                    }
                                                     key={feedback.id}
+                                                    seriesId={feedback.seriesId || null}
+                                                    chapterId={feedback.chapterId || null}
+                                                    taskId={feedback.mangaTaskId || null}
                                                     senderName={feedback.senderName}
                                                     seriesTitle={feedback.seriesTitle}
                                                     content={feedback.content}
                                                     createdAt={feedback.createdAt}
                                                     hasIcon={false}
-                                                    isNew={true}
+                                                    isNew={feedback.isRead === false}
                                                 />
                                             ))
                                         ) : (

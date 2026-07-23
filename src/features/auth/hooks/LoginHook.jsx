@@ -24,7 +24,6 @@ export function LoginHook() {
         try {
             // Gọi API đăng nhập từ authService
             const res = await authService.login(email, password);
-            console.log("Login API Response:", res);
 
             // Kiểm tra xem dữ liệu trả về có hợp lệ (là object) hay không
             if (!res || typeof res !== "object" || !res.success) {
