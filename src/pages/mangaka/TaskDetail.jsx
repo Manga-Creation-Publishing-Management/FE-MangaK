@@ -182,7 +182,7 @@ export function TaskDetail() {
                   <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3 items-center flex gap-2">
                     Assistant in charge
                   </h3>
-                  {role === "mangaka" && (
+                  {role === "mangaka" && !isOverdue && (
                     taskDetail?.status === "Available" ||
                     taskDetail?.status === "Rejected" ||
                     taskDetail?.status === "Revising" ||
@@ -216,7 +216,7 @@ export function TaskDetail() {
                     )}
                 </div>
 
-                {isEditingTaskAssistant ? (
+                {isEditingTaskAssistant && !isOverdue ? (
                   <div className="w-full mt-1">
                     <select
                       value={selectedTaskAssistantId} // BIẾN MỚI
