@@ -337,8 +337,7 @@ export function SeriesDetail() {
 
 
         {/* feedback box for roles tantou and editorial, only when status is processing or pending */}
-        {(isTantou || isEditorial) &&
-          (normalizedStatus === 'processing' || normalizedStatus === 'pending') &&
+        {((normalizedRole === 'tantou' && normalizedStatus === 'processing') || (normalizedRole === 'editorial' && normalizedStatus === 'pending')) &&
           <ApprovalPanel
             feedback={feedback}
             onFeedbackChange={(e) => setFeedback(e.target.value)}

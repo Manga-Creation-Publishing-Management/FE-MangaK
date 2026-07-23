@@ -7,7 +7,7 @@ export function ProcessingSeriesList({ pendingSeries, isLoading, onNavigateToSer
     <div className="bg-card border border-border rounded-xl p-6 h-full flex flex-col">
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
-          <FileSearch size={20} className="text-primary" />
+          <FileSearch size={30} className="text-primary" />
           <h3 className="text-lg font-semibold text-card-foreground">Series to Review</h3>
         </div>
         <button

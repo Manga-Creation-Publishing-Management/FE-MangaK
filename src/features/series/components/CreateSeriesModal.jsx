@@ -54,7 +54,6 @@ export default function CreateSeriesModal({ onClose, onReload }) {
               type="text"
               className="w-full px-4 py-2 bg-input-background text-foreground rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Enter series name"
-              required
               onChange={handleChange}
               name="title" // Đặt name chuẩn để handle thay đổi trong hook
             />

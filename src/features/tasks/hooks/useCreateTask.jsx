@@ -92,10 +92,11 @@ export function useCreateTask() {
       amountIncome: allFields.amountIncome ? Number(allFields.amountIncome) : 0
     };
 
-    if (!taskData.seriesId || !taskData.chapterId || !taskData.assignedToId || !taskData.deadline) {
-      showAlert("Please choose all fields: Series, Chapter, Assistant, and Deadline!", "warning");
+    if (!taskData.taskTitle || !taskData.seriesId || !taskData.chapterId || !taskData.assignedToId || !taskData.deadline) {
+      showAlert("Please choose and fill in all required fields: Title, Series, Chapter, Assistant, and Deadline!", "warning");
       return;
     }
+
 
     if (taskData.from < 1 || taskData.to < 1) {
       showAlert("Page numbers must be greater than 0!", "warning");
