@@ -21,6 +21,9 @@ export const chaptersService = {
   async updateChapterStatus(seriesId, chapterId, data) {
     return await api.patch(`/Chapter/${chapterId}?seriesId=${seriesId}`, data);
   },
+  async editManuscript(seriesId, chapterId, data) {
+    return await api.patch(`/Chapter/${chapterId}?seriesId=${seriesId}`, data);
+  },
 
   // Gửi số sao đánh giá (vote/rating) cho một chương truyện cụ thể
   async updateChapterRate(chapterId, rate) {
@@ -31,7 +34,12 @@ export const chaptersService = {
   },
 
   async getProgressingChapter(chapterId, status) {
-    return await  api.get(`/MangaTask/process-task?ChapterId=${chapterId}&Status=${status}`);
+    return await api.get(`/MangaTask/process-task?ChapterId=${chapterId}&Status=${status}`);
+  },
+
+  // Lấy số sao mà Reader đã đánh giá cho một chapter cụ thể
+  async getReaderVote(chapterId) {
+    return await api.get(`/Vote/${chapterId}`, { silent: true });
   },
 
 };

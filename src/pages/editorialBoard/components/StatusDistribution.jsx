@@ -5,7 +5,7 @@ export function StatusDistribution({ statusDistribution }) {
     <div className="bg-card border border-border rounded-xl p-6">
       <div className="flex items-center gap-2 mb-5">
         <BookOpen size={20} className="text-primary" />
-        <h2 className="text-lg font-semibold">Series Status</h2>
+        <h3 className="text-lg font-semibold text-card-foreground">Series Status</h3>
       </div>
 
       {statusDistribution.length === 0 ? (
@@ -41,13 +41,13 @@ export function StatusDistribution({ statusDistribution }) {
                         className="w-2.5 h-2.5 rounded-full shrink-0"
                         style={{ backgroundColor: item.color }}
                       />
-                      <span className="text-sm font-medium capitalize">
+                      <span className="text-sm font-medium capitalize text-foreground">
                         {item.status}
                       </span>
                     </div>
                   </td>
                   <td className="text-right px-4 py-3">
-                    <span className="text-sm font-semibold">
+                    <span className="text-sm font-semibold text-foreground">
                       {item.count}
                     </span>
                   </td>

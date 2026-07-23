@@ -19,13 +19,12 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
         <div className="bg-card rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
           <div className="sticky top-0 bg-card border-b border-border p-6 flex justify-between items-center">
-            <div className="text-2xl font-semibold">Create New Chapter</div>
+            <div className="text-2xl font-semibold text-card-foreground">Create New Chapter</div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-muted rounded-lg transition-colors"
-
+              className="p-2 hover:bg-muted text-foreground rounded-lg transition-colors cursor-pointer"
             >
-              <X className="cursor-pointer" />
+              <X className="cursor-pointer text-foreground" />
             </button>
           </div>
 
@@ -33,13 +32,13 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
 
             <div className="mb-4">
               <div className='mb-2 text-xl'>
-                <label htmlFor="chapterName">Title</label>
+                <label htmlFor="title" className="text-card-foreground font-medium">Title</label>
               </div>
               <div className="space-y-2">
                 <input
                   id="title"
                   type="text"
-                  className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-4 py-2 bg-input-background text-foreground rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Enter chapter's title"
                   required
                   onChange={handleChange}
@@ -49,13 +48,13 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
             </div>
             <div className="mb-4">
               <div className='mb-2 text-xl'>
-                <label htmlFor="chapterName">Summary</label>
+                <label htmlFor="summary" className="text-card-foreground font-medium">Summary</label>
               </div>
               <div className="space-y-2">
                 <input
                   id="summary"
                   type="text"
-                  className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-4 py-2 bg-input-background text-foreground rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Enter summary"
                   required
                   onChange={handleChange}
@@ -64,11 +63,9 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
               </div>
             </div>
 
-
-
             <div className="space-y-2">
               <div className='mb-2 text-xl'>
-                <label htmlFor="chapterName">Upload Manuscript</label>
+                <label className="text-card-foreground font-medium">Upload Manuscript</label>
               </div>
               <div
                 onClick={() => storyInputRef.current.click()}
@@ -96,7 +93,7 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
                 ) : (
                   <>
                     <p className="text-muted-foreground">Click to upload or drag and drop</p>
-                    <p className="text-sm text-muted-foreground mt-1">PNG, JPG up to 10MB</p>
+                    <p className="text-sm text-muted-foreground mt-1">PDF, ZIP up to 50MB</p>
                   </>
                 )}
                 <input
@@ -109,23 +106,18 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
               </div>
             </div>
 
-
-
-
-
-
             <div className="flex justify-end gap-3 pt-4">
               <button
                 onClick={onClose}
                 type="button"
-                className=" cursor-pointer px-6 py-2 rounded-lg border border-border hover:bg-muted transition-colors"
+                className="cursor-pointer px-6 py-2 rounded-lg border border-border text-foreground hover:bg-muted transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isLoading}
-                className=" cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
               >
                 {isLoading ? "Creating..." : "Create"}
               </button>

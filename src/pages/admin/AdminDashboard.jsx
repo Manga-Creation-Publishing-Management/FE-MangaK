@@ -8,13 +8,13 @@ export function AdminDashboard() {
   return (
     <div className="p-6 space-y-8">
       <div className="flex flex-col gap-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          <div className="lg:col-span-6 bg-card border border-border rounded-xl p-6 space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          <div className="lg:col-span-6 bg-card border border-border rounded-xl p-6 space-y-4 flex flex-col justify-between h-full">
             <div>
               <h3 className="text-lg font-bold text-foreground">Overview</h3>
               <p className="text-xs text-muted-foreground">General metrics and active status summary.</p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 flex-1 items-stretch">
               {stats.map((stat) => {
                 const Icon = stat.icon;
                 return (
@@ -38,8 +38,8 @@ export function AdminDashboard() {
             </div>
           </div>
 
-          <div className="lg:col-span-6">
-            <RoleDistributionTable roleCounts={roleCounts} isLoading={isLoading} />
+          <div className="lg:col-span-6 h-full">
+            <RoleDistributionTable roleCounts={roleCounts} isLoading={isLoading} className="h-full" />
           </div>
         </div>
       </div>

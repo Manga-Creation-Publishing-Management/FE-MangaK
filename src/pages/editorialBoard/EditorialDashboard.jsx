@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { OverviewCard } from "@/shared/components/OverviewCard";
 import { CheckCircle, Calendar, BookOpen } from "lucide-react";
 import { ApprovedSeriesCard } from "./components/ApprovedSeriesCard";
@@ -6,8 +7,12 @@ import { CancelSuccessModal } from "./components/CancelSuccessModal";
 import { useEditorialDashboard } from "./hooks/useEditorialDashboard";
 import { UpcomingReleases } from "./components/UpcomingReleases";
 import { StatusDistribution } from "./components/StatusDistribution";
+import { getTotalPage } from "@/features/Pagination/hooks/getTotalPage";
+import { PaginationCustom } from "@/features/Pagination/components/PaginationCustom";
 
 export function EditorialDashboard() {
+  const [currentPage, setCurrentPage] = useState(1);
+
   const {
     showCancelModal,
     setShowCancelModal,
@@ -26,6 +31,13 @@ export function EditorialDashboard() {
     handleCancelConfirm,
     handleNavigate,
   } = useEditorialDashboard();
+
+  const pageSize = 3;
+  const totalPages = Math.ceil(approvedSeries.length / pageSize);
+  const paginatedApprovedSeries = approvedSeries.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   return (
     <div className="p-6 space-y-8">
@@ -55,31 +67,41 @@ export function EditorialDashboard() {
         <StatusDistribution statusDistribution={seriesStats.statusDistribution} />
       </div>
 
-      <div className="bg-card border border-border rounded-xl p-6">
+      <div className="bg-card border border-border rounded-xl p-6 space-y-4">
         <div className="flex items-center gap-2 mb-5">
           <CheckCircle size={20} className="text-primary" />
-          <h2 className="text-lg font-semibold">Approved Series</h2>
+          <h3 className="text-lg font-semibold text-card-foreground">Approved Series</h3>
         </div>
 
-        <div className="space-y-4 max-h-[480px] overflow-y-auto pr-2 custom-scrollbar">
-          {isLoading ? (
-            <p className="text-muted-foreground">Loading approved series...</p>
-          ) : approvedSeries.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
-              <CheckCircle size={40} className="mx-auto mb-3 opacity-30" />
-              <p className="text-sm">No approved series currently in publication.</p>
+        {isLoading ? (
+          <p className="text-muted-foreground">Loading approved series...</p>
+        ) : approvedSeries.length === 0 ? (
+          <div className="text-center py-8 text-muted-foreground">
+            <CheckCircle size={40} className="mx-auto mb-3 opacity-30" />
+            <p className="text-sm">No approved series currently in publication.</p>
+          </div>
+        ) : (
+          <>
+            <div className="space-y-4">
+              {paginatedApprovedSeries.map((item) => (
+                <ApprovedSeriesCard
+                  key={item.id}
+                  item={item}
+                  onCancelClick={handleCancelClick}
+                  onNavigate={handleNavigate}
+                />
+              ))}
             </div>
-          ) : (
-            approvedSeries.map((item) => (
-              <ApprovedSeriesCard
-                key={item.id}
-                item={item}
-                onCancelClick={handleCancelClick}
-                onNavigate={handleNavigate}
+
+            {totalPages > 1 && (
+              <PaginationCustom
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setCurrentPage={setCurrentPage}
               />
-            ))
-          )}
-        </div>
+            )}
+          </>
+        )}
       </div>
 
       <CancelSeriesModal

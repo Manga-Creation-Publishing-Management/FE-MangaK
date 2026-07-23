@@ -8,7 +8,7 @@ export function ProcessingSeriesList({ pendingSeries, isLoading, onNavigateToSer
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
           <FileSearch size={20} className="text-primary" />
-          <h2 className="text-lg font-semibold">Series to Review</h2>
+          <h3 className="text-lg font-semibold text-card-foreground">Series to Review</h3>
         </div>
         <button
           onClick={onNavigateToSeriesList}
@@ -35,7 +35,7 @@ export function ProcessingSeriesList({ pendingSeries, isLoading, onNavigateToSer
               className="flex items-center justify-between p-3 bg-background rounded-lg border border-border/50 hover:border-primary/30 transition-colors"
             >
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm truncate">{series.title}</p>
+                <p className="font-medium text-sm truncate text-foreground">{series.title}</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
                   by {series.author}
                   {series.createdDate && (

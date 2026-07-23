@@ -5,7 +5,7 @@ export function UpcomingReleases({ upcomingReleases }) {
     <div className="bg-card border border-border rounded-xl p-6">
       <div className="flex items-center gap-2 mb-5">
         <CalendarDays size={20} className="text-primary" />
-        <h2 className="text-lg font-semibold">Upcoming Releases</h2>
+        <h3 className="text-lg font-semibold text-card-foreground">Upcoming Releases</h3>
       </div>
 
       {upcomingReleases.length === 0 ? (
@@ -21,7 +21,7 @@ export function UpcomingReleases({ upcomingReleases }) {
               className="flex items-center justify-between p-3 bg-background rounded-lg border border-border/50 hover:border-primary/30 transition-colors"
             >
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm truncate">
+                <p className="font-medium text-sm truncate text-foreground">
                   {release.seriesName}
                 </p>
                 <p className="text-xs text-muted-foreground mt-0.5">

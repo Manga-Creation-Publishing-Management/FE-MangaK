@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet, useParams } from "react-router"
 import { StatusBadge } from "@/shared/components/StatusBadge";
-import { Outdent, Plus } from "lucide-react";
+import { Outdent, Plus, Star } from "lucide-react";
 import { useCreateChapter } from "../hooks/useCreateChapter";
 import { useSeriesManagement } from "../../series/hooks/useSeriesManagement";
 import { useUpdateChapter } from "../hooks/useUpdateChapter";
 import { useChapterRate } from "../hooks/useChapterRate";
 import { RatePanel } from "../../../pages/reader/RatePanel";
+import { chaptersService } from "../../../services/chapterService";
 import { useUpdateRateChapter } from "../hooks/useUpdateRateChapter";
 import { CreateChapterModal } from "./CreateChapterModal";
 import { useChapterList } from "../hooks/useChapterList";
@@ -28,24 +29,63 @@ export function ChapterList({ roleName, seriesData }) {
   const { handleNavigateToChapter } = useSeriesManagement();
 
   const [selectedChapterId, setSelectedChapterId] = useState("all");
+  const [filterStatus, setFilterStatus] = useState("all");
 
-  // Hook quản lý trạng thái hiển thị Popup đánh giá của từng chapter
+  // State lưu trữ số sao Reader đã đánh giá cho từng chapter { [chapterId]: rating }
+  const [readerVotes, setReaderVotes] = useState({});
+
   const { activeChapterId, handlePopUp } = useChapterRate();
 
-  // Hook thực hiện gửi số sao đánh giá (API submit)
   const { handleRateSubmit } = useUpdateRateChapter();
 
 
   const { } = useProgressing()
 
-  // console.log("length", chapterList.length)
   console.log(`view series info: ${seriesData?.seriesId}`);
 
+  // Khi role là Reader, lấy số sao đã đánh giá cho từng chapter
+  useEffect(() => {
+    if (roleName?.toLowerCase() !== 'reader' || !chapterList?.length) return;
+
+    const fetchVotes = async () => {
+      const votes = {};
+      await Promise.all(
+        chapterList.map(async (chapter) => {
+          try {
+            const res = await chaptersService.getReaderVote(chapter.chapterId);
+            // Parse số sao từ response
+            // Structure: { success: true, message: "...", data: { readerId: "...", chapterId: "...", rating: 4 } }
+            if (res && typeof res === 'object') {
+              const voteData = res.data ?? res;
+              const rating = typeof voteData === 'object'
+                ? (voteData.rating ?? voteData.rate ?? voteData.score ?? voteData.star)
+                : (typeof voteData === 'number' ? voteData : null);
+
+              if (rating != null && !isNaN(Number(rating))) {
+                votes[chapter.chapterId] = Number(rating);
+              }
+            } else if (typeof res === 'number') {
+              votes[chapter.chapterId] = res;
+            }
+          } catch (err) {
+            // Reader chưa đánh giá chapter này -> bỏ qua yên lặng
+          }
+        })
+      );
+      setReaderVotes(votes);
+    };
+
+    fetchVotes();
+  }, [roleName, chapterList]);
+
   const visibleChapters = (chapterList || []).filter(chapter => {
-    const showChapter = roleName === 'reader'
+    const matchesRole = roleName === 'reader'
       ? chapter.status?.toLowerCase() === 'publishing'
       : true;
-    return showChapter;
+    const matchesStatus = filterStatus === "all"
+      ? true
+      : chapter.status?.toLowerCase() === filterStatus.toLowerCase();
+    return matchesRole && matchesStatus;
   });
 
   const chapterOptions = [
@@ -82,13 +122,38 @@ export function ChapterList({ roleName, seriesData }) {
         <>
           {/* Header của phần danh sách Chapter */}
           {/* Header của phần danh sách Chapter */}
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
             <div>
-              <h2 className="text-2xl ps-2 font-semibold ">Chapters ({chapterList?.length})</h2>
+              <h3 className="text-xl sm:text-xl ps-2 font-semibold text-card-foreground">Chapters ({chapterList?.length})</h3>
             </div>
 
-            <div className="flex items-center gap-4">
-              <div className="w-48">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+              {roleName !== "reader" && (
+                <div className="w-full sm:w-44">
+                  <SearchFilterBar
+                    showSearch={false}
+                    useCardWrapper={false}
+                    filters={[
+                      {
+                        value: filterStatus,
+                        onChange: setFilterStatus,
+                        options: [
+                          { value: "all", label: "All Status" },
+                          { value: "created", label: "Created" },
+                          { value: "pending", label: "Pending" },
+                          { value: "processing", label: "Processing" },
+                          { value: "scheduled", label: "Scheduled" },
+                          { value: "publishing", label: "Publishing" },
+                          { value: "rejected", label: "Rejected" }
+                        ],
+                        className: "w-full"
+                      }
+                    ]}
+                  />
+                </div>
+              )}
+
+              <div className="w-full sm:w-48">
                 <SearchFilterBar
                   showSearch={false}
                   useCardWrapper={false}
@@ -107,7 +172,7 @@ export function ChapterList({ roleName, seriesData }) {
               {roleName?.toLowerCase() === "mangaka" &&
                 <button
                   onClick={() => handleShowChapterModal()}
-                  className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:opacity-90 transition-opacity shrink-0"
+                  className="cursor-pointer flex items-center justify-center gap-2 px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:opacity-90 transition-opacity shrink-0 w-full sm:w-auto text-sm font-medium"
                 >
                   <Plus size={20} />
                   Add New Chapter
@@ -121,44 +186,57 @@ export function ChapterList({ roleName, seriesData }) {
             {currentDataListDisplay?.map((chapter) => {
               const showChapter = roleName === 'reader'
                 ? chapter.status?.toLowerCase() === 'publishing'
-                : true; // nếu là reader, chapter k pub thì false, nếu không là reader thì true, 
-              // nếu vừa là reader và pub thì true
+                : true;
 
-              if (!showChapter) return null; //tức là nếu là reader mà chapter không pub sẽ không trả về
+              if (!showChapter) return null;
 
               return (
-                <div key={chapter.chapterId} className="bg-card border border-border rounded-xl p-5 hover:shadow-lg transition-shadow">
-                  <div className="flex items-center justify-between">
+                <div key={chapter.chapterId} className="bg-card border border-border rounded-xl p-4 sm:p-5 hover:shadow-lg transition-shadow">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <h3 className="py-1 font-semibold text-xl break-words">
+                      <h4 className="py-1 text-base sm:text-xl break-words text-card-foreground">
                         Chapter {chapter.chapterNumber}: {chapter.title}
-                      </h3>
+                      </h4>
+                      {/* Hiển thị số sao Reader đã đánh giá cho chapter */}
+                      {roleName?.toLowerCase() === 'reader' && (
+                        <div className="flex items-center gap-1 mt-1">
+                          <span className="text-xs text-muted-foreground mr-1">
+                            {readerVotes[chapter.chapterId] != null ? 'Your rating:' : 'Not rated yet'}
+                          </span>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              size={16}
+                              className={star <= (readerVotes[chapter.chapterId] || 0)
+                                ? "text-[#FBBF24] fill-[#FBBF24]"
+                                : "text-[#71618a] fill-transparent"
+                              }
+                              strokeWidth={1.5}
+                            />
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    <div className="flex items-center gap-4 shrink-0">
+                    <div className="flex flex-wrap items-center justify-between sm:justify-end gap-10 w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border/40">
                       <StatusBadge status={chapter.status.toLowerCase()} />
 
-                      {console.log(`${roleName?.toLowerCase()} ChapterId: ${chapter.chapterId}`)}
                       {roleName !== 'reader' ?
                         <div>
                           <button
-                            className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                            className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-xs sm:text-sm font-medium"
                             onClick={() => handleNavigateToChapter(roleName?.toLowerCase(), seriesData?.seriesId, chapter?.chapterId)}
                           >
-
                             View Detail
                           </button>
                         </div>
                         :
-                        // Nếu là người đọc (reader) thì hiển thị nút "Rate chapter" để mở Popup đánh giá, ngược lại hiển thị nút "View Detail"
                         <div>
                           <button
-                            className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-                            onClick={() => handlePopUp(chapter.chapterId)} // Mở popup đánh giá cho chapter này
+                            className="cursor-pointer block text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-xs sm:text-sm font-medium"
+                            onClick={() => handlePopUp(chapter.chapterId)}
                           >
-
                             Rate chapter
                           </button>
-
                         </div>}
                     </div>
                   </div>
@@ -179,6 +257,8 @@ export function ChapterList({ roleName, seriesData }) {
               onSubmit={async (rating) => {
                 // Gọi API gửi điểm đánh giá số sao lên server
                 await handleRateSubmit(activeChapterId, rating);
+                // Cập nhật readerVotes ngay lập tức để hiển thị số sao trên UI
+                setReaderVotes(prev => ({ ...prev, [activeChapterId]: rating }));
                 handlePopUp(null); // Đóng popup sau khi submit thành công
               }}
             />

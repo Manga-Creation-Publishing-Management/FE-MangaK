@@ -4,7 +4,6 @@ export const roleLabels = {
   tantou: "Tantou Editor",
   editorial: "Editorial Board",
   reader: "Reader",
-  admin: "Administrator",
 };
 
 export const roleColors = {

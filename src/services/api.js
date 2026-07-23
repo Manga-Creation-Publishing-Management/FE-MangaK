@@ -57,11 +57,14 @@ async function request(endpoint, options = {}) {
     if (!response.ok) {
       // Nếu gặp lỗi xác thực 401 (token hết hạn hoặc không hợp lệ)
       if (response.status === 401) {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('user');
-        window.location.href = '/';
-        return null;
+        // Không tự động redirect nếu đang thực hiện các cuộc gọi API liên quan đến Auth (đăng nhập, đăng ký, quên mật khẩu...)
+        if (!endpoint.includes('/Auth/')) {
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          localStorage.removeItem('user');
+          window.location.href = '/';
+          return null;
+        }
       }
 
       const errorMsg = (data && typeof data === 'object' && (data.message || data.error)) 
@@ -72,8 +75,10 @@ async function request(endpoint, options = {}) {
     // Trả về dữ liệu nếu gọi API thành công
     return data;
   } catch (error) {
-    // Bắt và in ra lỗi mạng hoặc lỗi API để dễ debug
-    console.error(`API Error on ${url}:`, error);
+    // Bắt và in ra lỗi mạng hoặc lỗi API để dễ debug (nếu không bật cờ silent)
+    if (!options?.silent) {
+      console.error(`API Error on ${url}:`, error);
+    }
     throw error;
   }
 }
