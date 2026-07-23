@@ -262,7 +262,7 @@ export function TaskDetail() {
                     deadline {isOverdue && <span className="text-destructive font-bold text-[10px]">(Overdue)</span>}
                   </h3>
 
-                  {(role === "mangaka" && taskDetail?.status != "processing") && (
+                  {(role === "mangaka" && taskDetail?.status?.toLowerCase() !== "processing" && taskDetail?.status?.toLowerCase() !== "pending") && (
                     isEditingDeadline ? (
                       <div className="flex items-center gap-1 -mt-[10px] -mr-2">
                         <button
@@ -292,7 +292,7 @@ export function TaskDetail() {
                 </div>
 
                 {/* PHẦN HIỂN THỊ INPUT / TEXT PHÍA DƯỚI GIỮ NGUYÊN */}
-                {isEditingDeadline ? (
+                {isEditingDeadline && taskDetail?.status?.toLowerCase() !== "pending" && taskDetail?.status?.toLowerCase() !== "processing" ? (
                   <div className="w-full mt-1">
                     <input
                       type="datetime-local"
