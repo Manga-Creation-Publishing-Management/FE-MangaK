@@ -29,13 +29,11 @@ export function ResetPasswordPage() {
         const resetPasswordRes = await authService.resetPassword(code, newPassword);
 
         if (resetPasswordRes.message === "Change password successfully") {
-            console.log("Change password successfully!");
             setIsSending(true);
             showAlert("Your password has been reset successfully!", "success");
             navigate("/");
 
         } else {
-            console.log("Change password failed!");
             showAlert("The M-CODE is incorrect, please try again! ", "error");
             navigate('/forgot-password');
         }
