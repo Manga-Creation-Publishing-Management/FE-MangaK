@@ -247,7 +247,7 @@ export function ChapterDetail() {
                     >
                       <input
                         type="file"
-                        accept=".pdf,.zip" // Bạn có thể thêm các định dạng hỗ trợ khác ở đây
+                        accept=".pdf,.zip"
                         className="hidden"
                         ref={manuscriptInputRef}
                         onChange={handleManuscriptChange}
@@ -348,7 +348,7 @@ export function ChapterDetail() {
                       ) : (
                         <>
                           <p className="text-muted-foreground">Click to upload file</p>
-                          <p className="text-sm text-muted-foreground mt-1">PNG, JPG up to 10MB</p>
+                          <p className="text-sm text-muted-foreground mt-1">PDF, ZIP up to 50MB</p>
                         </>
                       )}
                       <input
@@ -392,9 +392,7 @@ export function ChapterDetail() {
                     {isLoading ? "Submitting..." : "Submit Chapter"}
                   </button>
                 ) : (
-                  <button className="bg-secondary text-secondary-foreground  font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:opacity-50 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed readonly " >
-                    Overdue
-                  </button>
+                  <></>
                 )
                 }
 

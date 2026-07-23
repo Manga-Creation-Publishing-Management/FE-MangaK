@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { ArrowUpRight, Calendar, CircleAlert, CircleCheckBig, CircleDashed, InfoIcon, JapaneseYen } from "lucide-react";
 import { OverviewCard } from "@/shared/components/OverviewCard";
 import { MyTask } from "./MyTask";
 import { useIncome } from "../../features/tasks/hooks/useIncome";
 import { useIncomeHistory } from "../../features/tasks/hooks/useIncomeHistory";
+import { getTotalPage } from "@/features/Pagination/hooks/getTotalPage";
+import { PaginationCustom } from "@/features/Pagination/components/PaginationCustom";
 
 export function Income() {
-
+  const [currentPage, setCurrentPage] = useState(1);
 
   const {
     totalIncome,
@@ -13,6 +16,13 @@ export function Income() {
   } = useIncome();
 
   const { monthlyIncomesList } = useIncomeHistory();
+
+  const pageSize = 6;
+  const totalPages = Math.ceil((monthlyIncomesList || []).length / pageSize);
+  const paginatedIncomes = (monthlyIncomesList || []).slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
   
   console.log("list monthly:", monthlyIncomesList);
 
@@ -23,11 +33,11 @@ export function Income() {
         <OverviewCard contentText="Total Income This Month" iconName={<JapaneseYen size={30} />} iconColor="#34d399" valueNum={`${totalIncome.toLocaleString('en-US') }`} />
       </div>
 
-      <div className="bg-card border border-border rounded-xl p-4 sm:p-6">
+      <div className="bg-card border border-border rounded-xl p-4 sm:p-6 space-y-4">
         <h2 className="text-xl font-semibold mb-5 text-card-foreground">Income History</h2>
 
         <div className="grid grid-cols-1 gap-4">
-          {monthlyIncomesList?.map(item => (
+          {paginatedIncomes.map(item => (
             <div
               key={`${item.month}-${item.year}`}
               className="bg-background border border-border/50 rounded-2xl p-4 sm:p-6 hover:shadow-lg transition-shadow"
@@ -68,6 +78,14 @@ export function Income() {
             </div>
           )}
         </div>
+
+        {totalPages > 1 && (
+          <PaginationCustom
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+          />
+        )}
       </div>
     </div>
   );

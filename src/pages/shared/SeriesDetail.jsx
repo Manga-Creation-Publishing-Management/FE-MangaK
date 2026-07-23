@@ -36,13 +36,19 @@ export function SeriesDetail() {
   // Việc này quan trọng để hiển thị giao diện tuỳ chỉnh theo role
   let roleFromState = location.state?.role;
 
-  // Dự phòng (Fallback): Nếu state bị mất (ví dụ do người dùng f5/refresh trang),
-  // Cố gắng tự nội suy role bằng cách nhìn vào đường dẫn URL (pathname)
   if (!roleFromState) {
-    if (pathname.includes("tantou")) {
+    if (pathname.includes("reader")) {
+      roleFromState = "reader";
+    } else if (pathname.includes("tantou")) {
       roleFromState = "tantou";
     } else if (pathname.includes("editorial")) {
       roleFromState = "editorial";
+    } else if (pathname.includes("assistant")) {
+      roleFromState = "assistant";
+    } else if (pathname.includes("admin")) {
+      roleFromState = "admin";
+    } else if (pathname.includes("mangaka")) {
+      roleFromState = "mangaka";
     }
   }
 
@@ -133,11 +139,19 @@ export function SeriesDetail() {
     : "Reject Series";
 
   const rolePrefix = roleFromState || "mangaka";
-  const customBreadcrumb = [
-    { label: rolePrefix.charAt(0).toUpperCase() + rolePrefix.slice(1), path: `/${rolePrefix}` },
-    { label: "Series", path: `/${rolePrefix}/series` },
-    { label: detailData?.title || "Series Detail" }
-  ];
+  const isReaderRole = rolePrefix.toLowerCase() === "reader";
+
+  const customBreadcrumb = isReaderRole
+    ? [
+        { label: "Reader", path: "/reader" },
+        { label: "Series", path: "/reader" },
+        { label: detailData?.title || "Series Detail" }
+      ]
+    : [
+        { label: rolePrefix.charAt(0).toUpperCase() + rolePrefix.slice(1), path: `/${rolePrefix}` },
+        { label: "Series", path: `/${rolePrefix}/series` },
+        { label: detailData?.title || "Series Detail" }
+      ];
 
   useEffect(() => {
     if (detailData) {

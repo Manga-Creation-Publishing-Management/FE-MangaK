@@ -134,9 +134,9 @@ export function MyTask({ isDashboardView = false }) {
   }
 
   return (
-    <div className="p-6 space-y-8 bg-background min-h-full animate-in fade-in duration-300">
+    <div className="p-4 sm:p-6 space-y-6 sm:space-y-8 bg-background min-h-full animate-in fade-in duration-300">
 
-      <div className="bg-card border border-border rounded-xl p-6 space-y-6">
+      <div className="bg-card border border-border rounded-xl p-4 sm:p-6 space-y-6">
         {searchFilterEl}
         {tasksListEl}
         {paginationEl}

@@ -110,11 +110,10 @@ export function ReaderLoginPage() {
                     <BackButton url='/' />
                     <div style={gridStyle}
                         className="lg:mx-20 col-span-1 md:col-span-7 flex flex-col items-center justify-center p-6 px-12 md:p-12 relative">
-                        <div className="w-full bg-background border border-border rounded-xl p-8
-                        shadow-xl transition-colors duration-300 relative">
+                        <div className="w-full bg-card rounded-2xl p-8 transition-colors duration-300 relative">
                             <div className="space-y-2 mb-8">
                                 <h1 className="text-2xl font-extrabold tracking-tight text-foreground">
-                                    Join in Manga<span className="text-accent">K</span>
+                                    Join in <span className="text-primary [font-family:inherit]">Manga</span><span className="text-accent [font-family:inherit]">K</span>
                                 </h1>
 
                                 <p className="text-xs md:text-sm text-muted-foreground">

@@ -38,8 +38,8 @@ export const chaptersService = {
   },
 
   // Lấy số sao mà Reader đã đánh giá cho một chapter cụ thể
-  async getReaderVote(chapterId, readerId) {
-    return await api.get(`/Vote/${chapterId}/reader/${readerId}`);
+  async getReaderVote(chapterId) {
+    return await api.get(`/Vote/${chapterId}`, { silent: true });
   },
 
 };

@@ -2,6 +2,8 @@ import { usePublishingSchedule } from "../../features/schedule/PublishingSchedul
 import { Calendar, Clock, Plus } from "lucide-react";
 import { OverviewCard } from "@/shared/components/OverviewCard";
 import { useState } from "react";
+import { getTotalPage } from "@/features/Pagination/hooks/getTotalPage";
+import { PaginationCustom } from "@/features/Pagination/components/PaginationCustom";
 
 import { ScheduleCard } from "./components/ScheduleCard";
 import { ScheduleFormModal } from "./components/ScheduleFormModal";
@@ -27,6 +29,7 @@ export function PublishingSchedule() {
     handleCloseModal,
   } = usePublishingSchedule();
 
+  const [currentPage, setCurrentPage] = useState(1);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteScheduleId, setDeleteScheduleId] = useState(null);
   const [deleteSeriesName, setDeleteSeriesName] = useState("");
@@ -56,6 +59,13 @@ export function PublishingSchedule() {
     );
   }).length;
 
+  const pageSize = 6;
+  const totalPages = Math.ceil(schedules.length / pageSize);
+  const paginatedSchedules = schedules.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
   return (
     <div className="p-4 sm:p-6 space-y-6 sm:space-y-8 animate-in fade-in duration-300">
 
@@ -74,7 +84,7 @@ export function PublishingSchedule() {
         />
       </div>
 
-      <div className="bg-card border border-border rounded-xl p-4 sm:p-6">
+      <div className="bg-card border border-border rounded-xl p-4 sm:p-6 space-y-4">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-5">
           <div className="flex items-center gap-2">
             <Calendar size={20} className="text-primary" />
@@ -96,16 +106,26 @@ export function PublishingSchedule() {
             <p className="text-sm">No schedules created yet</p>
           </div>
         ) : (
-          <div className="space-y-4 max-h-[640px] overflow-y-auto pr-2 custom-scrollbar">
-            {schedules.map((schedule) => (
-              <ScheduleCard
-                key={schedule.id}
-                schedule={schedule}
-                onEditClick={handleEditClick}
-                onDeleteClick={handleDeleteClick}
+          <>
+            <div className="space-y-4">
+              {paginatedSchedules.map((schedule) => (
+                <ScheduleCard
+                  key={schedule.id}
+                  schedule={schedule}
+                  onEditClick={handleEditClick}
+                  onDeleteClick={handleDeleteClick}
+                />
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <PaginationCustom
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setCurrentPage={setCurrentPage}
               />
-            ))}
-          </div>
+            )}
+          </>
         )}
       </div>
 
