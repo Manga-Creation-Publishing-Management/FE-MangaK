@@ -26,7 +26,7 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
     const profilePath = `/${routeRole}/profile`;
     const hasFeedbackSupport = ["mangaka", "assistant", "tantou editor", "editorial board", "tantou", "editorial"].includes(normalizedRole);
 
-    const { feedbackData } = useGetFeedback(hasFeedbackSupport);
+    const { feedbackData, unreadFeedbackCount } = useGetFeedback(hasFeedbackSupport);
 
     useEffect(() => {
         if (!isDropdownOpen) return;
@@ -107,6 +107,13 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
                                 <div className="content-center">
                                     <Bell size={20} />
                                 </div>
+
+                                {/* //số thông báo chưa đọc */}
+                                {unreadFeedbackCount > 0 &&
+                                    (<span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-destructive text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-background shadow-xs">
+                                        {unreadFeedbackCount > 99 ? '99+' : unreadFeedbackCount}
+                                    </span>
+                                    )}
                             </button>
 
                             {isDropdownOpen && (
