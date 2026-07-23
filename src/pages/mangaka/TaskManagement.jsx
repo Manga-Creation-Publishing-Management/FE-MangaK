@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { CalendarClock, Plus, Loader2 } from "lucide-react";
-import { useCreateTask } from "../../features/tasks/hooks/useCreateTask";
-import CreateTaskModal from "../../features/tasks/components/CreateTaskModal";
-import { useTaskList } from "../../features/tasks/hooks/useTaskList";
+import { useCreateTask } from "@/features/tasks/hooks/useCreateTask";
+import CreateTaskModal from "@/features/tasks/components/CreateTaskModal";
+import { useTaskList } from "@/features/tasks/hooks/useTaskList";
 import { StatusBadge } from "@/shared/components/StatusBadge";
 import dayjs from 'dayjs';
-import { useParams } from "react-router";
-// import { useSeriesManagement } from "../../series/hooks/useSeriesManagement";
 import utc from 'dayjs/plugin/utc';
-import { getTotalPage } from "../../features/Pagination/hooks/getTotalPage";
-import { PaginationCustom } from "../../features/Pagination/components/PaginationCustom";
+import { getTotalPage } from "@/features/Pagination/hooks/getTotalPage";
+import { PaginationCustom } from "@/features/Pagination/components/PaginationCustom";
 import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
 dayjs.extend(utc);
 export function TaskManagement() {
@@ -42,7 +40,6 @@ export function TaskManagement() {
     isLoadingList
   } = useTaskList(reload);
 
-  console.log("chapet", taskList);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -181,7 +178,6 @@ export function TaskManagement() {
           onReload={handleReload}
         />
       }
-      {/* {showCreateSeriesModal && (<CreateSeriesModal onClose={handleClick} onReload={handleReload} />)} */}
 
 
     </>

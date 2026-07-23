@@ -200,20 +200,28 @@ export function ChapterList({ roleName, seriesData }) {
                       {/* Hiển thị số sao Reader đã đánh giá cho chapter */}
                       {roleName?.toLowerCase() === 'reader' && (
                         <div className="flex items-center gap-1 mt-1">
-                          <span className="text-xs text-muted-foreground mr-1">
-                            {readerVotes[chapter.chapterId] != null ? 'Your rating:' : 'Not rated yet'}
-                          </span>
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star
-                              key={star}
-                              size={16}
-                              className={star <= (readerVotes[chapter.chapterId] || 0)
-                                ? "text-[#FBBF24] fill-[#FBBF24]"
-                                : "text-[#71618a] fill-transparent"
-                              }
-                              strokeWidth={1.5}
-                            />
-                          ))}
+                          {readerVotes[chapter.chapterId] != null ? (
+                            <>
+                              <span className="text-xs text-muted-foreground mr-1">
+                                Your rating:
+                              </span>
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <Star
+                                  key={star}
+                                  size={16}
+                                  className={star <= (readerVotes[chapter.chapterId] || 0)
+                                    ? "text-[#FBBF24] fill-[#FBBF24]"
+                                    : "text-[#71618a] fill-transparent"
+                                  }
+                                  strokeWidth={1.5}
+                                />
+                              ))}
+                            </>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">
+                              Not rated yet
+                            </span>
+                          )}
                         </div>
                       )}
                     </div>

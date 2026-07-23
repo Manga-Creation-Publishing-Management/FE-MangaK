@@ -56,19 +56,24 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
     useEffect(() => {
         if (normalizedRole === 'reader') {
             const user = JSON.parse(localStorage.getItem('user') || '{}');
-            if (user?.avatarUrl) {
+            if (user?.avatarUrl && typeof user.avatarUrl === 'string' && user.avatarUrl.trim() !== '' && user.avatarUrl !== 'null') {
                 setCurrentUserAvatar(user.avatarUrl);
+            } else {
+                setCurrentUserAvatar("/avatarImgDemo.png");
             }
             return;
         }
         const fetchHeaderProfile = async () => {
             try {
                 const res = await userService.getProfile();
-                if (res?.data?.avatarUrl) {
+                if (res?.data?.avatarUrl && typeof res.data.avatarUrl === 'string' && res.data.avatarUrl.trim() !== '' && res.data.avatarUrl !== 'null') {
                     setCurrentUserAvatar(res.data.avatarUrl);
+                } else {
+                    setCurrentUserAvatar("/avatarImgDemo.png");
                 }
             } catch (error) {
                 console.error("Failed to load header profile avatar:", error);
+                setCurrentUserAvatar("/avatarImgDemo.png");
             }
         };
 
@@ -93,8 +98,15 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
                     )}
 
                     <Link to={profilePath} className="shrink-0 hover:opacity-85 transition-opacity" title="View Profile">
-                        <img className="rounded-full w-9 h-9 sm:w-10 sm:h-10 object-cover ring-2 ring-primary/50 p-0.5 border border-primary/60 cursor-pointer"
-                            src={currentUserAvatar || "/avatarImgDemo.png"} alt="Avatar Image" />
+                        <img
+                            className="rounded-full w-9 h-9 sm:w-10 sm:h-10 object-cover ring-2 ring-primary/50 p-0.5 border border-primary/60 cursor-pointer"
+                            src={currentUserAvatar || "/avatarImgDemo.png"}
+                            alt="Avatar Image"
+                            onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = "/avatarImgDemo.png";
+                            }}
+                        />
                     </Link>
                     <div>
                         <span className="text-foreground text-xs sm:text-base font-semibold leading-snug block">Welcome back!</span>
