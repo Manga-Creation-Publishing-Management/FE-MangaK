@@ -116,15 +116,23 @@ export function useTaskDetail(taskId, role) {
     }
   };
 
-  const handleRejectTask = async () => {
+  const handleRejectTask = async (isAnnotation = false) => {
     if (!taskId) {
-      showAlert("Task ID does not exist");
+      showAlert("Task ID does not exist", "error");
+      return;
+    }
+
+    if (!isAnnotation && (!feedback || !feedback.trim())) {
+      showAlert("Please enter feedback before rejecting!", "error");
       return;
     }
 
     setIsLoading(true);
     try {
-      const response = await taskService.rejectTask(taskId, feedback !== "" ? feedback : "Annotation feedback added by Mangaka");
+      const finalFeedback = feedback && feedback.trim() !== "" 
+        ? feedback 
+        : "Annotation feedback added by Mangaka";
+      const response = await taskService.rejectTask(taskId, finalFeedback);
       console.log("Update status thành công:", response);
 
       // Cập nhật state taskDetail với status mới
@@ -135,7 +143,7 @@ export function useTaskDetail(taskId, role) {
 
     } catch (error) {
       console.error("Lỗi khi cập nhật status:", error);
-      showAlert("Update failed: " + error.message);
+      showAlert("Update failed: " + error.message, "error");
     } finally {
       setIsLoading(false);
     }
