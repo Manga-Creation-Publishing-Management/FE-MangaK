@@ -124,7 +124,7 @@ export function useTaskDetail(taskId, role) {
 
     setIsLoading(true);
     try {
-      const response = await taskService.rejectTask(taskId, feedback !== null ? feedback : "Annotation feedback added by Mangaka");
+      const response = await taskService.rejectTask(taskId, feedback !== "" ? feedback : "Annotation feedback added by Mangaka");
       console.log("Update status thành công:", response);
 
       // Cập nhật state taskDetail với status mới
