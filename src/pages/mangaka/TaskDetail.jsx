@@ -469,7 +469,7 @@ export function TaskDetail() {
                 taskId={taskId}
                 role={role}
                 onRejectTrigger={() => { //cho chữ mặc định khi annotation vì reject nó vẫn check á
-                  handleRejectTask(taskId, role);
+                  handleRejectTask(true);
                   setIsAnnotationOpen(false);
                 }}
               />
@@ -484,7 +484,7 @@ export function TaskDetail() {
                 }}
                 onNo={() => {
                   setConfirmModalOpen(false);
-                  handleRejectTask(taskId, role);
+                  handleRejectTask(false);
                 }}
               />
 
