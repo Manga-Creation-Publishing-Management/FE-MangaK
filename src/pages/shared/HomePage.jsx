@@ -98,12 +98,12 @@ export function HomePage() {
             <img
               src="https://images.unsplash.com/photo-1763732397784-c5ff2651d40c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxtYW5nYSUyMHBhZ2VzJTIwYmxhY2slMjB3aGl0ZSUyMGNvbWljJTIwYm9vayUyMHBhbmVscyUyMGlua3xlbnwxfHx8fDE3ODAwMjQ5NjV8MA&ixlib=rb-4.1.0&q=80&w=600"
               alt="Manga page close-up"
-              className="w-full h-[280px] md:h-[360px] object-cover border-3 border-foreground shadow-[4px_4px_0px_var(--color-comic-shadow)] rotate-[-2.5deg] transition-transform duration-300 hover:scale-[1.04]"
+              className="w-full h-[280px] md:h-[360px] object-cover rounded-2xl md:rounded-[24px] shadow-md transition-transform duration-300 hover:scale-[1.02]"
             />
             <img
               src="https://images.unsplash.com/photo-1763315371360-96015292bbf8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHw0fHxtYW5nYSUyMHBhZ2VzJTIwYmxhY2slMjB3aGl0ZSUyMGNvbWljJTIwYm9vayUyMHBhbmVscyUyMGlua3xlbnwxfHx8fDE3ODAwMjQ5NjV8MA&ixlib=rb-4.1.0&q=80&w=600"
               alt="Manga panel collage"
-              className="w-full h-[120px] md:h-[150px] object-cover border-3 border-foreground shadow-[3px_3px_0px_var(--color-comic-shadow)] rotate-[1.8deg] transition-transform duration-300 hover:scale-[1.04]"
+              className="w-full h-[120px] md:h-[150px] object-cover rounded-2xl md:rounded-[24px] shadow-md transition-transform duration-300 hover:scale-[1.02]"
             />
           </div>
 
@@ -111,17 +111,17 @@ export function HomePage() {
             <img
               src="https://images.unsplash.com/photo-1639634252346-0a27c7d168dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYW5nYSUyMHBhZ2VzJTIwYmxhY2slMjB3aGl0ZSUyMGNvbWljJTIwYm9vayUyMHBhbmVscyUyMGlua3xlbnwxfHx8fDE3ODAwMjQ5NjV8MA&ixlib=rb-4.1.0&q=80&w=600"
               alt="Manga storyboard drawing"
-              className="w-full h-[110px] md:h-[140px] object-cover border-3 border-foreground shadow-[3px_3px_0px_var(--color-comic-shadow)] rotate-[2.2deg] transition-transform duration-300 hover:scale-[1.04]"
+              className="w-full h-[110px] md:h-[140px] object-cover rounded-2xl md:rounded-[24px] shadow-md transition-transform duration-300 hover:scale-[1.02]"
             />
             <img
               src="https://images.unsplash.com/photo-1593345216067-47a359874578?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHw1fHxtYW5nYSUyMHBhZ2VzJTIwYmxhY2slMjB3aGl0ZSUyMGNvbWljJTIwYm9vayUyMHBhbmVscyUyMGlua3xlbnwxfHx8fDE3ODAwMjQ5NjV8MA&ixlib=rb-4.1.0&q=80&w=600"
               alt="Manga character lineart"
-              className="w-full h-[200px] md:h-[260px] object-cover border-3 border-foreground shadow-[4px_4px_0px_var(--color-comic-shadow)] rotate-[-1.5deg] transition-transform duration-300 hover:scale-[1.04]"
+              className="w-full h-[200px] md:h-[260px] object-cover rounded-2xl md:rounded-[24px] shadow-md transition-transform duration-300 hover:scale-[1.02]"
             />
             <img
               src="https://images.unsplash.com/photo-1763732397953-7866a2dd8289?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHw2fHxtYW5nYSUyMHBhZ2VzJTIwYmxhY2slMjB3aGl0ZSUyMGNvbWljJTIwYm9vayUyMHBhbmVscyUyMGlua3xlbnwxfHx8fDE3ODAwMjQ5NjV8MA&ixlib=rb-4.1.0&q=80&w=600"
               alt="Open manga booklet"
-              className="w-full h-[90px] md:h-[110px] object-cover border-3 border-foreground shadow-[3px_3px_0px_var(--color-comic-shadow)] rotate-[3deg] transition-transform duration-300 hover:scale-[1.04]"
+              className="w-full h-[90px] md:h-[110px] object-cover rounded-2xl md:rounded-[24px] shadow-md transition-transform duration-300 hover:scale-[1.02]"
             />
           </div>
         </div>
@@ -130,7 +130,7 @@ export function HomePage() {
           <div className="bg-primary/10 text-primary text-[10px] md:text-xs font-bold tracking-widest uppercase px-4 py-2 rounded-full w-fit">
             Manga Production & Publishing Management Platform
           </div>
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] text-foreground manga-title">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] text-foreground">
             Professional Manga <br />
             <span className="text-primary">Creative Workflow</span>
           </h1>
@@ -156,8 +156,8 @@ export function HomePage() {
             )}
           </div>
 
-          <div className="pt-6 w-full flex justify-start lg:justify-end">
-            <div className="bg-card p-4 sm:p-6 rotate-[-1.5deg] flex items-center gap-6 sm:gap-8 md:gap-12">
+          <div className="border-t border-border/60 pt-6 w-full flex justify-start lg:justify-end">
+            <div className="bg-card p-4 sm:p-6 rounded-2xl border border-border/60 shadow-sm flex items-center gap-6 sm:gap-8 md:gap-12">
               <div>
                 <div className="text-xl sm:text-2xl md:text-3xl font-extrabold text-foreground">500+</div>
                 <div className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-0.5">

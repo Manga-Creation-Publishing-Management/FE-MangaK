@@ -13,9 +13,7 @@ export function useUpdateTaskAssistant(taskId, currentAssistantId, currentAssist
     const fetchTaskAssistants = async () => {
         try {
             const response = await taskService.getAssistantList("Assistant");
-            console.log("Fetch assistants response:", response);
             const data = response?.data || response?.data?.data || [];
-            console.log("Extracted assistant list data:", data);
             setTaskAssistantList(data);
             return data;
         } catch (error) {

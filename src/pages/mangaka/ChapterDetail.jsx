@@ -32,11 +32,6 @@ export function ChapterDetail() {
   const seriesId = useLocation().state?.seriesId;
   const chapterId = useLocation().state?.chapterId;
   const currentRole = useLocation().state?.role;
-
-  // const validSeriesData = seriesData.find(item => String(item.id) == String(seriesIdFromState))
-
-  // const validChapterData = chapterList.find(item => String(item.id) == String(chapterId))
-
   const { progress } = useProgressing(chapterId);
 
   const { chapterDetail,
@@ -52,12 +47,9 @@ export function ChapterDetail() {
   const today = dayjs().utc(true);
   const deadlineObj = dayjs(chapterDetail?.deadline).utc(true);
   const foramttedDeadline = dayjs(chapterDetail?.deadline).utc(true).format('DD/MM/YYYY HH:mm')
-  console.log(foramttedDeadline);
 
   const isOverdue = deadlineObj.isBefore(today)
 
-  console.log(isOverdue);
-  console.log(chapterDetail);
   const {
     isEditingManuscript,
     manuscriptFile,
@@ -404,7 +396,6 @@ export function ChapterDetail() {
                   </button>
                 )}
 
-                {console.log("Coi chapter ID: ", chapterDetail?.chapterId)}
 
               </div>
             </>

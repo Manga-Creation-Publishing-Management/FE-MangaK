@@ -54,7 +54,6 @@ export function useCreateChapter(seriesId, onClose, onReload) {
 
 
   const handleChange = (e) => {
-    // console.log(e);
     const name = e.target.name;
     const value = e.target.value;
     setChapterListForm({
@@ -85,13 +84,7 @@ export function useCreateChapter(seriesId, onClose, onReload) {
     // 2. Append các chuỗi text thông thường (Lưu ý: Viết hoa chữ cái đầu y hệt Swagger)
     formDataToSend.append("Title", formElement.elements["Title"].value);
     formDataToSend.append("Summary", formElement.elements["Summary"].value);
-
     // 3. Xử lý định dạng Deadline và append vào FormData
-    // const rawDeadline = formElement.elements["deadline"].value;
-    // if (rawDeadline) {
-    //   const formattedDeadline = dayjs(rawDeadline).toISOString();
-    //   formDataToSend.append("Deadline", formattedDeadline);
-    // }
 
     // 4. Append FILE NHỊ PHÂN thực tế (Lấy từ state storyFile đã chọn)
     if (storyFile) {
@@ -99,7 +92,6 @@ export function useCreateChapter(seriesId, onClose, onReload) {
       formDataToSend.append("ManuscriptFileUrl", storyFile);
     }
 
-    // console.log("du lieu tra ve", chapterData);
     try {
       // 4. Gọi qua API client mới: api.post chứ không dùng post() lẻ loi nữa
       const results = await chaptersService.createChapter(seriesId, formDataToSend);
@@ -113,9 +105,6 @@ export function useCreateChapter(seriesId, onClose, onReload) {
           onReload();
         }, 0);
       }
-      // } else {
-      //   showAlert(results?.Message || "Failed to create chapter", "error");
-      // }
     } catch (error) {
       showAlert(error.response?.data?.Message || "Error creating chapter", "error");
       console.error("Error:", error);

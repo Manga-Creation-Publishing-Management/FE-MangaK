@@ -25,16 +25,7 @@ export function LoginForm() {
                     <label className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
                         Email
                     </label>
-                    <div
-                        className="w-full bg-background rounded-xl px-4 py-3 flex items-center gap-3 transition-all"
-                        style={{
-                            borderWidth: '3px',
-                            borderStyle: 'solid',
-                            borderImageSource: 'var(--manga-border-input)',
-                            borderImageSlice: 12,
-                            borderImageRepeat: 'stretch',
-                        }}
-                    >
+                    <div className="w-full bg-input-background border border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 rounded-xl px-4 py-3 flex items-center gap-3 transition-all">
                         <User size={18} className="text-muted-foreground/80 shrink-0" />
                         <input
                             type="email"
@@ -42,8 +33,7 @@ export function LoginForm() {
                             placeholder="Enter email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="text-foreground bg-transparent placeholder-muted-foreground/70 outline-none w-full text-sm font-medium !border-none !shadow-none !p-0"
-                            style={{ border: 'none', outline: 'none', boxShadow: 'none', background: 'transparent', padding: 0 }}
+                            className="bg-transparent text-foreground placeholder-muted-foreground/70 outline-none w-full text-sm font-medium"
                         />
                     </div>
                 </div>
@@ -55,16 +45,7 @@ export function LoginForm() {
                         </label>
                     </div>
 
-                    <div
-                        className="w-full bg-background rounded-xl px-4 py-3 flex items-center gap-3 transition-all"
-                        style={{
-                            borderWidth: '3px',
-                            borderStyle: 'solid',
-                            borderImageSource: 'var(--manga-border-input)',
-                            borderImageSlice: 12,
-                            borderImageRepeat: 'stretch',
-                        }}
-                    >
+                    <div className="w-full bg-input-background border border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 rounded-xl px-4 py-3 flex items-center gap-3 transition-all">
                         <Lock size={18} className="text-muted-foreground/80 shrink-0" />
                         <input
                             required
@@ -72,14 +53,12 @@ export function LoginForm() {
                             placeholder="Enter password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="text-foreground bg-transparent placeholder-muted-foreground/70 outline-none w-full text-sm font-medium !border-none !shadow-none !p-0"
-                            style={{ border: 'none', outline: 'none', boxShadow: 'none', background: 'transparent', padding: 0 }}
+                            className="bg-transparent text-foreground placeholder-muted-foreground/70 outline-none w-full text-sm font-medium"
                         />
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="toggle-btn text-muted-foreground hover:text-foreground shrink-0 focus:outline-none cursor-pointer !border-none !shadow-none !bg-transparent p-1"
-                            style={{ border: 'none', boxShadow: 'none', background: 'transparent' }}
+                            className="text-muted-foreground hover:text-foreground shrink-0 focus:outline-none cursor-pointer p-1"
                         >
                             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>

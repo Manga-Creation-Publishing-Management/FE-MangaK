@@ -129,13 +129,12 @@ export function useChapterAnnotation(onClose, initialFeedbackJson = null) {
       };
     });
 
-    console.log("TEST Combined Annotations JSON:", JSON.stringify(combinedAnnotations));
     try {
       await feedbackService.sendAnnotation(seriesId || null, chapterId || null, taskId || null, JSON.stringify(combinedAnnotations), "EditPDF");
       showAlert("Annotation submitted successfully!");
       return true;
     } catch (err) {
-      console.log("TEST error:", err)
+      console.error("Error sending annotation:", err);
       showAlert("Annotation submission failed!");
       return false;
     }

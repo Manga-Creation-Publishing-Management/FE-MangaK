@@ -25,8 +25,6 @@ export function TaskDetail() {
   const taskId = useLocation().state?.taskId;
   const role = useLocation().state?.role;
 
-  console.log("ss", taskId);
-
   const {
     taskDetail,
     storyFile,
@@ -59,7 +57,6 @@ export function TaskDetail() {
     }
   });
 
-  console.log("sss", taskDetail);
 
   //các state quản lí hiển thị pop-up
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);

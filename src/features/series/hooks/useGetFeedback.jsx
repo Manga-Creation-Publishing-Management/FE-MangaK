@@ -14,8 +14,6 @@ export function useGetFeedback(enabled = true) {
         async function getFeedback() {
             try {
                 const result = await feedbackService.getAllFeedback();
-
-                console.log(`Feedback result: ${result}`);
                 setFeedbackData(result);
             }
             catch (error) {

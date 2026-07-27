@@ -52,8 +52,6 @@ export function SeriesDetail() {
     }
   }
 
-  console.log("roleFromState", roleFromState);
-
   // Hook dùng để lấy danh sách thể loại (genre)
   const { genreList } = useCreateSeries();
 
@@ -114,21 +112,6 @@ export function SeriesDetail() {
   // Kiểm tra xem user hiện tại có phải là Tantou hay Editorial không (liên quan đến tính năng phê duyệt)
   const isTantou = normalizedRole === "tantou";
   const isEditorial = normalizedRole === "editorial";
-
-  console.log(`Is tantou? ${isTantou}`);
-
-  // Log debug để kiểm tra quá trình render
-  console.log("SeriesDetail render debug:", {
-    detailData,
-    currentStatus,
-    normalizedStatus,
-    roleFromState,
-    normalizedRole,
-    isTantou,
-    isEditorial,
-    showPanel: (((isTantou) && (normalizedStatus === 'processing'))
-      || ((isEditorial) && (normalizedStatus === 'pending')))
-  });
 
   // Tùy chỉnh dòng chữ trên nút Phê duyệt / Từ chối dựa trên role
   const approveText = isTantou
@@ -301,7 +284,6 @@ export function SeriesDetail() {
           <div className="pt-6">
             <ChapterList roleName={roleFromState} seriesData={detailData} />
           </div>
-          {console.log("Checkrolehientai:", roleFromState)}
 
         </div>
 

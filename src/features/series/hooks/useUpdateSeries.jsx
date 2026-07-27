@@ -82,7 +82,6 @@ export function useUpdateSeries() {
         isApproved: false, // Flag đánh dấu từ chối
         note: finalFeedback
       };
-      // console.log("----------!Feedback text debug: ", feedback);
 
       // Cả 2 role khi từ chối đều đẩy truyện về trạng thái "rejected", 
       // tùy từng backend config nhưng hàm gọi API tương tự như bước approve.
