@@ -3,7 +3,6 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import { Undo, Brush, Type, X } from "lucide-react";
-// import { KonvaDraw } from "./KonvaDraw";
 import { useChapterAnnotation } from "../../features/chapters/hooks/useChapterAnnotation";
 
 // Kích hoạt Web Worker để thư viện react-pdf xử lý PDF ở một luồng độc lập
@@ -17,41 +16,6 @@ export function PreviewModal({ isOpen, onClose, fileUrl, role }) {
         setNumPages(numPages);
     }
 
-    // const {
-    // tool,
-    // setTool,
-    // annotationData,
-    // annotationText,
-    // textInput,
-    // setTextInput,
-    // brushColor,
-    // setBrushColor,
-    // pageNumber,
-    // setPageNumber,
-    // pageWidth,
-    // setPageWidth,
-    // pageHeight,
-    // isPageLoaded,
-    // setIsPageLoaded,
-    // numPages,
-    // handleUndo,
-    // handleClearPage,
-    // setPageLines,
-    // setPageTexts,
-    //     closeModal,
-    //     handleBackdropClick,
-    //     onPageLoadSuccess,
-    //     onDocumentLoadSuccess,
-    // } = useChapterAnnotation(onClose);
-
-    // const containerRef = useRef(null);
-
-    // useEffect(() => {
-    //     if (isOpen && containerRef.current) {
-    //         // 32px cho phần padding 2 bên (p-4 = 16px * 2)
-    //         setPageWidth(containerRef.current.clientWidth - 32);
-    //     }
-    // }, [isOpen, setPageWidth]);
 
     if (!isOpen) return null;
 
@@ -87,33 +51,7 @@ export function PreviewModal({ isOpen, onClose, fileUrl, role }) {
                         }
                     >
                         <div className="relative">
-                            <Page
-                                pageNumber={pageNumber}
-                            // width={pageWidth}
-                            // onLoadSuccess={onPageLoadSuccess}
-                            // loading={
-                            //     <div className="flex flex-col items-center justify-center absolute inset-0 text-muted-foreground">
-                            //         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                            //         <p className="text-sm font-medium mt-2">Loading page {pageNumber}...</p>
-                            //     </div>
-                            // }
-                            />
-                            {/* {isPageLoaded && (
-                                <div className="absolute inset-0 z-20">
-                                    <KonvaDraw
-                                        width={pageWidth}
-                                        height={pageHeight}
-                                        tool={tool}
-                                        textInput={textInput}
-                                        onTextPlaced={() => setTextInput('')}
-                                        lines={annotationData[pageNumber] || []}
-                                        setLines={(newLines) => setPageLines(pageNumber, newLines)}
-                                        texts={annotationText[pageNumber] || []}
-                                        setTexts={(newTexts) => setPageTexts(pageNumber, newTexts)}
-                                        color={brushColor}
-                                    />
-                                </div>
-                            )} */}
+                            <Page pageNumber={pageNumber} />
                         </div>
                     </Document>
                 </div>
@@ -141,15 +79,7 @@ export function PreviewModal({ isOpen, onClose, fileUrl, role }) {
                     </div>
                 )}
 
-                {/* Nút Submit Annotation */}
-                {/* <div className="w-full border-t border-border pt-4 mt-2">
-                    <button
-                        onClick={() => handleSubmitAnnotation(seriesId, chapterId, taskId, role)}
-                        className="w-full py-3 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-all shadow-md cursor-pointer hover:shadow-lg text-sm"
-                    >
-                        Submit Annotation
-                    </button>
-                </div> */}
+
 
             </div>
         </div>

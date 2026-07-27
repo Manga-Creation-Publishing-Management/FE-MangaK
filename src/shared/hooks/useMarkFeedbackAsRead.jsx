@@ -6,7 +6,7 @@ export function useMarkFeedbackAsRead() {
         try {
             const isSuccess = await feedbackService.putFeedbackAsRead(feedbackId);
             if (isSuccess) {
-                console.log(`Marked feedback ${feedbackId} as read`);
+                // Success
             }
         } catch (error) {
             console.error("Failed to mark feedback as read:", error);

@@ -51,9 +51,7 @@ export function useUpdateManuscript(seriesId, chapterId, onUpdateSuccess) {
     try {
       const formData = new FormData();
       formData.append("ManuscriptFileUrl", manuscriptFile);
-      
       // Bỏ trường Status đi để API không tưởng đây là hành động submit chapter
-      // formData.append("Status", "Created");
 
       // Append TotalPage để API không báo lỗi (nếu API vẫn bắt buộc)
       if (pageNums > 0) {

@@ -48,7 +48,6 @@ export function useTaskDetail(taskId, role) {
     setIsLoading(true);
     try {
       const response = await taskService.claimTask(taskId, "Processing");
-      console.log("Update status thành công:", response);
 
       // Cập nhật state taskDetail với status mới
       setTaskDetail({
@@ -74,7 +73,6 @@ export function useTaskDetail(taskId, role) {
     setIsLoading(true);
     try {
       const response = await taskService.denyTask(taskId, "Rejected");
-      console.log("Update status thành công:", response);
 
       // Cập nhật state taskDetail với status mới
       setTaskDetail({
@@ -100,7 +98,6 @@ export function useTaskDetail(taskId, role) {
     setIsLoading(true);
     try {
       const response = await taskService.approvedTask(taskId, feedback);
-      console.log("Update status thành công:", response);
 
       // Cập nhật state taskDetail với status mới
 
@@ -133,7 +130,6 @@ export function useTaskDetail(taskId, role) {
         ? feedback 
         : "Annotation feedback added by Mangaka";
       const response = await taskService.rejectTask(taskId, finalFeedback);
-      console.log("Update status thành công:", response);
 
       // Cập nhật state taskDetail với status mới
 
@@ -158,7 +154,6 @@ export function useTaskDetail(taskId, role) {
     setIsLoading(true);
     try {
       const response = await taskService.unsatisfiedTask(taskId, feedback, salaryPercentage);
-      console.log("Update status thành công:", response);
 
       showAlert(`Unsatisfied Task set with salary percentage: ${salaryPercentage}%`);
       handleReload();
@@ -186,14 +181,12 @@ export function useTaskDetail(taskId, role) {
       formData.append("TaskId", taskId);
       formData.append("SubmittedFileUrl", storyFile);
       const response = await taskService.submitTask(formData);
-      console.log("Submit task thành công:", response);
 
       // Cập nhật lại status hiển thị thành "Submitted" (hoặc trạng thái tương ứng phía Backend)
 
 
       showAlert("Submitted task successfully!");
       handleReload();
-      // setStoryFile(null); // Reset lại file đã chọn sau khi nộp thành công
     } catch (error) {
       console.error("Lỗi khi submit task:", error);
       showAlert("Failed to submit task: " + error.message);

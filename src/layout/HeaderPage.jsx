@@ -89,7 +89,7 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
                         <div className="md:hidden">
                             <button
                                 onClick={onToggleMobileSidebar}
-                                className="p-2 text-muted-foreground hover:text-foreground border border-sidebar-border transition-colors cursor-pointer toggle-btn"
+                                className="p-2 text-muted-foreground hover:text-foreground border border-sidebar-border rounded-lg transition-colors cursor-pointer"
                                 title="Open Navigation"
                             >
                                 <PanelLeft size={22} />
@@ -125,7 +125,7 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
                         <div className="bell-container relative">
                             <button
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                className="relative flex text-muted-foreground hover:text-accent p-2 transition-colors cursor-pointer toggle-btn"
+                                className="relative flex text-muted-foreground hover:text-accent p-2 rounded-lg transition-colors cursor-pointer hover:bg-muted/50"
                                 title="Feedback Mailbox"
                             >
                                 <div className="content-center">

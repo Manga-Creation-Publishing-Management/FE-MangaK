@@ -5,7 +5,6 @@ import {
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router';
 import { Logo } from '@/shared/components/Logo';
-import { Mascot } from '@/shared/components/Mascot';
 
 export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
   const location = useLocation();
@@ -64,9 +63,9 @@ export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
             onClick={() => {
               if (onCloseMobile) onCloseMobile();
             }}
-            className={`flex items-center gap-3 px-3 py-2.5 transition-colors unique-sidebar-item ${isActive
-              ? 'unique-sidebar-item-active'
-              : 'text-sidebar-foreground hover:bg-sidebar-accent rounded-md'
+            className={`flex items-center gap-3 px-3 py-2.5 transition-colors rounded-md ${isActive
+              ? 'bg-sidebar-primary text-sidebar-primary-foreground font-medium shadow-xs'
+              : 'text-sidebar-foreground hover:bg-sidebar-accent'
               } ${isCollapsed && 'justify-center'}`}
             title={isCollapsed ? item.label : undefined}
           >
@@ -88,27 +87,24 @@ export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
       )}
 
       <div
-        className={`fixed inset-y-0 left-0 z-[70] w-64 bg-sidebar p-4 manga-sidebar flex flex-col transition-transform duration-300 md:hidden ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed inset-y-0 left-0 z-[70] w-64 bg-sidebar border-r border-sidebar-border p-4 flex flex-col transition-transform duration-300 md:hidden ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
       >
         <div className="flex items-center justify-between mb-6 pb-2 border-b border-sidebar-border">
           <Logo size="md" showText={true} to={`/${userRole}`} />
           <button
             onClick={onCloseMobile}
-            className="p-1.5 text-sidebar-foreground hover:bg-sidebar-accent border border-sidebar-border transition-colors shrink-0 toggle-btn"
+            className="p-1.5 text-sidebar-foreground hover:bg-sidebar-accent border border-sidebar-border rounded-md transition-colors shrink-0"
             title="Close menu"
           >
             <X size={20} />
           </button>
         </div>
         {renderNavItems(false)}
-        <div className="mt-auto shrink-0">
-          <Mascot userRole={userRole} isMobile={true} isMobileOpen={isMobileOpen} />
-        </div>
       </div>
 
       <div
-        className={`hidden md:flex bg-sidebar manga-sidebar h-screen p-4 transition-all duration-300 relative z-10 flex-col shrink-0 ${isOpen ? 'w-60' : 'w-20'
+        className={`hidden md:flex bg-sidebar border-r border-sidebar-border h-screen p-4 transition-all duration-300 relative z-10 flex-col shrink-0 ${isOpen ? 'w-60' : 'w-20'
           }`}
       >
         <div className={`flex items-center mb-6 ${isOpen ? 'justify-start px-1' : 'justify-center'}`}>
@@ -116,13 +112,9 @@ export function Sidebar({ userRole, isMobileOpen, onCloseMobile }) {
         </div>
         {renderNavItems(!isOpen)}
 
-        <div className="mt-auto shrink-0">
-          <Mascot userRole={userRole} isOpen={isOpen} />
-        </div>
-
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="absolute top-1/2 -translate-y-1/2 right-0 z-20 w-6 h-10 p-0 text-sidebar-foreground hover:bg-sidebar-accent transition-colors shrink-0 toggle-btn"
+          className="absolute top-1/2 -translate-y-1/2 right-0 z-20 w-6 h-10 p-0 text-sidebar-foreground hover:bg-sidebar-accent border border-sidebar-border rounded-l-md transition-colors shrink-0 flex items-center justify-center bg-sidebar"
           title={isOpen ? "Close sidebar" : "Open sidebar"}
         >
           {isOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
