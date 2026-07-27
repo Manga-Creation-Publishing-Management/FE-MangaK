@@ -17,8 +17,8 @@ export function ThemeProvider({ children }) {
     const saved = window.localStorage.getItem('mangak-theme')
     if (saved === 'dark' || saved === 'light') return saved
     
-    // Nếu chưa lưu, kiểm tra xem hệ điều hành của máy user đang để Dark mode không
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    // Nếu chưa có lựa chọn được lưu, mặc định luôn là theme sáng ('light')
+    return 'light'
   })
 
   // useEffect này sẽ chạy mỗi khi state 'theme' thay đổi
