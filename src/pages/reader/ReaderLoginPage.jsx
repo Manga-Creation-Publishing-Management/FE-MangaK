@@ -11,7 +11,6 @@ export function ReaderLoginPage() {
     const handleSucessLogin = async (credentialResponse) => {
         try {
             const idToken = credentialResponse.credential;
-            console.log(idToken);
 
             const response = await authService.loginGoogle(idToken);
 
@@ -21,7 +20,6 @@ export function ReaderLoginPage() {
             }
 
             showAlert("Login with Google successfully!");
-            console.log("Login success!");
 
             localStorage.setItem("accessToken", response.data?.accessToken);
             localStorage.setItem("refreshToken", response.data?.refreshToken || "");
@@ -38,13 +36,9 @@ export function ReaderLoginPage() {
             };
             localStorage.setItem("user", JSON.stringify(user));
 
-            // in ra để check xem thông tin nhận về
-            console.log("Access token:", localStorage.getItem('accessToken'));
-            console.log("Info user:", response.data);
             navigate("/reader");
         } catch (error) {
             showAlert("Login with Google failed!");
-            console.log("Login with Google failed!");
             console.error("login error: ", error);
         }
     }
@@ -110,11 +104,10 @@ export function ReaderLoginPage() {
                     <BackButton url='/' />
                     <div style={gridStyle}
                         className="lg:mx-20 col-span-1 md:col-span-7 flex flex-col items-center justify-center p-6 px-12 md:p-12 relative">
-                        <div className="w-full bg-background border border-border rounded-xl p-8
-                        shadow-xl transition-colors duration-300 relative">
+                        <div className="w-full bg-card rounded-2xl p-8 transition-colors duration-300 relative">
                             <div className="space-y-2 mb-8">
                                 <h1 className="text-2xl font-extrabold tracking-tight text-foreground">
-                                    Join in Manga<span className="text-accent">K</span>
+                                    Join in <span className="text-primary [font-family:inherit]">Manga</span><span className="text-accent [font-family:inherit]">K</span>
                                 </h1>
 
                                 <p className="text-xs md:text-sm text-muted-foreground">
@@ -123,10 +116,7 @@ export function ReaderLoginPage() {
                             </div>
                             <GoogleLogin
                                 onSuccess={handleSucessLogin}
-
-                                onError={() => {
-                                    console.log("Omg, login failed");
-                                }}
+                                onError={() => {}}
                             />
                         </div >
                     </div>

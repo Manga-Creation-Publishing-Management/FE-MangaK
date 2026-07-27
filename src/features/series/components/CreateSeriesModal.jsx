@@ -54,7 +54,6 @@ export default function CreateSeriesModal({ onClose, onReload }) {
               type="text"
               className="w-full px-4 py-2 bg-input-background text-foreground rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Enter series name"
-              required
               onChange={handleChange}
               name="title" // Đặt name chuẩn để handle thay đổi trong hook
             />
@@ -176,13 +175,13 @@ export default function CreateSeriesModal({ onClose, onReload }) {
               ) : (
                 <>
                   <p className="text-muted-foreground">Click to upload or drag and drop</p>
-                  <p className="text-sm text-muted-foreground mt-1">PDF, ZIP up to 50MB</p> {/* Lưu ý: ở input dưới là pdf,zip nên text nên đổi tương ứng */}
+                  <p className="text-sm text-muted-foreground mt-1">PDF, ZIP up to 50MB</p>
                 </>
               )}
               {/* Thẻ input file bị ẩn */}
               <input
                 type="file"
-                accept=".pdf,.zip" // Chỉ nhận file PDF hoặc ZIP
+                accept=".pdf,.zip"
                 className="hidden"
                 ref={storyInputRef}
                 onChange={handleStoryChange}
@@ -191,18 +190,18 @@ export default function CreateSeriesModal({ onClose, onReload }) {
           </div>
 
           {/* Vùng chứa các nút điều khiển form (Hủy / Tạo mới) */}
-          <div className="flex justify-end gap-3 pt-4">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4">
             <button
               onClick={onClose}
               type="button"
-              className="cursor-pointer px-6 py-2 rounded-lg border border-border text-foreground hover:bg-muted transition-colors"
+              className="cursor-pointer px-6 py-2 rounded-lg border border-border text-foreground hover:bg-muted transition-colors w-full sm:w-auto"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading} // Khóa nút bấm khi đang lưu để tránh spam
-              className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:cursor-not-allowed"
+              className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:cursor-not-allowed w-full sm:w-auto"
             >
               {isLoading ? "Creating..." : "Create"}
             </button>

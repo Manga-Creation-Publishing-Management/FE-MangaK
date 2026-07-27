@@ -10,7 +10,7 @@ export function LoginForm() {
     } = LoginHook();
 
     return (
-        <div className="w-full bg-background border border-border rounded-xl p-8 shadow-xl transition-colors duration-300 relative">
+        <div className="w-full bg-card rounded-2xl p-8 transition-colors duration-300 relative">
             <div className="space-y-2 mb-8">
                 <h1 className="text-2xl font-extrabold tracking-tight text-foreground">
                     Sign in to Manga<span className="text-accent">K</span>
@@ -25,7 +25,16 @@ export function LoginForm() {
                     <label className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
                         Email
                     </label>
-                    <div className="w-full bg-input-background border border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 rounded-xl px-4 py-3 flex items-center gap-3 transition-all">
+                    <div
+                        className="w-full bg-background rounded-xl px-4 py-3 flex items-center gap-3 transition-all"
+                        style={{
+                            borderWidth: '3px',
+                            borderStyle: 'solid',
+                            borderImageSource: 'var(--manga-border-input)',
+                            borderImageSlice: 12,
+                            borderImageRepeat: 'stretch',
+                        }}
+                    >
                         <User size={18} className="text-muted-foreground/80 shrink-0" />
                         <input
                             type="email"
@@ -33,7 +42,8 @@ export function LoginForm() {
                             placeholder="Enter email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="bg-transparent text-foreground placeholder-muted-foreground/70 outline-none w-full text-sm font-medium"
+                            className="text-foreground bg-transparent placeholder-muted-foreground/70 outline-none w-full text-sm font-medium !border-none !shadow-none !p-0"
+                            style={{ border: 'none', outline: 'none', boxShadow: 'none', background: 'transparent', padding: 0 }}
                         />
                     </div>
                 </div>
@@ -45,7 +55,16 @@ export function LoginForm() {
                         </label>
                     </div>
 
-                    <div className="w-full bg-input-background border border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 rounded-xl px-4 py-3 flex items-center gap-3 transition-all">
+                    <div
+                        className="w-full bg-background rounded-xl px-4 py-3 flex items-center gap-3 transition-all"
+                        style={{
+                            borderWidth: '3px',
+                            borderStyle: 'solid',
+                            borderImageSource: 'var(--manga-border-input)',
+                            borderImageSlice: 12,
+                            borderImageRepeat: 'stretch',
+                        }}
+                    >
                         <Lock size={18} className="text-muted-foreground/80 shrink-0" />
                         <input
                             required
@@ -53,12 +72,14 @@ export function LoginForm() {
                             placeholder="Enter password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="bg-transparent text-foreground placeholder-muted-foreground/70 outline-none w-full text-sm font-medium"
+                            className="text-foreground bg-transparent placeholder-muted-foreground/70 outline-none w-full text-sm font-medium !border-none !shadow-none !p-0"
+                            style={{ border: 'none', outline: 'none', boxShadow: 'none', background: 'transparent', padding: 0 }}
                         />
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="text-muted-foreground hover:text-foreground shrink-0 focus:outline-none cursor-pointer"
+                            className="toggle-btn text-muted-foreground hover:text-foreground shrink-0 focus:outline-none cursor-pointer !border-none !shadow-none !bg-transparent p-1"
+                            style={{ border: 'none', boxShadow: 'none', background: 'transparent' }}
                         >
                             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>

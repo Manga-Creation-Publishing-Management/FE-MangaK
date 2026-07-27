@@ -5,7 +5,7 @@ export function UpcomingReleases({ upcomingReleases }) {
     <div className="bg-card border border-border rounded-xl p-6">
       <div className="flex items-center gap-2 mb-5">
         <CalendarDays size={20} className="text-primary" />
-        <h2 className="text-lg font-semibold text-card-foreground">Upcoming Releases</h2>
+        <h3 className="text-lg font-semibold text-card-foreground">Upcoming Releases</h3>
       </div>
 
       {upcomingReleases.length === 0 ? (

@@ -114,6 +114,7 @@ export function AppRoutes() {
       <Route element={<ProtectedRoute allowedRole="reader" />}>
         <Route path="/reader" element={<Layout roleName="reader" />}>
           <Route index element={<ReaderDashboard />} />
+          <Route path="series" element={<Navigate to="/reader" replace />} />
           <Route path="series/:id" element={<SeriesDetail />} />
         </Route>
       </Route>

@@ -17,11 +17,13 @@ export function useAdminDashboard() {
       const systemList = Array.isArray(userListRes) ? userListRes : (userListRes.data || []);
       const readerList = Array.isArray(readerListRes) ? readerListRes : (readerListRes.data || []);
 
-      const mappedSystem = systemList.map((user) => ({
-        id: user.id || user.userId,
-        role: apiRoleMap[user.role?.toLowerCase()] || user.role?.toLowerCase() || "mangaka",
-        status: user.isActive === false || user.status?.toLowerCase() === 'suspended' || user.status?.toLowerCase() === 'inactive' ? 'inactive' : 'active',
-      }));
+      const mappedSystem = systemList
+        .map((user) => ({
+          id: user.id || user.userId,
+          role: apiRoleMap[user.role?.toLowerCase()] || user.role?.toLowerCase() || "mangaka",
+          status: user.isActive === false || user.status?.toLowerCase() === 'suspended' || user.status?.toLowerCase() === 'inactive' ? 'inactive' : 'active',
+        }))
+        .filter((user) => user.role !== "admin");
 
       const mappedReaders = readerList.map((user) => ({
         id: user.id || user.userId,

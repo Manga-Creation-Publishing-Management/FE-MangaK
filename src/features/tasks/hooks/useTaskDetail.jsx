@@ -47,7 +47,7 @@ export function useTaskDetail(taskId, role) {
 
     setIsLoading(true);
     try {
-      const response = await taskService.updateTaskStatus(taskId, "Processing");
+      const response = await taskService.claimTask(taskId, "Processing");
       console.log("Update status thành công:", response);
 
       // Cập nhật state taskDetail với status mới
@@ -65,6 +65,32 @@ export function useTaskDetail(taskId, role) {
     }
   };
 
+  const handleDenyTask = async () => {
+    if (!taskId) {
+      showAlert("Task ID does not exist", "error");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await taskService.denyTask(taskId, "Rejected");
+      console.log("Update status thành công:", response);
+
+      // Cập nhật state taskDetail với status mới
+      setTaskDetail({
+        ...taskDetail,
+        status: "Rejected"
+      });
+
+      showAlert("You have rejected this task!");
+    } catch (error) {
+      console.error("Lỗi khi cập nhật status:", error);
+      showAlert("Update failed: " + error.message, "error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleApprovedTask = async () => {
     if (!taskId) {
       showAlert("Task ID does not exist");
@@ -73,7 +99,7 @@ export function useTaskDetail(taskId, role) {
 
     setIsLoading(true);
     try {
-      const response = await taskService.approvedTask(taskId);
+      const response = await taskService.approvedTask(taskId, feedback);
       console.log("Update status thành công:", response);
 
       // Cập nhật state taskDetail với status mới
@@ -90,15 +116,23 @@ export function useTaskDetail(taskId, role) {
     }
   };
 
-  const handleRejectTask = async () => {
+  const handleRejectTask = async (isAnnotation = false) => {
     if (!taskId) {
-      showAlert("Task ID does not exist");
+      showAlert("Task ID does not exist", "error");
+      return;
+    }
+
+    if (!isAnnotation && (!feedback || !feedback.trim())) {
+      showAlert("Please enter feedback before rejecting!", "error");
       return;
     }
 
     setIsLoading(true);
     try {
-      const response = await taskService.rejectTask(taskId, feedback);
+      const finalFeedback = feedback && feedback.trim() !== "" 
+        ? feedback 
+        : "Annotation feedback added by Mangaka";
+      const response = await taskService.rejectTask(taskId, finalFeedback);
       console.log("Update status thành công:", response);
 
       // Cập nhật state taskDetail với status mới
@@ -107,6 +141,27 @@ export function useTaskDetail(taskId, role) {
       handleReload();
 
 
+    } catch (error) {
+      console.error("Lỗi khi cập nhật status:", error);
+      showAlert("Update failed: " + error.message, "error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleUnsatisfiedTask = async (salaryPercentage) => {
+    if (!taskId) {
+      showAlert("Task ID does not exist");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await taskService.unsatisfiedTask(taskId, feedback, salaryPercentage);
+      console.log("Update status thành công:", response);
+
+      showAlert(`Unsatisfied Task set with salary percentage: ${salaryPercentage}%`);
+      handleReload();
     } catch (error) {
       console.error("Lỗi khi cập nhật status:", error);
       showAlert("Update failed: " + error.message);
@@ -153,12 +208,15 @@ export function useTaskDetail(taskId, role) {
     storyFile,
     storyInputRef,
     handleStoryChange,
-    handleGetTask,      // ← Thêm hàm này
     isLoading,
     feedback,
     setFeedback,
     handleSubmitTask,
     handleApprovedTask,
-    handleRejectTask
+    handleRejectTask,
+    handleDenyTask,
+    handleGetTask,
+    handleUnsatisfiedTask,
+    handleReload
   }
 }

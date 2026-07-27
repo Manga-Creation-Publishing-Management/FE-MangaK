@@ -3,6 +3,7 @@ import { X, Upload, FileImage } from 'lucide-react';
 import { useCreateTask } from '../hooks/useCreateTask';
 import { CustomSelect } from '@/shared/components/CustomSelect';
 import { useToast } from '../../../shared/hooks/useToast';
+import { useGetPageRange } from '../hooks/useGetPageRange';
 
 
 export default function CreateTaskModal({
@@ -48,11 +49,15 @@ export default function CreateTaskModal({
   const selectedChapter = (chapters || []).find(
     (item) => item.chapterId === selectedChapterId
   );
+  const { assignedRanges, isLoadingRanges } = useGetPageRange(selectedChapterId);
+
+
+
   return (
     <>
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
         <div className="bg-card rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-          <div className="sticky top-0 bg-card border-b border-border p-6 flex justify-between items-center">
+          <div className="sticky top-0 bg-card border-b border-border p-6 flex justify-between items-center z-10">
             <div className="text-2xl font-semibold text-card-foreground">Create New Task</div>
             <button
               onClick={onClose}
@@ -125,7 +130,7 @@ export default function CreateTaskModal({
                 id="page_range"
                 name="taskTitle"
                 className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                // placeholder="..."
+                placeholder="Enter description"
                 required
                 rows={3}
                 onInvalid={(e) => {
@@ -135,7 +140,7 @@ export default function CreateTaskModal({
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
               {/* Bên trái: Page Range */}
 
               <div>
@@ -152,6 +157,11 @@ export default function CreateTaskModal({
                   placeholder="Enter From Page"
                   required
                 />
+                {assignedRanges && (
+                  <div className="mt-2 text-sm text-gray-500  p-2 rounded">
+                    Assigned Ranges: <strong>{assignedRanges}</strong>
+                  </div>
+                )}
               </div>
               <div>
                 <div className='mb-2 text-l flex items-center gap-2'>
@@ -209,22 +219,18 @@ export default function CreateTaskModal({
               />
             </div>
 
-
-
-
-
-            <div className="flex justify-end gap-3 pt-4">
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4">
               <button
                 onClick={onClose}
                 type="button"
-                className="cursor-pointer px-6 py-2 rounded-lg border border-border text-foreground hover:bg-muted transition-colors"
+                className="cursor-pointer px-6 py-2 rounded-lg border border-border text-foreground hover:bg-muted transition-colors w-full sm:w-auto"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isLoading}
-                className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
               >
                 {isLoading ? "Creating..." : "Create"}
               </button>

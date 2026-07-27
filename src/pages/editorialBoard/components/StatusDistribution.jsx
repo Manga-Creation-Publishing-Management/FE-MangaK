@@ -5,7 +5,7 @@ export function StatusDistribution({ statusDistribution }) {
     <div className="bg-card border border-border rounded-xl p-6">
       <div className="flex items-center gap-2 mb-5">
         <BookOpen size={20} className="text-primary" />
-        <h2 className="text-lg font-semibold text-card-foreground">Series Status</h2>
+        <h3 className="text-lg font-semibold text-card-foreground">Series Status</h3>
       </div>
 
       {statusDistribution.length === 0 ? (

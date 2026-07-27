@@ -1,9 +1,10 @@
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useOutletContext } from "react-router";
 import { StatusBadge } from "@/shared/components/StatusBadge";
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import dayjs from 'dayjs';
 
-import { Download, Star, ChevronDown, FileText } from "lucide-react";
+
+import { ArrowLeft, Download, Star, ChevronDown, FileText, Loader2, X, SquarePen, Check } from "lucide-react";
 import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
 import { useChapterDetail } from "../../features/chapters/hooks/useChapterDetail";
 import { useUpdateChapter } from "../../features/chapters/hooks/useUpdateChapter";
@@ -13,7 +14,8 @@ import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
 import { AnnotationModal } from "../shared/AnnotationModal";
 import { FeedbackViewer } from "../shared/FeedbackViewer";
 import { useToast } from "@/shared/hooks/useToast";
-import { Breadcrumb } from "@/shared/components/Breadcrumb";
+import { useUpdateManuscript } from "../../features/chapters/hooks/useUpdateManuscript";
+
 
 // (Worker setup moved to AnnotationModal)
 
@@ -24,6 +26,7 @@ export function ChapterDetail() {
   // Hook dùng để quay lại trang trước đó
   const navigate = useNavigate();
   const { showAlert } = useToast();
+  const { setBreadcrumbItems } = useOutletContext();
 
   // Lấy seriesId và chapterId được truyền ngầm qua state khi gọi hàm navigate từ component cha (VD: ChapterList)
   const seriesId = useLocation().state?.seriesId;
@@ -41,7 +44,8 @@ export function ChapterDetail() {
     storyFile,
     storyInputRef, handleStoryChange,
     handleSubmitChapter,
-    isLoading
+    isLoading,
+    handleReload
   } = useChapterDetail(seriesId, chapterId);
   const { handleApprove, handleReject, feedback, setFeedback } = useUpdateChapter(seriesId, chapterId);
 
@@ -54,6 +58,18 @@ export function ChapterDetail() {
 
   console.log(isOverdue);
   console.log(chapterDetail);
+  const {
+    isEditingManuscript,
+    manuscriptFile,
+    isUpdating,
+    manuscriptInputRef,
+    handleStartEditManuscript,
+    handleCancelEditManuscript,
+    handleManuscriptChange,
+    handleSaveManuscript,
+  } = useUpdateManuscript(seriesId, chapterId, handleReload);
+
+
 
   //các state quản lí hiển thị pop-up
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
@@ -71,6 +87,8 @@ export function ChapterDetail() {
     setConfirmModalOpen(true);
   }
 
+
+
   const rolePrefix = currentRole?.toLowerCase() || "mangaka";
   const customBreadcrumb = [
     { label: rolePrefix.charAt(0).toUpperCase() + rolePrefix.slice(1), path: `/${rolePrefix}` },
@@ -79,37 +97,54 @@ export function ChapterDetail() {
     { label: chapterDetail?.chapterNumber ? `Chapter ${chapterDetail.chapterNumber}${chapterDetail.title ? `: ${chapterDetail.title}` : ''}` : "Chapter Detail" }
   ];
 
+  useEffect(() => {
+    if (chapterDetail) {
+      setBreadcrumbItems(customBreadcrumb);
+    }
+    return () => setBreadcrumbItems(null);
+  }, [chapterDetail?.seriesTitle, chapterDetail?.chapterNumber, chapterDetail?.title, rolePrefix]);
+
+  if (!chapterDetail) {
+    return (
+      <div className="flex justify-center items-center h-[70vh]">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+        <span className="ml-3 text-muted-foreground font-medium text-lg">Loading chapter details...</span>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="p-6 space-y-6">
-        <Breadcrumb items={customBreadcrumb} />
 
-      {/* Khung (Card) chứa thông tin chính của Chapter */}
-      <div className="bg-card border border-border rounded-xl p-8 space-y-4">
-          <div className="w-full bg-muted rounded-full h-6 overflow-hidden border border-border">
-            <div
-              className={`h-full rounded-full transition-all duration-300 ease-out flex items-center justify-start ps-2 text-xs font-bold text-white ${progress === 100 ? 'bg-success' : 'bg-info'
-                }`}
-              style={{ width: `${progress}%` }}
-            >
-              {/* Chỉ hiển thị số khi tiến độ lớn hơn 10% để tránh chữ bị tràn ra ngoài khi thanh quá ngắn */}
-              {`${progress}%`}
+        {/* Khung (Card) chứa thông tin chính của Chapter */}
+        <div className="bg-card border border-border rounded-xl p-8 space-y-4">
+          {chapterDetail?.status !== ("Published" || "Publishing") && (
+            <div className="w-full bg-muted rounded-full h-6 overflow-hidden border border-border">
+              <div
+                className={`h-full rounded-full transition-all duration-300 ease-out flex items-center justify-start ps-2 text-xs font-bold text-white ${progress === 100 ? 'bg-success' : 'bg-info'
+                  }`}
+                style={{ width: `${progress}%` }}
+              >
+                {/* Chỉ hiển thị số khi tiến độ lớn hơn 10% để tránh chữ bị tràn ra ngoài khi thanh quá ngắn */}
+                {`${progress}%`}
+              </div>
             </div>
-          </div>
+          )}
 
-          <div className="flex justify-between items-start">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
             {/* Cụm thông tin bên trái: Tiêu đề Chapter, Số thứ tự, Tóm tắt */}
-            <div>
-              <h1 className="font-semibold text-xl capitalize text-card-foreground">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h1>
+            <div className="min-w-0">
+              <h3 className="title-obelix font-semibold text-lg sm:text-xl capitalize text-card-foreground break-words">Chapter {chapterDetail?.chapterNumber}: {chapterDetail?.title}</h3>
               <div>
-                <p className="mt-3 text-foreground/80">{chapterDetail?.seriesTitle}</p>
+                <p className="mt-1 sm:mt-3 text-xs sm:text-sm text-muted-foreground">{chapterDetail?.seriesTitle}</p>
               </div>
             </div>
 
             {/* Cụm thông tin bên phải: Badge trạng thái (Status) và Ngày tải lên */}
-            <div className="flex flex-col items-end space-y-2">
+            <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-3 w-full sm:w-auto shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-border/40">
               <StatusBadge status={chapterDetail?.status.toLowerCase()} />
-              <div className="flex items-center gap-1 text-sm text-muted-foreground"><FileText size={16} /> Total pages: <span className="text-foreground font-medium">{chapterDetail?.totalPage}</span></div>
+              <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground"><FileText size={16} /> Total pages: <span className="text-foreground font-medium">{chapterDetail?.totalPage}</span></div>
             </div>
 
           </div>
@@ -129,7 +164,7 @@ export function ChapterDetail() {
             </div>
             <div className="md:col-span-4 space-y-2 ">
               <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
-                <h3 className="font-normal text-sm text-muted-foreground gap-2 tracking-wider"><span>Deadline</span>
+                <h3 className="font-normal text-sm text-muted-foreground  tracking-wider">Deadline
                   {chapterDetail?.status != ("Publishing" || "Scheduled") ? (
                     <>{isOverdue && <span className="text-destructive font-bold">(Overdue)</span>}</>
                   ) : (
@@ -170,20 +205,81 @@ export function ChapterDetail() {
 
             {currentRole.toLowerCase() === "mangaka" &&
               <div className=" md:col-span-6 space-y-2">
-                <h3 className="font-medium text-sm text-muted-foreground uppercase">Original Manuscript</h3>
-                <div className="border  border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center space-y-2 h-[100px]">
-                  <p className="text-xs text-muted-foreground">View the initial manuscript file here</p>
-                  <a
-                    href={chapterDetail?.manuscriptFileUrl}
-                    download
-                    className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-8 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
-                  >
-                    <Download size={16} />
-                    View Initial Manuscript
-                  </a>
+
+                {/* Header & Nút Edit */}
+                <div className="flex justify-between items-center w-full">
+                  <h3 className="font-medium text-sm text-muted-foreground uppercase">Original Manuscript</h3>
+                  {chapterDetail?.status === "Created" && (
+                    isEditingManuscript ? (
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={handleCancelEditManuscript}
+                          disabled={isUpdating}
+                          className="bg-secondary hover:bg-secondary/80 text-secondary-foreground p-1 rounded cursor-pointer transition-colors disabled:opacity-50"
+                        >
+                          <X size={14} />
+                        </button>
+                        <button
+                          onClick={handleSaveManuscript}
+                          disabled={isUpdating}
+                          className="bg-primary hover:bg-primary/90 text-primary-foreground p-1 rounded cursor-pointer transition-colors disabled:opacity-50"
+                        >
+                          {isUpdating ? "..." : <Check size={14} />}
+                        </button>
+                      </div>
+                    ) : (
+                      <span
+                        onClick={handleStartEditManuscript}
+                        className="cursor-pointer hover:bg-secondary/50 rounded-xl p-1 inline-flex items-center justify-center text-muted-foreground"
+                      >
+                        <SquarePen size={14} />
+                      </span>
+                    )
+                  )}
                 </div>
+
+                {/* Nội dung vùng chọn file / tải file */}
+                <div className="bg-muted/30 p-4 rounded-lg border border-border min-h-[100px] flex flex-col items-center justify-center text-center space-y-2">
+                  {isEditingManuscript ? (
+                    <div
+                      className="w-full flex flex-col items-center justify-center cursor-pointer h-full"
+                      onClick={() => manuscriptInputRef.current?.click()}
+                    >
+                      <input
+                        type="file"
+                        accept=".pdf,.zip"
+                        className="hidden"
+                        ref={manuscriptInputRef}
+                        onChange={handleManuscriptChange}
+                      />
+                      {manuscriptFile ? (
+                        <p className="text-primary font-medium text-sm truncate max-w-[250px]">
+                          {manuscriptFile.name}
+                        </p>
+                      ) : (
+                        <p className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                          Click to select new file
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-xs text-muted-foreground">View the initial manuscript file here</p>
+                      <a
+                        href={chapterDetail?.manuscriptFileUrl}
+                        download
+                        className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-8 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
+                      >
+                        <Download size={16} />
+                        View Initial Manuscript
+                      </a>
+                    </>
+                  )}
+                </div>
+
               </div>
             }
+
             {currentRole.toLowerCase() === "tantou" &&
 
               <div className=" md:col-span-6 space-y-2">
@@ -224,10 +320,10 @@ export function ChapterDetail() {
             {currentRole === "mangaka" ? (
               progress === 100 ? (
                 <>
-                  <h3 className="font-medium text-sm text-muted-foreground">Submit Your Work</h3>
+                  <h3 className="font-medium text-sm inline-flex items-center text-muted-foreground">Submit Your Work</h3>
                   {chapterDetail?.chapterFileUrl ? (
-                    <>
-                      <p className="text-xs text-muted-foreground">Download To Review</p>
+                    <div className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center h-[160px] gap-2">
+                      <p className="text-xs text-center text-muted-foreground">Submitted File</p>
                       <div className="flex flex-col gap-2 w-full items-center">
                         <a
                           href={chapterDetail?.chapterFileUrl}
@@ -238,7 +334,7 @@ export function ChapterDetail() {
                           Download File Here
                         </a>
                       </div>
-                    </>
+                    </div>
                   ) : (
                     <div
                       onClick={() => storyInputRef.current.click()}
@@ -252,7 +348,7 @@ export function ChapterDetail() {
                       ) : (
                         <>
                           <p className="text-muted-foreground">Click to upload file</p>
-                          <p className="text-sm text-muted-foreground mt-1">PNG, JPG up to 10MB</p>
+                          <p className="text-sm text-muted-foreground mt-1">PDF, ZIP up to 50MB</p>
                         </>
                       )}
                       <input
@@ -296,9 +392,7 @@ export function ChapterDetail() {
                     {isLoading ? "Submitting..." : "Submit Chapter"}
                   </button>
                 ) : (
-                  <button className="bg-secondary text-secondary-foreground  font-medium px-6 py-2.5 rounded-lg text-base transition-colors shadow-sm w-50 disabled:opacity-50 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed readonly " >
-                    Overdue
-                  </button>
+                  <></>
                 )
                 }
 

@@ -1,6 +1,6 @@
 import { feedbackService } from "../../../services/feedbackService";
 import { useToast } from "../../../shared/hooks/useToast";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export function useGetFeedback(enabled = true) {
 
@@ -10,7 +10,7 @@ export function useGetFeedback(enabled = true) {
 
     useEffect(() => {
         if (!enabled) return;
-        
+
         async function getFeedback() {
             try {
                 const result = await feedbackService.getAllFeedback();
@@ -26,7 +26,11 @@ export function useGetFeedback(enabled = true) {
         getFeedback();
     }, [enabled]);
 
+    const feedbackList = feedbackData?.data || [];
+    const unreadFeedbackCount = feedbackList?.filter(item => item.isRead === false).length;
+
     return {
+        unreadFeedbackCount,
         feedbackData
     };
 }

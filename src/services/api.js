@@ -75,8 +75,10 @@ async function request(endpoint, options = {}) {
     // Trả về dữ liệu nếu gọi API thành công
     return data;
   } catch (error) {
-    // Bắt và in ra lỗi mạng hoặc lỗi API để dễ debug
-    console.error(`API Error on ${url}:`, error);
+    // Bắt và in ra lỗi mạng hoặc lỗi API để dễ debug (nếu không bật cờ silent)
+    if (!options?.silent) {
+      console.error(`API Error on ${url}:`, error);
+    }
     throw error;
   }
 }

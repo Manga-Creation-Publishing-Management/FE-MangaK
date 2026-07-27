@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Plus, ShieldCheck } from "lucide-react";
-import { userService } from "../../services/userService.js";
+import { userService } from "@/services/userService.js";
 import { useToast } from "@/shared/hooks/useToast";
 
 import { apiRoleMap } from "./constants/adminConstants.js";
@@ -10,6 +10,9 @@ import { CreateAccountModal } from "./components/CreateAccountModal.jsx";
 import { ConfirmStatusModal } from "./components/ConfirmStatusModal.jsx";
 import { RolePermissionsModal } from "./components/RolePermissionsModal.jsx";
 
+import { getTotalPage } from "@/features/Pagination/hooks/getTotalPage";
+import { PaginationCustom } from "@/features/Pagination/components/PaginationCustom";
+
 export function AccountManagement() {
   const { showAlert } = useToast();
   const [users, setUsers] = useState([]);
@@ -17,6 +20,7 @@ export function AccountManagement() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterRole, setFilterRole] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
@@ -31,15 +35,17 @@ export function AccountManagement() {
         : await userService.getReaderList();
       const userList = Array.isArray(response) ? response : (response.data || []);
 
-      const mapped = userList.map((user) => ({
-        id: user.id || user.userId,
-        name: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.userName || 'N/A',
-        email: user.email || '',
-        phone: user.phoneNumber || user.phone || user.phone || '',
-        role: accountType === "readers" ? "reader" : apiRoleMap[user.role?.toLowerCase()] || user.role?.toLowerCase() || "mangaka",
-        status: user.isActive === false || user.status?.toLowerCase() === 'suspended' || user.status?.toLowerCase() === 'inactive' ? 'inactive' : 'active',
-        supervisorId: user.supervisorId || user.SupervisorId || null,
-      }));
+      const mapped = userList
+        .map((user) => ({
+          id: user.id || user.userId,
+          name: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.userName || 'N/A',
+          email: user.email || '',
+          phone: user.phoneNumber || user.phone || user.phone || '',
+          role: accountType === "readers" ? "reader" : apiRoleMap[user.role?.toLowerCase()] || user.role?.toLowerCase() || "mangaka",
+          status: user.isActive === false || user.status?.toLowerCase() === 'suspended' || user.status?.toLowerCase() === 'inactive' ? 'inactive' : 'active',
+          supervisorId: user.supervisorId || user.SupervisorId || null,
+        }))
+        .filter((user) => user.role !== "admin");
 
       setUsers(mapped);
     } catch (error) {
@@ -105,7 +111,12 @@ export function AccountManagement() {
     setSearchQuery("");
     setFilterRole("all");
     setFilterStatus("all");
+    setCurrentPage(1);
   }, [accountType]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, filterRole, filterStatus]);
 
   useEffect(() => {
     fetchTantouList();
@@ -120,6 +131,13 @@ export function AccountManagement() {
     const matchesStatus = filterStatus === "all" || u.status === filterStatus;
     return matchesSearch && matchesRole && matchesStatus;
   });
+
+  const pageSize = 10;
+  const totalPages = Math.ceil(filtered.length / pageSize);
+  const paginatedUsers = filtered.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   const handleToggleStatus = (user) => {
     const action = user.status === "active" ? "inactive" : "activate";
@@ -166,8 +184,8 @@ export function AccountManagement() {
         <button
           onClick={() => setAccountType("system")}
           className={`px-5 py-3 text-sm font-semibold border-b-2 transition-all duration-200 ${accountType === "system"
-              ? "border-primary text-primary"
-              : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted"
+            ? "border-primary text-primary"
+            : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted"
             }`}
         >
           System Accounts
@@ -175,8 +193,8 @@ export function AccountManagement() {
         <button
           onClick={() => setAccountType("readers")}
           className={`px-5 py-3 text-sm font-semibold border-b-2 transition-all duration-200 ${accountType === "readers"
-              ? "border-primary text-primary"
-              : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted"
+            ? "border-primary text-primary"
+            : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted"
             }`}
         >
           Reader Accounts
@@ -197,17 +215,17 @@ export function AccountManagement() {
             />
           </div>
           {accountType !== "readers" ? (
-            <div className="flex gap-3 shrink-0">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 shrink-0 w-full md:w-auto">
               <button
                 onClick={() => setShowPermissionsModal(true)}
-                className="flex items-center gap-2 px-4 py-2 border border-border text-foreground rounded-lg hover:bg-muted transition-colors text-sm font-medium"
+                className="flex items-center justify-center gap-2 px-4 py-2 border border-border text-foreground rounded-lg hover:bg-muted transition-colors text-sm font-medium w-full sm:w-auto cursor-pointer"
               >
                 <ShieldCheck size={18} />
                 Role Permissions
               </button>
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium w-full sm:w-auto cursor-pointer"
               >
                 <Plus size={18} />
                 Create Account
@@ -222,11 +240,19 @@ export function AccountManagement() {
 
         <UserTable
           isLoading={isLoading}
-          filteredUsers={filtered}
+          filteredUsers={paginatedUsers}
           onSupervisorChange={handleSupervisorChange}
           getSupervisorOptions={getSupervisorOptions}
           onToggleStatus={handleToggleStatus}
         />
+
+        {totalPages > 1 && (
+          <PaginationCustom
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+          />
+        )}
 
         <CreateAccountModal
           show={showCreateModal}

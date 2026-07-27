@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useOutletContext } from "react-router";
 import { userService } from "../../services/userService";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -10,11 +10,12 @@ import { AvatarSection } from "./components/AvatarSection";
 import { PersonalInfoForm } from "./components/PersonalInfoForm";
 import { ConfirmUpdateModal } from "./components/ConfirmUpdateModal";
 import { SuccessModal } from "./components/SuccessModal";
-import { Breadcrumb } from "@/shared/components/Breadcrumb";
+
 
 export function ProfilePage() {
   const { showAlert } = useToast();
   const location = useLocation();
+  const { setBreadcrumbItems } = useOutletContext();
 
   const role = location.pathname.includes("mangaka")
     ? "mangaka"
@@ -137,11 +138,15 @@ export function ProfilePage() {
     { label: "Profile" }
   ];
 
-  return (
-    <div className="p-6 space-y-6">
-      <Breadcrumb items={customBreadcrumb} />
+  useEffect(() => {
+    setBreadcrumbItems(customBreadcrumb);
+    return () => setBreadcrumbItems(null);
+  }, [role]);
 
-      <div className="bg-card border border-border rounded-xl p-8 space-y-8 shadow-xs">
+  return (
+    <div className="p-3 sm:p-6 space-y-6">
+
+      <div className="bg-card border border-border rounded-xl p-4 sm:p-8 space-y-8 shadow-xs">
         <AvatarSection
           isLoading={isLoading}
           avatarPreview={avatarPreview}

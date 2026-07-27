@@ -1,5 +1,5 @@
-import { SeriesManagement } from '../shared/SeriesManagement';
-import { useSearch } from '../../features/series/hooks/useSearch';
+import { SeriesManagement } from '@/pages/shared/SeriesManagement';
+import { useSearch } from '@/features/series/hooks/useSearch';
 import { SearchFilterBar } from '@/shared/components/SearchFilterBar';
 
 export function ReaderDashboard() {

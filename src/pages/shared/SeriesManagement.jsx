@@ -1,9 +1,9 @@
 import { useState } from "react";
 import CreateSeriesModal from "@/features/series/components/CreateSeriesModal";
 import { useSeriesManagement } from "@/features/series/hooks/useSeriesManagement";
-import useCreateSeries from "@/features/series/hooks/useCreateSeries";
+import useSeriesList from "@/features/series/hooks/useSeriesList";
 import { StatusBadge } from "@/shared/components/StatusBadge";
-import { Plus, BookOpen } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { getTotalPage } from "@/features/Pagination/hooks/getTotalPage";
 import { PaginationCustom } from "@/features/Pagination/components/PaginationCustom";
 import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
@@ -19,7 +19,7 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered, headerCon
     handleNavigate
   } = useSeriesManagement();
 
-  const { seriesData } = useCreateSeries(null, handleReload, reload);
+  const { seriesData, isLoading } = useSeriesList(reload);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -64,8 +64,8 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered, headerCon
           ) : (
             <>
               {role === "mangaka" && (
-                <div className="flex justify-between items-center mb-5 gap-4">
-                  <div className="flex-1 max-w-xl">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-5 gap-4">
+                  <div className="flex-1 w-full max-w-xl">
                     {!seriesFiltered && role !== "reader" && (
                       <SearchFilterBar
                         searchQuery={searchQuery}
@@ -94,7 +94,7 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered, headerCon
 
                   <button
                     onClick={handleClick}
-                    className="cursor-pointer border-2 flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity shrink-0"
+                    className="cursor-pointer border-2 flex items-center justify-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity shrink-0 w-full sm:w-auto"
                   >
                     <Plus />Create New Series
                   </button>
@@ -130,42 +130,69 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered, headerCon
             </>
           )}
 
-          <div className="grid grid-cols-4 gap-6">
-            {currentDataListDisplay.length === 0 ?
-              (<div className="col-span-4 py-16 flex flex-col items-center justify-center text-center border border-dashed border-border rounded-xl bg-muted/20 my-2">
-                <div className="p-4 rounded-full bg-primary/10 text-primary mb-3">
-                  <BookOpen size={36} />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground">No Series Found</h3>
-                <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-                  There are currently no series matching your selected filters or search terms.
-                </p>
-              </div>)
-              : (currentDataListDisplay?.map(item => (
-                <div key={item.seriesId} className="col-span-1 md:col-span-1 w-full relative  bg-card border 
-                                border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
+          {role !== "mangaka" && !seriesFiltered && role !== "reader" && (
+            <div className="mb-6">
+              <SearchFilterBar
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                searchPlaceholder="Search by title..."
+                useCardWrapper={false}
+                filters={[
+                  {
+                    value: filterStatus,
+                    onChange: setFilterStatus,
+                    options: [
+                      { value: "all", label: "All Status" },
+                      { value: "processing", label: "Processing" },
+                      { value: "pending", label: "Pending" },
+                      { value: "approved", label: "Approved" },
+                      { value: "publishing", label: "Publishing" },
+                      { value: "scheduled", label: "Scheduled" },
+                      { value: "rejected", label: "Rejected" },
+                      { value: "cancelled", label: "Cancelled" }
+                    ]
+                  }
+                ]}
+              />
+            </div>
+          )}
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            {isLoading ? (
+              <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 flex justify-center items-center py-12">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                <span className="ml-2 text-muted-foreground">Loading series...</span>
+              </div>
+            ) : currentDataListDisplay.length === 0 ? (
+              <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 text-center py-8 text-muted-foreground">
+                <p className="text-sm text-accent">No series found.</p>
+              </div>
+            ) : (
+              currentDataListDisplay?.map(item => (
+                <div key={item.seriesId} className="w-full relative bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
+                  {/* ... (giữ nguyên nội dung card bên trong) ... */}
                   <div className=' aspect-[3/4] w-full relative'>
                     <img className="w-full h-full object-cover" src={item.coverFile} alt="cover file" />
                   </div>
 
-                  <div className="p-2 px-4 space-y-4">
+                  <div className="p-3 sm:p-4 space-y-3">
                     <div>
-                      <h3 className="font-semibold text-lg text-card-foreground">{item.title}</h3>
-                      <p className="text-sm text-muted-foreground mt-1">{item.totalChapters || 0} Chapters</p>
+                      <h3 className="font-semibold truncate sm:text-lg text-card-foreground line-clamp-1">{item.title}</h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{item.totalChapters || 0} Chapters</p>
                     </div>
                     <StatusBadge status={item?.status.toLowerCase()} />
 
-                    <button className="cursor-pointer w-full block text-center mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                    <button className="cursor-pointer w-full block text-center mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
                       onClick={() => handleNavigate(role, item.seriesId)}
                     >
                       View Detail
                     </button>
                   </div>
                 </div>
-              )))
-            }
+              ))
+            )}
           </div>
+
         </div>
         <PaginationCustom
           currentPage={currentPage}

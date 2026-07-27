@@ -29,32 +29,32 @@ export function FeedbackHistoryItem({ feedback, fileUrl, role }) {
 
   return (
     <>
-      <div className="group bg-card border border-border hover:border-primary/45 hover:shadow-md transition-all duration-300 rounded-xl p-4 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-4 min-w-0 flex-1">
+      <div className="group bg-card border border-border hover:border-primary/45 hover:shadow-md transition-all duration-300 rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
           {/* Icon indicator */}
           <div className="flex-shrink-0">
-            <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-105 ${
+            <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-105 ${
               isPDF 
                 ? 'bg-rose-500/10 text-rose-500 dark:text-rose-400' 
                 : 'bg-primary/10 text-primary'
             }`}>
-              {isPDF ? <FileSpreadsheet size={20} className="stroke-[2]" /> : <MessageSquare size={20} className="stroke-[2]" />}
+              {isPDF ? <FileSpreadsheet size={18} className="stroke-[2]" /> : <MessageSquare size={18} className="stroke-[2]" />}
             </div>
           </div>
 
           {/* Details */}
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-              <span className="font-semibold text-foreground text-sm md:text-base">
+              <span className="font-semibold text-foreground text-xs sm:text-sm md:text-base">
                 {sender}
               </span>
-              <span className="text-xs text-muted-foreground font-light">
+              <span className="text-[10px] sm:text-xs text-muted-foreground font-light">
                 {formattedDate}
               </span>
             </div>
             
             {/* Feedback type badge */}
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-1">
               <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium border ${
                 isPDF 
                   ? 'bg-rose-500/5 text-rose-500 border-rose-500/20' 
@@ -63,7 +63,7 @@ export function FeedbackHistoryItem({ feedback, fileUrl, role }) {
                 {isPDF ? "PDF Annotation" : "Text Feedback"}
               </span>
               {!isPDF && content && (
-                <p className="text-muted-foreground text-xs md:text-sm truncate max-w-[200px] sm:max-w-md">
+                <p className="text-muted-foreground text-xs md:text-sm truncate max-w-[180px] sm:max-w-md">
                   - {content}
                 </p>
               )}
@@ -74,7 +74,7 @@ export function FeedbackHistoryItem({ feedback, fileUrl, role }) {
         {/* View button */}
         <button
           onClick={handleViewClick}
-          className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium rounded-lg text-xs md:text-sm transition-all duration-200 cursor-pointer border border-border shadow-sm"
+          className="flex-shrink-0 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium rounded-lg text-xs md:text-sm transition-all duration-200 cursor-pointer border border-border shadow-sm w-full sm:w-auto"
         >
           <Eye size={14} className="stroke-[2]" />
           <span>View</span>

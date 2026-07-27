@@ -35,12 +35,10 @@ export function ForgotPasswordPage() {
         const forgotPasswordRes = await authService.forgotPassword(email);
 
         if (forgotPasswordRes.data === "Please check email") {
-            console.log("Send CODE successfully!");
             setIsSending(true);
             navigate("/reset-password");
 
         } else {
-            console.log("Send CODE failed!");
         }
 
         setTimeout(() => {

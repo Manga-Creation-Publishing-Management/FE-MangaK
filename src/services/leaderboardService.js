@@ -1,15 +1,18 @@
 import { api } from "./api";
 
-// Service chuyên gọi các API liên quan đến Bảng Xếp Hạng (Leaderboard)
 export const leaderboardService = {
 
-  // Lấy dữ liệu bảng xếp hạng theo Tuần
-  async getWeeklyLeaderboard() {
-    return await api.get("/Leaderboard/weekly");
+  async getPeriods(type) {
+    return await api.get(`/Leaderboard/periods?type=${encodeURIComponent(type)}`, { silent: true });
   },
 
-  // Lấy dữ liệu bảng xếp hạng theo Tháng
-  async getMonthlyLeaderboard() {
-    return await api.get("/Leaderboard/monthly");
+  async getWeeklyLeaderboard(period) {
+    const query = period ? `?period=${encodeURIComponent(period)}` : '';
+    return await api.get(`/Leaderboard/weekly${query}`, { silent: true });
+  },
+
+  async getMonthlyLeaderboard(period) {
+    const query = period ? `?period=${encodeURIComponent(period)}` : '';
+    return await api.get(`/Leaderboard/monthly${query}`, { silent: true });
   },
 };

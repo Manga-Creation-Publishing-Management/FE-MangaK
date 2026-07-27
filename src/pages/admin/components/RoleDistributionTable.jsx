@@ -9,14 +9,14 @@ const roleDotColors = {
   admin: "bg-rose-500",
 };
 
-export function RoleDistributionTable({ roleCounts, isLoading }) {
+export function RoleDistributionTable({ roleCounts, isLoading, className = "" }) {
   return (
-    <div className="bg-card border border-border rounded-xl p-6 space-y-4">
+    <div className={`bg-card border border-border rounded-xl p-6 space-y-4 flex flex-col justify-between h-full ${className}`}>
       <div>
         <h3 className="text-lg font-bold text-foreground">Role Distribution</h3>
         <p className="text-xs text-muted-foreground">Overview of users assigned to each system role.</p>
       </div>
-      <div className="overflow-hidden border border-border rounded-lg">
+      <div className="overflow-hidden border border-border rounded-lg flex-1 flex flex-col justify-center">
         <table className="w-full text-sm">
           <thead className="bg-muted/50 border-b border-border text-muted-foreground font-medium">
             <tr>
@@ -34,11 +34,11 @@ export function RoleDistributionTable({ roleCounts, isLoading }) {
             ) : (
               Object.entries(roleLabels).map(([roleKey, label]) => (
                 <tr key={roleKey} className="hover:bg-muted/20 transition-colors">
-                  <td className="px-6 py-4 flex items-center gap-3">
+                  <td className="px-6 py-3.5 flex items-center gap-3">
                     <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${roleDotColors[roleKey] || 'bg-muted-foreground'}`} />
                     <span className="font-medium text-sm">{label}</span>
                   </td>
-                  <td className="px-6 py-4 text-right font-semibold font-mono text-sm">
+                  <td className="px-6 py-3.5 text-right font-semibold font-mono text-sm">
                     {roleCounts[roleKey] || 0}
                   </td>
                 </tr>

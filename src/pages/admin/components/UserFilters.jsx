@@ -15,14 +15,13 @@ export function UserFilters({
     filters.push({
       value: filterRole,
       onChange: onFilterRoleChange,
-      className: "w-48",
+      className: "w-full sm:w-48",
       options: [
         { value: "all", label: "All Roles" },
         { value: "mangaka", label: "Mangaka" },
         { value: "assistant", label: "Assistant" },
         { value: "tantou", label: "Tantou Editor" },
-        { value: "editorial", label: "Editorial Board" },
-        { value: "admin", label: "Admin" }
+        { value: "editorial", label: "Editorial Board" }
       ]
     });
   }
@@ -30,7 +29,7 @@ export function UserFilters({
   filters.push({
     value: filterStatus,
     onChange: onFilterStatusChange,
-    className: "w-40",
+    className: "w-full sm:w-40",
     options: [
       { value: "all", label: "All Status" },
       { value: "active", label: "Active" },

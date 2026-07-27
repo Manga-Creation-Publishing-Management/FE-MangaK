@@ -16,8 +16,6 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
   const [selectGenres, setSelectGenres] = useState([]);
   // State lưu trữ dữ liệu các ô text trong form (như title, description)
   const [formSeriesData, setFormSeriesData] = useState({});
-  // State lưu danh sách các bộ truyện hiện tại
-  const [seriesData, setSeriesData] = useState([]);
 
   // State quản lý trạng thái loading (khi đang gọi API submit)
   const [isLoading, setIsLoading] = useState(false);
@@ -40,12 +38,9 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
     const fetchApi = async () => {
       // Chờ gọi 2 API lấy thể loại và series
       const resultsGenre = await seriesService.getAllCategory();
-      const resultsSeries = await seriesService.getAllSeries();
 
       // Cập nhật state
       setGenreList(resultsGenre.data);
-      // Đảo ngược mảng series (toReversed) để hiển thị truyện mới nhất lên đầu
-      setSeriesData(resultsSeries.data.toReversed());
     };
     fetchApi();
   }, [reloadState])
@@ -104,9 +99,17 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
     }, "image/jpeg");
   };
 
-  // Hàm xử lý khi form được submit
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Chặn việc reload trang
+    e.preventDefault();
+
+    const title = formSeriesData.title?.trim();
+    const description = formSeriesData.description?.trim();
+
+    if (!title || !description || selectGenres.length === 0 || !croppedFile || !storyFile) {
+      showAlert("Please enter all information");
+      return;
+    }
+
     setIsLoading(true); // Bật trạng thái loading
 
     // Tạo đối tượng FormData để chứa dữ liệu text và file
@@ -156,7 +159,6 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
     storyFile,
     coverInputRef,
     storyInputRef,
-    seriesData,
     formSeriesData,
     handleActive,
     handleChange,
