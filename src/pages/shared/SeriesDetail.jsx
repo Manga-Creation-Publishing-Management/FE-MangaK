@@ -179,17 +179,17 @@ export function SeriesDetail() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <div className="min-h-[40px] info-box p-3 text-foreground text-sm leading-relaxed">
+                    <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
                       <h5 className="font-normal text-sm sm:text-sm text-muted-foreground tracking-wider">Upcoming Chapter Release Date</h5>
-                      {detailData?.publishDate ? (
-                        <div className="text-sm sm:text-lg my-1.5 font-semibold">{dayjs(detailData?.publishDate).utc(true).format('DD/MM/YYYY HH:mm')}</div>
+                      {detailData?.nextChapterPublishDate ? (
+                        <div className="text-sm sm:text-lg my-1.5 font-semibold">{dayjs(detailData?.nextChapterPublishDate).utc(true).format('DD/MM/YYYY HH:mm')}</div>
                       ) : (
                         <div className="text-sm sm:text-lg my-1.5 font-semibold ms-0.5">— — — —</div>
                       )}
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <div className="min-h-[40px] info-box p-3 text-foreground text-sm leading-relaxed">
+                    <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
                       <h5 className="font-normal text-sm  sm:text-sm text-muted-foreground tracking-wider">Publish Period</h5>
                       {detailData?.publishPeriod ? (
                         <div className="text-sm sm:text-lg my-1.5 font-semibold capitalize">{detailData?.publishPeriod}</div>
@@ -199,7 +199,7 @@ export function SeriesDetail() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <div className="min-h-[40px] info-box p-3 text-foreground text-sm leading-relaxed">
+                    <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
                       <h5 className="font-normal text-sm sm:text-sm text-muted-foreground tracking-wider">Series Creation Date</h5>
                       {detailData?.createAt ? (
                         <div className="text-sm sm:text-lg my-1.5 font-semibold">{dayjs(detailData?.createAt).utc(true).format('DD/MM/YYYY HH:mm')}</div>
@@ -209,7 +209,7 @@ export function SeriesDetail() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <div className="min-h-[40px] info-box p-3 text-foreground text-sm leading-relaxed">
+                    <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
                       <h5 className="font-normal text-sm  sm:text-sm text-muted-foreground tracking-wider">Series Updated Date</h5>
                       {detailData?.updatedAt ? (
                         <div className="text-sm sm:text-lg my-1.5 font-semibold capitalize">{dayjs(detailData?.updatedAt).utc(true).format('DD/MM/YYYY HH:mm')}</div>
