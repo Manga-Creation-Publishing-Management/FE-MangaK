@@ -182,7 +182,7 @@ export function TaskDetail() {
                   <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3 items-center flex gap-2">
                     Assistant in charge
                   </h3>
-                  {role === "mangaka" && !isOverdue && (
+                  {role === "mangaka" && (
                     taskDetail?.status === "Available" ||
                     taskDetail?.status === "Rejected" ||
                     taskDetail?.status === "Revising" ||
@@ -216,7 +216,7 @@ export function TaskDetail() {
                     )}
                 </div>
 
-                {isEditingTaskAssistant && !isOverdue ? (
+                {isEditingTaskAssistant ? (
                   <div className="w-full mt-1">
                     <select
                       value={selectedTaskAssistantId} // BIẾN MỚI
@@ -262,7 +262,7 @@ export function TaskDetail() {
                     deadline {isOverdue && <span className="text-destructive font-bold text-[10px]">(Overdue)</span>}
                   </h3>
 
-                  {(role === "mangaka" && taskDetail?.status?.toLowerCase() !== "processing" && taskDetail?.status?.toLowerCase() !== "pending") && (
+                  {(role === "mangaka" && taskDetail?.status != "processing") && (
                     isEditingDeadline ? (
                       <div className="flex items-center gap-1 -mt-[10px] -mr-2">
                         <button
@@ -292,7 +292,7 @@ export function TaskDetail() {
                 </div>
 
                 {/* PHẦN HIỂN THỊ INPUT / TEXT PHÍA DƯỚI GIỮ NGUYÊN */}
-                {isEditingDeadline && taskDetail?.status?.toLowerCase() !== "pending" && taskDetail?.status?.toLowerCase() !== "processing" ? (
+                {isEditingDeadline ? (
                   <div className="w-full mt-1">
                     <input
                       type="datetime-local"
@@ -469,7 +469,7 @@ export function TaskDetail() {
                 taskId={taskId}
                 role={role}
                 onRejectTrigger={() => { //cho chữ mặc định khi annotation vì reject nó vẫn check á
-                  handleRejectTask(true);
+                  handleRejectTask(taskId, role);
                   setIsAnnotationOpen(false);
                 }}
               />
@@ -484,7 +484,7 @@ export function TaskDetail() {
                 }}
                 onNo={() => {
                   setConfirmModalOpen(false);
-                  handleRejectTask(false);
+                  handleRejectTask(taskId, role);
                 }}
               />
 
