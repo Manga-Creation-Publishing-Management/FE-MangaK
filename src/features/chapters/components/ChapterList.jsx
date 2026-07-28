@@ -182,7 +182,7 @@ export function ChapterList({ roleName, seriesData }) {
                 <div key={chapter.chapterId} className="bg-card border border-border rounded-xl p-4 sm:p-5 hover:shadow-lg transition-shadow">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <h4 className="py-1 text-base sm:text-xl break-words text-card-foreground">
+                      <h4 className=" font-semibold sm:text-xl text-card-foreground break-words">
                         Chapter {chapter.chapterNumber}: {chapter.title}
                       </h4>
                       {/* Hiển thị số sao Reader đã đánh giá cho chapter */}
