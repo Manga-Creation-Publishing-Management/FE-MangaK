@@ -1,129 +1,169 @@
 # MangaK - Manga Creation and Publishing Management System 📚✍️
 
-**MangaK** is a feature-rich React frontend application designed to manage the end-to-end workflow of manga creation, collaborative review, editing, publishing schedule management, and digital publishing. It provides a secure, role-based portal layout with strict routing permissions, facilitating collaboration between Mangakas (Artists), Assistants, Tantou Editors (Assigned Editors), the Editorial Board, Administrators, and Readers.
+**MangaK** (FE-MangaK) là ứng dụng Frontend được xây dựng bằng **React 19** & **Vite**, phục vụ toàn bộ quy trình từ sáng tác, hỗ trợ vẽ, phân công công việc, duyệt bản thảo, ghi chú chỉnh sửa trực quan (Interactive Canvas Annotation), lên lịch xuất bản cho tới đọc truyện trực tuyến.
+
+Hệ thống được thiết kế theo mô hình phân quyền nghiêm ngặt (**Role-Based Access Control - RBAC**) với 6 nhóm người dùng chuyên biệt.
 
 ---
 
-## 👥 User Roles & Access Control (Portals)
+## 📋 Cấu Trúc Nội Dung (Table of Contents)
 
-The application implements strict role-based access control (RBAC) utilizing custom protected route wrappers (`ProtectedRoute`). Below are the primary user roles and their main privileges:
+1. [👥 Phân Quyền & Vai Trò Người Dùng (Roles & Portals)](#-phân-quyền--vai-trò-người-dùng-roles--portals)
+2. [🚀 Công Nghệ & Thư Viện Sử Dụng (Tech Stack)](#-công-nghệ--thư-viện-sử-dụng-tech-stack)
+3. [📂 Cấu Trúc Thư Mục Dự Án (Project Structure)](#-cấu-trúc-thư-mục-dự-án-project-structure)
+4. [🛠️ Hướng Dẫn Cài Đặt & Chạy Dự Án (Getting Started)](#-hướng-dẫn-cài-đặt--chạy-dự-án-getting-started)
+5. [📜 Danh Sách Lệnh (NPM Scripts)](#-danh-sách-lệnh-npm-scripts)
+6. [🎨 Tính Năng Đổi Mới UI/UX](#-tính-năng-đổi-mới-uiux)
+7. [🌐 Cấu Hình Triển Khai (Deployment)](#-cấu-hình-triển-khai-deployment)
 
-| Role | Portals & Key Features |
+---
+
+## 👥 Phân Quyền & Vai Trò Người Dùng (Roles & Portals)
+
+Hệ thống kiểm soát truy cập phân quyền thông qua các `ProtectedRoute` wrapper. Dưới đây là các vai trò chính và đặc quyền tương ứng:
+
+| Vai Trò | Phân Vùng Portals & Tính Năng Nổi Bật |
 | :--- | :--- |
-| **🎨 Mangaka (Artist)** | - **Series Management**: Create new manga series, crop covers, and edit info.<br>- **Chapter Management**: Upload manuscript files (PDF/Images) and publish chapters.<br>- **Canvas Annotation Reader**: View visual revision drawings and feedback left by Tantou Editors.<br>- **Task Delegation**: Assign specific tasks (inking, background drawing, coloring, speech bubbles) to Assistants.<br>- **Leaderboard & Profile**: Track series performance and manage profile details. |
-| **🖌️ Assistant (Trợ lý)** | - **Task Management**: Access the `My Tasks` board to view assigned drawing/inking sub-tasks.<br>- **Status Tracking**: Update status, submit finished drafts, and request review.<br>- **Income Dashboard**: Monitor earned income and payment records for completed tasks. |
-| **📝 Tantou Editor (Assigned Editor)** | - **Tantou Dashboard**: Track active projects of assigned Mangakas.<br>- **Interactive Canvas Review**: Draw circles, arrows, highlights, and write notes directly onto manuscripts using the Konva canvas.<br>- **Revision Management**: Provide textual feedbacks, request changes, or endorse chapters. |
-| **🏛️ Editorial Board (Ban biên tập)** | - **Series Approval**: Moderate, review, and officially approve or reject new series and chapter draft submissions.<br>- **Publishing Schedule**: Set, adjust, and monitor publication dates via an interactive release calendar.<br>- **Leaderboard Import**: Monitor overall reader statistics and rank series. |
-| **👑 Admin (Quản trị viên)** | - **Account Management**: List, create, update, suspend, or configure user roles and accounts.<br>- **System Logs & Metrics**: Monitor system statistics and basic configuration settings. |
-| **📖 Reader (Độc giả)** | - **Reader Portal**: Search, filter, and read published manga series and chapters.<br>- **Community Interaction**: Rate, comment, and vote for favorite series (directly influencing the Leaderboard rankings). |
+| **🎨 Mangaka (Họa sĩ chính)** | - **Quản lý bộ truyện (Series)**: Tạo truyện mới, cắt ảnh bìa, chỉnh sửa thông tin.<br>- **Quản lý chương (Chapter)**: Đăng tải bản thảo (PDF / Ảnh) và xuất bản chương.<br>- **Canvas Annotation Reader**: Xem các nét vẽ ghi chú & phản hồi trực quan từ Tantou Editor trên trang bản thảo.<br>- **Phân công nhiệm vụ**: Giao việc cụ thể (vẽ nét, vẽ nền, tô màu, chèn thoại) cho Trợ lý (Assistant).<br>- **Bảng xếp hạng & Hồ sơ**: Theo dõi hiệu suất truyện và quản lý trang cá nhân. |
+| **🖌️ Assistant (Trợ lý)** | - **Quản lý công việc**: Truy cập bảng `My Tasks` để xem các phụ tá việc được giao.<br>- **Cập nhật tiến độ**: Chuyển trạng thái, nộp bản vẽ hoàn thành và gửi yêu cầu duyệt.<br>- **Thu nhập**: Theo dõi doanh thu & lịch sử thanh toán cho từng công việc đã hoàn thành. |
+| **📝 Tantou Editor (BTV Trực tiếp)** | - **Tantou Dashboard**: Theo dõi danh sách dự án của các Mangaka được phân công.<br>- **Interactive Canvas Review**: Vẽ khoanh tròn, mũi tên, highlight và ghi chú trực tiếp lên trang bản thảo nhờ Konva Canvas.<br>- **Quản lý phê duyệt**: Phản hồi văn bản, yêu cầu chỉnh sửa (Request Revision) hoặc duyệt chương. |
+| **🏛️ Editorial Board (Ban biên tập)** | - **Phê duyệt nội dung**: Phê duyệt hoặc từ chối các bộ truyện và chương truyện mới đăng.<br>- **Lịch xuất bản (Publishing Schedule)**: Lên lịch, điều chỉnh ngày phát hành trên bộ lịch trực quan.<br>- **Thống kê & Xếp hạng**: Theo dõi chỉ số người đọc và quản lý thứ hạng truyện trên Leaderboard. |
+| **👑 Admin (Quản trị viên)** | - **Quản lý tài khoản**: Danh sách, tạo mới, cập nhật, khóa hoặc phân quyền người dùng.<br>- **Hệ thống & Cấu hình**: Monitor thống kê hệ thống và các thiết lập chung. |
+| **📖 Reader (Độc giả)** | - **Reader Portal**: Tìm kiếm, lọc và đọc các bộ truyện/chương đã xuất bản.<br>- **Tương tác cộng đồng**: Đánh giá, bình luận và bình chọn bộ truyện yêu thích. |
 
 ---
 
-## 🚀 Tech Stack & Core Libraries
+## 🚀 Công Nghệ & Thư Viện Sử Dụng (Tech Stack)
 
-- **Core Framework:** [React 19](https://react.dev/) & [Vite 8](https://vite.dev/) (leveraging ultra-fast Hot Module Replacement)
-- **Styling & Theme:** [Tailwind CSS v4](https://tailwindcss.com/) (modern CSS compilation and utility configuration)
-- **Routing:** [React Router 7](https://reactrouter.com/) (handling nested layouts and authorization middleware)
-- **Authentication:** [@react-oauth/google](https://www.npmjs.com/package/@react-oauth/google) (seamless Google authentication)
-- **Interactive Painting & Feedback:** [Konva](https://konvajs.org/) & [React Konva](https://konvajs.org/docs/react/index.html) (HTML5 Canvas drawing library for manuscript annotations)
-- **Image Editing:** [CropperJS](https://fengyuanchen.github.io/cropperjs/) & [React Cropper](https://github.com/hookyqr/react-cropper) (high-performance cropping tool for profile avatars and manga cover pages)
-- **Document Viewing:** [React PDF](https://github.com/wojtekmaj/react-pdf) (inline client-side PDF renderer for manuscripts review)
-- **State & Form Validation:** React Hook Form & Yup
-- **Utility Packages:** [Lucide React](https://lucide.dev/) (icons) & [Day.js](https://day.js.org/) (date formatting and schedule calculations)
-- **Mock Database Support:** [JSON Server](https://github.com/typicode/json-server) (local API server for prototyping using `database.json`)
+- **Core Framework:** [React 19](https://react.dev/) & [Vite 8](https://vite.dev/) (trình đóng gói ứng dụng với HMR)
+- **Styling & Theme:** [Tailwind CSS v4](https://tailwindcss.com/) & `@tailwindcss/vite`
+- **Routing & Navigation:** [React Router 7](https://reactrouter.com/) (xử lý routing lồng ghép và phân quyền `ProtectedRoute`)
+- **Authentication:** [@react-oauth/google](https://www.npmjs.com/package/@react-oauth/google) (xác thực Google OAuth2)
+- **Interactive Painting & Canvas:** [Konva](https://konvajs.org/) & [React Konva](https://konvajs.org/docs/react/index.html) (canvas vẽ ghi chú bản thảo)
+- **Image Editing:** [CropperJS](https://fengyuanchen.github.io/cropperjs/) & [React Cropper](https://github.com/hookyqr/react-cropper) (cắt ảnh bìa truyện & avatar)
+- **Document Viewing:** [React PDF](https://github.com/wojtekmaj/react-pdf) (hiển thị file bản thảo PDF trực tiếp)
+- **Form & Validation:** [React Hook Form](https://react-hook-form.com/) & [Yup](https://github.com/jquense/yup)
+- **Icons & Time Utils:** [Lucide React](https://lucide.dev/) (hệ thống icon) & [Day.js](https://day.js.org/) (xử lý ngày tháng & lịch xuất bản)
+- **Code Quality & Linting:** ESLint 10 & Prettier
+- **Mock Server Support:** [JSON Server](https://github.com/typicode/json-server) (chạy API giả lập khi cần dev offline)
 
 ---
 
-## 📂 Project Directory Structure
+## 📂 Cấu Trúc Thư Mục Dự Án (Project Structure)
 
-The source directory (`src/`) is organized modularly for high maintainability and clean separation of concerns:
+Mã nguồn trong thư mục `src/` được tổ chức dạng modular rõ ràng:
 
 ```text
 src/
-├── app/                  # Application root, defines context providers (Theme, Auth, Router)
-├── features/             # Business logic split by domain features
-│   ├── auth/             # Login, logout, ProtectedRoute, and PublicRoute guards
-│   ├── chapters/         # Chapter creation, annotation hooks, and display logic
-│   ├── Pagination/       # Standardized client-side and server-side pagination components
-│   ├── schedule/         # Release scheduler components and date rules
-│   ├── series/           # Series forms, crop modals, detail views, and series creation hooks
-│   ├── shared/           # Features shared between multiple modules
-│   ├── tasks/            # Task delegation cards, lists, status updates, and inputs
-│   └── theme/            # Theme toggle context (Light/Dark mode)
-├── layout/               # Global layouts (HeaderPage, FooterPage, Sidebar, Main Layout)
-├── pages/                # Page controllers grouped by role access
-│   ├── admin/            # Admin accounts and configuration dashboards
-│   ├── assistant/        # Assistant tasks list and income summary
-│   ├── auth/             # Login, Forgot/Reset password screens
-│   ├── editorialBoard/   # Release schedule calendar and approval list
-│   ├── mangaka/          # Mangaka series view, chapter upload, task assignment boards
-│   ├── reader/           # Public reader feed and reading view
-│   ├── tantouEditor/     # Tantou editor feed and review panel
-│   └── shared/           # Common views (HomePage, Profile, Leaderboard, Annotation canvas, etc.)
-├── routes/               # Centralized routing configuration (AppRoutes.jsx)
-├── services/             # API client client/axios wrapper and endpoint services
-│   ├── api.js            # Core HTTP client with authorization interceptors
-│   ├── authService.js    # Auth calls (Credentials login, Google Sign-in)
-│   ├── chapterService.js # Fetching, uploading, and editing chapter endpoints
-│   └── ...               # (seriesService, taskService, userService, feedbackService, etc.)
-├── shared/               # Universal UI components (Buttons, Inputs, Modals, Loaders, ThemeToggle)
-└── styles/               # Global stylesheet rules (global.css)
+├── app/                  # Khởi tạo App, các Providers (Theme, Auth, Router)
+├── features/             # Logic nghiệp vụ chia theo domain
+│   ├── auth/             # Logic xác thực, ProtectedRoute, PublicRoute
+│   ├── chapters/         # Đăng chương, đọc chương, canvas ghi chú
+│   ├── leaderboard/      # Thống kê & bảng xếp hạng bộ truyện
+│   ├── Pagination/       # Component phân trang dùng chung
+│   ├── schedule/         # Bộ quản lý lịch xuất bản
+│   ├── series/           # Quản lý bộ truyện (tạo, sửa, crop ảnh bìa)
+│   ├── shared/           # Features chia sẻ giữa các phân vùng
+│   ├── tasks/            # Bảng phân công & theo dõi nhiệm vụ trợ lý
+│   └── theme/            # Theme Context (Light/Dark mode)
+├── layout/               # Giao diện chung (Header, Footer, Sidebar, Layout chính)
+├── pages/                # Controller cho từng trang theo vai trò
+│   ├── admin/            # Trang quản trị tài khoản & cài đặt hệ thống
+│   ├── assistant/        # Trang nhiệm vụ trợ lý & bảng thu nhập
+│   ├── auth/             # Đăng nhập, quên mật khẩu, đặt lại mật khẩu
+│   ├── editorialBoard/   # Duyệt truyện & quản lý lịch phát hành
+│   ├── mangaka/          # Trang quản lý dự án, đăng chương & giao việc
+│   ├── reader/           # Trang chủ đọc truyện, tìm kiếm & xem chi tiết
+│   ├── tantouEditor/     # Trang BTV trực tiếp review & ghi chú bản thảo
+│   └── shared/           # Trang chung (Profile, Leaderboard, Annotation canvas...)
+├── routes/               # Cấu hình định tuyến tập trung (AppRoutes.jsx)
+├── services/             # HTTP client & các API service endpoints
+│   ├── api.js            # Fetch wrapper tích hợp Bearer token & auto refresh logic
+│   ├── authService.js    # API Đăng nhập, Google Auth, Refresh Token
+│   ├── chapterService.js # API lấy & đăng chương truyện
+│   ├── taskService.js    # API giao việc & cập nhật tiến độ trợ lý
+│   └── ...               # (seriesService, userService, feedbackService, incomeService, v.v.)
+├── shared/               # Component UI chung (Button, Input, Modal, Loader, ThemeToggle...)
+└── styles/               # File CSS toàn cục (global.css, theme.css, font chữ)
 ```
 
 ---
 
-## 🛠️ Getting Started & Installation
+## 🛠️ Hướng Dẫn Cài Đặt & Chạy Dự Án (Getting Started)
 
-### 1. Prerequisites
-Ensure you have **Node.js** installed (LTS version `18.x` or higher is recommended).
+### 1. Yêu cầu môi trường
+Đảm bảo đã cài đặt **Node.js** (Khuyên dùng phiên bản LTS `18.x` hoặc cao hơn) và **npm**.
 
-### 2. Install Dependencies
-Clone the repository, navigate to the folder, and run:
+### 2. Cài đặt các gói phụ thuộc (Dependencies)
+Tải mã nguồn về máy, mở terminal tại thư mục dự án và chạy:
 ```bash
 npm install
 ```
 
-### 3. Environment Setup
-Create a `.env` file in the root directory (or edit the existing one) with the following parameters:
+### 3. Cấu hình biến môi trường (.env)
+Tạo file `.env` ở thư mục gốc của dự án với các thông số cấu hình:
+
 ```env
 VITE_API_URL="https://mangaka-deploy-latest.onrender.com/api"
 VITE_GOOGLE_CLIENT_ID="your-google-oauth-client-id-here"
 ```
-- `VITE_API_URL`: Points to the active backend API server (e.g., Render host or `http://localhost:5000` for local backend).
-- `VITE_GOOGLE_CLIENT_ID`: Required for Google login authentication on the reader and login pages.
 
-### 4. Running the Development Server
-To launch the Vite development server with Hot Module Replacement (HMR), run:
+- `VITE_API_URL`: Đường dẫn kết nối tới server Backend API (Render host hoặc `http://localhost:5000` khi chạy backend ở máy cục bộ).
+- `VITE_GOOGLE_CLIENT_ID`: Mã Google OAuth Client ID dùng cho tính năng đăng nhập bằng tài khoản Google.
+
+> ⚠️ **Lưu ý bảo mật:** File `.env` chứa thông tin cấu hình nhạy cảm và đã được đưa vào `.gitignore` để tránh bị lộ mã khoá bí mật trên GitHub repository.
+
+
+### 4. Chạy chế độ Development
+Mở server phát triển Vite với tính năng tự động tải lại (HMR):
 ```bash
 npm run dev
 ```
-By default, the application will run at [http://localhost:5173](http://localhost:5173).
+Ứng dụng sẽ chạy mặc định tại địa chỉ: [http://localhost:5173](http://localhost:5173)
 
-### 5. Running the Mock Server (Optional)
-If you are developing locally without a backend database, you can start the built-in mock server running on port `3001` (requires a valid `database.json` file in the root):
+### 5. Chạy Mock Server (Tùy chọn)
+Nếu muốn chạy test offline mà không có backend API, bạn có thể khởi tạo file `database.json` ở thư mục gốc và chạy:
 ```bash
 npm run server
 ```
+Server giả lập `json-server` sẽ lắng nghe tại cổng `http://localhost:3001`.
 
 ---
 
-## 📜 Available NPM Scripts
+## 📜 Danh Sách Lệnh (NPM Scripts)
 
-Below is a list of configured scripts inside `package.json` that you can run:
+Các lệnh đã được định cấu hình trong `package.json`:
 
-| Command | Description |
+| Lệnh | Mô tả |
 | :--- | :--- |
-| `npm run dev` | Runs the Vite development server on port `5173`. |
-| `npm run server` | Starts a mock REST API server on port `3001` using `database.json`. |
-| `npm run build` | Compiles and optimizes the React code into a production bundle under the `/dist` directory. |
-| `npm run preview` | Locally serves the compiled production build from the `/dist` folder for previewing. |
-| `npm run lint` | Analyzes code quality and formatting standard compliance using ESLint. |
+| `npm run dev` | Khởi chạy server phát triển Vite tại địa chỉ `http://localhost:5173`. |
+| `npm run build` | Biên dịch và tối ưu hóa mã nguồn React thành bản sản xuất trong thư mục `/dist`. |
+| `npm run preview` | Chạy xem trước bản build sản xuất từ thư mục `/dist`. |
+| `npm run lint` | Kiểm tra chất lượng code và chuẩn style bằng ESLint. |
+| `npm run server` | Khởi chạy REST API server giả lập ở cổng `3001` từ `database.json`. |
 
 ---
 
-## 🎨 UI/UX Features
+## 🎨 Tính Năng Đổi Mới UI/UX
 
-- **Light/Dark Mode Support**: Uses CSS variables combined with Tailwind CSS. Toggle states are managed by `ThemeContext` and persisted for a smooth, unified aesthetic.
-- **Fully Responsive Layout**: Built with a responsive grid layout. Sidebars and data tables automatically adapt to desktop, tablet, and mobile screens.
-- **Interactive Annotation Interface**: Uses Konva canvases to overlay drawn review comments on top of PDF page renderings.
-- **Precise Crop Tool**: Integrates CropperJS to enable creators to adjust visual bounds before upload, standardizing covers and avatars.
+- **Hỗ trợ Giao diện Sáng/Tối (Light/Dark Mode)**: Tích hợp CSS variables kết hợp cùng Tailwind CSS. Trạng thái theme được lưu và đồng bộ qua `ThemeContext`.
+- **Thiết kế Responsive Toàn diện**: Giao diện thích ứng linh hoạt trên Desktop, Tablet và Mobile.
+- **Công cụ Vẽ & Ghi chú Trực quan**: Tích hợp Konva Canvas hỗ trợ BTV vẽ khoanh vùng, mũi tên và ghi chú chỉnh sửa trực tiếp trên file PDF/ảnh bản thảo.
+- **Cắt Ảnh Chuẩn Xác**: Đóng gói CropperJS giúp Mangaka dễ dàng canh chỉnh tỉ lệ ảnh bìa truyện và avatar trước khi tải lên.
+
+---
+
+## 🌐 Cấu Hình Triển Khai (Deployment)
+
+Dự án được cấu hình sẵn cho việc triển khai trên **Vercel** thông qua file `vercel.json`:
+- Cấu hình Single Page Application (SPA) rewrite tất cả request về `/index.html` để tránh lỗi 404 khi người dùng refresh trang ở các route lồng nhau.
+```json
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
+```
