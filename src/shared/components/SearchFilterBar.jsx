@@ -20,7 +20,7 @@ export function SearchFilterBar({
         <div className="relative flex-1 sm:max-w-sm w-full">
           <Search
             size={18}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
           />
           <input
             type="text"
