@@ -26,9 +26,9 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
     const normalizedRole = roleName ? roleName.toLowerCase() : "";
     const routeRole = roleRouteMap[normalizedRole] || "mangaka";
     const profilePath = `/${routeRole}/profile`;
-    const hasFeedbackSupport = ["mangaka", "assistant", "tantou editor", "editorial board", "tantou", "editorial"].includes(normalizedRole);
+    const hasFeedbackSupport = ["mangaka", "assistant", "tantou editor", "editorial board", "tantou", "editorial", "board"].includes(normalizedRole);
 
-    const { feedbackData, unreadFeedbackCount } = useGetFeedback(hasFeedbackSupport);
+    const { feedbackData, unreadFeedbackCount, markAsReadLocally } = useGetFeedback(hasFeedbackSupport);
     const { handleNavigateFromFeedback } = useNavigateFromFeedback();
     const { handleMarkAsRead } = useMarkFeedbackAsRead();
 
@@ -36,6 +36,7 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
         handleNavigateFromFeedback(feedback, roleName);
         if (feedback?.id) {
             handleMarkAsRead(feedback.id);
+            markAsReadLocally(feedback.id); //update UI
         }
         setIsDropdownOpen(false);
     };

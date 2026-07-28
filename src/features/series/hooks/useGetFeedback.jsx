@@ -27,8 +27,23 @@ export function useGetFeedback(enabled = true) {
     const feedbackList = feedbackData?.data || [];
     const unreadFeedbackCount = feedbackList?.filter(item => item.isRead === false).length;
 
+    const markAsReadLocally = (feedbackId) => {
+        setFeedbackData(prev => {
+            if (!prev?.data) return prev;
+            return {
+                ...prev, //giữ lại các field khác của object, chỉ ghi đè mỗi data
+                data: prev.data.map(item =>
+                    item.id === feedbackId
+                        ? { ...item, isRead: true }
+                        : item
+                )
+            };
+        });
+    };
+
     return {
         unreadFeedbackCount,
-        feedbackData
+        feedbackData,
+        markAsReadLocally
     };
 }

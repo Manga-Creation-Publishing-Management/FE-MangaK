@@ -44,6 +44,36 @@ async function request(endpoint, options = {}) {
       return null;
     }
 
+    if (response.status === 401) {
+      if (!endpoint.includes('/Auth/') && !options._isRetry) {
+        //đánh dấu đã refresh r nha mà vẫn fail  
+          options._isRetry = true;
+
+          try {
+            const refreshToken = localStorage.getItem('refreshToken');
+            if (!refreshToken) throw new Error ('There is no refresh token stored');
+
+            //gọi API refresh token 
+            const refreshResponse = await api.post('/Auth/refresh', {refreshToken});
+            //lưu token mới
+            localStorage.setItem('accessToken', refreshResponse.accessToken || refreshResponse?.data.accessToken);
+            localStorage.setItem('refreshToken', refreshResponse.refreshToken || refreshResponse?.data.refreshToken);
+            
+            //gọi lại hàm request này với token mới
+            return await request(endpoint, options);
+
+          } catch (refreshError) {
+              console.error('Refresh token failed:', refreshError);
+              localStorage.removeItem('accessToken');
+              localStorage.removeItem('refreshToken');
+              localStorage.removeItem('user');
+              window.location.href = '/';
+              return null;
+          }
+
+      } 
+    }
+
     let data;
     // Kiểm tra định dạng dữ liệu trả về: Nếu là JSON thì parse JSON, ngược lại đọc dưới dạng Text
     const contentType = response.headers.get('content-type');
@@ -54,7 +84,7 @@ async function request(endpoint, options = {}) {
     }
 
     // Nếu HTTP Status Code không nằm trong dải thành công (200-299), ném ra lỗi
-    if (!response.ok) {
+    if (!response.ok && !options._isRetry) {
       // Nếu gặp lỗi xác thực 401 (token hết hạn hoặc không hợp lệ)
       if (response.status === 401) {
         // Không tự động redirect nếu đang thực hiện các cuộc gọi API liên quan đến Auth (đăng nhập, đăng ký, quên mật khẩu...)
