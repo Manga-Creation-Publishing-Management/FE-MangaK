@@ -40,7 +40,6 @@ export function useChapterDetail(seriesId, chapterId) {
 
           // Lưu số trang vào state
           setPageNums(pdf.numPages);
-          console.log("Số trang PDF là:", pdf.numPages);
 
         } catch (error) {
           console.error("Lỗi khi đếm số trang PDF:", error);
@@ -89,14 +88,12 @@ export function useChapterDetail(seriesId, chapterId) {
       formData.append("ChapterFileUrl", storyFile);
       formData.append("TotalPage", pageNums);
       const response = await chaptersService.submitChapter(seriesId, chapterId, formData);
-      console.log("Submit chapter thành công:", response);
 
       // Cập nhật lại status hiển thị thành "Pending""
 
 
       showAlert("Chapter submitted successfully!");
       handleReload();
-      // setStoryFile(null); // Reset lại file đã chọn sau khi nộp thành công
     } catch (error) {
       console.error("Lỗi khi submit chapter:", error);
       showAlert("Submitting chapter failed: " + error.message);

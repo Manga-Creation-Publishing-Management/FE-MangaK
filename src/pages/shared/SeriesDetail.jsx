@@ -52,8 +52,6 @@ export function SeriesDetail() {
     }
   }
 
-  console.log("roleFromState", roleFromState);
-
   // Hook dùng để lấy danh sách thể loại (genre)
   const { genreList } = useCreateSeries();
 
@@ -114,21 +112,6 @@ export function SeriesDetail() {
   // Kiểm tra xem user hiện tại có phải là Tantou hay Editorial không (liên quan đến tính năng phê duyệt)
   const isTantou = normalizedRole === "tantou";
   const isEditorial = normalizedRole === "editorial";
-
-  console.log(`Is tantou? ${isTantou}`);
-
-  // Log debug để kiểm tra quá trình render
-  console.log("SeriesDetail render debug:", {
-    detailData,
-    currentStatus,
-    normalizedStatus,
-    roleFromState,
-    normalizedRole,
-    isTantou,
-    isEditorial,
-    showPanel: (((isTantou) && (normalizedStatus === 'processing'))
-      || ((isEditorial) && (normalizedStatus === 'pending')))
-  });
 
   // Tùy chỉnh dòng chữ trên nút Phê duyệt / Từ chối dựa trên role
   const approveText = isTantou
@@ -196,17 +179,17 @@ export function SeriesDetail() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <div className="min-h-[40px] info-box p-3 text-foreground text-sm leading-relaxed">
+                    <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
                       <h5 className="font-normal text-sm sm:text-sm text-muted-foreground tracking-wider">Upcoming Chapter Release Date</h5>
-                      {detailData?.publishDate ? (
-                        <div className="text-sm sm:text-lg my-1.5 font-semibold">{dayjs(detailData?.publishDate).utc(true).format('DD/MM/YYYY HH:mm')}</div>
+                      {detailData?.nextChapterPublishDate ? (
+                        <div className="text-sm sm:text-lg my-1.5 font-semibold">{dayjs(detailData?.nextChapterPublishDate).utc(true).format('DD/MM/YYYY HH:mm')}</div>
                       ) : (
-                        <div className="text-sm sm:text-lg my-1.5 font-semibold ms-0.5">— — — —</div>
+                        <div className="text-sm sm:text-lg my-1.5 font-semibold ms-0.5">{dayjs(detailData?.publishDate).utc(true).format('DD/MM/YYYY HH:mm')}</div>
                       )}
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <div className="min-h-[40px] info-box p-3 text-foreground text-sm leading-relaxed">
+                    <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
                       <h5 className="font-normal text-sm  sm:text-sm text-muted-foreground tracking-wider">Publish Period</h5>
                       {detailData?.publishPeriod ? (
                         <div className="text-sm sm:text-lg my-1.5 font-semibold capitalize">{detailData?.publishPeriod}</div>
@@ -216,7 +199,7 @@ export function SeriesDetail() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <div className="min-h-[40px] info-box p-3 text-foreground text-sm leading-relaxed">
+                    <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
                       <h5 className="font-normal text-sm sm:text-sm text-muted-foreground tracking-wider">Series Creation Date</h5>
                       {detailData?.createAt ? (
                         <div className="text-sm sm:text-lg my-1.5 font-semibold">{dayjs(detailData?.createAt).utc(true).format('DD/MM/YYYY HH:mm')}</div>
@@ -226,7 +209,7 @@ export function SeriesDetail() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <div className="min-h-[40px] info-box p-3 text-foreground text-sm leading-relaxed">
+                    <div className="bg-muted/30 p-3 rounded-lg border border-border min-h-[85px] text-foreground text-sm leading-relaxed">
                       <h5 className="font-normal text-sm  sm:text-sm text-muted-foreground tracking-wider">Series Updated Date</h5>
                       {detailData?.updatedAt ? (
                         <div className="text-sm sm:text-lg my-1.5 font-semibold capitalize">{dayjs(detailData?.updatedAt).utc(true).format('DD/MM/YYYY HH:mm')}</div>
@@ -291,7 +274,7 @@ export function SeriesDetail() {
             </div>
             <div className="col-span-1 md:col-span-12 flex flex-col flex-1">
               <h5 className="text-xs sm:text-sm text-muted-foreground uppercase font-semibold mb-1">Description</h5>
-              <p className="text-foreground  min-h-30 text-justify w-full px-4 py-2 info-box flex-1 max-h-50 overflow-y-auto text-sm leading-relaxed">
+              <p className="bg-muted/30 p-3 rounded-lg border border-border text-foreground  min-h-30 text-justify w-full px-4 py-2 info-box flex-1 max-h-50 overflow-y-auto text-sm leading-relaxed">
                 {detailData?.description}
               </p>
             </div>
@@ -301,7 +284,6 @@ export function SeriesDetail() {
           <div className="pt-6">
             <ChapterList roleName={roleFromState} seriesData={detailData} />
           </div>
-          {console.log("Checkrolehientai:", roleFromState)}
 
         </div>
 

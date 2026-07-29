@@ -26,9 +26,9 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
     const normalizedRole = roleName ? roleName.toLowerCase() : "";
     const routeRole = roleRouteMap[normalizedRole] || "mangaka";
     const profilePath = `/${routeRole}/profile`;
-    const hasFeedbackSupport = ["mangaka", "assistant", "tantou editor", "editorial board", "tantou", "editorial"].includes(normalizedRole);
+    const hasFeedbackSupport = ["mangaka", "assistant", "tantou editor", "editorial board", "tantou", "editorial", "board"].includes(normalizedRole);
 
-    const { feedbackData, unreadFeedbackCount } = useGetFeedback(hasFeedbackSupport);
+    const { feedbackData, unreadFeedbackCount, markAsReadLocally } = useGetFeedback(hasFeedbackSupport);
     const { handleNavigateFromFeedback } = useNavigateFromFeedback();
     const { handleMarkAsRead } = useMarkFeedbackAsRead();
 
@@ -36,6 +36,7 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
         handleNavigateFromFeedback(feedback, roleName);
         if (feedback?.id) {
             handleMarkAsRead(feedback.id);
+            markAsReadLocally(feedback.id); //update UI
         }
         setIsDropdownOpen(false);
     };
@@ -82,14 +83,14 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
 
     return (
         <>
-            <div className="flex items-center justify-between shadow p-2.5 px-4 sm:px-8 relative z-30">
+            <div className="flex items-center justify-between bg-card border-b border-border shadow-xs p-2.5 px-4 sm:px-8 relative z-30">
                 <div className="flex items-center gap-2 sm:gap-3">
                     {/* Mobile Sidebar Toggle Button */}
                     {normalizedRole !== 'reader' && (
                         <div className="md:hidden">
                             <button
                                 onClick={onToggleMobileSidebar}
-                                className="p-2 text-muted-foreground hover:text-foreground border border-sidebar-border transition-colors cursor-pointer toggle-btn"
+                                className="p-2 text-muted-foreground hover:text-foreground border border-sidebar-border rounded-lg transition-colors cursor-pointer"
                                 title="Open Navigation"
                             >
                                 <PanelLeft size={22} />
@@ -125,7 +126,7 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
                         <div className="bell-container relative">
                             <button
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                className="relative flex text-muted-foreground hover:text-accent p-2 transition-colors cursor-pointer toggle-btn"
+                                className="relative flex text-muted-foreground hover:text-accent p-2 rounded-lg transition-colors cursor-pointer hover:bg-muted/50"
                                 title="Feedback Mailbox"
                             >
                                 <div className="content-center">

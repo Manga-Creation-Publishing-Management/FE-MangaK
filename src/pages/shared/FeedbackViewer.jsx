@@ -31,7 +31,6 @@ export const FeedbackViewer = forwardRef(({
 
         const extractedType = feedbackData?.data?.type || feedbackData?.type;
         const extractedContent = feedbackData?.data?.content || feedbackData?.content;
-        console.log("extractedContent", extractedContent);
 
         if (feedbackData && (extractedContent || extractedType)) {
           setFetchedFeedback(extractedContent || fallbackFeedback);
@@ -69,8 +68,6 @@ export const FeedbackViewer = forwardRef(({
 
         } catch (error) {
           console.error("Error fetching text feedback detail:", error);
-          // showAlert("Could not fetch the latest feedback.", "fail"); // không báo ra nữa, chỉ in console, sửa thành in ra chữ No feedback provided
-          // Fallback
           setFetchedFeedback("No feedback provided");
           if (fallbackFeedbackType === "Manual") {
             setIsViewAnnotationOpen(true);

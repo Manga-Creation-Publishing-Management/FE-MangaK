@@ -1,11 +1,8 @@
 import { useState, useEffect } from "react";
-import useSeriesList from "./useSeriesList";
+
 
 // Custom hook hỗ trợ tính năng tìm kiếm (search) bộ truyện
-export function useSearch() {
-    // Tái sử dụng useSeriesList để lấy danh sách dữ liệu bộ truyện
-    const { seriesData } = useSeriesList();
-
+export function useSearch(seriesData = []) {
     // State lưu trữ từ khóa tìm kiếm (search text)
     const [searchTxt, setSearchText] = useState("");
     // State lưu trữ mảng kết quả sau khi đã lọc
@@ -26,8 +23,8 @@ export function useSearch() {
 
         // Thực hiện lọc danh sách bộ truyện:
         // Yêu cầu 1: Trạng thái (status) phải là "Publishing" (đang xuất bản)
-        // Yêu cầu 2: Tiêu đề bộ truyện (in thường) phải bắt đầu bằng (startsWith) từ khóa tìm kiếm (in thường)
-        const filtered = (seriesData || []).filter((series) =>
+        // Yêu cầu 2: Tiêu đề bộ truyện (in thường) phải bao gồm (includes) từ khóa tìm kiếm (in thường)
+        const filtered = seriesData.filter((series) =>
             series.status === "Publishing" &&
             series.title.toLowerCase().includes(searchTxt.toLowerCase())
         );

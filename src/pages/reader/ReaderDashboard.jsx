@@ -1,9 +1,11 @@
 import { SeriesManagement } from '@/pages/shared/SeriesManagement';
 import { useSearch } from '@/features/series/hooks/useSearch';
 import { SearchFilterBar } from '@/shared/components/SearchFilterBar';
+import useSeriesList from '../../features/series/hooks/useSeriesList';
 
 export function ReaderDashboard() {
-    const { searchTxt, searchResult, handleSearch } = useSearch();
+    const { seriesData, isLoading } = useSeriesList();
+    const { searchTxt, searchResult, handleSearch } = useSearch(seriesData);
 
     return (
         <div className='p-5 bg-background'>
@@ -18,13 +20,12 @@ export function ReaderDashboard() {
                     />
                 </div>
 
-                {searchTxt.length > 0
-                    ? (searchResult.length === 0
-                        ? <div className='p-6 text-warning'>There is no series matches</div>
-                        : <SeriesManagement role="reader" seriesFiltered={searchResult} />
-                    )
-                    : <SeriesManagement role="reader" statusFilter={"Publishing"} />
-                }
+
+                <SeriesManagement
+                    role="reader"
+                    statusFilter="Publishing"
+                    seriesFiltered={searchTxt.length > 0 ? searchResult : undefined}
+                />
 
             </div>
         </div>

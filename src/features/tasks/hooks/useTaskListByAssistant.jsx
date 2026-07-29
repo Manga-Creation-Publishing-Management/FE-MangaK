@@ -8,7 +8,6 @@ export function useTaskListByAssistant(assistantId) {
 
     const fetchApi = async () => {
       const response = await taskService.getTaskListByAssistant();
-      // console.log(response);
       setTaskListByAssistant(response.data);
     }
     fetchApi();

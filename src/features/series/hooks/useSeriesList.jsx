@@ -10,9 +10,9 @@ export default function useSeriesList(reloadState) {
             try {
                 setIsLoading(true);
                 const resultsSeries = await seriesService.getAllSeries();
-                setSeriesData(resultsSeries.data.toReversed());
+                setSeriesData(resultsSeries.data);
             } catch (error) {
-                console.error("Lỗi khi lấy danh sách truyện:", error);
+                console.error("Fail when loading series list", error);
             } finally {
                 setIsLoading(false);
             }

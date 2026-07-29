@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-// import { get, post } from "../../shared/requests";
 import { api } from "../../../services/api";
 import { seriesService } from "../../../services/seriesService";
 import { useToast } from "../../../shared/hooks/useToast";
@@ -94,7 +93,6 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
       });
       setCroppedFile(file);
       setCoverFile(file);
-      // setImage("");
       showAlert("Cropped successfully!");
     }, "image/jpeg");
   };
@@ -153,6 +151,7 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
 
   // Trả về tất cả các biến và hàm cần thiết để form (CreateSeriesModal) sử dụng
   return {
+    isLoading,
     genreList,
     selectGenres,
     coverFile,
