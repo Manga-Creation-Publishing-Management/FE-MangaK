@@ -313,7 +313,7 @@ export function ChapterDetail() {
               progress === 100 ? (
                 <>
                   <h3 className="font-medium text-sm inline-flex items-center text-muted-foreground">Submit Your Work</h3>
-                  {chapterDetail?.chapterFileUrl ? (
+                  {(chapterDetail?.chapterFileUrl && chapterDetail?.status?.toLowerCase() !== 'rejected' && chapterDetail?.status?.toLowerCase() !== 'revising') ? (
                     <div className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center h-[160px] gap-2">
                       <p className="text-xs text-center text-muted-foreground">Submitted File</p>
                       <div className="flex flex-col gap-2 w-full items-center">
