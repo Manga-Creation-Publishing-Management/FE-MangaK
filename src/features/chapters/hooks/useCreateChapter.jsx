@@ -108,8 +108,9 @@ export function useCreateChapter(seriesId, onClose, onReload) {
     } catch (error) {
       showAlert(error.response?.data?.Message || "Error creating chapter", "error");
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
     }
-
 
   };
 

@@ -163,7 +163,7 @@ export function TaskDetail() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             {/* 1. Task Description */}
             <div className="md:col-span-6">
-              <div className="info-box p-4 min-h-[200px] text-foreground text-sm leading-relaxed max-h-20 overflow-y-auto">
+              <div className="bg-muted/30 rounded-lg border border-border p-4 min-h-[200px] text-foreground text-sm leading-relaxed max-h-20 overflow-y-auto">
                 <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-2">
                   Task Description
                 </h3>
@@ -174,7 +174,7 @@ export function TaskDetail() {
             {/* 2. Cột giữa */}
             <div className="md:col-span-3 flex flex-col gap-2 min-h-[200px] h-auto">
               {/* Ô 2: Assistant in Charge */}
-              <div className="info-box p-4 flex flex-col justify-start min-h-[96px]">
+              <div className="bg-muted/30 rounded-lg border border-border p-4 flex flex-col justify-start min-h-[96px]">
                 <div className="flex flex-row justify-between items-center w-full">
                   <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3 items-center flex gap-2">
                     Assistant in charge
@@ -236,7 +236,7 @@ export function TaskDetail() {
                 )}
               </div>
               {/* Ô 1: Income Amount */}
-              <div className="info-box p-4 min-h-[96px] flex flex-col justify-start">
+              <div className="bg-muted/30 rounded-lg border border-border p-4 min-h-[96px] flex flex-col justify-start">
                 <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-2">
                   Income Amount
                 </h3>
@@ -252,7 +252,7 @@ export function TaskDetail() {
             {/* 3. Cột phải */}
             <div className="md:col-span-3 flex flex-col gap-2 min-h-[200px] h-auto">
               {/* Ô 3: Deadline */}
-              <div className="info-box p-4 flex flex-col justify-start min-h-[96px]">
+              <div className="bg-muted/30 rounded-lg border border-border p-4 flex flex-col justify-start min-h-[96px]">
                 <div className="flex flex-row justify-between items-center w-full">
                   {/* Thẻ h3 giữ nguyên mb-3 để đẩy chiều cao header chuẩn như mẫu */}
                   <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3 items-center flex gap-2">
@@ -309,7 +309,7 @@ export function TaskDetail() {
               </div>
 
               {/* Ô 4: Submitted At */}
-              <div className="info-box p-4 flex flex-col justify-start min-h-[96px]">
+              <div className="bg-muted/30 rounded-lg border border-border p-4 flex flex-col justify-start min-h-[96px]">
                 <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3">
                   Submitted At
                 </h3>
@@ -353,6 +353,31 @@ export function TaskDetail() {
                   </div>
                 </>
               }
+
+              {(role?.toLowerCase() === "assistant" && (taskDetail?.status?.toLowerCase() === "completed" || taskDetail?.status?.toLowerCase() === "pending" || taskDetail?.status?.toLowerCase() === "unsatisfied")) && (
+
+                <>
+                  <h3 className="font-medium text-sm text-muted-foreground">Your Submitted File</h3>
+                  <div className="w-full border border-dashed border-border rounded-xl p-6 bg-muted/20 flex flex-col items-center justify-center text-center space-y-3 h-[160px] ">
+                    {taskDetail?.submittedFileUrl ? (
+                      <>
+                        <p className="text-xs text-muted-foreground">Download your submitted file</p>
+                        <a
+                          href={taskDetail?.submittedFileUrl}
+                          download
+                          className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-10 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-border shadow-sm"
+                        >
+                          <Download size={16} />
+                          Download File
+                        </a>
+                      </>
+                    ) : (
+                      <p className="text-xl font-semibold text-muted-foreground">No file has been submitted.</p>
+                    )}
+                  </div>
+                </>
+              )}
+
 
               {role === "mangaka" && (taskDetail?.status == "Processing" || taskDetail?.status == "Pending" || taskDetail?.status == "Completed" || taskDetail?.status == "Unsatisfied") &&
                 <>
