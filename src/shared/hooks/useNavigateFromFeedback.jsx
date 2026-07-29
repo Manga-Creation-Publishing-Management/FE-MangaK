@@ -4,10 +4,17 @@ export function useNavigateFromFeedback() {
     const navigate = useNavigate();
 
     const handleNavigateFromFeedback = (feedback, role) => {
-        const normalizedRole = role.toLowerCase();
+        let normalizedRole = role.toLowerCase();
+
+        if (normalizedRole === 'tantou editor')
+            normalizedRole = 'tantou';
+        if (normalizedRole === 'editorial board')
+            normalizedRole = 'editorial';
+
+        console.log("Normalized role:", normalizedRole);
 
         // Check if mangaTaskId exists (indicating it's a task)
-        if (feedback.mangaTaskId) {
+        if (feedback.mangaTaskId && (normalizedRole === 'mangaka')) {
             const taskId = feedback.mangaTaskId;
             navigate(`/${normalizedRole}/tasks/${taskId}`, { state: { role: normalizedRole, taskId } });
             // <Link to={`/${normalizedRole}/tasks/${taskId}`} state={{ role: normalizedRole, taskId }} reloadDocument></Link>
