@@ -184,7 +184,7 @@ export function SeriesDetail() {
                       {detailData?.nextChapterPublishDate ? (
                         <div className="text-sm sm:text-lg my-1.5 font-semibold">{dayjs(detailData?.nextChapterPublishDate).utc(true).format('DD/MM/YYYY HH:mm')}</div>
                       ) : (
-                        <div className="text-sm sm:text-lg my-1.5 font-semibold ms-0.5">— — — —</div>
+                        <div className="text-sm sm:text-lg my-1.5 font-semibold ms-0.5">{dayjs(detailData?.publishDate).utc(true).format('DD/MM/YYYY HH:mm')}</div>
                       )}
                     </div>
                   </div>
@@ -274,7 +274,7 @@ export function SeriesDetail() {
             </div>
             <div className="col-span-1 md:col-span-12 flex flex-col flex-1">
               <h5 className="text-xs sm:text-sm text-muted-foreground uppercase font-semibold mb-1">Description</h5>
-              <p className="text-foreground  min-h-30 text-justify w-full px-4 py-2 info-box flex-1 max-h-50 overflow-y-auto text-sm leading-relaxed">
+              <p className="bg-muted/30 p-3 rounded-lg border border-border text-foreground  min-h-30 text-justify w-full px-4 py-2 info-box flex-1 max-h-50 overflow-y-auto text-sm leading-relaxed">
                 {detailData?.description}
               </p>
             </div>
