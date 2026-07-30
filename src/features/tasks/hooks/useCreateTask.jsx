@@ -76,6 +76,7 @@ export function useCreateTask() {
 
   const handleSubmitCreateTask = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const formData = new FormData(e.target);
     const allFields = Object.fromEntries(formData.entries());

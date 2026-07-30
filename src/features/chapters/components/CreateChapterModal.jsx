@@ -114,7 +114,7 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                className="cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity disabled:cursor-not-allowed"
               >
                 {isLoading ? "Creating..." : "Create"}
               </button>

@@ -131,6 +131,7 @@ export default function useCreateSeries(onClose, onReload, reloadState) {
   };
 
   return {
+    isLoading,
     genreList,
     selectGenres,
     coverFile,
