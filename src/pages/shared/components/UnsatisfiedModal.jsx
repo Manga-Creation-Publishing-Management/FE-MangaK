@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { X } from "lucide-react";
+import { useState } from 'react';
+import { X } from 'lucide-react';
 
 export function UnsatisfiedModal({ isOpen, onClose, onSubmit, isLoading }) {
   const [percentage, setPercentage] = useState("70");

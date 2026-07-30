@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Lock, User, Eye, EyeOff } from 'lucide-react';
-import { BackButton } from './BackButton';
-import { authService } from '../../services/authService';
-import { useToast } from '../../shared/hooks/useToast';
+import { BackButton } from '@/pages/auth/BackButton';
+import { authService } from '@/services/authService';
+import { useToast } from '@/shared/hooks/useToast';
 import { useNavigate } from 'react-router';
 
 export function ResetPasswordPage() {
@@ -13,14 +13,11 @@ export function ResetPasswordPage() {
     const [isSending, setIsSending] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
-
-    // Tạo hoạ tiết nền dạng lưới (grid lines) giống LoginPage
     const gridStyle = {
         backgroundImage: `linear-gradient(to right, rgba(155, 126, 184, 0.06) 1px, transparent 1px),
                       linear-gradient(to bottom, rgba(155, 126, 184, 0.06) 1px, transparent 1px)`,
         backgroundSize: '24px 24px',
     };
-
 
     const handleResetPassword = async (e) => {
         e.preventDefault();
@@ -42,16 +39,13 @@ export function ResetPasswordPage() {
 
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col font-sans relative" style={gridStyle}>
-            {/* Nút quay lại trang đăng nhập */}
+            
             <BackButton url="/login" />
 
-            {/* Container căn giữa phần trên (top-middle) */}
             <div className="flex-1 flex flex-col items-center pt-20 md:pt-32 px-6">
 
-                {/* Thẻ Form (Card) chính */}
                 <div className="w-full max-w-md bg-background border border-border rounded-xl p-8 shadow-xl transition-colors duration-300 relative">
 
-                    {/* Tiêu đề & Mô tả */}
                     <div className="space-y-3 mb-8">
                         <h1 className="text-2xl font-extrabold tracking-tight text-foreground text-center">
                             Reset your password
@@ -61,10 +55,8 @@ export function ResetPasswordPage() {
                         </p>
                     </div>
 
-                    {/* Form Nhập Liệu */}
                     <form onSubmit={handleResetPassword} className="space-y-6">
 
-                        {/* Input Email */}
                         <div className="space-y-2">
                             <label className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
                                 M-CODE
@@ -87,7 +79,7 @@ export function ResetPasswordPage() {
                             </label>
                             <div className="w-full bg-muted/40 border border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 rounded-xl px-4 py-3 flex items-center gap-3 transition-all">
                                 <Lock size={18} className="text-muted-foreground/80 shrink-0" />
-                                {/* Ẩn/Hiện mật khẩu phụ thuộc vào giá trị state showPassword */}
+                                
                                 <input
                                     required
                                     type={showPassword ? 'text' : 'password'}
@@ -97,7 +89,6 @@ export function ResetPasswordPage() {
                                     className="bg-transparent text-foreground placeholder-muted-foreground/70 outline-none w-full text-sm font-medium"
                                 />
 
-                                {/* Nút bấm con mắt để thay đổi cờ showPassword */}
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
@@ -108,7 +99,6 @@ export function ResetPasswordPage() {
                             </div>
                         </div>
 
-                        {/* Nút Submit*/}
                         <div className="space-y-4">
                             <button
                                 type="submit"

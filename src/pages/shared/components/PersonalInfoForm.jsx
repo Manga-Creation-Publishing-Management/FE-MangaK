@@ -1,4 +1,4 @@
-import { User, Mail, Phone, Save } from "lucide-react";
+import { User, Mail, Phone, Save } from 'lucide-react';
 
 export function PersonalInfoForm({
   register,

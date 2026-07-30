@@ -1,8 +1,8 @@
-import { BackButton } from '../auth/BackButton';
+import { BackButton } from '@/pages/auth/BackButton';
 import { GoogleLogin } from '@react-oauth/google';
-import { authService } from '../../services/authService';
+import { authService } from '@/services/authService';
 import { useNavigate } from 'react-router';
-import { useToast } from '../../shared/hooks/useToast';
+import { useToast } from '@/shared/hooks/useToast';
 
 export function ReaderLoginPage() {
     const navigate = useNavigate();
@@ -14,7 +14,6 @@ export function ReaderLoginPage() {
 
             const response = await authService.loginGoogle(idToken);
 
-            // Kiểm tra xem dữ liệu trả về có hợp lệ không
             if (!response || typeof response !== "object" || !response.success) {
                 throw new Error(response?.message || "Google login failed on server.");
             }
@@ -24,7 +23,6 @@ export function ReaderLoginPage() {
             localStorage.setItem("accessToken", response.data?.accessToken);
             localStorage.setItem("refreshToken", response.data?.refreshToken || "");
 
-            // Decode Google JWT để lấy avatar
             const payload = JSON.parse(atob(idToken.split('.')[1]));
 
             const user = {
@@ -43,7 +41,6 @@ export function ReaderLoginPage() {
         }
     }
 
-
     const gridStyle = {
         backgroundImage: `linear-gradient(to right, rgba(155, 126, 184, 0.06) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(155, 126, 184, 0.06) 1px, transparent 1px)`,
@@ -56,8 +53,6 @@ export function ReaderLoginPage() {
             <div className='min-h-screen flex flex-col '>
                 <div className="flex-1 grid grid-cols-1 md:grid-cols-12 bg-background text-foreground transition-colors duration-300 font-sans">
 
-                    {/* --- Cột bên Trái (Mảng Banner Giới Thiệu Reader) --- */}
-                    {/* Giữ nguyên màu sắc cố định ở cả theme tối và theme sáng */}
                     <div className="hidden md:flex md:col-span-5 bg-slate-950 p-10 lg:p-12 flex-col justify-between text-white relative overflow-hidden border-r border-slate-800">
 
                         <div className="flex items-center gap-3 relative z-10 select-none">
@@ -80,7 +75,6 @@ export function ReaderLoginPage() {
                             <p className="text-slate-300 text-sm leading-relaxed font-normal">
                                 A real-time platform for rating your favourite series
                             </p>
-
 
                             <div className="bg-slate-900/90 border border-slate-800 rounded-[24px] p-5 backdrop-blur-md">
                                 <div className="flex items-center gap-2 text-slate-300 text-[10px] font-bold uppercase tracking-widest select-none">

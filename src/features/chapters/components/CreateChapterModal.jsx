@@ -1,5 +1,5 @@
-import { X } from "lucide-react";
-import { useCreateChapter } from "../hooks/useCreateChapter";
+import { X } from 'lucide-react';
+import { useCreateChapter } from '@/features/chapters/hooks/useCreateChapter';
 
 export function CreateChapterModal({ onClose, seriesId, onReload }) {
 
@@ -76,7 +76,6 @@ export function CreateChapterModal({ onClose, seriesId, onReload }) {
                       Selected: {storyFile.name}
                     </div>
 
-                    {/* Hiển thị số trang khi đã quét xong hoặc đang quét */}
                     {isReadingPdf && (
                       <p className="text-xs text-muted-foreground animate-pulse">
                         Analyzing PDF pages...

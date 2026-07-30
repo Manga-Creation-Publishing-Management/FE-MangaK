@@ -1,4 +1,4 @@
-import { api } from "./api";
+import { api } from '@/services/api';
 
 export const feedbackService = {
   async getAllFeedback() {
@@ -15,7 +15,6 @@ export const feedbackService = {
     });
   },
 
-
   async getFeedbackDetail(seriesId, chapterId, taskId) {
     const params = new URLSearchParams();
     if (seriesId) params.append('SeriesId', seriesId);
@@ -24,7 +23,6 @@ export const feedbackService = {
     
     return api.get(`/Feedback/get-feedback-detail?${params.toString()}`);
   }, 
-
 
   async getLastFeedback(seriesId, chapterId, taskId) {
     const params = new URLSearchParams();
@@ -39,5 +37,4 @@ export const feedbackService = {
     return api.patch(`/Feedback/mark-as-read/${feedbackId}`)  
   }
 
-  
 }

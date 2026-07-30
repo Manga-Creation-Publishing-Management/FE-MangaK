@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { seriesService } from "../../../services/seriesService";
+import { useState, useEffect } from 'react';
+import { seriesService } from '@/services/seriesService';
 
 export default function useSeriesList(reloadState) {
     const [seriesData, setSeriesData] = useState([]);
@@ -18,7 +18,7 @@ export default function useSeriesList(reloadState) {
             }
         };
         fetchSeries();
-    }, [reloadState]); // Fetch lại khi reloadState thay đổi
+    }, [reloadState]); 
 
     return { seriesData, isLoading };
 }

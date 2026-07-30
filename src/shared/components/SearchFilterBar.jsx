@@ -1,5 +1,5 @@
-import { Search } from "lucide-react";
-import { CustomSelect } from "./CustomSelect";
+import { Search } from 'lucide-react';
+import { CustomSelect } from '@/shared/components/CustomSelect';
 
 export function SearchFilterBar({
   searchQuery,
@@ -15,7 +15,7 @@ export function SearchFilterBar({
 
   return (
     <div className={containerClass}>
-      {/* Ô tìm kiếm */}
+      
       {showSearch && (
         <div className="relative flex-1 sm:max-w-sm w-full">
           <Search

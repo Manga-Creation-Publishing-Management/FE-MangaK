@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { chaptersService } from "@/services/chapterService";
+import { useEffect, useState } from 'react';
+import { chaptersService } from '@/services/chapterService';
 
 export function useProgressing(chapterId) {
   const [progress, setProgressing] = useState(0);

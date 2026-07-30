@@ -1,10 +1,9 @@
-import { feedbackService } from "../../../services/feedbackService";
-import { useToast } from "../../../shared/hooks/useToast";
-import { useState, useEffect, useCallback } from 'react';
+import { feedbackService } from '@/services/feedbackService';
+import { useToast } from '@/shared/hooks/useToast';
+import { useState, useEffect } from 'react';
 
 export function useGetFeedback(enabled = true) {
 
-    // State quản lý trạng thái loading (khi đang gọi API submit)
     const [feedbackData, setFeedbackData] = useState(null);
     const { showAlert } = useToast();
 
@@ -31,7 +30,7 @@ export function useGetFeedback(enabled = true) {
         setFeedbackData(prev => {
             if (!prev?.data) return prev;
             return {
-                ...prev, //giữ lại các field khác của object, chỉ ghi đè mỗi data
+                ...prev, 
                 data: prev.data.map(item =>
                     item.id === feedbackId
                         ? { ...item, isRead: true }

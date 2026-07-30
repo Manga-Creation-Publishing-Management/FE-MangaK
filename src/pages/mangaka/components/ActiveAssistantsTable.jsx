@@ -1,6 +1,6 @@
 import { Loader2 } from 'lucide-react';
-import { PaginationCustom } from "@/features/Pagination/components/PaginationCustom";
-import { getTotalPage } from "@/features/Pagination/hooks/getTotalPage";
+import { PaginationCustom } from '@/features/pagination/components/PaginationCustom';
+import { getTotalPage } from '@/features/pagination/hooks/getTotalPage';
 
 export function ActiveAssistantsTable({ isLoading, activeAssistants }) {
   const postsPerPageLimit = 4;
@@ -77,4 +77,4 @@ export function ActiveAssistantsTable({ isLoading, activeAssistants }) {
     </div>
   );
 }
-
+

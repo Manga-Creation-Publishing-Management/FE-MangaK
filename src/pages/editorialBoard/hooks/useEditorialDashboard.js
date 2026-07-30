@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { seriesService } from "@/services/seriesService";
-import { publishingScheduleService } from "@/services/publishingScheduleService";
-import { updateSeries } from "@/services/updateSeriesService";
-import { feedbackService } from "@/services/feedbackService";
-import { useSeriesManagement } from "@/features/series/hooks/useSeriesManagement";
-import { useToast } from "@/shared/hooks/useToast";
+import { useEffect, useState } from 'react';
+import { seriesService } from '@/services/seriesService';
+import { publishingScheduleService } from '@/services/publishingScheduleService';
+import { updateSeries } from '@/services/updateSeriesService';
+import { feedbackService } from '@/services/feedbackService';
+import { useSeriesManagement } from '@/features/series/hooks/useSeriesManagement';
+import { useToast } from '@/shared/hooks/useToast';
 
 const STATUS_COLORS = {
   processing: "#60a5fa",

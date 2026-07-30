@@ -1,13 +1,13 @@
 import { User, Lock, Eye, EyeOff } from 'lucide-react';
 import { Link } from 'react-router';
-import { LoginHook } from '@/features/auth/hooks/LoginHook';
+import { useLogin } from '@/features/auth/hooks/useLogin';
 
 export function LoginForm() {
     const {
         email, setEmail, password, setPassword,
         showPassword, setShowPassword, handleSignIn,
         error, isLoading
-    } = LoginHook();
+    } = useLogin();
 
     return (
         <div className="w-full bg-card rounded-2xl p-8 transition-colors duration-300 relative">

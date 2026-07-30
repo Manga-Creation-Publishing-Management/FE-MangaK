@@ -1,13 +1,12 @@
 
-import { useEffect, useRef, useState } from "react";
-import { chaptersService } from "../../../services/chapterService";
-import { useToast } from "../../../shared/hooks/useToast";
-import { pdfjs } from "react-pdf";
+import { useEffect, useRef, useState } from 'react';
+import { chaptersService } from '@/services/chapterService';
+import { useToast } from '@/shared/hooks/useToast';
+import { pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-// Hook tự tạo (Custom hook) dùng để lấy chi tiết của một chapter cụ thể
 export function useChapterDetail(seriesId, chapterId) {
-  // State lưu trữ dữ liệu chi tiết của chapter sau khi gọi API thành công
+  
   const [chapterDetail, setChapterDetail] = useState(null);
 
   const [storyFile, setStoryFile] = useState(null);
@@ -33,12 +32,11 @@ export function useChapterDetail(seriesId, chapterId) {
 
       if (file.type === "application/pdf") {
         try {
-          // Chuyển file thành dạng array buffer để pdfjs có thể đọc
+          
           const arrayBuffer = await file.arrayBuffer();
-          // Lấy thông tin tài liệu PDF
+          
           const pdf = await pdfjs.getDocument(arrayBuffer).promise;
 
-          // Lưu số trang vào state
           setPageNums(pdf.numPages);
 
         } catch (error) {
@@ -49,27 +47,24 @@ export function useChapterDetail(seriesId, chapterId) {
     }
   };
 
-
-  // useEffect sẽ tự động chạy mỗi khi component sử dụng hook này được render lần đầu,
-  // hoặc mỗi khi 'chapterId' thay đổi
   useEffect(() => {
-    // Hàm fetchChapterDetail được khai báo bên trong useEffect để gọi API bất đồng bộ
+    
     const fetchChapterDetail = async () => {
-      // Nếu không có chapterId (chưa có data hoặc id lỗi), thì dừng và không gọi API
+      
       if (!chapterId) return;
       try {
-        // Gọi API lấy thông tin chi tiết của chapter thông qua service
+        
         const response = await chaptersService.getChapterDetailById(seriesId, chapterId);
-        // Cập nhật state với dữ liệu trả về từ server
+        
         setChapterDetail(response.data);
       } catch (error) {
-        // Bắt lỗi nếu API thất bại (lỗi mạng, sai ID,...)
+        
         console.log("Lỗi:", error);
       }
     };
-    // Gọi hàm fetch
+    
     fetchChapterDetail();
-  }, [chapterId, reload]); // Dependency array: Effect này phụ thuộc vào chapterId
+  }, [chapterId, reload]); 
 
   const handleSubmitChapter = async () => {
     if (!chapterId) {
@@ -89,9 +84,6 @@ export function useChapterDetail(seriesId, chapterId) {
       formData.append("TotalPage", pageNums);
       const response = await chaptersService.submitChapter(seriesId, chapterId, formData);
 
-      // Cập nhật lại status hiển thị thành "Pending""
-
-
       showAlert("Chapter submitted successfully!");
       handleReload();
     } catch (error) {
@@ -102,14 +94,13 @@ export function useChapterDetail(seriesId, chapterId) {
     }
   }
 
-  // Trả về dữ liệu chi tiết để component giao diện có thể sử dụng
   return {
     chapterDetail,
     setChapterDetail,
     storyFile,
     storyInputRef,
     handleStoryChange,
-    // chapterListForm,
+    
     handleSubmitChapter,
     isLoading,
     handleReload

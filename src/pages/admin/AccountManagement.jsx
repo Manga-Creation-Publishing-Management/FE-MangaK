@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react";
-import { Plus, ShieldCheck } from "lucide-react";
-import { userService } from "@/services/userService.js";
-import { useToast } from "@/shared/hooks/useToast";
+import { useEffect, useState } from 'react';
+import { Plus, ShieldCheck } from 'lucide-react';
+import { userService } from '@/services/userService.js';
+import { useToast } from '@/shared/hooks/useToast';
 
-import { apiRoleMap } from "./constants/adminConstants.js";
-import { UserFilters } from "./components/UserFilters.jsx";
-import { UserTable } from "./components/UserTable.jsx";
-import { CreateAccountModal } from "./components/CreateAccountModal.jsx";
-import { ConfirmStatusModal } from "./components/ConfirmStatusModal.jsx";
-import { RolePermissionsModal } from "./components/RolePermissionsModal.jsx";
+import { apiRoleMap } from '@/pages/admin/constants/adminConstants.js';
+import { UserFilters } from '@/pages/admin/components/UserFilters.jsx';
+import { UserTable } from '@/pages/admin/components/UserTable.jsx';
+import { CreateAccountModal } from '@/pages/admin/components/CreateAccountModal.jsx';
+import { ConfirmStatusModal } from '@/pages/admin/components/ConfirmStatusModal.jsx';
+import { RolePermissionsModal } from '@/pages/admin/components/RolePermissionsModal.jsx';
 
-import { getTotalPage } from "@/features/Pagination/hooks/getTotalPage";
-import { PaginationCustom } from "@/features/Pagination/components/PaginationCustom";
+import { PaginationCustom } from '@/features/pagination/components/PaginationCustom';
 
 export function AccountManagement() {
   const { showAlert } = useToast();
@@ -25,7 +24,7 @@ export function AccountManagement() {
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
   const [tantouList, setTantouList] = useState([]);
-  const [accountType, setAccountType] = useState("system"); // "system" or "readers"
+  const [accountType, setAccountType] = useState("system"); 
 
   const fetchUsers = async () => {
     setIsLoading(true);
@@ -104,10 +103,9 @@ export function AccountManagement() {
     return options;
   };
 
-  // Fetch users when the account type tab changes
   useEffect(() => {
     fetchUsers();
-    // Reset filters
+    
     setSearchQuery("");
     setFilterRole("all");
     setFilterStatus("all");
@@ -179,7 +177,7 @@ export function AccountManagement() {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Account Type Tabs */}
+      
       <div className="flex border-b border-border gap-2">
         <button
           onClick={() => setAccountType("system")}

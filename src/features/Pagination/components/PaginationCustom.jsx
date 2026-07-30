@@ -1,10 +1,10 @@
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { getPaginationRange } from "../hooks/getPaginationRange";
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { getPaginationRange } from '@/features/pagination/hooks/getPaginationRange';
 
 export function PaginationCustom({ currentPage, totalPages, setCurrentPage }) {
   return (
     <div className="flex flex-wrap justify-center items-center gap-1.5 sm:gap-2 mt-6 sm:mt-8 select-none max-w-full px-1">
-      {/* Nút Previous */}
+      
       <button
         disabled={currentPage === 1}
         onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -13,7 +13,6 @@ export function PaginationCustom({ currentPage, totalPages, setCurrentPage }) {
         <ArrowLeft size={16} />
       </button>
 
-      {/* Render các nút số trang kèm dấu ba chấm */}
       {getPaginationRange(currentPage, totalPages).map((page, index) =>
         page === '...' ? (
           <span key={`dots-${index}`} className="px-1 sm:px-2 text-xs sm:text-sm text-muted-foreground font-medium shrink-0">
@@ -33,7 +32,6 @@ export function PaginationCustom({ currentPage, totalPages, setCurrentPage }) {
         )
       )}
 
-      {/* Nút Next */}
       <button
         disabled={currentPage === totalPages}
         onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}

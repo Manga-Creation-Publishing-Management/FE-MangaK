@@ -1,5 +1,5 @@
-import { Edit, Trash2 } from "lucide-react";
-import dayjs from "dayjs";
+import { Edit, Trash2 } from 'lucide-react';
+import dayjs from 'dayjs';
 
 export function ScheduleCard({ schedule, onEditClick, onDeleteClick }) {
   return (

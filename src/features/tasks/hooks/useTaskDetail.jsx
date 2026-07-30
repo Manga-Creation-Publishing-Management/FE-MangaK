@@ -1,7 +1,6 @@
-import { useEffect, useState, useRef } from "react"
-import { taskService } from "../../../services/taskService";
-import { useToast } from "../../../shared/hooks/useToast";
-
+import { useEffect, useState, useRef } from 'react';
+import { taskService } from '@/services/taskService';
+import { useToast } from '@/shared/hooks/useToast';
 
 export function useTaskDetail(taskId, role) {
   const { showAlert } = useToast();
@@ -19,7 +18,6 @@ export function useTaskDetail(taskId, role) {
   const handleReload = () => {
     setReload(!reload);
   }
-
 
   const handleStoryChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -49,7 +47,6 @@ export function useTaskDetail(taskId, role) {
     try {
       const response = await taskService.claimTask(taskId, "Processing");
 
-      // Cập nhật state taskDetail với status mới
       setTaskDetail({
         ...taskDetail,
         status: "Processing"
@@ -74,7 +71,6 @@ export function useTaskDetail(taskId, role) {
     try {
       const response = await taskService.denyTask(taskId, "Rejected");
 
-      // Cập nhật state taskDetail với status mới
       setTaskDetail({
         ...taskDetail,
         status: "Rejected"
@@ -99,11 +95,8 @@ export function useTaskDetail(taskId, role) {
     try {
       const response = await taskService.approvedTask(taskId, feedback);
 
-      // Cập nhật state taskDetail với status mới
-
       showAlert("Approved Task!")
       handleReload();
-
 
     } catch (error) {
       console.error("Lỗi khi cập nhật status:", error);
@@ -131,11 +124,8 @@ export function useTaskDetail(taskId, role) {
         : "Annotation feedback added by Mangaka";
       const response = await taskService.rejectTask(taskId, finalFeedback);
 
-      // Cập nhật state taskDetail với status mới
-
       showAlert("Reject Task!")
       handleReload();
-
 
     } catch (error) {
       console.error("Lỗi khi cập nhật status:", error);
@@ -182,9 +172,6 @@ export function useTaskDetail(taskId, role) {
       formData.append("SubmittedFileUrl", storyFile);
       const response = await taskService.submitTask(formData);
 
-      // Cập nhật lại status hiển thị thành "Submitted" (hoặc trạng thái tương ứng phía Backend)
-
-
       showAlert("Submitted task successfully!");
       handleReload();
     } catch (error) {
@@ -194,7 +181,6 @@ export function useTaskDetail(taskId, role) {
       setIsLoading(false);
     }
   };
-
 
   return {
     taskDetail,

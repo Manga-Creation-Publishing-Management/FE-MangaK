@@ -1,7 +1,7 @@
 import { SeriesManagement } from '@/pages/shared/SeriesManagement';
 import { useSearch } from '@/features/series/hooks/useSearch';
 import { SearchFilterBar } from '@/shared/components/SearchFilterBar';
-import useSeriesList from '../../features/series/hooks/useSeriesList';
+import useSeriesList from '@/features/series/hooks/useSeriesList';
 
 export function ReaderDashboard() {
     const { seriesData, isLoading } = useSeriesList();
@@ -19,7 +19,6 @@ export function ReaderDashboard() {
                         useCardWrapper={false}
                     />
                 </div>
-
 
                 <SeriesManagement
                     role="reader"

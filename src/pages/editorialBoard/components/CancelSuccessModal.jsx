@@ -1,4 +1,4 @@
-import { CheckCircle } from "lucide-react";
+import { CheckCircle } from 'lucide-react';
 
 export function CancelSuccessModal({ show, cancelledSeriesName, onClose }) {
   if (!show) return null;

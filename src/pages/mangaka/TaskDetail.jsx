@@ -1,21 +1,21 @@
-import { ArrowLeft, Calendar, DollarSign, Download, FileText, JapaneseYen, SquarePen, UploadCloud, ChevronDown, Loader2, X, Check } from "lucide-react";
-import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
-import { Navigate, useLocation, useNavigate, useOutletContext } from "react-router";
-import { useTaskDetail } from "../../features/tasks/hooks/useTaskDetail";
-import { StatusBadge } from "@/shared/components/StatusBadge";
-import { ApprovalPanel } from "@/pages/shared/ApprovalPanel";
+import { Download, FileText, JapaneseYen, SquarePen, ChevronDown, X, Check } from 'lucide-react';
+import { FeedbackHistoryList } from '@/shared/components/FeedbackHistoryList';
+import { useLocation, useNavigate, useOutletContext } from 'react-router';
+import { useTaskDetail } from '@/features/tasks/hooks/useTaskDetail';
+import { StatusBadge } from '@/shared/components/StatusBadge';
+import { ApprovalPanel } from '@/pages/shared/components/ApprovalPanel';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { AnnotationModal } from "../shared/AnnotationModal";
-import { ConfirmRejectModal } from "../shared/ConfirmRejectModal";
-import { PreviewModal } from "../shared/PreviewModal";
-import { UnsatisfiedModal } from "../shared/UnsatisfiedModal";
-import { useState, useRef, useEffect } from "react";
-import { FeedbackViewer } from "../shared/FeedbackViewer";
-import { useToast } from "@/shared/hooks/useToast";
-import { useUpdateTaskDeadline } from "../../features/tasks/hooks/useUpdateTaskDeadline";
+import { AnnotationModal } from '@/pages/shared/components/AnnotationModal';
+import { ConfirmRejectModal } from '@/pages/shared/components/ConfirmRejectModal';
+import { PreviewModal } from '@/pages/shared/components/PreviewModal';
+import { UnsatisfiedModal } from '@/pages/shared/components/UnsatisfiedModal';
+import { useState, useRef, useEffect } from 'react';
+import { FeedbackViewer } from '@/pages/shared/components/FeedbackViewer';
+import { useToast } from '@/shared/hooks/useToast';
+import { useUpdateTaskDeadline } from '@/features/tasks/hooks/useUpdateTaskDeadline';
 
-import { useUpdateTaskAssistant } from "../../features/tasks/hooks/useUpdateTaskAssistant";
+import { useUpdateTaskAssistant } from '@/features/tasks/hooks/useUpdateTaskAssistant';
 dayjs.extend(utc);
 export function TaskDetail() {
 
@@ -51,14 +51,12 @@ export function TaskDetail() {
     handleCancelEditDeadline,
     handleSaveDeadline
   } = useUpdateTaskDeadline(taskId, taskDetail?.deadline, (newDeadline) => {
-    // Cập nhật trực tiếp trường deadline trong object taskDetail mà không gọi lại API reload
+    
     if (taskDetail) {
       taskDetail.deadline = newDeadline;
     }
   });
 
-
-  //các state quản lí hiển thị pop-up
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
@@ -113,11 +111,10 @@ export function TaskDetail() {
     taskDetail?.assignedToId || taskDetail?.assistantId,
     taskDetail?.assistantName,
     (newAssistantId, newAssistantName) => {
-      // Gọi hàm handleReload để fetch lại API
+      
       handleReload();
     }
   );
-
 
   return (
     <>
@@ -161,7 +158,7 @@ export function TaskDetail() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-            {/* 1. Task Description */}
+            
             <div className="md:col-span-6">
               <div className="info-box p-4 min-h-[200px] text-foreground text-sm leading-relaxed max-h-20 overflow-y-auto">
                 <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-2">
@@ -171,9 +168,8 @@ export function TaskDetail() {
               </div>
             </div>
 
-            {/* 2. Cột giữa */}
             <div className="md:col-span-3 flex flex-col gap-2 min-h-[200px] h-auto">
-              {/* Ô 2: Assistant in Charge */}
+              
               <div className="info-box p-4 flex flex-col justify-start min-h-[96px]">
                 <div className="flex flex-row justify-between items-center w-full">
                   <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3 items-center flex gap-2">
@@ -216,13 +212,13 @@ export function TaskDetail() {
                 {isEditingTaskAssistant && !isOverdue ? (
                   <div className="w-full mt-1">
                     <select
-                      value={selectedTaskAssistantId} // BIẾN MỚI
-                      onChange={(e) => setSelectedTaskAssistantId(e.target.value)} // Cập nhật state cục bộ thay vì gọi API ngay
-                      disabled={isUpdatingTaskAssistant} // BIẾN MỚI
+                      value={selectedTaskAssistantId} 
+                      onChange={(e) => setSelectedTaskAssistantId(e.target.value)} 
+                      disabled={isUpdatingTaskAssistant} 
                       className="bg-card text-foreground border border-border rounded px-2 py-0.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary w-full cursor-pointer h-[26px]"
                     >
                       <option value="">Select assistant...</option>
-                      {taskAssistantList.map((as) => ( // MAP TỪ LIST MỚI
+                      {taskAssistantList.map((as) => ( 
                         <option key={as.userId} value={as.userId}>
                           {as.firstName + " " + as.lastName}
                         </option>
@@ -235,7 +231,7 @@ export function TaskDetail() {
                   </span>
                 )}
               </div>
-              {/* Ô 1: Income Amount */}
+              
               <div className="info-box p-4 min-h-[96px] flex flex-col justify-start">
                 <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-2">
                   Income Amount
@@ -246,15 +242,13 @@ export function TaskDetail() {
                 </span>
               </div>
 
-
             </div>
 
-            {/* 3. Cột phải */}
             <div className="md:col-span-3 flex flex-col gap-2 min-h-[200px] h-auto">
-              {/* Ô 3: Deadline */}
+              
               <div className="info-box p-4 flex flex-col justify-start min-h-[96px]">
                 <div className="flex flex-row justify-between items-center w-full">
-                  {/* Thẻ h3 giữ nguyên mb-3 để đẩy chiều cao header chuẩn như mẫu */}
+                  
                   <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3 items-center flex gap-2">
                     deadline {isOverdue && <span className="text-destructive font-bold text-[10px]">(Overdue)</span>}
                   </h3>
@@ -288,7 +282,6 @@ export function TaskDetail() {
                   )}
                 </div>
 
-                {/* PHẦN HIỂN THỊ INPUT / TEXT PHÍA DƯỚI GIỮ NGUYÊN */}
                 {isEditingDeadline && taskDetail?.status?.toLowerCase() !== "pending" && taskDetail?.status?.toLowerCase() !== "processing" ? (
                   <div className="w-full mt-1">
                     <input
@@ -308,7 +301,6 @@ export function TaskDetail() {
                 )}
               </div>
 
-              {/* Ô 4: Submitted At */}
               <div className="info-box p-4 flex flex-col justify-start min-h-[96px]">
                 <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider mb-3">
                   Submitted At
@@ -322,7 +314,6 @@ export function TaskDetail() {
             </div>
           </div>
           <div className="grid grid-cols-1  md:grid-cols-1 gap-6 pt-4 border-t border-border">
-
 
             <div className="space-y-3 w-full">
               {(role === "assistant" && (taskDetail?.status == "Processing" || taskDetail?.status == "Revising")) &&
@@ -376,7 +367,6 @@ export function TaskDetail() {
                       </>
                     )}
 
-                    {/* NHÃ THÊM CÁI NÚT ANNOTATE CHO MANGAKA NÀY */}
                     {taskDetail?.status === "Pending" &&
                       <button
                         onClick={() => setIsPreviewOpen(true)}
@@ -430,7 +420,6 @@ export function TaskDetail() {
                   </button>
                 )}
 
-
               </>
             }
 
@@ -442,11 +431,10 @@ export function TaskDetail() {
               </button>
             )}
 
-
           </div>
           {(role === "mangaka" && taskDetail?.status == "Pending") &&
             <>
-              {/* NHÃ SỬA CÁI APPROVAL */}
+              
               <ApprovalPanel
                 feedback={feedback}
                 onFeedbackChange={(e) => setFeedback(e.target.value)}
@@ -465,12 +453,11 @@ export function TaskDetail() {
                 fileUrl={taskDetail?.submittedFileUrl}
                 taskId={taskId}
                 role={role}
-                onRejectTrigger={() => { //cho chữ mặc định khi annotation vì reject nó vẫn check á
+                onRejectTrigger={() => { 
                   handleRejectTask(true);
                   setIsAnnotationOpen(false);
                 }}
               />
-
 
               <ConfirmRejectModal
                 isOpen={confirmModalOpen}
@@ -502,22 +489,9 @@ export function TaskDetail() {
                 isLoading={isLoading}
               />
 
-
-              {/* PHẦN CŨ CỦA CHƯN */}
-              {/* <button
-                  onClick={handleRejectTask}
-                  className="bg-destructive hover:bg-destructive/70 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
-                  Reject & Feedback
-                </button>
-                <button
-                  onClick={handleApprovedTask}
-                  className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6 py-2.5 rounded-lg text-l transition-colors cursor-pointer shadow-sm w-50">
-                  Approve Task
-                </button> */}
             </>
           }
 
-          {/* Feedback Modals */}
           <FeedbackViewer
             ref={feedbackViewerRef}
             taskId={taskId}
@@ -528,7 +502,6 @@ export function TaskDetail() {
           />
         </div>
 
-        {/* Feedback History Log Section */}
         <div className="w-full">
 
           <button

@@ -1,6 +1,5 @@
-import React from 'react';
 import { Trophy, Loader2, AlertCircle } from 'lucide-react';
-import { LeaderboardItem } from './LeaderboardItem';
+import { LeaderboardItem } from '@/features/leaderboard/components/LeaderboardItem';
 
 export function LeaderboardList({
   isLoading,

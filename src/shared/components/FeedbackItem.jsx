@@ -16,7 +16,7 @@ export function FeedbackItem({ seriesId, chapterId, taskId, senderName, seriesTi
                 : 'bg-card border border-border opacity-70 hover:opacity-100'
                 }`}
         >
-            {/* Chấm tròn đỏ/chủ đạo nhấp nháy báo tin CHƯA ĐỌC */}
+            
             {isNew && (
                 <span className="absolute top-3 right-3 flex h-3 w-3">
                     <span className="bg-card animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>

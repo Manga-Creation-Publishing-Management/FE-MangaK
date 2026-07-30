@@ -1,6 +1,6 @@
-import { OverviewCard } from "@/shared/components/OverviewCard";
-import { useAdminDashboard } from "./hooks/useAdminDashboard";
-import { RoleDistributionTable } from "./components/RoleDistributionTable";
+import { OverviewCard } from '@/shared/components/OverviewCard';
+import { useAdminDashboard } from '@/pages/admin/hooks/useAdminDashboard';
+import { RoleDistributionTable } from '@/pages/admin/components/RoleDistributionTable';
 
 export function AdminDashboard() {
   const { isLoading, stats, roleCounts } = useAdminDashboard();

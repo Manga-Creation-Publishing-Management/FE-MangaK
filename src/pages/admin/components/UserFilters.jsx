@@ -1,4 +1,4 @@
-import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
+import { SearchFilterBar } from '@/shared/components/SearchFilterBar';
 
 export function UserFilters({
   accountType,
@@ -43,7 +43,7 @@ export function UserFilters({
       onSearchChange={onSearchQueryChange}
       searchPlaceholder="Search by name, email or phone…"
       filters={filters}
-      useCardWrapper={false} // Không bọc khung card để hiển thị inline cạnh các nút bấm
+      useCardWrapper={false} 
     />
   );
 }

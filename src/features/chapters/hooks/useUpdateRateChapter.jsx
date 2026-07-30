@@ -1,7 +1,6 @@
-import { chaptersService } from "../../../services/chapterService";
-import { useToast } from "../../../shared/hooks/useToast";
+import { chaptersService } from '@/services/chapterService';
+import { useToast } from '@/shared/hooks/useToast';
 
-// Hook xử lý việc gửi đánh giá (rating) của chương truyện lên server
 export function useUpdateRateChapter() {
     const { showAlert } = useToast();
 
@@ -9,7 +8,6 @@ export function useUpdateRateChapter() {
         try {
             const res = await chaptersService.updateChapterRate(chapterId, rateRange);
 
-            // Backend trả về HTTP status 200 nhưng payload chứa success: false
             if (res && typeof res === 'object' && res.success === false) {
                 showAlert(res.message || "You only change vote once");
                 return false;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { leaderboardService } from '@/services/leaderboardService';
-import { getPeriodOptionDetails, formatDateLabel } from '../utils/leaderboardUtils';
+import { getPeriodOptionDetails, formatDateLabel } from '@/features/leaderboard/utils/leaderboardUtils';
 
 export function useLeaderboard() {
   const [timePeriod, setTimePeriod] = useState('weekly');

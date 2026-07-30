@@ -1,4 +1,4 @@
-import { AlertTriangle, X } from "lucide-react";
+import { AlertTriangle, X } from 'lucide-react';
 
 export function ConfirmUpdateModal({ show, onClose, onConfirm }) {
   if (!show) return null;

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { incomeService } from "../../../services/incomeService";
+import { useEffect, useState } from 'react';
+import { incomeService } from '@/services/incomeService';
 
 export function useIncome() {
   const [totalIncome, setTotalIncome] = useState(0);

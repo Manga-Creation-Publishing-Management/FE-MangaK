@@ -1,4 +1,4 @@
-import { Camera } from "lucide-react";
+import { Camera } from 'lucide-react';
 
 export function AvatarSection({
   isLoading,

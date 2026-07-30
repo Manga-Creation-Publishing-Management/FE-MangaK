@@ -1,4 +1,3 @@
-import React from 'react';
 import { CustomSelect } from '@/shared/components/CustomSelect';
 
 export function LeaderboardFilter({

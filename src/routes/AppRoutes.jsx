@@ -1,48 +1,37 @@
-import { Routes, Route, Navigate, Outlet } from 'react-router';
-import { SeriesManagement } from "../pages/shared/SeriesManagement.jsx"
-import { TaskManagement } from '../pages/mangaka/TaskManagement';
-import { MyTask } from '../pages/assistant/MyTask';
-import { SeriesReview } from '../pages/tantouEditor/SeriesReview';
-import { PublishingSchedule } from '../pages/editorialBoard/PublishingSchedule';
-import { SeriesApproval } from '../pages/editorialBoard/SeriesApproval';
-import { SeriesDetail } from '../pages/shared/SeriesDetail.jsx';
-import { HomePage } from '../pages/shared/HomePage.jsx';
-import { LoginPage } from '../pages/auth/LoginPage.jsx';
-import { ChapterDetail } from '../pages/mangaka/ChapterDetail.jsx';
-import { ProfilePage } from '../pages/shared/ProfilePage.jsx';
+import { Routes, Route, Navigate } from 'react-router';
+import { SeriesManagement } from '@/pages/shared/SeriesManagement.jsx';
+import { TaskManagement } from '@/pages/mangaka/TaskManagement';
+import { MyTask } from '@/pages/assistant/MyTask';
+import { SeriesReview } from '@/pages/tantouEditor/SeriesReview';
+import { PublishingSchedule } from '@/pages/editorialBoard/PublishingSchedule';
+import { SeriesApproval } from '@/pages/editorialBoard/SeriesApproval';
+import { SeriesDetail } from '@/pages/shared/SeriesDetail.jsx';
+import { HomePage } from '@/pages/shared/HomePage.jsx';
+import { LoginPage } from '@/pages/auth/LoginPage.jsx';
+import { ChapterDetail } from '@/pages/mangaka/ChapterDetail.jsx';
+import { ProfilePage } from '@/pages/shared/ProfilePage.jsx';
 import { Layout } from '@/layout/Layout.jsx';
-import { AdminDashboard } from '../pages/admin/AdminDashboard.jsx';
-import { AccountManagement } from '../pages/admin/AccountManagement.jsx';
-import { MangakaDashboard } from '../pages/mangaka/MangakaDashboard.jsx';
-import { AssistantDashboard } from '../pages/assistant/AssistantDashboard.jsx';
-import { TantouDashboard } from '../pages/tantouEditor/TantouDashboard.jsx';
-import { EditorialDashboard } from '../pages/editorialBoard/EditorialDashboard.jsx';
-import { ReaderDashboard } from '../pages/reader/ReaderDashboard.jsx';
-import { ProtectedRoute } from '../features/auth/components/ProtectedRoute';
-import { PublicRoute } from '../features/auth/components/PublicRoute';
-import { LeaderboardPage } from '../pages/shared/LeaderboardPage.jsx';
-import { ReaderLoginPage } from '../pages/reader/ReaderLoginPage.jsx';
-import { TaskDetail } from '../pages/mangaka/TaskDetail.jsx';
-import { Income } from '../pages/assistant/Income.jsx';
-import { ForgotPasswordPage } from '../pages/auth/ForgotPasswordPage.jsx';
-import { ResetPasswordPage } from '../pages/auth/ResetPasswordPage.jsx';
-
-const roleDisplayNames = {
-  mangaka: "Mangaka",
-  assistant: "Assistant",
-  tantou: "Tantou Editor",
-  editorial: "Editorial Board",
-  admin: "Admin",
-  reader: "Reader"
-};
-
+import { AdminDashboard } from '@/pages/admin/AdminDashboard.jsx';
+import { AccountManagement } from '@/pages/admin/AccountManagement.jsx';
+import { MangakaDashboard } from '@/pages/mangaka/MangakaDashboard.jsx';
+import { AssistantDashboard } from '@/pages/assistant/AssistantDashboard.jsx';
+import { TantouDashboard } from '@/pages/tantouEditor/TantouDashboard.jsx';
+import { EditorialDashboard } from '@/pages/editorialBoard/EditorialDashboard.jsx';
+import { ReaderDashboard } from '@/pages/reader/ReaderDashboard.jsx';
+import { ProtectedRoute } from '@/features/auth/components/ProtectedRoute';
+import { PublicRoute } from '@/features/auth/components/PublicRoute';
+import { LeaderboardPage } from '@/pages/shared/LeaderboardPage.jsx';
+import { ReaderLoginPage } from '@/pages/auth/ReaderLoginPage.jsx';
+import { TaskDetail } from '@/pages/mangaka/TaskDetail.jsx';
+import { Income } from '@/pages/assistant/Income.jsx';
+import { ForgotPasswordPage } from '@/pages/auth/ForgotPasswordPage.jsx';
+import { ResetPasswordPage } from '@/pages/auth/ResetPasswordPage.jsx';
 
 export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
 
-      {/* Guest/Anonymous Routes */}
       <Route element={<PublicRoute />}>
         <Route path="/login" element={<LoginPage />} />
         <Route path="loginReader" element={<ReaderLoginPage />} />
@@ -50,8 +39,6 @@ export function AppRoutes() {
         <Route path="reset-password" element={<ResetPasswordPage />} />
       </Route>
 
-
-      {/* Mangaka Routes */}
       <Route element={<ProtectedRoute allowedRole="mangaka" />}>
         <Route path="/mangaka" element={<Layout roleName="mangaka" />}>
           <Route index element={<MangakaDashboard />} />
@@ -65,7 +52,6 @@ export function AppRoutes() {
         </Route>
       </Route>
 
-      {/* Assistant Routes */}
       <Route element={<ProtectedRoute allowedRole="assistant" />}>
         <Route path="/assistant" element={<Layout roleName="assistant" />}>
           <Route index element={<AssistantDashboard />} />
@@ -76,7 +62,6 @@ export function AppRoutes() {
         </Route>
       </Route>
 
-      {/* Tantou Editor Routes */}
       <Route element={<ProtectedRoute allowedRole="tantou" />}>
         <Route path="/tantou" element={<Layout roleName="tantou" />}>
           <Route index element={<TantouDashboard />} />
@@ -88,7 +73,6 @@ export function AppRoutes() {
         </Route>
       </Route>
 
-      {/* Editorial Board Routes */}
       <Route element={<ProtectedRoute allowedRole="editorial" />}>
         <Route path="/editorial" element={<Layout roleName="editorial" />}>
           <Route index element={<EditorialDashboard />} />
@@ -101,7 +85,6 @@ export function AppRoutes() {
         </Route>
       </Route>
 
-      {/* Admin Routes */}
       <Route element={<ProtectedRoute allowedRole="admin" />}>
         <Route path="/admin" element={<Layout roleName="admin" />}>
           <Route index element={<AdminDashboard />} />
@@ -110,7 +93,6 @@ export function AppRoutes() {
         </Route>
       </Route>
 
-      {/* Reader Routes */}
       <Route element={<ProtectedRoute allowedRole="reader" />}>
         <Route path="/reader" element={<Layout roleName="reader" />}>
           <Route index element={<ReaderDashboard />} />
@@ -120,6 +102,6 @@ export function AppRoutes() {
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes >
-  )
+    </Routes>
+  );
 }

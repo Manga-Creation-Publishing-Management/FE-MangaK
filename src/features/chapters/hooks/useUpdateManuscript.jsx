@@ -1,15 +1,14 @@
-import { useState, useRef } from "react";
-import { useToast } from "@/shared/hooks/useToast";
-import { chaptersService } from "../../../services/chapterService";
-import { pdfjs } from "react-pdf";
+import { useState, useRef } from 'react';
+import { useToast } from '@/shared/hooks/useToast';
+import { chaptersService } from '@/services/chapterService';
+import { pdfjs } from 'react-pdf';
 
-// Đặt workerSrc để pdfjs hoạt động
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 export function useUpdateManuscript(seriesId, chapterId, onUpdateSuccess) {
   const [isEditingManuscript, setIsEditingManuscript] = useState(false);
   const [manuscriptFile, setManuscriptFile] = useState(null);
-  const [pageNums, setPageNums] = useState(0); // State lưu số trang
+  const [pageNums, setPageNums] = useState(0); 
   const [isUpdating, setIsUpdating] = useState(false);
   const manuscriptInputRef = useRef(null);
   const { showAlert } = useToast();
@@ -18,7 +17,7 @@ export function useUpdateManuscript(seriesId, chapterId, onUpdateSuccess) {
 
   const handleCancelEditManuscript = () => {
     setIsEditingManuscript(false);
-    setManuscriptFile(null); // Xóa file đã chọn nếu hủy
+    setManuscriptFile(null); 
     setPageNums(0);
   };
 
@@ -27,7 +26,6 @@ export function useUpdateManuscript(seriesId, chapterId, onUpdateSuccess) {
     if (file) {
       setManuscriptFile(file);
 
-      // Xử lý đếm số trang nếu là file PDF
       if (file.type === "application/pdf") {
         try {
           const arrayBuffer = await file.arrayBuffer();
@@ -51,14 +49,11 @@ export function useUpdateManuscript(seriesId, chapterId, onUpdateSuccess) {
     try {
       const formData = new FormData();
       formData.append("ManuscriptFileUrl", manuscriptFile);
-      // Bỏ trường Status đi để API không tưởng đây là hành động submit chapter
-
-      // Append TotalPage để API không báo lỗi (nếu API vẫn bắt buộc)
+      
       if (pageNums > 0) {
         formData.append("TotalPage", pageNums);
       }
 
-      // Gọi API patch
       await chaptersService.updateChapterStatus(seriesId, chapterId, formData);
 
       showAlert?.("Updated manuscript successfully!", "success");

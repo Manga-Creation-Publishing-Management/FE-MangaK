@@ -1,8 +1,7 @@
-import { BookOpen } from "lucide-react";
+import { BookOpen } from 'lucide-react';
 
-// Component hiển thị bảng phân bổ trạng thái series cho Tantou Editor
 export function TantouStatusDistribution({ statusDistribution, isLoading }) {
-  // Mapping tên trạng thái hiển thị đẹp hơn
+  
   const STATUS_LABELS = {
     processing: "Processing",
     rejected: "Rejected",

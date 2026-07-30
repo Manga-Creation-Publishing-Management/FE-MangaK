@@ -1,7 +1,5 @@
-import { Check, X, SquareX } from "lucide-react";
+import { Check, X, SquareX } from 'lucide-react';
 
-// Component ApprovalPanel: Bảng điều khiển dùng để gửi nhận xét (Feedback) 
-// và nút Phê duyệt / Từ chối (Approve / Reject) dành cho Tantou hoặc Editorial Board.
 export function ApprovalPanel({
   feedback = "",
   onFeedbackChange,
@@ -14,23 +12,21 @@ export function ApprovalPanel({
   rejectText = "Reject",
 }) {
   return (
-    // Vỏ ngoài của bảng điều khiển, cách điệu với viền trên và shadow khi hover
+    
     <div className="space-y-4 bg-card border-t border-border rounded-xl p-5 hover:shadow-lg">
 
-      {/* Dòng chữ hướng dẫn cho người duyệt */}
       <p className="text-sm font-medium text-foreground">
         Feedback on Names/Chapter
-        {/* Chú thích nhỏ: Feedback là không bắt buộc khi duyệt, nhưng bắt buộc khi từ chối */}
+        
         <span className="text-muted-foreground font-normal ml-2">
           (Optional for approval, Required for rejection)
         </span>
       </p>
 
-      {/* Ô nhập văn bản (Textarea) để viết nhận xét / phản hồi */}
       <textarea
         defaultValue={feedback}
         onChange={onFeedbackChange}
-        rows={4} // Hiển thị sẵn 4 dòng
+        rows={4} 
         placeholder="Provide feedback on the series concept and draft..."
         className="
       w-full px-4 py-3 resize-none 
@@ -42,10 +38,8 @@ export function ApprovalPanel({
       "
       />
 
-      {/* Khung chứa các nút bấm hành động (Approve & Reject) */}
       <div className="flex flex-col sm:flex-row gap-3">
 
-        {/* Nút Phê Duyệt (Approve) */}
         <button
           type="button"
           onClick={onApprove}
@@ -62,7 +56,6 @@ export function ApprovalPanel({
           {approveText}
         </button>
 
-        {/* Nút Từ Chối (Reject) */}
         <button
           type="button"
           onClick={onReject}
@@ -81,7 +74,6 @@ export function ApprovalPanel({
           {rejectText}
         </button>
 
-        {/* Nút Không hài lòng (Unsatisfied) - chỉ hiển thị khi rejectCount >= 2 */}
         {rejectCount >= 2 && onUnsatisfied && (
           <button
             type="button"

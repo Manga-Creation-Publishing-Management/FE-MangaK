@@ -1,14 +1,13 @@
-import { useState } from "react";
-import { OverviewCard } from "@/shared/components/OverviewCard";
-import { CheckCircle, Calendar, BookOpen } from "lucide-react";
-import { ApprovedSeriesCard } from "./components/ApprovedSeriesCard";
-import { CancelSeriesModal } from "./components/CancelSeriesModal";
-import { CancelSuccessModal } from "./components/CancelSuccessModal";
-import { useEditorialDashboard } from "./hooks/useEditorialDashboard";
-import { UpcomingReleases } from "./components/UpcomingReleases";
-import { StatusDistribution } from "./components/StatusDistribution";
-import { getTotalPage } from "@/features/Pagination/hooks/getTotalPage";
-import { PaginationCustom } from "@/features/Pagination/components/PaginationCustom";
+import { useState } from 'react';
+import { OverviewCard } from '@/shared/components/OverviewCard';
+import { CheckCircle, Calendar, BookOpen } from 'lucide-react';
+import { ApprovedSeriesCard } from '@/pages/editorialBoard/components/ApprovedSeriesCard';
+import { CancelSeriesModal } from '@/pages/editorialBoard/components/CancelSeriesModal';
+import { CancelSuccessModal } from '@/pages/editorialBoard/components/CancelSuccessModal';
+import { useEditorialDashboard } from '@/pages/editorialBoard/hooks/useEditorialDashboard';
+import { UpcomingReleases } from '@/pages/editorialBoard/components/UpcomingReleases';
+import { StatusDistribution } from '@/pages/editorialBoard/components/StatusDistribution';
+import { PaginationCustom } from '@/features/pagination/components/PaginationCustom';
 
 export function EditorialDashboard() {
   const [currentPage, setCurrentPage] = useState(1);

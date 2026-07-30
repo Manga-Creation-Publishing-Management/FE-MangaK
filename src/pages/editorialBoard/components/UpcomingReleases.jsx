@@ -1,4 +1,4 @@
-import { Calendar, CalendarDays } from "lucide-react";
+import { Calendar, CalendarDays } from 'lucide-react';
 
 export function UpcomingReleases({ upcomingReleases }) {
   return (

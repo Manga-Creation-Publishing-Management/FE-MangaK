@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { ChevronDown, ChevronUp, CircleCheckBig, History, JapaneseYen, Calendar } from "lucide-react";
-import { OverviewCard } from "@/shared/components/OverviewCard";
-import { StatusBadge } from "@/shared/components/StatusBadge";
-import { useIncome } from "../../features/tasks/hooks/useIncome";
-import { useIncomeHistory } from "../../features/tasks/hooks/useIncomeHistory";
-import { PaginationCustom } from "@/features/Pagination/components/PaginationCustom";
-import dayjs from "dayjs";
+import { useState } from 'react';
+import { ChevronDown, ChevronUp, CircleCheckBig, History, JapaneseYen, Calendar } from 'lucide-react';
+import { OverviewCard } from '@/shared/components/OverviewCard';
+import { StatusBadge } from '@/shared/components/StatusBadge';
+import { useIncome } from '@/features/tasks/hooks/useIncome';
+import { useIncomeHistory } from '@/features/tasks/hooks/useIncomeHistory';
+import { PaginationCustom } from '@/features/pagination/components/PaginationCustom';
+import dayjs from 'dayjs';
 
 export function Income() {
   const [historyPage, setHistoryPage] = useState(1);
@@ -21,7 +21,6 @@ export function Income() {
 
   const { monthlyIncomesList, loading: loadingHistory } = useIncomeHistory();
 
-  // Pagination cho Paid Incomes (max 5 item/trang)
   const paidPageSize = 5;
   const paidTotalPages = Math.ceil((paidIncomes || []).length / paidPageSize);
   const paginatedPaidIncomes = (paidIncomes || []).slice(
@@ -29,7 +28,6 @@ export function Income() {
     paidPage * paidPageSize
   );
 
-  // Pagination cho Income History (max 5 item/trang)
   const historyPageSize = 5;
   const historyTotalPages = Math.ceil((monthlyIncomesList || []).length / historyPageSize);
   const paginatedHistory = (monthlyIncomesList || []).slice(
@@ -39,7 +37,7 @@ export function Income() {
 
   return (
     <div className="p-4 sm:p-6 space-y-6 sm:space-y-8 bg-background min-h-full">
-      {/* Cards tổng quan */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <OverviewCard
           contentText="Completed Tasks"
@@ -55,7 +53,6 @@ export function Income() {
         />
       </div>
 
-      {/* Danh sách Thu nhập đã hoàn thành trong tháng (Paid Incomes) */}
       <div className="bg-card border border-border rounded-xl p-4 sm:p-6 space-y-4">
         <div className="flex items-center gap-3">
           <JapaneseYen size={24} className="stroke-[2.5] text-success" />
@@ -118,9 +115,8 @@ export function Income() {
         )}
       </div>
 
-      {/* Income History với 1 dòng mặc định và nút Toggle */}
       <div className="bg-card border border-border rounded-xl p-4 sm:p-6 space-y-4">
-        {/* Hàng Tiêu đề History Income + Toggle Button */}
+        
         <div
           onClick={() => setIsHistoryOpen((prev) => !prev)}
           className="flex items-center justify-between cursor-pointer select-none py-1 hover:opacity-90 transition-opacity"
@@ -141,7 +137,6 @@ export function Income() {
           </button>
         </div>
 
-        {/* Khung xổ ra khi click Toggle */}
         {isHistoryOpen && (
           <div className="pt-3 space-y-4 border-t border-border/50 animate-in fade-in duration-200">
             {loadingHistory ? (

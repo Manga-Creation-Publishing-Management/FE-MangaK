@@ -1,13 +1,9 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
-import { Undo, Brush, Type, X, Eye, EyeOff, Move, Eraser } from "lucide-react";
-import { KonvaDraw } from "./KonvaDraw";
-import { useChapterAnnotation } from "../../features/chapters/hooks/useChapterAnnotation";
-import { useState } from "react";
+import { KonvaDraw } from '@/pages/shared/components/KonvaDraw';
+import { useChapterAnnotation } from '@/features/chapters/hooks/useChapterAnnotation';
+import { useState } from 'react';
 
-// Kích hoạt Web Worker để thư viện react-pdf xử lý PDF ở một luồng độc lập
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, chapterId = null, taskId = null, role, onRejectTrigger, isReadOnly = false, initialFeedbackJson = null }) {
@@ -39,10 +35,9 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
   } = useChapterAnnotation(onClose, initialFeedbackJson);
 
   const handleCombineSubmit = async () => {
-    // 1. Gọi API lưu JSON từ hook cũ
+    
     const isSuccess = await handleSubmitAnnotation(seriesId, chapterId, taskId, role);
 
-    // 2. Nếu lưu JSON thành công VÀ có truyền hàm onRejectTrigger từ cha xuống -> Gọi Reject
     if (isSuccess && onRejectTrigger) {
       onRejectTrigger();
     }
@@ -51,7 +46,7 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
 
   useEffect(() => {
     if (isOpen && containerRef.current) {
-      // 32px cho phần padding 2 bên (p-4 = 16px * 2)
+      
       setPageWidth(containerRef.current.clientWidth - 32);
     }
   }, [isOpen, setPageWidth]);
@@ -65,7 +60,6 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
     >
       <div className="bg-card border border-border rounded-2xl shadow-2xl p-6 w-[95vw] md:w-[85vw] lg:w-[1000px] max-w-[100vw] max-h-[95vh] overflow-y-auto flex flex-col items-center gap-4 relative">
 
-        {/* Tiêu đề & Nút Close */}
         <div className="flex justify-between items-center w-full pb-4 border-b border-border">
           <h2 className="text-lg font-semibold text-foreground">
             {isReadOnly ? "View Feedback (Read-only)" : "View and Annotate"}
@@ -91,10 +85,10 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
 
         {!isReadOnly && (
           <>
-            {/* MỚI NỮA NÈ: Thanh công cụ: Vẽ và Text */}
+            
             <div className="flex flex-wrap items-center justify-between gap-4 w-full bg-muted/40 p-3 rounded-xl border border-border">
           <div className="flex items-center gap-2">
-            {/* Các nút chọn công cụ vẽ/text */}
+            
             <button
               onClick={() => setTool('brush')}
               className={`p-2 rounded-lg transition-all ${tool === 'brush' ? 'bg-primary text-primary-foreground shadow-sm' : 'hover:bg-muted/50 text-muted-foreground'
@@ -130,7 +124,6 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
           </div>
         </div>
 
-        {/* Thanh công cụ vẽ: Brush color, Undo, Clear */}
         <div className="flex flex-wrap items-center justify-between gap-4 w-full bg-muted/40 p-3 rounded-xl border border-border">
           <div className="flex items-center gap-2">
             <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Color:</span>
@@ -165,7 +158,6 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
           </>
         )}
 
-        {/* Vùng hiển thị PDF và lớp vẽ KonvaDraw */}
         <div ref={containerRef} className="relative overflow-auto border border-border rounded-xl shadow-inner bg-muted min-h-[400px] max-h-[65vh] w-full flex justify-center items-start p-4">
           <Document
             file={fileUrl}
@@ -210,7 +202,6 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
           </Document>
         </div>
 
-        {/* Phân trang PDF */}
         {numPages && (
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full px-2">
             <button
@@ -233,13 +224,11 @@ export function AnnotationModal({ isOpen, onClose, fileUrl, seriesId = null, cha
           </div>
         )}
 
-        {/* Nút Submit Annotation */}
         {!isReadOnly && (
           <div className="w-full border-t border-border pt-4 mt-2">
             <button
               onClick={handleCombineSubmit}
-              // Dùng hàm mới gộp 2 action này
-
+              
               className="w-full py-3 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-all shadow-md cursor-pointer hover:shadow-lg text-sm"
             >
               Submit Annotation

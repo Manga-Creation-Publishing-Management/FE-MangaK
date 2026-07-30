@@ -1,6 +1,6 @@
-import { CalendarClock, JapaneseYen, Eye, CheckCircle } from "lucide-react";
-import { StatusBadge } from "@/shared/components/StatusBadge";
-import dayjs from "dayjs";
+import { CalendarClock, JapaneseYen, Eye, CheckCircle } from 'lucide-react';
+import { StatusBadge } from '@/shared/components/StatusBadge';
+import dayjs from 'dayjs';
 
 export function UrgentTaskCard({ urgentTasks = [], isLoading, onNavigateToTask }) {
   return (

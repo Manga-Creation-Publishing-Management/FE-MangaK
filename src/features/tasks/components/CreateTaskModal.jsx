@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { X, Upload, FileImage } from 'lucide-react';
-import { useCreateTask } from '../hooks/useCreateTask';
+import { X } from 'lucide-react';
 import { CustomSelect } from '@/shared/components/CustomSelect';
-import { useToast } from '../../../shared/hooks/useToast';
-import { useGetPageRange } from '../hooks/useGetPageRange';
-
+import { useToast } from '@/shared/hooks/useToast';
+import { useGetPageRange } from '@/features/tasks/hooks/useGetPageRange';
 
 export default function CreateTaskModal({
   onClose,
@@ -25,24 +23,21 @@ export default function CreateTaskModal({
 
   const { showAlert } = useToast();
 
-  // 2. Hàm kiểm tra định dạng khi người dùng click ra ngoài (Blur)
   const handlePageRangeBlur = (e) => {
     const value = e.target.value.trim();
 
-    // Nếu ô này trống và đang là required, bạn có thể check trống
     if (!value) {
       setPageRangeError("Page range is required.");
       return;
     }
 
-    // Định nghĩa Regex: bắt buộc phải có dạng [Số]-[Số]
     const regex = /^\d+-\d+$/;
 
     if (!regex.test(value)) {
-      // Nếu nhập sai định dạng, set câu thông báo lỗi
+      
       setPageRangeError("Please use the format: number-number (e.g. 1-30).");
     } else {
-      // Nếu nhập đúng, xóa bỏ thông báo lỗi
+      
       setPageRangeError("");
     }
   };
@@ -50,8 +45,6 @@ export default function CreateTaskModal({
     (item) => item.chapterId === selectedChapterId
   );
   const { assignedRanges, isLoadingRanges } = useGetPageRange(selectedChapterId);
-
-
 
   return (
     <>
@@ -134,15 +127,14 @@ export default function CreateTaskModal({
                 required
                 rows={3}
                 onInvalid={(e) => {
-                  e.preventDefault(); // Chặn popup mặc định của trình duyệt
+                  e.preventDefault(); 
                   showAlert(`Description cannot be empty`);
                 }}
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-              {/* Bên trái: Page Range */}
-
+              
               <div>
                 <div className='mb-2 text-l'>
                   <label htmlFor="">From Page</label>
@@ -182,8 +174,8 @@ export default function CreateTaskModal({
                   placeholder="Enter To Page"
                   required
                   onInvalid={(e) => {
-                    e.preventDefault(); // Chặn popup mặc định của trình duyệt
-                    // Kiểm tra xem lỗi là do vượt quá max hay do chưa nhập
+                    e.preventDefault(); 
+                    
                     if (e.target.validity.rangeOverflow) {
                       showAlert(`Value must be less than or equal to ${maxPagesAllowed}`);
                     }
@@ -213,7 +205,7 @@ export default function CreateTaskModal({
               </div>
               <input
                 type="datetime-local"
-                name="deadline" // Tên thuộc tính sẽ gửi lên Backend
+                name="deadline" 
                 required
                 className="w-full px-4 py-2 bg-input-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
               />

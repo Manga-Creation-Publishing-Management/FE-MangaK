@@ -1,5 +1,5 @@
 import { useGetFeedbackDetail } from '@/shared/hooks/useGetFeedbackDetail';
-import { FeedbackHistoryItem } from './FeedbackHistoryItem';
+import { FeedbackHistoryItem } from '@/shared/components/FeedbackHistoryItem';
 import { History, AlertCircle } from 'lucide-react';
 
 export function FeedbackHistoryList({ seriesId = null, chapterId = null, taskId = null, fileUrl, role }) {
@@ -7,7 +7,7 @@ export function FeedbackHistoryList({ seriesId = null, chapterId = null, taskId 
 
   return (
     <div className="w-full bg-card rounded-xl p-5 md:p-6 border border-border shadow-sm mt-3">
-      {/* Header */}
+      
       <div className="flex items-center gap-2.5 mb-4 pb-3 border-b border-border/60">
         <div className="text-primary flex items-center justify-center">
           <History size={18} className="stroke-[2.2]" />
@@ -17,7 +17,6 @@ export function FeedbackHistoryList({ seriesId = null, chapterId = null, taskId 
         </h3>
       </div>
 
-      {/* Content */}
       <div className="flex flex-col gap-3">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-8 text-muted-foreground gap-2">

@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import {
-  Home, FolderKanban, DollarSign, TrendingUp, CalendarClock,
-  CheckSquare, ClipboardList, FileSearch, Users, ChevronLeft, ChevronRight, X
-} from 'lucide-react';
+import { Home, FolderKanban, DollarSign, TrendingUp, CalendarClock, CheckSquare, ClipboardList, FileSearch, Users, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router';
 import { Logo } from '@/shared/components/Logo';
 import { Mascot } from '@/shared/components/Mascot';

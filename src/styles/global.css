@@ -2,25 +2,25 @@
 @import "tailwindcss";
 @import "./theme.css";
 
-/* Hide browser default password reveal and clear buttons (specifically in Microsoft Edge / IE) */
+
 input::-ms-reveal,
 input::-ms-clear {
   display: none;
 }
 
-/* Hide scrollbar utility */
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
 .no-scrollbar {
   -ms-overflow-style: none;
-  /* IE and Edge */
+  
   scrollbar-width: none;
-  /* Firefox */
+  
 }
 
-/* Automatically hide scrollbars inside modal overlays */
+
 .fixed [class*="overflow-y-auto"]::-webkit-scrollbar,
 .fixed [class*="overflow-auto"]::-webkit-scrollbar,
 .fixed.overflow-y-auto::-webkit-scrollbar {
@@ -34,7 +34,7 @@ input::-ms-clear {
   scrollbar-width: none;
 }
 
-/* Synchronized smooth theme transition rule */
+
 .theme-transitioning,
 .theme-transitioning *,
 .theme-transitioning *::before,
@@ -45,7 +45,7 @@ input::-ms-clear {
     box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-/* Dark mode high-contrast placeholder & form styles */
+
 .dark input::placeholder,
 .dark textarea::placeholder,
 .dark select::placeholder {
@@ -63,7 +63,7 @@ input::-ms-clear {
   color: var(--color-foreground);
 }
 
-/* Native date/datetime picker calendar icon in dark mode */
+
 .dark input[type="date"]::-webkit-calendar-picker-indicator,
 .dark input[type="datetime-local"]::-webkit-calendar-picker-indicator,
 .dark input[type="time"]::-webkit-calendar-picker-indicator,
@@ -79,7 +79,7 @@ input::-ms-clear {
   color-scheme: dark;
 }
 
-/* Override browser autofill (Chrome/Edge/Safari) background & text color in both Light & Dark modes */
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -101,13 +101,13 @@ input:-webkit-autofill:active {
   }
 }
 
-/* Hiệu ứng động ở ảnh bên homepage */
+
 .animate-smallbounce {
   animation: smallbounce 3s infinite;
 }
 
 
-/* Container định vị toast ở góc trên bên phải màn hình */
+
 #toast-container {
   position: fixed;
   top: 1.5rem;
@@ -117,7 +117,7 @@ input:-webkit-autofill:active {
   pointer-events: none;
 }
 
-/* Kiểu dáng chung của Toast */
+
 .toast {
   min-width: 280px;
   max-width: 400px;
@@ -136,14 +136,14 @@ input:-webkit-autofill:active {
   pointer-events: auto;
 }
 
-/* Khi kích hoạt hiệu ứng hiển thị */
+
 .toast.show {
   transform: translateY(0);
   opacity: 1;
   background-color: var(--color-background);
 }
 
-/* Tùy biến màu viền trái theo từng loại Alert */
+
 .toast.success {
   border-left: 4px solid var(--color-success);
 }

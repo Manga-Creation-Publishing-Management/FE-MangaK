@@ -1,8 +1,7 @@
-import React from 'react';
 import { useLeaderboard } from '@/features/leaderboard/hooks/useLeaderboard';
 import { LeaderboardFilter } from '@/features/leaderboard/components/LeaderboardFilter';
 import { LeaderboardList } from '@/features/leaderboard/components/LeaderboardList';
-import { PaginationCustom } from '@/features/Pagination/components/PaginationCustom';
+import { PaginationCustom } from '@/features/pagination/components/PaginationCustom';
 
 export function LeaderboardPage() {
   const {

@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
-import { chaptersService } from "../../../services/chapterService";
-import { useToast } from "../../../shared/hooks/useToast";
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
+import { chaptersService } from '@/services/chapterService';
+import { useToast } from '@/shared/hooks/useToast';
 
 export function useUpdateChapter(seriesId, chapterId) {
     const { showAlert } = useToast();
@@ -42,7 +42,7 @@ export function useUpdateChapter(seriesId, chapterId) {
     };
 
     const handleReject = async (roleFromState, currentStatus, setLocalStatus, overrideFeedback = null) => {
-        //ưu tiên lấy feedback truyền vào
+        
         const finalFeedback = overrideFeedback != null ? overrideFeedback : feedback;
 
         if (!finalFeedback.trim()) {

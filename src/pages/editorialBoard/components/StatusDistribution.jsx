@@ -1,4 +1,4 @@
-import { BookOpen } from "lucide-react";
+import { BookOpen } from 'lucide-react';
 
 export function StatusDistribution({ statusDistribution }) {
   return (

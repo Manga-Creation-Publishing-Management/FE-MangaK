@@ -1,5 +1,5 @@
-import { X } from "lucide-react";
-import { roleColors, roleLabels, permissionMatrix } from "../constants/adminConstants.js";
+import { X } from 'lucide-react';
+import { roleColors, roleLabels, permissionMatrix } from '@/pages/admin/constants/adminConstants.js';
 
 export function RolePermissionsModal({ show, onClose }) {
   if (!show) return null;

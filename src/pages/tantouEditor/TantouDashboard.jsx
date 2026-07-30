@@ -1,11 +1,10 @@
-import { useTantouDashboard } from './hooks/useTantouDashboard';
+import { useTantouDashboard } from '@/pages/tantouEditor/hooks/useTantouDashboard';
 import { OverviewCard } from '@/shared/components/OverviewCard';
 import { CircleEllipsis, CircleCheckBig, CircleX } from 'lucide-react';
-import { ProcessingSeriesList } from './components/ProcessingSeriesList';
-import { TantouStatusDistribution } from './components/TantouStatusDistribution';
-import { RecentlyReviewedList } from './components/RecentlyReviewedList';
+import { ProcessingSeriesList } from '@/pages/tantouEditor/components/ProcessingSeriesList';
+import { TantouStatusDistribution } from '@/pages/tantouEditor/components/TantouStatusDistribution';
+import { RecentlyReviewedList } from '@/pages/tantouEditor/components/RecentlyReviewedList';
 
-// Component Trang chủ (Dashboard) dành riêng cho role Tantou Editor (Biên tập viên phụ trách)
 export function TantouDashboard() {
   const {
     isLoading,
@@ -21,7 +20,7 @@ export function TantouDashboard() {
 
   return (
     <div className='p-6 space-y-8 bg-background min-h-full'>
-      {/* Hàng 1: Overview Cards */}
+      
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <OverviewCard
           contentText="Processing Series"
@@ -43,7 +42,6 @@ export function TantouDashboard() {
         />
       </div>
 
-      {/* Hàng 2: Grid 2 cột – Series cần Review + Phân bổ trạng thái */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <ProcessingSeriesList
           pendingSeries={pendingSeries}
@@ -57,7 +55,6 @@ export function TantouDashboard() {
         />
       </div>
 
-      {/* Hàng 3: Recently Reviewed */}
       <RecentlyReviewedList
         recentlyReviewed={recentlyReviewed}
         isLoading={isLoading}
@@ -66,4 +63,3 @@ export function TantouDashboard() {
     </div>
   );
 }
-

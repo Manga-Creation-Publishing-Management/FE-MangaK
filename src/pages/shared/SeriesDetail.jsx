@@ -1,39 +1,34 @@
-import { ArrowLeft, Download, Eye, ChevronDown, Loader2 } from "lucide-react";
-import useCreateSeries from "../../features/series/hooks/useCreateSeries";
-import { FeedbackHistoryList } from "../../shared/components/FeedbackHistoryList";
-import { useLocation, useNavigate, useOutletContext, useParams } from "react-router";
-import { StatusBadge } from "@/shared/components/StatusBadge";
-import { ChapterList } from "../../features/chapters/components/ChapterList";
-import { ApprovalPanel } from "./ApprovalPanel";
-import { useEffect, useState, useRef } from "react";
-import { seriesService } from "../../services/seriesService";
-import { useUpdateSeries } from "../../features/series/hooks/useUpdateSeries";
-import { PreviewModal } from "./PreviewModal";
-import { ConfirmRejectModal } from "./ConfirmRejectModal";
-import { AnnotationModal } from "./AnnotationModal";
-import { TextFeedbackModal } from "./TextFeedbackModal";
-import { FeedbackViewer } from "./FeedbackViewer";
-import { useToast } from "@/shared/hooks/useToast";
+import { Download, Eye, ChevronDown, Loader2 } from 'lucide-react';
+import useCreateSeries from '@/features/series/hooks/useCreateSeries';
+import { FeedbackHistoryList } from '@/shared/components/FeedbackHistoryList';
+import { useLocation, useNavigate, useOutletContext, useParams } from 'react-router';
+import { StatusBadge } from '@/shared/components/StatusBadge';
+import { ChapterList } from '@/features/chapters/components/ChapterList';
+import { ApprovalPanel } from '@/pages/shared/components/ApprovalPanel';
+import { useEffect, useState, useRef } from 'react';
+import { seriesService } from '@/services/seriesService';
+import { useUpdateSeries } from '@/features/series/hooks/useUpdateSeries';
+import { PreviewModal } from '@/pages/shared/components/PreviewModal';
+import { ConfirmRejectModal } from '@/pages/shared/components/ConfirmRejectModal';
+import { AnnotationModal } from '@/pages/shared/components/AnnotationModal';
+import { FeedbackViewer } from '@/pages/shared/components/FeedbackViewer';
+import { useToast } from '@/shared/hooks/useToast';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(utc);
 
-// Component hiển thị trang chi tiết của một bộ truyện (Series)
 export function SeriesDetail() {
-  // useParams lấy ID của bộ truyện từ URL (vd: /series/:id)
+  
   const { id } = useParams();
-  // useNavigate dùng để quay lại trang trước đó khi nhấn nút "Back"
+  
   const navigate = useNavigate();
   const { showAlert } = useToast();
   const { setBreadcrumbItems } = useOutletContext();
 
-  // useLocation dùng để lấy đường dẫn hiện tại hoặc state truyền qua URL
   const location = useLocation();
   const pathname = location.pathname.toLowerCase();
 
-  // Thử lấy 'role' (vai trò) từ location.state. 
-  // Việc này quan trọng để hiển thị giao diện tuỳ chỉnh theo role
   let roleFromState = location.state?.role;
 
   if (!roleFromState) {
@@ -52,18 +47,14 @@ export function SeriesDetail() {
     }
   }
 
-  // Hook dùng để lấy danh sách thể loại (genre)
   const { genreList } = useCreateSeries();
 
-  // State lưu trữ dữ liệu chi tiết của bộ truyện lấy từ server
   const [detailData, setDetailData] = useState(null);
 
-  // State lưu trữ trạng thái hiện tại (cục bộ) của bộ truyện để không phải gọi API lại ngay lập tức khi vừa approve/reject
   const [localStatus, setLocalStatus] = useState(null);
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
-  //các state quản lí hiển thị pop-up
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const [isAnnotationOpen, setIsAnnotationOpen] = useState(false);
@@ -79,9 +70,6 @@ export function SeriesDetail() {
     setConfirmModalOpen(true);
   }
 
-
-
-  // Hook hỗ trợ xử lý duyệt / từ chối series (Approval Flow)
   const {
     isLoading,
     feedback,
@@ -90,7 +78,6 @@ export function SeriesDetail() {
     handleReject
   } = useUpdateSeries();
 
-  // Effect chạy mỗi khi ID thay đổi để lấy dữ liệu từ API
   useEffect(() => {
     const fetchSeriesDetail = async () => {
       if (!id) return;
@@ -104,16 +91,13 @@ export function SeriesDetail() {
     fetchSeriesDetail();
   }, [id]);
 
-  // Ưu tiên sử dụng trạng thái local (nếu vừa có thay đổi), nếu không thì lấy trạng thái từ dữ liệu API
   const currentStatus = localStatus || detailData?.status;
   const normalizedStatus = currentStatus?.toLowerCase();
   const normalizedRole = roleFromState?.toLowerCase();
 
-  // Kiểm tra xem user hiện tại có phải là Tantou hay Editorial không (liên quan đến tính năng phê duyệt)
   const isTantou = normalizedRole === "tantou";
   const isEditorial = normalizedRole === "editorial";
 
-  // Tùy chỉnh dòng chữ trên nút Phê duyệt / Từ chối dựa trên role
   const approveText = isTantou
     ? "Approve & Submit to Editorial Board"
     : "Approve Series";
@@ -152,15 +136,12 @@ export function SeriesDetail() {
     );
   }
 
-
   return (
     <>
       <div className="p-6 space-y-6">
 
-        {/* Khung chứa ảnh bìa và thông tin cơ bản của bộ truyện */}
         <div className="bg-card border border-border rounded-xl overflow-hidden p-4 sm:p-6">
 
-          {/* Vùng hiển thị Ảnh bìa */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 border-b border-border pb-2 items-start">
             <div className="col-span-1 md:col-span-4 lg:col-span-3 w-full aspect-[3/4] relative rounded-xl max-w-xs mx-auto md:max-w-none" >
               <img className="w-full h-full object-cover rounded-xl" src={detailData?.coverFile} alt="Series-cover-image" />
@@ -169,11 +150,11 @@ export function SeriesDetail() {
               <div className="flex flex-col h-full justify-between space-y-4">
                 <div className="flex justify-between items-start gap-4">
                   <div className="flex-1">
-                    {/* Tiêu đề truyện và Tên tác giả */}
+                    
                     <h2 className="title-obelix text-md sm:text-2xl font-semibold text-card-foreground">{detailData?.title}</h2>
                     <h3 className="text-muted-foreground text-xs sm:text-sm mt-1">{detailData?.mangakaName}</h3>
                   </div>
-                  {/* Huy hiệu hiển thị trạng thái (Processing, Pending, Approved...) */}
+                  
                   <StatusBadge status={currentStatus?.toLowerCase()} />
                 </div>
 
@@ -223,7 +204,7 @@ export function SeriesDetail() {
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-start">
                   <div className="sm:col-span-7 md:col-span-8 space-y-2">
                     <h5 className="text-xs sm:text-sm text-muted-foreground uppercase font-semibold">Genres</h5>
-                    {/* Danh sách các thể loại */}
+                    
                     <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {detailData?.categories?.map((item, index) => {
                         const nameGenre = genreList?.find(itemGenre => String(itemGenre.categoryId) === String(item))
@@ -268,8 +249,6 @@ export function SeriesDetail() {
                   }
                 </div>
 
-
-
               </div>
             </div>
             <div className="col-span-1 md:col-span-12 flex flex-col flex-1">
@@ -280,14 +259,12 @@ export function SeriesDetail() {
             </div>
           </div>
 
-          {/* Component hiển thị Danh sách các Chapter thuộc bộ truyện này */}
           <div className="pt-6">
             <ChapterList roleName={roleFromState} seriesData={detailData} />
           </div>
 
         </div>
 
-        {/* Feedback History Log Section */}
         {['tantou', 'editorial', 'mangaka'].includes(normalizedRole) && (
           <div className="w-full">
             <button
@@ -316,9 +293,6 @@ export function SeriesDetail() {
           </div>
         )}
 
-
-
-        {/* feedback box for roles tantou and editorial, only when status is processing or pending */}
         {((normalizedRole === 'tantou' && normalizedStatus === 'processing') || (normalizedRole === 'editorial' && normalizedStatus === 'pending')) &&
           <ApprovalPanel
             feedback={feedback}
@@ -361,7 +335,7 @@ export function SeriesDetail() {
         fileUrl={detailData?.nameFile}
         seriesId={id}
         role={normalizedRole}
-        onRejectTrigger={() => { //cho chữ mặc định khi annotation vì reject nó vẫn check á
+        onRejectTrigger={() => { 
           handleReject(id, normalizedRole, setLocalStatus, "Annotation feedback added to the submission");
           setIsAnnotationOpen(false);
         }}

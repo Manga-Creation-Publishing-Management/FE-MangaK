@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { feedbackService } from "@/services/feedbackService";
-import { useToast } from "@/shared/hooks/useToast";
+import { useState, useEffect } from 'react';
+import { feedbackService } from '@/services/feedbackService';
+import { useToast } from '@/shared/hooks/useToast';
 
 export function useGetFeedbackDetail(seriesId = null, chapterId = null, taskId = null) {
   const [feedbacks, setFeedbacks] = useState([]);

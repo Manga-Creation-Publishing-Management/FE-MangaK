@@ -1,13 +1,12 @@
-import { useState } from "react";
-import CreateSeriesModal from "@/features/series/components/CreateSeriesModal";
-import { useSeriesManagement } from "@/features/series/hooks/useSeriesManagement";
-import useSeriesList from "@/features/series/hooks/useSeriesList";
-import { StatusBadge } from "@/shared/components/StatusBadge";
-import { Loader2, Plus } from "lucide-react";
-import { getTotalPage } from "@/features/Pagination/hooks/getTotalPage";
-import { PaginationCustom } from "@/features/Pagination/components/PaginationCustom";
-import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
-
+import { useState } from 'react';
+import CreateSeriesModal from '@/features/series/components/CreateSeriesModal';
+import { useSeriesManagement } from '@/features/series/hooks/useSeriesManagement';
+import useSeriesList from '@/features/series/hooks/useSeriesList';
+import { StatusBadge } from '@/shared/components/StatusBadge';
+import { Loader2, Plus } from 'lucide-react';
+import { getTotalPage } from '@/features/pagination/hooks/getTotalPage';
+import { PaginationCustom } from '@/features/pagination/components/PaginationCustom';
+import { SearchFilterBar } from '@/shared/components/SearchFilterBar';
 
 export function SeriesManagement({ role, statusFilter, seriesFiltered, headerControls }) {
 
@@ -170,7 +169,7 @@ export function SeriesManagement({ role, statusFilter, seriesFiltered, headerCon
             ) : (
               currentDataListDisplay?.map(item => (
                 <div key={item.seriesId} className="w-full relative bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
-                  {/* ... (giữ nguyên nội dung card bên trong) ... */}
+                  
                   <div className=' aspect-[3/4] w-full relative'>
                     <img className="w-full h-full object-cover" src={item.coverFile} alt="cover file" />
                   </div>

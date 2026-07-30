@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { X } from 'lucide-react';
 
 export function TextFeedbackModal({ isOpen, onClose, feedbackText }) {
   if (!isOpen) return null;

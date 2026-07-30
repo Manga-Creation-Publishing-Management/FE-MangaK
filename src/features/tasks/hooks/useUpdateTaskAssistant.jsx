@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { taskService } from "../../../services/taskService";
-import { useToast } from "../../../shared/hooks/useToast";
+import { useState } from 'react';
+import { taskService } from '@/services/taskService';
+import { useToast } from '@/shared/hooks/useToast';
 
 export function useUpdateTaskAssistant(taskId, currentAssistantId, currentAssistantName, onReload) {
     const { showAlert } = useToast();

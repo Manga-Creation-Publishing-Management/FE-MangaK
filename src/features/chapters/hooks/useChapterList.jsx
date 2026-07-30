@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { chaptersService } from "@/services/chapterService";
+import { useEffect, useState } from 'react';
+import { chaptersService } from '@/services/chapterService';
 
 export function useChapterList(seriesId, reload) {
   const [chapterList, setChapterList] = useState([]);

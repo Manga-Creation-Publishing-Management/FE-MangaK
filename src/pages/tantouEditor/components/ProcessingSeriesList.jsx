@@ -1,7 +1,6 @@
-import { FileSearch, Eye, ArrowRight } from "lucide-react";
-import dayjs from "dayjs";
+import { FileSearch, Eye, ArrowRight } from 'lucide-react';
+import dayjs from 'dayjs';
 
-// Component hiển thị danh sách series đang chờ Tantou Editor review (ở trạng thái Processing)
 export function ProcessingSeriesList({ pendingSeries, isLoading, onNavigateToSeries, onNavigateToSeriesList }) {
   return (
     <div className="bg-card border border-border rounded-xl p-6 h-full flex flex-col">

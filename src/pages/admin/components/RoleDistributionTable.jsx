@@ -1,4 +1,4 @@
-import { roleLabels } from "../constants/adminConstants.js";
+import { roleLabels } from '@/pages/admin/constants/adminConstants.js';
 
 const roleDotColors = {
   mangaka: "bg-pink-500",

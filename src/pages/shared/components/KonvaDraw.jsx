@@ -1,71 +1,59 @@
 import { useState, useRef, useEffect } from 'react';
 import { Stage, Layer, Line, Text, Rect } from 'react-konva';
 
-/**
- * Component KonvaDraw hiển thị lớp vẽ Canvas đè lên trang PDF.
- * Hỗ trợ chế độ vẽ cọ (brush), viết chữ chú thích (text) kéo thả, và di chuyển nét vẽ/text (move).
- */
 export function KonvaDraw({
     width,
     height,
-    tool = 'brush',          // Công cụ đang chọn: 'brush', 'text', hoặc 'move'
-    lines = [],              // Danh sách các nét vẽ của trang hiện tại
-    setLines,                // Setter cập nhật danh sách nét vẽ
-    texts = [],              // Danh sách các chữ chú thích của trang hiện tại
-    setTexts,                // Setter cập nhật danh sách chữ chú thích
-    color,                   // Màu vẽ/viết chữ hiện tại đang chọn
-    isReadOnly = false       // Chế độ chỉ đọc
+    tool = 'brush',          
+    lines = [],              
+    setLines,                
+    texts = [],              
+    setTexts,                
+    color,                   
+    isReadOnly = false       
 }) {
-    // Trạng thái giữ chuột khi đang vẽ cọ (brush)
+    
     const isDrawing = useRef(false);
 
-    // Trạng thái khi đang kéo thả tạo vùng text box
     const isDrawingText = useRef(false);
     const startPos = useRef({ x: 0, y: 0 });
     const [tempRect, setTempRect] = useState(null);
     const [editingText, setEditingText] = useState(null);
     const textareaRef = useRef(null);
 
-    // Tự động focus vào ô nhập chữ khi xuất hiện
     useEffect(() => {
         if (editingText && textareaRef.current) {
             textareaRef.current.focus();
         }
     }, [editingText]);
 
-    /**
-     * Xử lý sự kiện nhấn chuột xuống Canvas
-     */
     const handleMouseDown = (e) => {
-        if (isReadOnly) return; // Nếu là chế độ chỉ đọc thì không cho vẽ hay chèn chữ
+        if (isReadOnly) return; 
 
         const stage = e.target.getStage();
         const pos = stage.getPointerPosition();
 
         if (tool === 'brush') {
-            // Chế độ cọ vẽ: Bắt đầu ghi nhận nét vẽ mới
+            
             isDrawing.current = true;
             setLines([...lines, { points: [pos.x, pos.y], color: color }]);
         }
         else if (tool === 'eraser') {
-            // Chế độ tẩy: Kích hoạt trạng thái kéo chuột để xóa nét vẽ
+            
             isDrawing.current = true;
         }
         else if (tool === 'text') {
-            // Nếu đang gõ dở một text khác, submit trước
+            
             if (editingText) {
                 handleTextSubmit();
             }
-            // Bắt đầu vẽ khung chữ nhật tạm để đặt text
+            
             isDrawingText.current = true;
             startPos.current = pos;
             setTempRect({ x: pos.x, y: pos.y, width: 0, height: 0 });
         }
     };
 
-    /**
-     * Xử lý sự kiện di chuyển chuột để vẽ nét hoặc vẽ khung text box
-     */
     const handleMouseMove = (e) => {
         if (isReadOnly) return;
 
@@ -73,17 +61,15 @@ export function KonvaDraw({
         const pos = stage.getPointerPosition();
 
         if (tool === 'brush' && isDrawing.current) {
-            // Lấy nét vẽ cuối cùng đang thực hiện
+            
             const lastLine = lines[lines.length - 1];
             if (!lastLine) return;
 
-            // Tạo bản sao mới của nét vẽ để tránh mutate prop trực tiếp
             const updatedLine = {
                 ...lastLine,
                 points: lastLine.points.concat([pos.x, pos.y])
             };
 
-            // Cập nhật lại nét vẽ đó trong mảng lines
             const updatedLines = [...lines];
             updatedLines[updatedLines.length - 1] = updatedLine;
             setLines(updatedLines);
@@ -98,9 +84,6 @@ export function KonvaDraw({
         }
     };
 
-    /**
-     * Xử lý sự kiện thả chuột để kết thúc nét vẽ hoặc hiển thị ô gõ chữ
-     */
     const handleMouseUp = (e) => {
         if (isReadOnly) return;
 
@@ -116,7 +99,6 @@ export function KonvaDraw({
             let width = Math.abs(startPos.current.x - pos.x);
             let height = Math.abs(startPos.current.y - pos.y);
 
-            // Nếu click nhanh hoặc khoảng cách kéo quá nhỏ thì cho kích thước mặc định
             if (width < 5 || height < 5) {
                 width = 150;
                 height = 50;
@@ -133,9 +115,6 @@ export function KonvaDraw({
         }
     };
 
-    /**
-     * Lưu đoạn text vừa gõ vào danh sách texts
-     */
     const handleTextSubmit = () => {
         if (editingText) {
             if (editingText.text.trim()) {
@@ -153,9 +132,6 @@ export function KonvaDraw({
         }
     };
 
-    /**
-     * Xử lý phím tắt khi đang nhập text
-     */
     const handleTextKeyDown = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -165,9 +141,6 @@ export function KonvaDraw({
         }
     };
 
-    /**
-     * Lấy con trỏ chuột dựa theo công cụ đang chọn
-     */
     const getCursor = () => {
         if (isReadOnly) return 'default';
         if (tool === 'brush' || tool === 'text') return 'crosshair';
@@ -186,29 +159,27 @@ export function KonvaDraw({
                 style={{ cursor: getCursor() }}
             >
                 <Layer>
-                    {/* 1. Vẽ các nét vẽ (lines) */}
+                    
                     {lines.map((line, i) => (
                         <Line
                             key={i}
                             points={line.points}
                             stroke={line.color || "#ef4444"}
                             strokeWidth={2}
-                            hitStrokeWidth={12} // Vùng hover/click rộng hơn để dễ tẩy
-                            tension={0.5}      // Làm mịn các khúc cua của nét vẽ
-                            lineCap="round"    // Bo tròn đầu nét vẽ
-                            lineJoin="round"   // Bo tròn điểm tiếp nối các nét
+                            hitStrokeWidth={12} 
+                            tension={0.5}      
+                            lineCap="round"    
+                            lineJoin="round"   
                             draggable={tool === 'move' && !isReadOnly}
                             onDragEnd={(e) => {
                                 const node = e.target;
                                 const dx = node.x();
                                 const dy = node.y();
 
-                                // Dịch chuyển trực tiếp các tọa độ trong mảng points để đảm bảo cấu trúc data nguyên bản
                                 const newPoints = line.points.map((val, idx) =>
                                     idx % 2 === 0 ? val + dx : val + dy
                                 );
 
-                                // Reset offset vẽ của Konva về 0 để tránh bị nhân đôi độ lệch
                                 node.x(0);
                                 node.y(0);
 
@@ -221,7 +192,7 @@ export function KonvaDraw({
                             }}
                             onMouseDown={(e) => {
                                 if (tool === 'eraser' && !isReadOnly) {
-                                    e.cancelBubble = true; // Ngăn sự kiện nổi bọt lên Stage
+                                    e.cancelBubble = true; 
                                     const newLines = lines.filter((_, idx) => idx !== i);
                                     setLines(newLines);
                                 }
@@ -234,7 +205,7 @@ export function KonvaDraw({
                                     const stage = e.target.getStage();
                                     stage.container().style.cursor = 'crosshair';
                                     if (isDrawing.current) {
-                                        // Nếu đang đè chuột kéo qua thì xóa luôn nét vẽ này
+                                        
                                         const newLines = lines.filter((_, idx) => idx !== i);
                                         setLines(newLines);
                                     }
@@ -252,7 +223,6 @@ export function KonvaDraw({
                         />
                     ))}
 
-                    {/* 2. Hiển thị các chữ chú thích (texts) */}
                     {texts.map((item) => (
                         <Text
                             key={item.id}
@@ -295,7 +265,6 @@ export function KonvaDraw({
                         />
                     ))}
 
-                    {/* 3. Vẽ khung chữ nhật đứt nét tạm thời khi người dùng đang kéo chuột tạo vùng text */}
                     {tempRect && (
                         <Rect
                             x={tempRect.x}
@@ -310,7 +279,6 @@ export function KonvaDraw({
                 </Layer>
             </Stage>
 
-            {/* Form nhập nhận xét đè lên vùng Canvas */}
             {editingText && (
                 <textarea
                     ref={textareaRef}

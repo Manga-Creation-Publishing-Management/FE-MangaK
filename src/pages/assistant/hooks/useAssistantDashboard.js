@@ -18,7 +18,6 @@ export function useAssistantDashboard() {
         const response = await taskService.getTaskListByAssistant();
         const taskList = response.data || [];
 
-        // 1. Tính toán các chỉ số cho Overview Cards
         let completed = 0;
         let pending = 0;
         let review = 0;
@@ -38,14 +37,13 @@ export function useAssistantDashboard() {
         setPendingCount(pending);
         setReviewCount(review);
 
-        // 2. Tìm nhiệm vụ khẩn cấp nhất (Chỉ hiển thị các task ở trạng thái processing)
         const activeTasks = taskList.filter(task => {
           const status = task.status?.toLowerCase();
           return status === "processing";
         });
 
         if (activeTasks.length > 0) {
-          // Sắp xếp theo ngày deadline tăng dần
+          
           const sorted = activeTasks.sort((a, b) => {
             if (!a.deadline) return 1;
             if (!b.deadline) return -1;

@@ -1,6 +1,6 @@
-import { UserX, UserCheck } from "lucide-react";
-import { CustomSelect } from "../../../shared/components/CustomSelect.jsx";
-import { roleColors, roleLabels } from "../constants/adminConstants.js";
+import { UserX, UserCheck } from 'lucide-react';
+import { CustomSelect } from '@/shared/components/CustomSelect.jsx';
+import { roleColors, roleLabels } from '@/pages/admin/constants/adminConstants.js';
 
 export function UserTable({
   isLoading,

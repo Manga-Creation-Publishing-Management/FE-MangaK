@@ -1,7 +1,6 @@
-import { ClipboardCheck, Eye } from "lucide-react";
-import { StatusBadge } from "@/shared/components/StatusBadge";
+import { ClipboardCheck, Eye } from 'lucide-react';
+import { StatusBadge } from '@/shared/components/StatusBadge';
 
-// Component hiển thị danh sách series đã được Tantou Editor xử lý gần đây
 export function RecentlyReviewedList({ recentlyReviewed, isLoading, onNavigateToSeries }) {
   return (
     <div className="bg-card border border-border rounded-xl p-6">

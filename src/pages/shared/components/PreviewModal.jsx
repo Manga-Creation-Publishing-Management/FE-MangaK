@@ -1,11 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
-import { Undo, Brush, Type, X } from "lucide-react";
-import { useChapterAnnotation } from "../../features/chapters/hooks/useChapterAnnotation";
 
-// Kích hoạt Web Worker để thư viện react-pdf xử lý PDF ở một luồng độc lập
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 export function PreviewModal({ isOpen, onClose, fileUrl, role }) {
@@ -16,7 +11,6 @@ export function PreviewModal({ isOpen, onClose, fileUrl, role }) {
         setNumPages(numPages);
     }
 
-
     if (!isOpen) return null;
 
     return (
@@ -26,7 +20,6 @@ export function PreviewModal({ isOpen, onClose, fileUrl, role }) {
         >
             <div className="bg-card border border-border rounded-2xl shadow-2xl p-6 w-[95vw] md:w-[85vw] lg:w-[1000px] max-w-[100vw] max-h-[95vh] overflow-y-auto flex flex-col items-center gap-4 relative">
 
-                {/* Tiêu đề & Nút Close */}
                 <div className="flex justify-between items-center w-full pb-4 border-b border-border">
                     <h2 className="text-lg font-semibold text-foreground">Preview</h2>
                     <button
@@ -37,8 +30,6 @@ export function PreviewModal({ isOpen, onClose, fileUrl, role }) {
                     </button>
                 </div>
 
-
-                {/* Vùng hiển thị PDF và lớp vẽ KonvaDraw */}
                 <div className="relative overflow-auto border border-border rounded-xl shadow-inner bg-muted min-h-[400px] max-h-[65vh] w-full flex justify-center items-start p-4">
                     <Document
                         file={fileUrl}
@@ -56,7 +47,6 @@ export function PreviewModal({ isOpen, onClose, fileUrl, role }) {
                     </Document>
                 </div>
 
-                {/* Phân trang PDF */}
                 {numPages && (
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full px-2">
                         <button
@@ -78,8 +68,6 @@ export function PreviewModal({ isOpen, onClose, fileUrl, role }) {
                         </button>
                     </div>
                 )}
-
-
 
             </div>
         </div>

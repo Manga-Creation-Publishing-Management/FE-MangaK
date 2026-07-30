@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { SeriesManagement } from "../shared/SeriesManagement";
-import { useSeriesManagement } from "../../features/series/hooks/useSeriesManagement";
-import useSeriesList from "../../features/series/hooks/useSeriesList";
-import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
+import { useState } from 'react';
+import { SeriesManagement } from '@/pages/shared/SeriesManagement';
+import { useSeriesManagement } from '@/features/series/hooks/useSeriesManagement';
+import useSeriesList from '@/features/series/hooks/useSeriesList';
+import { SearchFilterBar } from '@/shared/components/SearchFilterBar';
 
 export function SeriesApproval() {
   const { reload, handleReload } = useSeriesManagement();

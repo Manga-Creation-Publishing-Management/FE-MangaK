@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { CalendarClock, JapaneseYen } from "lucide-react";
-import { useTaskListByAssistant } from "../../features/tasks/hooks/useTaskListByAssistant";
-import { StatusBadge } from "@/shared/components/StatusBadge";
-import dayjs from "dayjs";
-import { useTaskList } from "../../features/tasks/hooks/useTaskList";
-import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
-import { getTotalPage } from "../../features/Pagination/hooks/getTotalPage";
-import { PaginationCustom } from "../../features/Pagination/components/PaginationCustom";
+import { useState } from 'react';
+import { CalendarClock, JapaneseYen } from 'lucide-react';
+import { useTaskListByAssistant } from '@/features/tasks/hooks/useTaskListByAssistant';
+import { StatusBadge } from '@/shared/components/StatusBadge';
+import dayjs from 'dayjs';
+import { useTaskList } from '@/features/tasks/hooks/useTaskList';
+import { SearchFilterBar } from '@/shared/components/SearchFilterBar';
+import { getTotalPage } from '@/features/pagination/hooks/getTotalPage';
+import { PaginationCustom } from '@/features/pagination/components/PaginationCustom';
 
 export function MyTask({ isDashboardView = false }) {
   const userString = localStorage.getItem('user');

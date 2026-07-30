@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { X, Eye, EyeOff } from "lucide-react";
-import { CustomSelect } from "../../../shared/components/CustomSelect.jsx";
-import { createAccountSchema } from "../schemas/createAccountSchema.js";
-import { userService } from "../../../services/userService.js";
-import { feRoleToApiRole } from "../constants/adminConstants.js";
+import { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { X, Eye, EyeOff } from 'lucide-react';
+import { CustomSelect } from '@/shared/components/CustomSelect.jsx';
+import { createAccountSchema } from '@/pages/admin/schemas/createAccountSchema.js';
+import { userService } from '@/services/userService.js';
+import { feRoleToApiRole } from '@/pages/admin/constants/adminConstants.js';
 
 export function CreateAccountModal({ show, onClose, onCreated, tantouList }) {
   const [showNewPassword, setShowNewPassword] = useState(false);

@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react"
-import { taskService } from "@/services/taskService";
-import { seriesService } from "@/services/seriesService";
-import { chaptersService } from "@/services/chapterService";
-import { useToast } from "@/shared/hooks/useToast";
+import { useEffect, useState } from 'react';
+import { taskService } from '@/services/taskService';
+import { seriesService } from '@/services/seriesService';
+import { chaptersService } from '@/services/chapterService';
+import { useToast } from '@/shared/hooks/useToast';
 import dayjs from 'dayjs';
 
 export function useCreateTask() {
@@ -74,7 +74,6 @@ export function useCreateTask() {
   const currentSelectedChapter = chapters.find(c => c.chapterId === selectedChapterId);
   const maxPagesAllowed = currentSelectedChapter ? currentSelectedChapter.totalPage : null;
 
-
   const handleSubmitCreateTask = async (e) => {
     e.preventDefault();
 
@@ -96,7 +95,6 @@ export function useCreateTask() {
       showAlert("Please choose and fill in all required fields: Title, Series, Chapter, Assistant, and Deadline!", "warning");
       return;
     }
-
 
     if (taskData.from < 1 || taskData.to < 1) {
       showAlert("Page numbers must be greater than 0!", "warning");

@@ -1,21 +1,20 @@
-import { useState } from "react";
-import { CalendarClock, Plus, Loader2 } from "lucide-react";
-import { useCreateTask } from "@/features/tasks/hooks/useCreateTask";
-import CreateTaskModal from "@/features/tasks/components/CreateTaskModal";
-import { useTaskList } from "@/features/tasks/hooks/useTaskList";
-import { StatusBadge } from "@/shared/components/StatusBadge";
+import { useState } from 'react';
+import { CalendarClock, Plus, Loader2 } from 'lucide-react';
+import { useCreateTask } from '@/features/tasks/hooks/useCreateTask';
+import CreateTaskModal from '@/features/tasks/components/CreateTaskModal';
+import { useTaskList } from '@/features/tasks/hooks/useTaskList';
+import { StatusBadge } from '@/shared/components/StatusBadge';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { getTotalPage } from "@/features/Pagination/hooks/getTotalPage";
-import { PaginationCustom } from "@/features/Pagination/components/PaginationCustom";
-import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
+import { getTotalPage } from '@/features/pagination/hooks/getTotalPage';
+import { PaginationCustom } from '@/features/pagination/components/PaginationCustom';
+import { SearchFilterBar } from '@/shared/components/SearchFilterBar';
 dayjs.extend(utc);
 export function TaskManagement() {
 
   const userString = localStorage.getItem('user');
   const currentUser = JSON.parse(userString);
   const role = currentUser.role;
-
 
   const {
     handleShowCreateTaskModal,
@@ -39,7 +38,6 @@ export function TaskManagement() {
     handleNavigateToTask,
     isLoadingList
   } = useTaskList(reload);
-
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -115,14 +113,13 @@ export function TaskManagement() {
             ) : (
               currentDataListDisplay?.map(item => (
                 <div key={item.id} className="task-card p-4 sm:p-6 transition-shadow animate-in fade-in duration-200">
-                  {/* Phần trên: Tiêu đề bên trái, Trạng thái & Nút bấm bên phải */}
+                  
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-card-foreground truncate sm:text-xl font-semibold">Chapter {item.chapterNumber} - {item.seriesTitle}</h4>
                       <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Page Range: {item.taskDescription}</p>
                     </div>
 
-                    {/* Cụm Status và Button bên phải */}
                     <div className="flex flex-wrap items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border/40">
                       <StatusBadge status={item.status?.toLowerCase()} />
 
@@ -135,13 +132,11 @@ export function TaskManagement() {
                     </div>
                   </div>
 
-                  {/* Phần dưới: Đường phân cách + Assigned (Trái) và Deadline (Phải) */}
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-4 pt-3 border-t border-border/50">
                     <span className="text-xs sm:text-sm text-muted-foreground">
                       Assigned to: <span className="font-medium text-foreground">{item.assistantName}</span>
                     </span>
 
-                    {/* Deadline được đẩy hẳn sang bên phải */}
                     <div className="flex items-center gap-1.5 text-xs sm:text-sm text-destructive font-medium shrink-0">
                       <CalendarClock size={16} />
                       <span>Deadline: {dayjs(item.deadline).utc(true).format('DD/MM/YYYY HH:mm')}</span>
@@ -151,8 +146,6 @@ export function TaskManagement() {
               ))
             )}
           </div>
-
-
 
           <PaginationCustom
             currentPage={currentPage}
@@ -178,7 +171,6 @@ export function TaskManagement() {
           onReload={handleReload}
         />
       }
-
 
     </>
   )

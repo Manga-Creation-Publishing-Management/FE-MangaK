@@ -1,13 +1,12 @@
-import { usePublishingSchedule } from "../../features/schedule/PublishingSchedule";
-import { Calendar, Clock, Plus } from "lucide-react";
-import { OverviewCard } from "@/shared/components/OverviewCard";
-import { useState } from "react";
-import { getTotalPage } from "@/features/Pagination/hooks/getTotalPage";
-import { PaginationCustom } from "@/features/Pagination/components/PaginationCustom";
+import { usePublishingSchedule } from '@/features/schedule/PublishingSchedule';
+import { Calendar, Clock, Plus } from 'lucide-react';
+import { OverviewCard } from '@/shared/components/OverviewCard';
+import { useState } from 'react';
+import { PaginationCustom } from '@/features/pagination/components/PaginationCustom';
 
-import { ScheduleCard } from "./components/ScheduleCard";
-import { ScheduleFormModal } from "./components/ScheduleFormModal";
-import { DeleteScheduleModal } from "./components/DeleteScheduleModal";
+import { ScheduleCard } from '@/pages/editorialBoard/components/ScheduleCard';
+import { ScheduleFormModal } from '@/pages/editorialBoard/components/ScheduleFormModal';
+import { DeleteScheduleModal } from '@/pages/editorialBoard/components/DeleteScheduleModal';
 
 export function PublishingSchedule() {
   const {

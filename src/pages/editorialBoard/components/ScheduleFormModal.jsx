@@ -1,4 +1,4 @@
-import { CustomSelect } from "../../../shared/components/CustomSelect.jsx";
+import { CustomSelect } from '@/shared/components/CustomSelect.jsx';
 
 export function ScheduleFormModal({
   show,

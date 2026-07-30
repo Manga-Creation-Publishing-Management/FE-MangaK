@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { Users, ShieldCheck, UserX, UserCheck } from "lucide-react";
-import { userService } from "@/services/userService.js";
-import { apiRoleMap } from "../constants/adminConstants.js";
+import { useEffect, useState } from 'react';
+import { Users, ShieldCheck, UserX, UserCheck } from 'lucide-react';
+import { userService } from '@/services/userService.js';
+import { apiRoleMap } from '@/pages/admin/constants/adminConstants.js';
 
 export function useAdminDashboard() {
   const [users, setUsers] = useState([]);

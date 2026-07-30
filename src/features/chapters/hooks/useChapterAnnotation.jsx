@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useToast } from "@/shared/hooks/useToast";
-import { feedbackService } from "@/services/feedbackService";
+import { useToast } from '@/shared/hooks/useToast';
+import { feedbackService } from '@/services/feedbackService';
 
 export function useChapterAnnotation(onClose, initialFeedbackJson = null) {
   const { showAlert } = useToast();
@@ -78,7 +78,6 @@ export function useChapterAnnotation(onClose, initialFeedbackJson = null) {
     }));
   };
 
-
   const setPageLines = (pageIndex, newLines) => {
     setAnnotationData(prev => ({
       ...prev,
@@ -92,7 +91,6 @@ export function useChapterAnnotation(onClose, initialFeedbackJson = null) {
       [pageIndex]: newTexts
     }));
   };
-
 
   const closeModal = () => {
     setPageNumber(1);

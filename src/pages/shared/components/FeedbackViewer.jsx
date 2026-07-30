@@ -1,8 +1,8 @@
-import { useState, forwardRef, useImperativeHandle } from "react";
-import { feedbackService } from "../../services/feedbackService";
-import { useToast } from "@/shared/hooks/useToast";
-import { TextFeedbackModal } from "./TextFeedbackModal";
-import { AnnotationModal } from "./AnnotationModal";
+import { useState, forwardRef, useImperativeHandle } from 'react';
+import { feedbackService } from '@/services/feedbackService';
+import { useToast } from '@/shared/hooks/useToast';
+import { TextFeedbackModal } from '@/pages/shared/components/TextFeedbackModal';
+import { AnnotationModal } from '@/pages/shared/components/AnnotationModal';
 
 export const FeedbackViewer = forwardRef(({
   seriesId = null,
@@ -63,8 +63,6 @@ export const FeedbackViewer = forwardRef(({
           setFetchedFeedback(textContent || fallbackFeedback);
 
           setIsTextFeedbackOpen(true);
-
-
 
         } catch (error) {
           console.error("Error fetching text feedback detail:", error);

@@ -1,14 +1,11 @@
-import { api } from "./api";
+import { api } from '@/services/api';
 
-// Service xử lý các API liên quan đến Chapter (Chương truyện)
 export const chaptersService = {
 
-  // Lấy danh sách tất cả các chương của một bộ truyện dựa trên seriesId
   async getAllSeriesBySeriesId(seriesId) {
     return await api.get(`/Chapter/get-all-chapters?seriesId=${seriesId}`);
   },
 
-  // Lấy chi tiết thông tin của một chương cụ thể (để đọc hoặc sửa đổi)
   async getChapterDetailById(seriesId, chapterId) {
     return await api.get(`/Chapter/get-chapter-details?seriesId=${seriesId}&chapterId=${chapterId}`);
   },
@@ -24,7 +21,6 @@ export const chaptersService = {
     return await api.patch(`/Chapter/${chapterId}?seriesId=${seriesId}`, data);
   },
 
-  // Gửi số sao đánh giá (vote/rating) cho một chương truyện cụ thể
   async updateChapterRate(chapterId, rate) {
     return await api.post(`/Vote/voting-chapter`, { chapterId, rate });
   },
@@ -36,7 +32,6 @@ export const chaptersService = {
     return await api.get(`/MangaTask/process-task?ChapterId=${chapterId}&Status=${status}`);
   },
 
-  // Lấy số sao mà Reader đã đánh giá cho một chapter cụ thể
   async getReaderVote(chapterId) {
     return await api.get(`/Vote/${chapterId}`, { silent: true });
   },

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronDown } from 'lucide-react';
 
@@ -108,4 +108,4 @@ export function CustomSelect({ value, onChange, options, className = '', name })
     </div>
   );
 }
-
+

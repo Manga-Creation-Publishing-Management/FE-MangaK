@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router';
-import { Sidebar } from './Sidebar';
-import { HeaderPage } from './HeaderPage';
+import { Sidebar } from '@/layout/Sidebar';
+import { HeaderPage } from '@/layout/HeaderPage';
 import { useState } from 'react';
 import { Breadcrumb } from '@/shared/components/Breadcrumb';
 
@@ -57,4 +57,4 @@ export function Layout({ roleName }) {
     </div>
   );
 }
-
+

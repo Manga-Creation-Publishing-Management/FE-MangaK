@@ -5,9 +5,9 @@ import { Logo } from '@/shared/components/Logo';
 import { useGetFeedback } from '@/features/series/hooks/useGetFeedback';
 import { FeedbackItem } from '@/shared/components/FeedbackItem';
 import { userService } from '@/services/userService';
-import { HeaderMenu } from './HeaderMenu';
-import { useNavigateFromFeedback } from '../shared/hooks/useNavigateFromFeedback';
-import { useMarkFeedbackAsRead } from '../shared/hooks/useMarkFeedbackAsRead';
+import { HeaderMenu } from '@/layout/HeaderMenu';
+import { useNavigateFromFeedback } from '@/shared/hooks/useNavigateFromFeedback';
+import { useMarkFeedbackAsRead } from '@/shared/hooks/useMarkFeedbackAsRead';
 
 const roleRouteMap = {
     mangaka: "mangaka",
@@ -36,7 +36,7 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
         handleNavigateFromFeedback(feedback, roleName);
         if (feedback?.id) {
             handleMarkAsRead(feedback.id);
-            markAsReadLocally(feedback.id); //update UI
+            markAsReadLocally(feedback.id); 
         }
         setIsDropdownOpen(false);
     };
@@ -85,7 +85,7 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
         <>
             <div className="flex items-center justify-between bg-card border-b border-border shadow-xs p-2.5 px-4 sm:px-8 relative z-30">
                 <div className="flex items-center gap-2 sm:gap-3">
-                    {/* Mobile Sidebar Toggle Button */}
+                    
                     {normalizedRole !== 'reader' && (
                         <div className="md:hidden">
                             <button
@@ -133,7 +133,6 @@ export function HeaderPage({ roleName, avatarUrl, onToggleMobileSidebar }) {
                                     <Bell size={20} />
                                 </div>
 
-                                {/* //số thông báo chưa đọc */}
                                 {unreadFeedbackCount > 0 &&
                                     (<span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-destructive text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-background shadow-xs">
                                         {unreadFeedbackCount > 99 ? '99+' : unreadFeedbackCount}

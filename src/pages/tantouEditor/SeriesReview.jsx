@@ -1,10 +1,9 @@
-import { useState } from "react";
-import { SeriesManagement } from "../shared/SeriesManagement";
-import { useSeriesManagement } from "../../features/series/hooks/useSeriesManagement";
-import useSeriesList from "../../features/series/hooks/useSeriesList";
-import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
+import { useState } from 'react';
+import { SeriesManagement } from '@/pages/shared/SeriesManagement';
+import { useSeriesManagement } from '@/features/series/hooks/useSeriesManagement';
+import useSeriesList from '@/features/series/hooks/useSeriesList';
+import { SearchFilterBar } from '@/shared/components/SearchFilterBar';
 
-// Component SeriesReview: Dành cho màn hình Đánh giá Truyện của Tantou Editor
 export function SeriesReview() {
   const { reload, handleReload } = useSeriesManagement();
   const { seriesData } = useSeriesList(reload);
@@ -13,7 +12,7 @@ export function SeriesReview() {
   const [filterStatus, setFilterStatus] = useState("all");
 
   const filtered = seriesData.filter((item) => {
-    // Các trạng thái truyện mà Tantou được phép xem/đánh giá
+    
     const allowedStatuses = ["processing", "rejected", "pending", "approved", "scheduled", "publishing"];
     const itemStatus = item.status?.toLowerCase();
     if (!allowedStatuses.includes(itemStatus)) return false;

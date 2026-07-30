@@ -90,7 +90,6 @@ export function HomePage() {
         </div>
       </nav>
 
-
       <main className="h-full flex-grow max-w-7xl mx-auto px-6 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
         <div className="animate-smallbounce lg:col-span-6 grid grid-cols-2 gap-4 md:gap-5">
 
@@ -179,7 +178,6 @@ export function HomePage() {
             </div>
           </div>
         </div>
-
 
       </main>
 

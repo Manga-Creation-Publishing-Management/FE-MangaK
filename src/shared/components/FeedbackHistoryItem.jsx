@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { FileSpreadsheet, Eye, MessageSquare } from 'lucide-react';
 import dayjs from 'dayjs';
-import { TextFeedbackModal } from '@/pages/shared/TextFeedbackModal';
-import { AnnotationModal } from '@/pages/shared/AnnotationModal';
+import { TextFeedbackModal } from '@/pages/shared/components/TextFeedbackModal';
+import { AnnotationModal } from '@/pages/shared/components/AnnotationModal';
 
 export function FeedbackHistoryItem({ feedback, fileUrl, role }) {
   const [isTextOpen, setIsTextOpen] = useState(false);
@@ -31,7 +31,7 @@ export function FeedbackHistoryItem({ feedback, fileUrl, role }) {
     <>
       <div className="group bg-card border border-border hover:border-primary/45 hover:shadow-md transition-all duration-300 rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-          {/* Icon indicator */}
+          
           <div className="flex-shrink-0">
             <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-105 ${
               isPDF 
@@ -42,7 +42,6 @@ export function FeedbackHistoryItem({ feedback, fileUrl, role }) {
             </div>
           </div>
 
-          {/* Details */}
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
               <span className="font-semibold text-foreground text-xs sm:text-sm md:text-base">
@@ -53,7 +52,6 @@ export function FeedbackHistoryItem({ feedback, fileUrl, role }) {
               </span>
             </div>
             
-            {/* Feedback type badge */}
             <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-1">
               <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium border ${
                 isPDF 
@@ -71,7 +69,6 @@ export function FeedbackHistoryItem({ feedback, fileUrl, role }) {
           </div>
         </div>
 
-        {/* View button */}
         <button
           onClick={handleViewClick}
           className="flex-shrink-0 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium rounded-lg text-xs md:text-sm transition-all duration-200 cursor-pointer border border-border shadow-sm w-full sm:w-auto"
@@ -81,7 +78,6 @@ export function FeedbackHistoryItem({ feedback, fileUrl, role }) {
         </button>
       </div>
 
-      {/* Specific Feedback Modals */}
       <TextFeedbackModal
         isOpen={isTextOpen}
         onClose={() => setIsTextOpen(false)}

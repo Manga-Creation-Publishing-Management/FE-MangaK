@@ -16,12 +16,11 @@ export function useMangakaDashboard() {
     const fetchDashboardData = async () => {
       setIsLoading(true);
       try {
-        // 1. Lấy danh sách truyện để đếm Total Series
+        
         const seriesRes = await seriesService.getAllSeries();
         const seriesList = seriesRes.data || [];
         setTotalSeries(seriesList.length);
 
-        // 2. Lấy danh sách chapter của từng truyện để đếm các chapter ở trạng thái Pending
         const chaptersPromises = seriesList.map(async (series) => {
           try {
             const chapRes = await chaptersService.getAllSeriesBySeriesId(series.seriesId);
@@ -36,13 +35,11 @@ export function useMangakaDashboard() {
         const pendingChaps = allChapters.filter(ch => ch.status === "Pending");
         setPendingChaptersCount(pendingChaps.length);
 
-        // 3. Lấy danh sách Task và lọc những Task ở trạng thái Pending
         const tasksRes = await taskService.getTaskList();
         const tasksList = tasksRes.data || tasksRes || [];
         const pTasks = tasksList.filter(t => t.status === "Pending");
         setPendingTasks(pTasks);
 
-        // 4. Lấy danh sách Trợ lý và lọc những Trợ lý có tài khoản Active
         const assistantsRes = await taskService.getAssistantList("Assistant");
         const assistantsList = assistantsRes.data || [];
         const actAssistants = assistantsList.filter(user => {

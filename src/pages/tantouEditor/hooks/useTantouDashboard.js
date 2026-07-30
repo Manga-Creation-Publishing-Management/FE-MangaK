@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { seriesService } from '@/services/seriesService';
 
-// Bảng màu cho từng trạng thái series
 const STATUS_COLORS = {
   processing: "#60a5fa",
   rejected: "#ef4444",
@@ -14,18 +13,14 @@ const STATUS_COLORS = {
 export function useTantouDashboard() {
   const [isLoading, setIsLoading] = useState(true);
 
-  // Số liệu tổng quan
   const [processingCount, setProcessingCount] = useState(0);
   const [approvedCount, setApprovedCount] = useState(0);
   const [rejectedCount, setRejectedCount] = useState(0);
 
-  // Danh sách series đang chờ review (Processing)
   const [pendingSeries, setPendingSeries] = useState([]);
 
-  // Bảng phân bổ trạng thái
   const [statusDistribution, setStatusDistribution] = useState([]);
 
-  // Danh sách series đã xử lý gần đây (Approved / Rejected)
   const [recentlyReviewed, setRecentlyReviewed] = useState([]);
 
   const navigate = useNavigate();
@@ -37,13 +32,11 @@ export function useTantouDashboard() {
         const seriesRes = await seriesService.getAllSeries();
         const allSeries = seriesRes.data || [];
 
-        // Lọc các trạng thái mà Tantou Editor quản lý
         const allowedStatuses = ["processing", "rejected", "pending", "approved", "publishing"];
         const tantouSeries = allSeries.filter(s =>
           allowedStatuses.includes(s.status?.toLowerCase())
         );
 
-        // 1. Tính toán Overview Card metrics
         const processing = tantouSeries.filter(s => s.status?.toLowerCase() === "processing");
         const approved = tantouSeries.filter(s =>
           s.status?.toLowerCase() === "approved" || s.status?.toLowerCase() === "pending"
@@ -54,7 +47,6 @@ export function useTantouDashboard() {
         setApprovedCount(approved.length);
         setRejectedCount(rejected.length);
 
-        // 2. Danh sách series cần review (Processing, tối đa 5 item mới nhất)
         const pendingList = processing
           .slice(0, 5)
           .map(s => ({
@@ -65,7 +57,6 @@ export function useTantouDashboard() {
           }));
         setPendingSeries(pendingList);
 
-        // 3. Bảng phân bổ trạng thái
         const statusMap = {};
         tantouSeries.forEach(s => {
           const status = s.status?.toLowerCase() || "unknown";
@@ -78,7 +69,6 @@ export function useTantouDashboard() {
         }));
         setStatusDistribution(distribution);
 
-        // 4. Series đã xử lý gần đây (Approved / Rejected, tối đa 5)
         const reviewed = tantouSeries
           .filter(s => {
             const st = s.status?.toLowerCase();

@@ -1,16 +1,15 @@
-import { useState, useEffect, useRef } from "react";
-import { useLocation, useOutletContext } from "react-router";
-import { userService } from "../../services/userService";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useToast } from "../../shared/hooks/useToast";
+import { useState, useEffect, useRef } from 'react';
+import { useLocation, useOutletContext } from 'react-router';
+import { userService } from '@/services/userService';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useToast } from '@/shared/hooks/useToast';
 
-import { profileSchema } from "./schemas/profileSchema";
-import { AvatarSection } from "./components/AvatarSection";
-import { PersonalInfoForm } from "./components/PersonalInfoForm";
-import { ConfirmUpdateModal } from "./components/ConfirmUpdateModal";
-import { SuccessModal } from "./components/SuccessModal";
-
+import { profileSchema } from '@/pages/shared/schemas/profileSchema';
+import { AvatarSection } from '@/pages/shared/components/AvatarSection';
+import { PersonalInfoForm } from '@/pages/shared/components/PersonalInfoForm';
+import { ConfirmUpdateModal } from '@/pages/shared/components/ConfirmUpdateModal';
+import { SuccessModal } from '@/pages/shared/components/SuccessModal';
 
 export function ProfilePage() {
   const { showAlert } = useToast();

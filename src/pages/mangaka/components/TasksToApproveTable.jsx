@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
-import { getTotalPage } from '@/features/Pagination/hooks/getTotalPage';
-import { PaginationCustom } from '@/features/Pagination/components/PaginationCustom';
+import { PaginationCustom } from '@/features/pagination/components/PaginationCustom';
 
 export function TasksToApproveTable({ isLoading, pendingTasks = [], onNavigateToTask }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,7 +32,7 @@ export function TasksToApproveTable({ isLoading, pendingTasks = [], onNavigateTo
           </div>
         ) : (
           <>
-            {/* Mobile Card Layout (< 640px) */}
+            
             <div className="sm:hidden divide-y divide-border bg-card">
               {paginatedTasks.map((task) => (
                 <div key={task.id} className="p-4 flex flex-col gap-2.5 hover:bg-muted/20 transition-colors">
@@ -63,7 +62,6 @@ export function TasksToApproveTable({ isLoading, pendingTasks = [], onNavigateTo
               ))}
             </div>
 
-            {/* Desktop / Tablet Table Layout (>= 640px) */}
             <div className="hidden sm:block overflow-x-auto">
               <table className="w-full text-sm min-w-[500px]">
                 <thead className="bg-muted/50 border-b border-border text-muted-foreground font-medium">

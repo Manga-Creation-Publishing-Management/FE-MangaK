@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import { useToast } from "@/shared/hooks/useToast";
-import { taskService } from "../../../services/taskService";
-import dayjs from "dayjs";
+import { useState, useEffect } from 'react';
+import { useToast } from '@/shared/hooks/useToast';
+import { taskService } from '@/services/taskService';
+import dayjs from 'dayjs';
 
 export function useUpdateTaskDeadline(taskId, initialDeadline, onUpdateSuccess) {
   const [isEditingDeadline, setIsEditingDeadline] = useState(false);
@@ -9,7 +9,6 @@ export function useUpdateTaskDeadline(taskId, initialDeadline, onUpdateSuccess) 
   const [isUpdating, setIsUpdating] = useState(false);
   const { showAlert } = useToast();
 
-  // Cập nhật dữ liệu ban đầu từ taskDetail khi có sự thay đổi
   useEffect(() => {
     if (initialDeadline) {
       setDeadlineValue(initialDeadline);
@@ -19,7 +18,7 @@ export function useUpdateTaskDeadline(taskId, initialDeadline, onUpdateSuccess) 
   const handleStartEditDeadline = () => setIsEditingDeadline(true);
   const handleCancelEditDeadline = () => {
     setIsEditingDeadline(false);
-    setDeadlineValue(initialDeadline || ""); // Reset về giá trị cũ nếu hủy
+    setDeadlineValue(initialDeadline || ""); 
   };
 
   const handleSaveDeadline = async () => {
@@ -30,10 +29,9 @@ export function useUpdateTaskDeadline(taskId, initialDeadline, onUpdateSuccess) 
 
     setIsUpdating(true);
     try {
-      // Chuyển đổi định dạng từ ô input thành chuỗi ISO string gửi cho backend
+      
       const formattedDeadline = dayjs(deadlineValue).toISOString();
 
-      // Gọi API với data đã chuẩn hóa đúng như Swagger yêu cầu
       await taskService.updateTaskDeadline(taskId, formattedDeadline);
 
       showAlert?.("Updated deadline successfully!", "success");

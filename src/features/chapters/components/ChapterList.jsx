@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react";
-import { StatusBadge } from "@/shared/components/StatusBadge";
-import { Plus, Star } from "lucide-react";
-import { useSeriesManagement } from "../../series/hooks/useSeriesManagement";
-import { useChapterRate } from "../hooks/useChapterRate";
-import { RatePanel } from "../../../pages/reader/RatePanel";
-import { chaptersService } from "../../../services/chapterService";
-import { useUpdateRateChapter } from "../hooks/useUpdateRateChapter";
-import { CreateChapterModal } from "./CreateChapterModal";
-import { useChapterList } from "../hooks/useChapterList";
-import { getTotalPage } from "../../Pagination/hooks/getTotalPage";
-import { PaginationCustom } from "../../Pagination/components/PaginationCustom";
-import { SearchFilterBar } from "@/shared/components/SearchFilterBar";
+import { useState, useEffect } from 'react';
+import { StatusBadge } from '@/shared/components/StatusBadge';
+import { Plus, Star } from 'lucide-react';
+import { useSeriesManagement } from '@/features/series/hooks/useSeriesManagement';
+import { useChapterRate } from '@/features/chapters/hooks/useChapterRate';
+import { RatePanel } from '@/pages/reader/components/RatePanel';
+import { chaptersService } from '@/services/chapterService';
+import { useUpdateRateChapter } from '@/features/chapters/hooks/useUpdateRateChapter';
+import { CreateChapterModal } from '@/features/chapters/components/CreateChapterModal';
+import { useChapterList } from '@/features/chapters/hooks/useChapterList';
+import { getTotalPage } from '@/features/pagination/hooks/getTotalPage';
+import { PaginationCustom } from '@/features/pagination/components/PaginationCustom';
+import { SearchFilterBar } from '@/shared/components/SearchFilterBar';
 
 export function ChapterList({ roleName, seriesData }) {
 
@@ -25,14 +25,12 @@ export function ChapterList({ roleName, seriesData }) {
   const [selectedChapterId, setSelectedChapterId] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
 
-  // State lưu trữ số sao Reader đã đánh giá cho từng chapter { [chapterId]: rating }
   const [readerVotes, setReaderVotes] = useState({});
 
   const { activeChapterId, handlePopUp } = useChapterRate();
 
   const { handleRateSubmit } = useUpdateRateChapter();
 
-  // Khi role là Reader, lấy số sao đã đánh giá cho từng chapter
   useEffect(() => {
     if (roleName?.toLowerCase() !== 'reader' || !chapterList?.length) return;
 
@@ -42,8 +40,7 @@ export function ChapterList({ roleName, seriesData }) {
         chapterList.map(async (chapter) => {
           try {
             const res = await chaptersService.getReaderVote(chapter.chapterId);
-            // Parse số sao từ response
-            // Structure: { success: true, message: "...", data: { readerId: "...", chapterId: "...", rating: 4 } }
+            
             if (res && typeof res === 'object') {
               const voteData = res.data ?? res;
               const rating = typeof voteData === 'object'
@@ -57,7 +54,7 @@ export function ChapterList({ roleName, seriesData }) {
               votes[chapter.chapterId] = res;
             }
           } catch (err) {
-            // Reader chưa đánh giá chapter này -> bỏ qua yên lặng
+            
           }
         })
       );
@@ -108,8 +105,7 @@ export function ChapterList({ roleName, seriesData }) {
     <>
       {(seriesData?.status === "Scheduled" || seriesData?.status === "Publishing") && (
         <>
-          {/* Header của phần danh sách Chapter */}
-          {/* Header của phần danh sách Chapter */}
+          
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
             <div>
               <h3 className="text-xl sm:text-xl ps-2 font-semibold text-card-foreground">Chapters {roleName === 'reader' ? `(${visibleChapters?.length})` : `(${chapterList?.length})`}</h3>
@@ -156,7 +152,6 @@ export function ChapterList({ roleName, seriesData }) {
                 />
               </div>
 
-              {/* Chỉ hiển thị nút "Add New Chapter" nếu user hiện tại là Mangaka */}
               {roleName?.toLowerCase() === "mangaka" &&
                 <button
                   onClick={() => handleShowChapterModal()}
@@ -169,7 +164,6 @@ export function ChapterList({ roleName, seriesData }) {
             </div>
           </div>
 
-          {/* Danh sách các card hiển thị thông tin từng chapter */}
           <div className="space-y-4">
             {currentDataListDisplay?.map((chapter) => {
               const showChapter = roleName === 'reader'
@@ -185,7 +179,7 @@ export function ChapterList({ roleName, seriesData }) {
                       <h4 className=" font-semibold sm:text-xl text-card-foreground break-words">
                         Chapter {chapter.chapterNumber}: {chapter.title}
                       </h4>
-                      {/* Hiển thị số sao Reader đã đánh giá cho chapter */}
+                      
                       {roleName?.toLowerCase() === 'reader' && (
                         <div className="flex items-center gap-1 mt-1">
                           {readerVotes[chapter.chapterId] != null ? (
@@ -246,18 +240,18 @@ export function ChapterList({ roleName, seriesData }) {
             totalPages={totalPages}
             setCurrentPage={setCurrentPage}
           />
-          {/* Nếu activeChapterId không null (tức đang chọn đánh giá cho một chapter nào đó), hiển thị RatePanel Popup */}
+          
           {activeChapterId &&
             <RatePanel
               initialRating={readerVotes[activeChapterId] || 0}
-              onClose={() => handlePopUp(null)} // Đóng popup khi nhấn nút hủy/X
+              onClose={() => handlePopUp(null)} 
               onSubmit={async (rating) => {
-                // Gọi API gửi điểm đánh giá số sao lên server
+                
                 const isSuccess = await handleRateSubmit(activeChapterId, rating);
-                // Chỉ cập nhật readerVotes hiển thị số sao trên UI khi gọi API THÀNH CÔNG
+                
                 if (isSuccess) {
                   setReaderVotes(prev => ({ ...prev, [activeChapterId]: rating }));
-                  handlePopUp(null); // Đóng popup sau khi submit thành công
+                  handlePopUp(null); 
                 }
               }}
             />
